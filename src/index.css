@@ -19707,6 +19707,9 @@ code {
   text-transform: capitalize;
   font-size: 1rem;
   font-weight: 600;
+ 
+}
+.titleback{
   background: lightgray;
   padding: 5px 10px;
 }
