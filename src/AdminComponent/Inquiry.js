@@ -10,7 +10,7 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { Button, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { Button, Card, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 
@@ -301,16 +301,18 @@ const Inquiry = () => {
                                     <div className='row d-flex justify-content-between'>
                                         <div className='col-md-6 col-lg-6'>
                                             <div className='row justify-content-center' >
-                                                <div className='p-2' style={{ width: "100%" }}>
+                                                <div className='p-3' style={{ width: "100%" }}>
                                                     <div>
-                                                        <h4 className="card-title">Add Inquiry</h4>
+                                                        <h4 className="card-title">Edit Inquiry</h4>
                                                     </div>
-                                                    <div className="form-group col-lg-12 p-0">
+                                                    <div className='row'>
+                                                    <div className="form-group col-lg-8 ">
                                                         <label for="exampleInputUsername1">Name<span className='text-danger'>*</span></label>
                                                         <input type="text" class="form-control" id="exampleInputUsername1" value={value.firstname} placeholder="Name*" name='firstname' onChange={onhandleChange} />
                                                         {error.facultyname && <span className='text-danger'>{error.name}</span>}
                                                     </div>
-                                                    <div className="form-group col-lg-12 p-0">
+                                                    
+                                                    <div className="form-group col-lg-4 ">
                                                         <label for="exampleInputUsername1">Gender</label>
                                                         <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.gender} name='gender' onChange={onhandleChange} >
                                                             <option>Male</option>
@@ -318,56 +320,65 @@ const Inquiry = () => {
                                                             <option>Other</option>
                                                         </select>
                                                     </div>
-                                                    <div className="form-group col-lg-12 p-0">
+                                                  
+                                                    </div>
+                                                    <div className='row'>
+                                                    <div className="form-group col-lg-4 ">
                                                         <label for="exampleInputUsername1">Date Of Brith</label>
                                                         <input type="date" class="form-control" id="exampleInputUsername1" value={value.dob} placeholder="Contact Person" name='dob' onChange={onhandleChange} />
 
                                                     </div>
-                                                    <div className="form-group col-lg-12 p-0">
-                                                        <div className='row'>
-                                                            <div className='col-6'>
+                                                    <div className='col-4'>
                                                                 <label for="exampleInputUsername1">Mobile</label>
                                                                 <input type="number" className="form-control" id="exampleInputUsername1" value={value.mobile} placeholder="Number" name='mobile' onChange={onhandleChange} />
                                                             </div>
-                                                            <div className='col-6'>
+                                                            <div className='col-4'>
                                                                 <label for="exampleInputUsername1">Whatsapp Number</label>
                                                                 <input type="number" className="form-control" id="exampleInputUsername1" value={value.whatsapp} placeholder="Number" name='whatsapp' onChange={onhandleChange} />
                                                             </div>
-                                                        </div>
                                                     </div>
-                                                    <div className="form-group col-lg-12 p-0">
+                                                   
+                                                   
+                                                    <div className='row'>
+                                                    <div className="form-group col-lg-6 ">
                                                         <label for="exampleInputUsername1">Email<span className='text-danger'>*</span></label>
                                                         <input type="text" className="form-control" id="exampleInputUsername1" value={value.email} placeholder="Name*" name='email' onChange={onhandleChange} />
                                                         {error.facultyname && <span className='text-danger'>{error.name}</span>}
                                                     </div>
-                                                    <div className="form-group col-lg-12 p-0">
+                                                    <div className="form-group col-lg-3 ">
                                                         <label for="exampleInputUsername1">Nationality<span className='text-danger'>*</span></label>
                                                         <input type="text" class="form-control" id="exampleInputUsername1" value={value.nationality} placeholder="Nationality*" name='nationality' onChange={onhandleChange} />
                                                         {error.facultyname && <span className='text-danger'>{error.name}</span>}
                                                     </div>
+
+                                                    <div className="form-group col-lg-3 ">
+                                                        <label for="exampleInputUsername1">Country<span className='text-danger'>*</span></label>
+                                                        <input type="text" class="form-control" id="exampleInputUsername1" value={value.country} placeholder="Name*" name='country' onChange={onhandleChange} />
+                                                        {error.facultyname && <span className='text-danger'>{error.name}</span>}
+                                                    </div>
+                                                    </div>
+                                                    
                                                     <div className="form-group col-lg-12 p-0">
                                                         <label for="exampleTextarea1">Discussion </label>
                                                         <textarea className="form-control" id="exampleTextarea1" value={value.discussion} placeholder="Discussion" name='discussion' onChange={onhandleChange}></textarea>
 
                                                     </div>
-                                                    <div className="form-group col-lg-12 p-0">
-                                                        <label for="exampleInputUsername1">Country<span className='text-danger'>*</span></label>
-                                                        <input type="text" class="form-control" id="exampleInputUsername1" value={value.country} placeholder="Name*" name='country' onChange={onhandleChange} />
-                                                        {error.facultyname && <span className='text-danger'>{error.name}</span>}
-                                                    </div>
+                                                  
                                                 </div>
                                             </div>
+                                           
                                             <div className='row justify-content-center' >
-                                                <div className='p-2' style={{ width: "100%" }}>
+                                                <div className='p-3' style={{ width: "100%" }}>
                                                     <div>
                                                         <h4 className="card-title">Status Details</h4>
                                                     </div>
-                                                    <div class="form-group col-lg-12 p-0">
+                                                    <div className='row'>
+                                                    <div class="form-group col-lg-6 ">
                                                         <label for="exampleInputUsername1">Date</label>
                                                         <input type="date" className="form-control" id="exampleInputUsername1" value={value.dob} placeholder="Contact Person" name='dob' onChange={onhandleChange} disabled />
 
                                                     </div>
-                                                    <div className="form-group col-lg-12 p-0">
+                                                    <div className="form-group col-lg-6 ">
                                                         <label for="exampleInputUsername1">Set Status</label>
                                                         <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.gender} name='gender' onChange={onhandleChange} disabled>
                                                             <option>Male</option>
@@ -375,6 +386,8 @@ const Inquiry = () => {
                                                             <option>Other</option>
                                                         </select>
                                                     </div>
+                                                    </div>
+                                                    
 
                                                 </div>
                                             </div>
@@ -385,16 +398,17 @@ const Inquiry = () => {
                                         </div>
                                         <div className='col-md-6 col-lg-6'>
                                             <div className='row justify-content-center' >
-                                                <div className='p-2' style={{ width: "100%" }}>
+                                                <div className='p-3' style={{ width: "100%" }}>
                                                     <div>
                                                         <h4 className="card-title">Inquiry Details</h4>
                                                     </div>
-                                                    <div className="form-group col-lg-12 p-0">
+                                                    <div className='row'>
+                                                    <div className="form-group col-lg-4">
                                                         <label for="exampleInputUsername1">Inquiry Date</label>
                                                         <input type="date" className="form-control" id="exampleInputUsername1" value={value.InquiryDate} placeholder="Contact Person" name='InquiryDate' onChange={onhandleChange} />
 
                                                     </div>
-                                                    <div className="form-group col-lg-12 p-0">
+                                                    <div className="form-group col-lg-3 ">
                                                         <label for="exampleInputUsername1">Mode Of Inquiry</label>
                                                         <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.modeEnquiry} name='modeEnquiry' onChange={onhandleChange} >
                                                             <option>Mail</option>
@@ -403,7 +417,7 @@ const Inquiry = () => {
                                                             <option>OnlineMail</option>
                                                         </select>
                                                     </div>
-                                                    <div className="form-group col-lg-12 p-0">
+                                                    <div className="form-group col-lg-5 ">
                                                         <label for="exampleInputUsername1">How they come to know about SIT	    </label>
                                                         <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.advert} name='advert' onChange={onhandleChange} >
                                                             <option>Advertisement</option>
@@ -411,19 +425,26 @@ const Inquiry = () => {
                                                             <option>Google</option>
                                                         </select>
                                                     </div>
+
+                                                    </div>
+                                                    
                                                 </div>
                                             </div>
                                             <div className='row justify-content-center' >
-                                                <div className='p-2' style={{ width: "100%" }}>
+                                                <div className='p-3' style={{ width: "100%" }}>
                                                     <div>
                                                         <h4 className="card-title">Training Programme & batch details</h4>
                                                     </div>
-                                                    <div className="form-group col-lg-12 p-0">
+                                                    <div className='row'>
+                                                    <div className="form-group col-lg-12">
                                                         <label for="exampleTextarea1">Programme inquired	</label>
                                                         <textarea class="form-control" id="exampleTextarea1" value={value.programmeEnquired} placeholder="Discussion" name='programmeEnquired' onChange={onhandleChange}></textarea>
 
                                                     </div>
-                                                    <div className="form-group col-lg-12 p-0">
+                                                    </div>
+                             
+                                                    <div className='row'>
+                                                    <div className="form-group col-lg-5">
                                                         <label for="exampleInputUsername1">Selected Training Programme	</label>
                                                         <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.selectedProgramme} name='selectedProgramme' onChange={onhandleChange} >
                                                             {Course.map((item) => {
@@ -431,7 +452,7 @@ const Inquiry = () => {
                                                             })}
                                                         </select>
                                                     </div>
-                                                    <div className="form-group col-lg-12 p-0">
+                                                    <div className="form-group col-lg-4">
                                                         <label for="exampleInputUsername1">Category</label>
                                                         <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.category} name='category' onChange={onhandleChange} >
                                                             {batchCategoty?.map((item) => {
@@ -439,7 +460,7 @@ const Inquiry = () => {
                                                             })}
                                                         </select>
                                                     </div>
-                                                    <div className="form-group col-lg-12 p-0">
+                                                    <div className="form-group col-lg-3">
                                                         <label for="exampleInputUsername1">Batch</label>
                                                         <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batch} name='batch' onChange={onhandleChange} >
                                                             <option>Male</option>
@@ -447,14 +468,17 @@ const Inquiry = () => {
                                                             <option>Other</option>
                                                         </select>
                                                     </div>
+                                                    </div>
+                                                    
                                                 </div>
                                             </div>
                                             <div className='row justify-content-center' >
-                                                <div className='p-2' style={{ width: "100%" }}>
+                                                <div className='p-3' style={{ width: "100%" }}>
                                                     <div>
                                                         <h4 className="card-title">Education Qualification & Work</h4>
                                                     </div>
-                                                    <div className="form-group col-lg-12 p-0">
+                                                    <div className='row'>
+                                                    <div className="form-group col-lg-4 ">
                                                         <label for="exampleInputUsername1">Qualification</label>
                                                         <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.qualification} name='qualification' onChange={onhandleChange} >
                                                             {
@@ -466,7 +490,7 @@ const Inquiry = () => {
                                                             }
                                                         </select>
                                                     </div>
-                                                    <div className="form-group col-lg-12 p-0">
+                                                    <div className="form-group col-lg-4 ">
                                                         <label for="exampleInputUsername1">Descipline</label>
                                                         <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.descipline} name='descipline' onChange={onhandleChange} >
                                                             {
@@ -479,11 +503,13 @@ const Inquiry = () => {
                                                         </select>
                                                     </div>
 
-                                                    <div className="form-group col-lg-12 p-0">
+                                                    <div className="form-group col-lg-4 ">
                                                         <label for="exampleInputUsername1">Percentage<span className='text-danger'>*</span></label>
                                                         <input type="text" className="form-control" id="exampleInputUsername1" value={value.percentage} placeholder="Name*" name='percentage' onChange={onhandleChange} />
                                                         {error.facultyname && <span className='text-danger'>{error.name}</span>}
                                                     </div>
+                                                    </div>
+                                                   
 
                                                 </div>
                                             </div>

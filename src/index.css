@@ -10406,8 +10406,8 @@ pre code {
 .form-control {
   display: block;
   width: 100%;
-  height: 2.875rem;
-  padding: 0.875rem 1.375rem;
+  height: 40px;
+  padding: 10px 10px;
   font-size: 0.875rem;
   font-weight: 400;
   line-height: 1;
@@ -10520,8 +10520,8 @@ select.form-control:focus::-ms-value {
 }
 
 .form-control-lg {
-  height: 3.175rem;
-  padding: 0.94rem 1.94rem;
+  height: 40px;
+  padding: 10px 10px;
   font-size: 1.25rem;
   line-height: 1.5;
   border-radius: 0.3rem;
@@ -10536,7 +10536,7 @@ textarea.form-control {
 }
 
 .form-group {
-  margin-bottom: 1rem;
+  margin-bottom: 15px;
 }
 
 .form-text {
@@ -19707,6 +19707,8 @@ code {
   text-transform: capitalize;
   font-size: 1rem;
   font-weight: 600;
+  background: lightgray;
+  padding: 5px 10px;
 }
 
 .card .card-description {
@@ -20019,7 +20021,7 @@ code {
 
 /* Forms */
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 15px;
 }
 
 .input-group-append,
