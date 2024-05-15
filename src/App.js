@@ -72,6 +72,7 @@ import ViewStudentCV from './AdminComponent/ViewStudentCV.js';
 import Students from './AdminComponent/Students.jsx';
 import OnlineAdmissions from './AdminComponent/OnlineAdmission.jsx';
 import GetCorporate from './AdminComponent/GetCorporate.jsx';
+import AdmissionForm from './AdminComponent/AdmissionForm.js';
 
 
 
@@ -319,6 +320,10 @@ const Router = createBrowserRouter([
       {
         path: '/viewstudent',
         element: <ViewStudentCV/>
+      },
+      {
+        path: '/admissionform',
+        element: <AdmissionForm/>
       },
       // {
       //   path: '/companyrequirment',

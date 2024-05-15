@@ -508,6 +508,7 @@ const Inquiry = () => {
                                                         <input type="text" className="form-control" id="exampleInputUsername1" value={value.percentage} placeholder="Name*" name='percentage' onChange={onhandleChange} />
                                                         {error.facultyname && <span className='text-danger'>{error.name}</span>}
                                                     </div>
+                                                    
                                                     </div>
                                                    
 
