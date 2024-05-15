@@ -15,7 +15,7 @@ import IconButton from '@mui/material/IconButton';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 
 
-const Inquiry = () => {
+const CorporateInquiryForm = () => {
 
     const [brand, setBrand] = useState([])
     const [vendordata, setVendorData] = useState([])
@@ -299,52 +299,88 @@ const Inquiry = () => {
 
                                 <div className='container-fluid'>
                                     <div className='row d-flex justify-content-between'>
-                                        <div className='col-md-6 col-lg-6'>
+                                        <div className='col-md-6 col-lg-12'>
                                             <div className='row justify-content-center' >
                                                 <div className='p-2' style={{ width: "100%" }}>
                                                     <div>
-                                                        <h4 className="card-title">Add Inquiry</h4>
+                                                        <h4 className="card-title">Inquiry Information</h4>
                                                     </div>
-                                                    <div className="form-group col-lg-12 p-0">
-                                                        <label for="exampleInputUsername1">Name<span className='text-danger'>*</span></label>
-                                                        <input type="text" class="form-control" id="exampleInputUsername1" value={value.firstname} placeholder="Name*" name='firstname' onChange={onhandleChange} />
+                                                   <div className='d-flex'>
+                                                   <div className="form-group col-lg-4 ">
+                                                        <label for="exampleInputUsername1">FName<span className='text-danger'>*</span></label>
+                                                        <input type="text" class="form-control" id="exampleInputUsername1" value={value.firstname} placeholder="FName*" name='firstname' onChange={onhandleChange} />
                                                         {error.facultyname && <span className='text-danger'>{error.name}</span>}
                                                     </div>
+
+                                                    <div className="form-group col-lg-4 ">
+                                                        <label for="exampleInputUsername1">MName<span className='text-danger'>*</span></label>
+                                                        <input type="text" class="form-control" id="exampleInputUsername1" value={value.firstname} placeholder="MName*" name='firstname' onChange={onhandleChange} />
+                                                        {error.facultyname && <span className='text-danger'>{error.name}</span>}
+                                                    </div>
+
+                                                    <div className="form-group col-lg-4 ">
+                                                        <label for="exampleInputUsername1">LName<span className='text-danger'>*</span></label>
+                                                        <input type="text" class="form-control" id="exampleInputUsername1" value={value.firstname} placeholder="LName*" name='firstname' onChange={onhandleChange} />
+                                                        {error.facultyname && <span className='text-danger'>{error.name}</span>}
+                                                    </div>
+                                                   </div>
+
+                                                   <div className="form-group col-lg-12 p-0">
+                                                        <div className='row'>
+                                                            <div className='col-4'>
+                                                                <label for="exampleInputUsername1">Mobile</label>
+                                                                <input type="number" className="form-control" id="exampleInputUsername1" value={value.mobile} placeholder="Number" name='mobile' onChange={onhandleChange} />
+                                                            </div>
+                                                            <div className='col-4'>
+                                                                <label for="exampleInputUsername1"> Phone</label>
+                                                                <input type="number" className="form-control" id="exampleInputUsername1" value={value.whatsapp} placeholder="Number" name='whatsapp' onChange={onhandleChange} />
+                                                            </div>
+
+                                                        <div className="form-group col-lg-4">
+                                                        <label for="exampleInputUsername1">Email<span className='text-danger'>*</span></label>
+                                                        <input type="text" className="form-control" id="exampleInputUsername1" value={value.email} placeholder="Name*" name='email' onChange={onhandleChange} />
+                                                        {error.facultyname && <span className='text-danger'>{error.name}</span>}
+                                                        </div>
+                                                    </div>
+                                                   
+                                                    </div>
+
                                                     <div className="form-group col-lg-12 p-0">
+                                                        <div className='row'>
+                                                            <div className='col-4'>
+                                                                <label for="exampleInputUsername1">Business</label>
+                                                                <input type="number" className="form-control" id="exampleInputUsername1" value={value.mobile} placeholder="Business" name='Business' onChange={onhandleChange} />
+                                                            </div>
+                                                            <div className='col-4'>
+                                                                <label for="exampleInputUsername1">Company Name </label>
+                                                                <input type="number" className="form-control" id="exampleInputUsername1" value={value.whatsapp} placeholder="Company Name " name='whatsapp' onChange={onhandleChange} />
+                                                            </div>
+
+                                                        <div className="form-group col-lg-4">
+                                                        <label for="exampleInputUsername1">Designation <span className='text-danger'>*</span></label>
+                                                        <input type="text" className="form-control" id="exampleInputUsername1" value={value.email} placeholder="Designation *" name='email' onChange={onhandleChange} />
+                                                        {error.facultyname && <span className='text-danger'>{error.name}</span>}
+                                                        </div>
+                                                    </div>
+                                                   
+                                                    </div>
+
+                                                    {/* male female  */}
+                                                    {/* <div className="form-group col-lg-12 p-0">
                                                         <label for="exampleInputUsername1">Gender</label>
                                                         <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.gender} name='gender' onChange={onhandleChange} >
                                                             <option>Male</option>
                                                             <option>Female</option>
                                                             <option>Other</option>
                                                         </select>
-                                                    </div>
+                                                    </div> */}
                                                     <div className="form-group col-lg-12 p-0">
                                                         <label for="exampleInputUsername1">Date Of Brith</label>
                                                         <input type="date" class="form-control" id="exampleInputUsername1" value={value.dob} placeholder="Contact Person" name='dob' onChange={onhandleChange} />
 
                                                     </div>
-                                                    <div className="form-group col-lg-12 p-0">
-                                                        <div className='row'>
-                                                            <div className='col-6'>
-                                                                <label for="exampleInputUsername1">Mobile</label>
-                                                                <input type="number" className="form-control" id="exampleInputUsername1" value={value.mobile} placeholder="Number" name='mobile' onChange={onhandleChange} />
-                                                            </div>
-                                                            <div className='col-6'>
-                                                                <label for="exampleInputUsername1">Whatsapp Number</label>
-                                                                <input type="number" className="form-control" id="exampleInputUsername1" value={value.whatsapp} placeholder="Number" name='whatsapp' onChange={onhandleChange} />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="form-group col-lg-12 p-0">
-                                                        <label for="exampleInputUsername1">Email<span className='text-danger'>*</span></label>
-                                                        <input type="text" className="form-control" id="exampleInputUsername1" value={value.email} placeholder="Name*" name='email' onChange={onhandleChange} />
-                                                        {error.facultyname && <span className='text-danger'>{error.name}</span>}
-                                                    </div>
-                                                    <div className="form-group col-lg-12 p-0">
-                                                        <label for="exampleInputUsername1">Nationality<span className='text-danger'>*</span></label>
-                                                        <input type="text" class="form-control" id="exampleInputUsername1" value={value.nationality} placeholder="Nationality*" name='nationality' onChange={onhandleChange} />
-                                                        {error.facultyname && <span className='text-danger'>{error.name}</span>}
-                                                    </div>
+                                                 
+                                                   
                                                     <div className="form-group col-lg-12 p-0">
                                                         <label for="exampleTextarea1">Discussion </label>
                                                         <textarea className="form-control" id="exampleTextarea1" value={value.discussion} placeholder="Discussion" name='discussion' onChange={onhandleChange}></textarea>
@@ -383,7 +419,7 @@ const Inquiry = () => {
                                                 {/* <button className='col-2'>close</button> */}
                                             </div>
                                         </div>
-                                        <div className='col-md-6 col-lg-6'>
+                                        <div className='col-md-6 col-lg-12'>
                                             <div className='row justify-content-center ' >
                                                 <div className='p-2 ' style={{ width: "100%" }}>
                                                     <div style={{ width: "100%" }} >
@@ -525,37 +561,6 @@ const Inquiry = () => {
 
                                     </div>
 
-                                    <div>
-                                        <DataGrid
-                                            rows={rowsWithIds}
-                                            columns={columns}
-                                            disableColumnFilter
-                                            disableColumnSelector
-                                            disableDensitySelector
-                                            rowHeight={50}
-                                            getRowId={(row) => row.id}
-                                            initialState={{
-                                                pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
-                                                },
-                                            }}
-                                            slots={{ toolbar: GridToolbar }}
-                                            slotProps={{
-                                                toolbar: {
-                                                    showQuickFilter: true,
-                                                },
-                                            }}
-                                        />
-
-                                        {confirmationVisibleMap[cid] && (
-                                            <div className='confirm-delete'>
-                                                <p>Are you sure you want to delete?</p>
-                                                <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
-                                                <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
-                                            </div>
-                                        )}
-                                    </div>
-
 
 
                                 </div>
@@ -569,4 +574,4 @@ const Inquiry = () => {
     )
 }
 
-export default Inquiry
+export default CorporateInquiryForm
