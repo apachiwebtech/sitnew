@@ -526,7 +526,7 @@ const Inquiry = () => {
                                         <div >
                                             <h4 class="card-title">View Inquiry</h4>
                                         </div>
-                                        <div className='d-flex justify-content-between' style={{ width: "50%" }}>
+                                        {/* <div className='d-flex justify-content-between' style={{ width: "50%" }}>
                                             <FormControl fullWidth className='mr-1'>
                                                 <InputLabel id="demo-simple-select-label">Select Search Type</InputLabel>
                                                 <Select
@@ -544,7 +544,7 @@ const Inquiry = () => {
                                                 </Select>
                                             </FormControl>
                                             <input type='text' placeholder='search' style={{ width: "100%" }}></input>
-                                        </div>
+                                        </div> */}
 
                                     </div>
 
