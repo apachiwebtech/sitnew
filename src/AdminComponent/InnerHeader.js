@@ -48,6 +48,12 @@ const InnerHeader = () => {
                 return 'Account Head';
             case '/onefieldform/awt_asset_category/Asset%20Category':
                 return 'Account Head';
+            case '/inquiry':
+                return 'Inquiry';
+            case '/inquirylisting':
+                return 'Inquirylisting';
+            case '/inquiry/:inquiryid':
+                return 'Edit Inquiry';
             default:
                 return '';
         }

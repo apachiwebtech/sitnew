@@ -38,7 +38,7 @@ const Header = () => {
 
   return (
     <nav className="sidebar sidebar-offcanvas col-lg-2" id="sidebar" wordBreak='break-word' overflowWrap='break-word'>
-      <ul className="nav">
+      <ul className="nav p-2">
 
         <li className="nav-item">
           <Link className="nav-link" to="/">
@@ -330,7 +330,7 @@ const Header = () => {
           <ul className='inner-item'>
 
             <li className="nav-item">
-              <Link className="nav-link" to="/inquiry">
+              <Link className="nav-link" to="/inquirylisting">
                 {/* <Icon path={mdiCircleMedium } size={1} className='mx-3' /> */}
                 <Icon path={mdiCircleMedium } size={1} className='mx-3' />
                 <span className="menu-title">Inquiry</span>

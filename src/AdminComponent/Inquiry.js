@@ -144,57 +144,11 @@ const Inquiry = () => {
         setUid([])
     }, [])
 
-    const handleClick = (id) => {
-        setCid(id)
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: true,
-        }));
-    };
+ 
 
-    const handleCancel = (id) => {
-        // Hide the confirmation dialog without performing the delete action
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
-    };
+   
 
-    const handleUpdate = (id) => {
-        const data = {
-            u_id: id,
-            tablename: "awt_faculty"
-        }
-        axios.post(`${BASE_URL}/update_data`, data)
-            .then((res) => {
-                setUid(res.data[0])
-
-                console.log(res.data, "update")
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
-
-    const handleDelete = (id) => {
-        const data = {
-            cat_id: id,
-            tablename: "awt_faculty"
-        }
-
-        axios.post(`${BASE_URL}/delete_data`, data)
-            .then((res) => {
-
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
-    }
+  
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -232,7 +186,9 @@ const Inquiry = () => {
 
         const data = await response.json();
 
-        console.log(data);
+        alert(data.message)
+      window.location.pathname = '/inquirylisting'
+
 
         // }        
     }
@@ -247,43 +203,7 @@ const Inquiry = () => {
 
 
 
-    const columns = [
-        {
-            field: 'index',
-            headerName: 'Id',
-            type: 'number',
-            align: 'center',
-            headerAlign: 'center',
-            flex: 1,
-            filterable: false,
-        },
-        { field: 'FName', headerName: 'Student Name', flex: 2 },
-        { field: 'course', headerName: 'Course Name', flex: 2 },
-        { field: 'inquiry_DT', headerName: 'Inquiry Date', flex: 2 },
-        { field: 'discussion', headerName: 'discuss', flex: 2 },
-        { field: 'present_mobile', headerName: 'mobile', flex: 2 },
-        { field: 'Email', headerName: 'Email', flex: 2 },
-        { field: 'Discipline', headerName: 'discipline', flex: 2 },
-        { field: 'Inquiry_type', headerName: 'inquiry type', flex: 2 },
-        // { field: 'isActive', headerName: 'Options', flex: 2},
-        {
-            field: 'actions',
-            type: 'actions',
-            headerName: 'Action',
-            flex: 1,
-            renderCell: (params) => {
-                return (
-                    <>
-                        <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
-                    </>
-                )
-            }
-        },
-    ];
-
-
-    const rowsWithIds = inquiryData.map((row, index) => ({ index: index + 1, ...row }));
+   
 
     return (
 
@@ -520,71 +440,7 @@ const Inquiry = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-lg-12">
-                            <div className="card">
-                                <div className="card-body">
-                                    <div className='d-flex justify-content-between gap-3' style={{ width: "100%", padding: "10px 0" }}>
-                                        <div >
-                                            <h4 class="card-title">View Inquiry</h4>
-                                        </div>
-                                        {/* <div className='d-flex justify-content-between' style={{ width: "50%" }}>
-                                            <FormControl fullWidth className='mr-1'>
-                                                <InputLabel id="demo-simple-select-label">Select Search Type</InputLabel>
-                                                <Select
-                                                    labelId="demo-simple-select-label"
-                                                    id="demo-simple-select"
-                                                    // value={age}
-                                                    label="Select Search Types"
-                                                // onChange={handleChange}
-                                                >
-                                                    <MenuItem value={'FName'}>Name Wise</MenuItem>
-                                                    <MenuItem value={'course'}>Course Wise</MenuItem>
-                                                    <MenuItem value={'Email'}>Email Wise</MenuItem>
-                                                    <MenuItem value={'present_mobile'}>Mobile Wise</MenuItem>
-                                                    <MenuItem value={'isActive'}>Status Wise</MenuItem>
-                                                </Select>
-                                            </FormControl>
-                                            <input type='text' placeholder='search' style={{ width: "100%" }}></input>
-                                        </div> */}
-
-                                    </div>
-
-                                    <div>
-                                        <DataGrid
-                                            rows={rowsWithIds}
-                                            columns={columns}
-                                            disableColumnFilter
-                                            disableColumnSelector
-                                            disableDensitySelector
-                                            rowHeight={50}
-                                            getRowId={(row) => row.id}
-                                            initialState={{
-                                                pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
-                                                },
-                                            }}
-                                            slots={{ toolbar: GridToolbar }}
-                                            slotProps={{
-                                                toolbar: {
-                                                    showQuickFilter: true,
-                                                },
-                                            }}
-                                        />
-
-                                        {confirmationVisibleMap[cid] && (
-                                            <div className='confirm-delete'>
-                                                <p>Are you sure you want to delete?</p>
-                                                <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
-                                                <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
-                                            </div>
-                                        )}
-                                    </div>
-
-
-
-                                </div>
-                            </div>
-                        </div>
+                     
                     </div>
                 </div>
             </div >

@@ -2,7 +2,7 @@ import React from 'react'
 
 const AdmissionForm = () => {
   return (
-    <div>ssatyam</div>
+    <div>satyam</div>
   )
 }
 

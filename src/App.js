@@ -73,6 +73,13 @@ import Students from './AdminComponent/Students.jsx';
 import OnlineAdmissions from './AdminComponent/OnlineAdmission.jsx';
 import GetCorporate from './AdminComponent/GetCorporate.jsx';
 import AdmissionForm from './AdminComponent/AdmissionForm.js';
+import InquiryListing from './AdminComponent/InquiryListing.js';
+import OnlineAdmissionForm from './AdminComponent/OnlineAdmissionForm.js';
+import PerssonalInfo from './AdminComponent/PerssonalInfo.js';
+import AcademicQualification from './AdminComponent/AcademicQualification.js';
+import CompanyInfo from './AdminComponent/CompanyInfo.js';
+import Discussion from './AdminComponent/Discussion.js';
+import Documents from './AdminComponent/Documents.js';
 
 
 
@@ -222,7 +229,7 @@ const Router = createBrowserRouter([
       // =====================Admission Activity===================
 
       {
-        path: '/inquiry',
+        path: '/inquiry/:inquiryid',
         element: <Inquiry/>
       },
       {
@@ -325,10 +332,32 @@ const Router = createBrowserRouter([
         path: '/admissionform',
         element: <AdmissionForm/>
       },
-      // {
-      //   path: '/companyrequirment',
-      //   element: <CompanyRequirment/>
-      // }
+      {
+        path: '/inquirylisting',
+        element: <InquiryListing/>
+      },
+      {
+        path: '/onlineadmissionform/personalinfo/:admissionid',
+        element: <PerssonalInfo/>
+      },
+      {
+        path: '/onlineadmissionform/academicqualification/:admissionid',
+        element: <AcademicQualification/>
+      },
+      {
+        path: '/onlineadmissionform/companyinfo/:admissionid',
+        element: <CompanyInfo/>
+      },
+   
+      {
+        path: '/onlineadmissionform/discussion/:admissionid',
+        element: <Discussion/>
+      },
+      {
+        path: '/onlineadmissionform/documents/:admissionid',
+        element: <Documents/>
+      },
+   
 
     
 
