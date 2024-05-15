@@ -303,7 +303,7 @@ const Inquiry = () => {
                                             <div className='row justify-content-center' >
                                                 <div className='p-3' style={{ width: "100%" }}>
                                                     <div>
-                                                        <h4 className="card-title">Edit Inquiry</h4>
+                                                        <h4 className="card-title titleback">Edit Inquiry</h4>
                                                     </div>
                                                     <div className='row'>
                                                     <div className="form-group col-lg-8 ">
@@ -328,11 +328,11 @@ const Inquiry = () => {
                                                         <input type="date" class="form-control" id="exampleInputUsername1" value={value.dob} placeholder="Contact Person" name='dob' onChange={onhandleChange} />
 
                                                     </div>
-                                                    <div className='col-4'>
+                                                    <div className='form-group col-4'>
                                                                 <label for="exampleInputUsername1">Mobile</label>
                                                                 <input type="number" className="form-control" id="exampleInputUsername1" value={value.mobile} placeholder="Number" name='mobile' onChange={onhandleChange} />
                                                             </div>
-                                                            <div className='col-4'>
+                                                            <div className='form-group col-4'>
                                                                 <label for="exampleInputUsername1">Whatsapp Number</label>
                                                                 <input type="number" className="form-control" id="exampleInputUsername1" value={value.whatsapp} placeholder="Number" name='whatsapp' onChange={onhandleChange} />
                                                             </div>
@@ -370,7 +370,7 @@ const Inquiry = () => {
                                             <div className='row justify-content-center' >
                                                 <div className='p-3' style={{ width: "100%" }}>
                                                     <div>
-                                                        <h4 className="card-title">Status Details</h4>
+                                                        <h4 className="card-title titleback">Status Details</h4>
                                                     </div>
                                                     <div className='row'>
                                                     <div class="form-group col-lg-6 ">
@@ -400,7 +400,7 @@ const Inquiry = () => {
                                             <div className='row justify-content-center' >
                                                 <div className='p-3' style={{ width: "100%" }}>
                                                     <div>
-                                                        <h4 className="card-title">Inquiry Details</h4>
+                                                        <h4 className="card-title titleback">Inquiry Details</h4>
                                                     </div>
                                                     <div className='row'>
                                                     <div className="form-group col-lg-4">
@@ -433,7 +433,7 @@ const Inquiry = () => {
                                             <div className='row justify-content-center' >
                                                 <div className='p-3' style={{ width: "100%" }}>
                                                     <div>
-                                                        <h4 className="card-title">Training Programme & batch details</h4>
+                                                        <h4 className="card-title titleback">Training Programme & batch details</h4>
                                                     </div>
                                                     <div className='row'>
                                                     <div className="form-group col-lg-12">
@@ -475,7 +475,7 @@ const Inquiry = () => {
                                             <div className='row justify-content-center' >
                                                 <div className='p-3' style={{ width: "100%" }}>
                                                     <div>
-                                                        <h4 className="card-title">Education Qualification & Work</h4>
+                                                        <h4 className="card-title titleback">Education Qualification & Work</h4>
                                                     </div>
                                                     <div className='row'>
                                                     <div className="form-group col-lg-4 ">
@@ -505,7 +505,7 @@ const Inquiry = () => {
 
                                                     <div className="form-group col-lg-4 ">
                                                         <label for="exampleInputUsername1">Percentage<span className='text-danger'>*</span></label>
-                                                        <input type="text" className="form-control" id="exampleInputUsername1" value={value.percentage} placeholder="Name*" name='percentage' onChange={onhandleChange} />
+                                                        <input type="text" className="form-control" id="exampleInputUsername1" value={value.percentage} placeholder="Percentage" name='percentage' onChange={onhandleChange} />
                                                         {error.facultyname && <span className='text-danger'>{error.name}</span>}
                                                     </div>
                                                     
@@ -527,7 +527,7 @@ const Inquiry = () => {
                                         <div >
                                             <h4 class="card-title">View Inquiry</h4>
                                         </div>
-                                        <div className='d-flex justify-content-between' style={{ width: "50%" }}>
+                                        {/* <div className='d-flex justify-content-between' style={{ width: "50%" }}>
                                             <FormControl fullWidth className='mr-1'>
                                                 <InputLabel id="demo-simple-select-label">Select Search Type</InputLabel>
                                                 <Select
@@ -545,7 +545,7 @@ const Inquiry = () => {
                                                 </Select>
                                             </FormControl>
                                             <input type='text' placeholder='search' style={{ width: "100%" }}></input>
-                                        </div>
+                                        </div> */}
 
                                     </div>
 
