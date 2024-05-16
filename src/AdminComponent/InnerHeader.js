@@ -51,7 +51,7 @@ const InnerHeader = () => {
             case '/inquiry':
                 return 'Inquiry';
             case '/inquirylisting':
-                return 'Inquirylisting';
+                return 'Inquiry Listing';
             case '/inquiry/:inquiryid':
                 return 'Edit Inquiry';
             default:

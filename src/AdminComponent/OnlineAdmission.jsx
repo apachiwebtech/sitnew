@@ -3,6 +3,7 @@ import { BASE_URL } from './BaseUrl'
 import EditIcon from "@mui/icons-material/Edit";
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
+import InnerHeader from './InnerHeader';
 
 const OnlineAdmissions = () => {
 
@@ -51,7 +52,7 @@ const OnlineAdmissions = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />
+                        <Link to={`/onlineadmissionform/personalinfo/${params.row.Student_Id}`}><EditIcon style={{ cursor: "pointer" }} /></Link>
                     </>
                 )
             }
@@ -63,6 +64,7 @@ const OnlineAdmissions = () => {
 
     return (
         <div className="container-fluid page-body-wrapper col-lg-10">
+            <InnerHeader/>
             <div className="main-pannel">
                 <div className="content-wrapper ">
                     <div className="row">
@@ -74,8 +76,7 @@ const OnlineAdmissions = () => {
                                         <div >
                                             <h4 class="card-title">Online Admission</h4>
                                         </div>
-                                        <Link to='/onlineadmissionform/personalinfo/:admissionid'> <button className='btn btn-success'>Add +</button></Link>
-
+                            
 
                                     </div>
 
