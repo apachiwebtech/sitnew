@@ -28,7 +28,11 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 
 const Discussion = () => {
   const [open, setOpen] = React.useState(false);
-
+  const [discussion , setDiscussion] = useState({
+    date : "",
+    remark : "",
+    department : "",
+  });
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -38,14 +42,51 @@ const Discussion = () => {
 
   const [onlineAdmissions, setOnlineAdmissions] = useState([]);
 
+  useEffect(()=>{
+    getDisscussionData()
+  },[])
 
+  async function getDisscussionData() {
+    let id = localStorage.getItem(`Admissionid`)
+    
+    axios.post(`${BASE_URL}/getdiscussion`, {student_id : id }).then((res) => {
+      console.log(res.data,">>>>>>")
+      setOnlineAdmissions(res.data)
+      // setDiscussion      // setOnlineAdmissions((prevState)=>{
+
+      // })
+    })
+    .catch((err)=> {
+      console.log(err)
+    })
+  }
  
-  const handleUpdate = () => {
-    console.log("hehehe");
+  const handleChange = (e) => {
+    
+    setDiscussion((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+    
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    const data = {
+      student_id : localStorage.getItem(`Admissionid`),
+      date : discussion.date,
+      remark : discussion.remark,
+      department : discussion.department,
+    }
+      axios.post(`${BASE_URL}/` , data ).then((res)=> {
+        setOpen(false);
+      }).catch((err)=> {
+        console.log(err)
+      })
+    
+    //add discussion api
+  }
+
   const columns = [
    
-    { field: "Discussion Date", headerName: "Discussion Date", flex: 2 },
+    { field: "Disscussion_date", headerName: "Discussion Date", flex: 2 },
     { field: "Remark", headerName: "Remark", flex: 4 },
     { field: "Department", headerName: "Department", flex: 2 },
     
@@ -89,7 +130,7 @@ const Discussion = () => {
                       disableColumnSelector
                       disableDensitySelector
                       rowHeight={37}
-                      getRowId={(row) => row.Present_Mobile}
+                      getRowId={(row) => row.id}
                       initialState={{
                         pagination: {
                           paginationModel: { pageSize: 10, page: 0 },
@@ -132,6 +173,8 @@ const Discussion = () => {
           <CloseIcon />
         </IconButton>
         <DialogContent dividers>
+          
+          <form onSubmit={handleSubmit}>
           <div className="row justify-content-center">
             <div className="p-3" style={{ width: "100%" }}>
               <div className="row">
@@ -143,10 +186,10 @@ const Discussion = () => {
                     type="date"
                     class="form-control"
                     id="exampleInputUsername1"
-                    value=""
+
                     placeholder="Discussion Date"
                     name="date"
-                    onChange=""
+                    onChange={handleChange}
                   />
                 </div>
                 <div className="form-group col-lg-6 ">
@@ -154,9 +197,8 @@ const Discussion = () => {
                   <select
                     className="form-control form-control-lg"
                     id="exampleFormControlSelect1"
-                    value=""
-                    name="qualification"
-                    onChange=""
+                    name="department"
+                    onChange={handleChange}
                   >
                     <option>Account</option>
                     <option>Library</option>
@@ -172,10 +214,9 @@ const Discussion = () => {
                     type="text"
                     class="form-control"
                     id="exampleInputUsername1"
-                    value=""
                     placeholder=" Remark"
                     name="remark"
-                    onChange=""
+                    onChange={handleChange}
                   />
                 </div>
                 
@@ -184,17 +225,17 @@ const Discussion = () => {
               </div>
             </div>
           </div>
+          <div>
+            <button type="submit">save</button>
+          </div>
 
           <div className="row p-2 gap-2">
             {/* <button className='mr-2 btn btn-primary'>Save</button> */}
             {/* <button className='col-2'>close</button> */}
           </div>
+      </form>
         </DialogContent>
-        <DialogActions>
-          <Button autoFocus onClick={handleClose}>
-            + Add
-          </Button>
-        </DialogActions>
+     
       </BootstrapDialog>
     </div>
   );
