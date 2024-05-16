@@ -4,10 +4,13 @@ import EditIcon from "@mui/icons-material/Edit";
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
 import InnerHeader from './InnerHeader';
+import axios from 'axios';
+import { Switch } from '@mui/material';
 
 const OnlineAdmissions = () => {
 
     const [onlineAdmissions, setOnlineAdmissions] = useState([])
+    const label = { inputProps: { 'aria-label': 'Color switch demo' } };
     const getOnlineAdmissions = async () => {
         const response = await fetch(`${BASE_URL}/getStudents`, {
             method: 'GET',
@@ -27,6 +30,18 @@ const OnlineAdmissions = () => {
     const handleUpdate = () => {
         console.log('hehehe')
     }
+
+    const handleswitchchange = (value,Inquiry_Id) =>{
+        const newval = value == 0 ? 1 : 0
+    
+        axios.post(`${BASE_URL}/data_status` , {status : newval, Inquiry_Id : Inquiry_Id, table_name : "Student_Master"})
+        .then((res)=>{
+            console.log(res)
+            getOnlineAdmissions()
+        })
+     }
+
+
     const columns = [
         {
             field: 'index',
@@ -53,6 +68,7 @@ const OnlineAdmissions = () => {
                 return (
                     <>
                         <Link to={`/onlineadmissionform/personalinfo/${params.row.Student_Id}`}><EditIcon style={{ cursor: "pointer" }} /></Link>
+                        <Switch {...label} onChange={() => handleswitchchange(params.row.isActive,params.row.id )} defaultChecked={params.row.isActive == 0 ? false : true} color="secondary" />
                     </>
                 )
             }

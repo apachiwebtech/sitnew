@@ -15,6 +15,7 @@ import DialogActions from "@mui/material/DialogActions";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
+import axios from "axios";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -36,28 +37,29 @@ const CompanyInfo = () => {
   };
 
   const [onlineAdmissions, setOnlineAdmissions] = useState([]);
-  const getOnlineAdmissions = async () => {
-    const response = await fetch(`${BASE_URL}/getStudents`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+  async function getOnlineAdmissions(){
 
-    const data = await response.json();
-    setOnlineAdmissions(data);
-    console.log(data);
-  };
+    const data = {
+      student_id : localStorage.getItem(`Admissionid`)
+    }
+    axios.post(`${BASE_URL}/getcompanyinfo` , data)
+    .then((res)=>{
+      console.log(res)
+      setOnlineAdmissions(res.data)
+    })
+   }
 
   useEffect(() => {
     getOnlineAdmissions();
   }, []);
+
+
   const handleUpdate = () => {
     console.log("hehehe");
   };
   const columns = [
     {
-      field: "index",
+      field: "Student_id",
       headerName: "Id",
       type: "number",
       align: "center",
@@ -66,7 +68,7 @@ const CompanyInfo = () => {
       filterable: false,
     },
     { field: "Company", headerName: "Company", flex: 2 },
-    { field: "Business Nature", headerName: "Business Nature", flex: 2 },
+    { field: "BussinessNature", headerName: "Business Nature", flex: 2 },
     { field: "Designation", headerName: "Designation", flex: 2 },
     { field: "Duration", headerName: "Duration", flex: 2 },
   ];
@@ -109,7 +111,7 @@ const CompanyInfo = () => {
                       disableColumnSelector
                       disableDensitySelector
                       rowHeight={37}
-                      getRowId={(row) => row.Present_Mobile}
+                      getRowId={(row) => row.id}
                       initialState={{
                         pagination: {
                           paginationModel: { pageSize: 5, page: 0 },
