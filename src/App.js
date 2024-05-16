@@ -80,6 +80,8 @@ import AcademicQualification from './AdminComponent/AcademicQualification.js';
 import CompanyInfo from './AdminComponent/CompanyInfo.js';
 import Discussion from './AdminComponent/Discussion.js';
 import Documents from './AdminComponent/Documents.js';
+import AdmissionListing from './AdminComponent/AdmissionListing.js';
+import Admission from './AdminComponent/Admission.js';
 
 
 
@@ -331,6 +333,14 @@ const Router = createBrowserRouter([
       {
         path: '/admissionform',
         element: <AdmissionForm/>
+      },
+      {
+        path: '/admissionlisting',
+        element: <AdmissionListing/>
+      },
+      {
+        path: '/admission/:studentid',
+        element: <Admission/>
       },
       {
         path: '/inquirylisting',
