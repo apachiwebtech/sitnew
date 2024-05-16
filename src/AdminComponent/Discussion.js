@@ -15,6 +15,7 @@ import DialogActions from "@mui/material/DialogActions";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
+import axios from "axios";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -36,22 +37,9 @@ const Discussion = () => {
   };
 
   const [onlineAdmissions, setOnlineAdmissions] = useState([]);
-  const getOnlineAdmissions = async () => {
-    const response = await fetch(`${BASE_URL}/getStudents`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
 
-    const data = await response.json();
-    setOnlineAdmissions(data);
-    console.log(data);
-  };
 
-  useEffect(() => {
-    getOnlineAdmissions();
-  }, []);
+ 
   const handleUpdate = () => {
     console.log("hehehe");
   };
