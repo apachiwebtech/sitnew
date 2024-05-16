@@ -82,6 +82,7 @@ import Discussion from './AdminComponent/Discussion.js';
 import Documents from './AdminComponent/Documents.js';
 import AdmissionListing from './AdminComponent/AdmissionListing.js';
 import Admission from './AdminComponent/Admission.js';
+import AddCorporateInquiry from './AdminComponent/AddCorporateInquiry.js';
 
 
 
@@ -244,7 +245,11 @@ const Router = createBrowserRouter([
       },
       {
         path: '/inquirycorporate',
-        element: <GetCorporate/>
+        element: <InquiryCorporate/>
+      },
+      {
+        path: '/addcorporateinquiry/:corpid',
+        element: <AddCorporateInquiry/>
       },
       //================Daily Activities======================
 
