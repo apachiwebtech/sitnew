@@ -17,107 +17,28 @@ const InquiryCorporate = () => {
     const [checked, setChecked] = React.useState([true, false]);
     const label = { inputProps: { 'aria-label': 'Color switch demo' } };
 
-    const [inquiryData, setInquiryData] = useState([]);
-    const [Discipline, setDescipline] = useState([]);
-    const [Course, setCourse] = useState([]);
-    const [Education, setEducation] = useState([]);
-    const [batch, setBatch] = useState([]);
-    const [batchCategoty, setbatchCategory] = useState([]);
-    const [value, setValue] = useState({
-        firstname: '',
-        gender: '',
-        dob: '',
-        mobile: '',
-        whatsapp: '',
-        email: '',
-        nationality: '',
-        discussion: '',
-        country: '',
-        InquiryDate: '',
-        modeEnquiry: '',
-        advert: '',
-        programmeEnquired: '',
-        selectedProgramme: '',
-        category: '',
-        batch: '',
-        qualification: '',
-        descipline: '',
-        percentage: '',
+    const [data, setData] = useState([]);
+
+
+
+
+
+  async function getlisting(){
+    axios.post(`${BASE_URL}/getcorporateinquiry`)
+    .then((res)=>{
+        setData(res.data)
     })
+  }
+  
 
 
 
 
-    const getInquiryData = async () => {
-        const response = await fetch(`${BASE_URL}/getadmissionactivity`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
 
-        setInquiryData(data);
-    }
 
-    const getDiscipline = async () => {
-        const response = await fetch(`${BASE_URL}/getDiscipline`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setDescipline(data);
-    }
-    const getCourse = async () => {
-        const response = await fetch(`${BASE_URL}/getCourses`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setCourse(data);
-    }
-    const getEducation = async () => {
-        const response = await fetch(`${BASE_URL}/getEducation`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setEducation(data);
-    }
-    const getBatch = async () => {
-        const response = await fetch(`${BASE_URL}/getBtach`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setBatch(data);
-    }
-    const getBtachCategory = async () => {
-        const response = await fetch(`${BASE_URL}/getBtachCategory`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setbatchCategory(data);
-    }
     useEffect(() => {
-        getInquiryData()
-        getDiscipline();
-        getEducation();
-        getCourse();
-        getBatch();
-        getBtachCategory();
-        value.title = ""
+
+     getlisting()
         setError({})
         setUid([])
     }, [])
@@ -138,31 +59,17 @@ const InquiryCorporate = () => {
         }));
     };
 
-    const handleUpdate = (id) => {
-        const data = {
-            u_id: id,
-            tablename: "awt_faculty"
-        }
-        axios.post(`${BASE_URL}/update_data`, data)
-            .then((res) => {
-                setUid(res.data[0])
 
-                console.log(res.data, "update")
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
 
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename: "Student_Inquiry"
+            tablename: "CorporateInquiry"
         }
 
-        axios.post(`${BASE_URL}/delete_inquiry_data`, data)
+        axios.post(`${BASE_URL}/delete_corporate_data`, data)
             .then((res) => {
-                getInquiryData()
+                getlisting()
             })
             .catch((err) => {
                 console.log(err)
@@ -178,10 +85,10 @@ const InquiryCorporate = () => {
  const handleswitchchange = (value,Inquiry_Id) =>{
     const newval = value == 0 ? 1 : 0
 
-    axios.post(`${BASE_URL}/data_status` , {status : newval, Inquiry_Id : Inquiry_Id, table_name : "Student_Inquiry"})
+    axios.post(`${BASE_URL}/data_status` , {status : newval, Inquiry_Id : Inquiry_Id, table_name : "CorporateInquiry"})
     .then((res)=>{
         console.log(res)
-        getInquiryData()
+   
     })
  }
 
@@ -200,8 +107,8 @@ const InquiryCorporate = () => {
             flex: 1,
             filterable: false,
         },
-        { field: 'Inquirer', headerName: 'Inquirer', flex: 2 },
-        { field: 'course', headerName: 'Course', flex: 2 },
+        { field: 'FullName', headerName: 'Inquirer', flex: 2 },
+        { field: 'Course_Id', headerName: 'Course', flex: 2 },
         { field: 'Email', headerName: 'Email', flex: 2 },
         
         {
@@ -213,7 +120,7 @@ const InquiryCorporate = () => {
                 return (
                     <>
                         <Link to={`/addcorporateinquiry/${params.row.id}`} ><EditIcon style={{ cursor: "pointer" }}  /></Link>
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
+                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.Id)} />
                         <Switch {...label} onChange={() => handleswitchchange(params.row.isActive,params.row.id )} defaultChecked={params.row.isActive == 0 ? false : true} color="secondary" />
                     </>
                 )
@@ -222,7 +129,7 @@ const InquiryCorporate = () => {
     ];
 
 
-    const rowsWithIds = inquiryData.map((row, index) => ({ index: index + 1, ...row }));
+    const rowsWithIds = data.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
 
@@ -254,7 +161,7 @@ const InquiryCorporate = () => {
                                             disableColumnSelector
                                             disableDensitySelector
                                             rowHeight={37}
-                                            getRowId={(row) => row.id}
+                                            getRowId={(row) => row.Id}
                                             initialState={{
                                                 pagination: {
                                                     paginationModel: { pageSize: 10, page: 0 },

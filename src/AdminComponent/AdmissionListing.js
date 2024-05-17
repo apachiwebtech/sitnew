@@ -190,41 +190,41 @@ const AdmissionListing = () => {
 
 
 
-    const columns = [
-        {
-            field: 'index',
-            headerName: 'Id',
-            type: 'number',
-            align: 'center',
-            headerAlign: 'center',
-            flex: 1,
-            filterable: false,
-        },
-        { field: 'Student Name', headerName: 'Student Name', flex: 2 },
-        { field: 'course', headerName: 'Course Name', flex: 2 },
-        { field: 'Admission Date', headerName: 'Admission Date', flex: 2 },
-        { field: 'Inquiry Date', headerName: 'Inquiry Date', flex: 2 },
-        { field: 'Batch Code', headerName: 'Batch Code', flex: 2 },
-        { field: 'Payment Type', headerName: 'Payment Type', flex: 2 },
-        { field: 'Total Fees', headerName: 'Total Fees', flex: 2 },
-        { field: 'Status', headerName: 'Status', flex: 2 },
-        // { field: 'isActive', headerName: 'Options', flex: 2},
-        {
-            field: 'actions',
-            type: 'actions',
-            headerName: 'Action',
-            flex: 2,
-            renderCell: (params) => {
-                return (
-                    <>
-                        <Link to={`/admission/${params.row.id}`} ><EditIcon style={{ cursor: "pointer" }}  /></Link>
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
-                        <Switch {...label} onChange={() => handleswitchchange(params.row.isActive,params.row.id )} defaultChecked={params.row.isActive == 0 ? false : true} color="secondary" />
-                    </>
-                )
-            }
-        },
-    ];
+ const columns = [
+    {
+        field: 'index',
+        headerName: 'Id',
+        type: 'number',
+        align: 'center',
+        headerAlign: 'center',
+        flex: 1,
+        filterable: false,
+    },
+    { field: 'FName', headerName: 'Student Name', flex: 2 },
+    { field: 'course', headerName: 'Course Name', flex: 2 },
+    { field: 'inquiry_DT', headerName: 'Inquiry Date', flex: 2 },
+    { field: 'discussion', headerName: 'Discuss', flex: 2 },
+    { field: 'present_mobile', headerName: 'Mobile', flex: 2 },
+    { field: 'Email', headerName: 'Email', flex: 2 },
+    { field: 'Discipline', headerName: 'Discipline', flex: 2 },
+    { field: 'Inquiry_type', headerName: 'Inquiry type', flex: 2 },
+    // { field: 'isActive', headerName: 'Options', flex: 2},
+    {
+        field: 'actions',
+        type: 'actions',
+        headerName: 'Action',
+        flex: 2,
+        renderCell: (params) => {
+            return (
+                <>
+                    <Link to={`/admission/${params.row.id}`}><EditIcon style={{ cursor: "pointer" }}  /></Link>
+                    <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
+                    <Switch {...label} onChange={() => handleswitchchange(params.row.isActive,params.row.id )} defaultChecked={params.row.isActive == 0 ? false : true} color="secondary" />
+                </>
+            )
+        }
+    },
+];
 
 
     const rowsWithIds = inquiryData.map((row, index) => ({ index: index + 1, ...row }));

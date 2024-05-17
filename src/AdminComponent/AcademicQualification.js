@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BASE_URL } from "./BaseUrl";
 import EditIcon from "@mui/icons-material/Edit";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import OnlineAdmissionForm from "./OnlineAdmissionForm";
 import InnerHeader from "./InnerHeader";
 
@@ -48,6 +48,11 @@ const AcademicQualification = () => {
     setOnlineAdmissions(data);
     console.log(data);
   };
+  const{admissionid}  = useParams();
+
+  useEffect(()=>{
+      localStorage.setItem("Admissionid", admissionid);
+  },[admissionid])
 
   useEffect(() => {
     getOnlineAdmissions();
@@ -95,7 +100,7 @@ const AcademicQualification = () => {
       <InnerHeader />
       <div className="main-pannel">
         <div className="content-wrapper ">
-          <OnlineAdmissionForm />
+          <OnlineAdmissionForm admissionid={admissionid} />
           <div className="row">
             <div className="col-lg-12">
               <div className="card">

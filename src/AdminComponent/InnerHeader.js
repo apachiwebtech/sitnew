@@ -54,6 +54,14 @@ const InnerHeader = () => {
                 return 'Inquiry Listing';
             case '/inquiry/:inquiryid':
                 return 'Edit Inquiry';
+            case '/onlineadmission':
+                return 'Online Admission';
+            case '/admissionlisting':
+                return 'Admission';
+            case '/inquirycorporate':
+                return 'Corporate Inquiry';
+            case '/Student':
+                return 'Student';
             default:
                 return '';
         }

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BASE_URL } from "./BaseUrl";
 import EditIcon from "@mui/icons-material/Edit";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import OnlineAdmissionForm from "./OnlineAdmissionForm";
 import InnerHeader from "./InnerHeader";
 
@@ -37,21 +37,38 @@ const CompanyInfo = () => {
   };
 
   const [onlineAdmissions, setOnlineAdmissions] = useState([]);
-  async function getOnlineAdmissions(){
+  async function getOnlineAdmissions() {
 
     const data = {
-      student_id : localStorage.getItem(`Admissionid`)
+      student_id: localStorage.getItem(`Admissionid`)
     }
-    axios.post(`${BASE_URL}/getcompanyinfo` , data)
-    .then((res)=>{
-      console.log(res)
-      setOnlineAdmissions(res.data)
-    })
-   }
+    axios.post(`${BASE_URL}/getcompanyinfo`, data)
+      .then((res) => {
+        console.log(res)
+        setOnlineAdmissions(res.data)
+      })
+  }
 
   useEffect(() => {
     getOnlineAdmissions();
   }, []);
+
+  const [value, setValue] = useState({
+    Company: "",
+    BussinessNature: "",
+    Designation: "",
+    Duration: ""
+  })
+
+  const handleChange = (e) => {
+    setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+  }
+
+  const{admissionid}  = useParams();
+
+  useEffect(()=>{
+      localStorage.setItem("Admissionid", admissionid);
+  },[admissionid])
 
 
   const handleUpdate = () => {
@@ -78,12 +95,32 @@ const CompanyInfo = () => {
     ...row,
   }));
 
+  const handleSubmit = (e) => {
+    e.preventDefault()
+
+    const data = {
+      Company: value.Company,
+      BussinessNature: value.BussinessNature,
+      Designation: value.Designation,
+      Duration: value.Duration,
+      student_id :localStorage.getItem(`Admissionid`)
+    }
+
+    axios.post(`${BASE_URL}/add_companyinfo`, data)
+      .then((res) => {
+        console.log(res)
+        setOpen(false)
+        getOnlineAdmissions()
+      })
+
+  }
+
   return (
     <div className="container-fluid page-body-wrapper col-lg-10">
       <InnerHeader />
       <div className="main-pannel">
         <div className="content-wrapper ">
-          <OnlineAdmissionForm />
+          <OnlineAdmissionForm admissionid={admissionid} />
           <div className="row">
             <div className="col-lg-12">
               <div className="card">
@@ -125,7 +162,7 @@ const CompanyInfo = () => {
                       }}
                     />
                   </div>
-                  <div className="row py-3 ">
+                  {/* <div className="row py-3 ">
                     <div className="col-lg-12">
                       <div>
                         <h4 className="card-title titleback">
@@ -195,14 +232,13 @@ const CompanyInfo = () => {
 
                     </div>
 
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-
       <BootstrapDialog
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
@@ -224,82 +260,86 @@ const CompanyInfo = () => {
           <CloseIcon />
         </IconButton>
         <DialogContent dividers>
-          <div className="row justify-content-center">
-            <div className="p-3" style={{ width: "100%" }}>
-              <div className="row">
-                <div className="form-group col-lg-4 ">
-                  <label for="exampleInputUsername1">
-                    Company<span className="text-danger">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="exampleInputUsername1"
-                    value=""
-                    placeholder="Company"
-                    name="Company"
-                    onChange=""
-                  />
-                </div>
+          <form onSubmit={handleSubmit}>
+            <div className="row justify-content-center" >
+              <div className="p-3" style={{ width: "100%" }}>
+                <div className="row">
+                  <div className="form-group col-lg-4 ">
+                    <label for="exampleInputUsername1">
+                      Company<span className="text-danger">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="exampleInputUsername1"
 
-                <div className="form-group col-lg-4">
-                  <label for="exampleInputUsername1">
-                    Business Nature<span className="text-danger">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="exampleInputUsername1"
-                    value=""
-                    placeholder=" Business Nature"
-                    name="passyear"
-                    onChange=""
-                  />
-                </div>
+                      placeholder="Company"
+                      name="Company"
+                      onChange={handleChange}
+                    />
+                  </div>
 
-                <div className="form-group col-lg-4 ">
-                  <label for="exampleInputUsername1">
-                    Designation<span className="text-danger">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="exampleInputUsername1"
-                    value=""
-                    placeholder="Designation"
-                    name="garde"
-                    onChange=""
-                  />
-                </div>
-                <div className="form-group col-lg-4 ">
-                  <label for="exampleInputUsername1">
-                    Duration<span className="text-danger">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="exampleInputUsername1"
-                    value=""
-                    placeholder="Duration"
-                    name="duration"
-                    onChange=""
-                  />
+                  <div className="form-group col-lg-4">
+                    <label for="exampleInputUsername1">
+                      Business Nature<span className="text-danger">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="exampleInputUsername1"
+
+                      placeholder=" Business Nature"
+                      name="BussinessNature"
+                      onChange={handleChange}
+                    />
+                  </div>
+
+                  <div className="form-group col-lg-4 ">
+                    <label for="exampleInputUsername1">
+                      Designation<span className="text-danger">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="exampleInputUsername1"
+
+                      placeholder="Designation"
+                      name="garde"
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div className="form-group col-lg-4 ">
+                    <label for="exampleInputUsername1">
+                      Duration<span className="text-danger">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="exampleInputUsername1"
+
+                      placeholder="Duration"
+                      name="Duration"
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div className="form-group col-lg-12 ">
+                    <button className="btn btn-success" type="submit">Save</button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div className="row p-2 gap-2">
-            {/* <button className='mr-2 btn btn-primary'>Save</button> */}
-            {/* <button className='col-2'>close</button> */}
-          </div>
+            <div className="row p-2 gap-2">
+              {/* <button className='mr-2 btn btn-primary'>Save</button> */}
+              {/* <button className='col-2'>close</button> */}
+            </div>
+          </form>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={handleClose}>
-            + Add
-          </Button>
+
         </DialogActions>
       </BootstrapDialog>
+
     </div>
   );
 };

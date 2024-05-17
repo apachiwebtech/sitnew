@@ -25,7 +25,7 @@ const Admission = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
 
-    const { inquiryid } = useParams();
+    const { studentid } = useParams();
     const [inquiryData, setInquiryData] = useState([]);
     const [Discipline, setDescipline] = useState([]);
     const [Course, setCourse] = useState([]);
@@ -70,74 +70,18 @@ const Admission = () => {
     }
 
 
-    const getInquiryData = async () => {
-        const response = await fetch(`${BASE_URL}/getadmissionactivity`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
 
-        setInquiryData(data);
-    }
 
-    const getDiscipline = async () => {
-        const response = await fetch(`${BASE_URL}/getDiscipline`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setDescipline(data);
-    }
-    const getCourse = async () => {
-        const response = await fetch(`${BASE_URL}/getCourses`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setCourse(data);
-    }
-    const getEducation = async () => {
-        const response = await fetch(`${BASE_URL}/getEducation`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setEducation(data);
-    }
-    const getBatch = async () => {
-        const response = await fetch(`${BASE_URL}/getBtach`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setBatch(data);
-    }
-    const getBtachCategory = async () => {
-        const response = await fetch(`${BASE_URL}/getBtachCategory`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setbatchCategory(data);
-    }
+
+
+ 
+
 
     async function getStudentDetail() {
         const response = await fetch(`${BASE_URL}/studentDetail`, {
             method: 'POST',
             body: JSON.stringify({
-                id: inquiryid,
+                id: studentid,
             }),
             headers: {
                 'Content-Type': 'application/json',
@@ -171,16 +115,12 @@ const Admission = () => {
             percentage: data[0].Percentage,
         }))
     }
+
     useEffect(() => {
-        if(inquiryid !== ":studentid"){
+        if(studentid !== ":studentid"){
             // getStudentDetail()
         }
-        getInquiryData()
-        getDiscipline();
-        getEducation();
-        getCourse();
-        getBatch();
-        getBtachCategory();
+        getStudentDetail()
         value.title = ""
         setError({})
         setUid([])
@@ -194,67 +134,29 @@ const Admission = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        let response
+    
         // if(validateForm()){
-        if (inquiryid == ":studentid") {
-            response = await fetch(`${BASE_URL}/postInquiry`, {
-                method: 'POST',
-                body: JSON.stringify({
-                    firstname: value.firstname,
-                    gender: value.gender,
-                    dob: value.dob,
-                    mobile: value.mobile,
-                    whatsapp: value.whatsapp,
-                    email: value.email,
-                    nationality: value.nationality,
-                    discussion: value.discussion,
-                    country: value.country,
-                    InquiryDate: value.InquiryDate,
-                    modeEnquiry: value.modeEnquiry,
-                    advert: value.advert,
-                    programmeEnquired: value.programmeEnquired,
-                    selectedProgramme: value.selectedProgramme,
-                    category: value.category,
-                    batch: value.batch,
-                    qualification: value.qualification,
-                    descipline: value.descipline,
-                    percentage: value.percentage,
-                }),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-        } else {
 
-             response = await fetch(`${BASE_URL}/updateInquiry`, {
-                method: 'POST',
-                body: JSON.stringify({
-                    Enquiry_Id: inquiryid,
-                    firstname: value.firstname,
-                    gender: value.gender,
-                    dob: value.dob,
-                    mobile: value.mobile,
-                    whatsapp: value.whatsapp,
-                    email: value.email,
-                    nationality: value.nationality,
-                    discussion: value.discussion,
-                    country: value.country,
-                    InquiryDate: value.InquiryDate,
-                    modeEnquiry: value.modeEnquiry,
-                    advert: value.advert,
-                    programmeEnquired: value.programmeEnquired,
-                    selectedProgramme: value.selectedProgramme,
-                    category: value.category,
-                    batch: value.batch,
-                    qualification: value.qualification,
-                    descipline: value.descipline,
-                    percentage: value.percentage,
-                }),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-        }
+      const response = await fetch(`${BASE_URL}/updateAdmission`, {
+            method: 'POST',
+            body: JSON.stringify({
+                Enquiry_Id: studentid,
+                firstname: value.firstname,
+                gender: value.gender,
+                dob: value.dob,
+                mobile: value.mobile,
+                whatsapp: value.whatsapp,
+                email: value.email,
+         
+                qualification: value.qualification,
+                descipline: value.descipline,
+                percentage: value.percentage,
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+   
 
 
 
