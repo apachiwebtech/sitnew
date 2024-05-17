@@ -270,8 +270,10 @@ const PerssonalInfo = () => {
                                            
                                             
                                             <div className='row p-2 gap-2'>
+                                                <button className='mr-2 btn btn-success'>Accept</button>
+                                                <button className='mr-2 btn btn-danger'>Denied</button>
                                                 <button className='mr-2 btn btn-primary'>Save</button>
-                                                {/* <button className='col-2'>close</button> */}
+                                                <button className='mr-2 btn btn-secondary'>close</button>
                                             </div>
                                         </div>
                                         <div className='col-md-6 col-lg-6'>

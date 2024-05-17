@@ -172,7 +172,7 @@ const Inquiry = () => {
         }))
     }
     useEffect(() => {
-        if(inquiryid !== ":inquiryid"){
+        if (inquiryid !== ":inquiryid") {
             getStudentDetail()
         }
         getInquiryData()
@@ -226,7 +226,7 @@ const Inquiry = () => {
             })
         } else {
 
-             response = await fetch(`${BASE_URL}/updateInquiry`, {
+            response = await fetch(`${BASE_URL}/updateInquiry`, {
                 method: 'POST',
                 body: JSON.stringify({
                     Enquiry_Id: inquiryid,

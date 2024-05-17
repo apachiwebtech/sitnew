@@ -27,6 +27,7 @@ const OnlineAdmissions = () => {
     useEffect(() => {
         getOnlineAdmissions();
     }, [])
+    
     const handleUpdate = () => {
         console.log('hehehe')
     }

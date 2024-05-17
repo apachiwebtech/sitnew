@@ -33,7 +33,54 @@ const AcademicQualification = () => {
   };
   const handleClose = () => {
     setOpen(false);
+    handleSubmit();
   };
+
+  const handleSubmit = async () => {
+    const response = await fetch(`${BASE_URL}/postqualification`, {
+      method: 'POST',
+      body: JSON.stringify({
+        studentId: '', //get from localstorage
+        qualification: value.qualification,
+        descipline: value.descipline,
+        college: value.college,
+        uni: value.uni,
+        passYear: value.passYear,
+        grade: value.grade,
+        status: value.status,
+        kt: value.kt,
+        remark: value.remark,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+
+    const data = await response.json();
+    console.log(data);
+    console.log(value);
+  }
+  const [value, setValue] = useState({
+    qualification: '',
+    descipline: '',
+    college: '',
+    uni: '',
+    passYear: '',
+    grade: '',
+    status: '',
+    kt: '',
+    remark: '',
+
+  })
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setValue(prevState => ({
+      ...prevState,
+      [name]: value,
+    }
+    ))
+  }
 
   const [onlineAdmissions, setOnlineAdmissions] = useState([]);
   const getOnlineAdmissions = async () => {
@@ -48,18 +95,16 @@ const AcademicQualification = () => {
     setOnlineAdmissions(data);
     console.log(data);
   };
-  const{admissionid}  = useParams();
-
-  useEffect(()=>{
-      localStorage.setItem("Admissionid", admissionid);
-  },[admissionid])
 
   useEffect(() => {
     getOnlineAdmissions();
   }, []);
-  const handleUpdate = () => {
-    console.log("hehehe");
-  };
+
+  const { admissionid } = useParams();
+
+  useEffect(() => {
+    localStorage.setItem("Admissionid", admissionid);
+  }, [admissionid])
   const columns = [
     {
       field: "index",
@@ -95,6 +140,9 @@ const AcademicQualification = () => {
     ...row,
   }));
 
+  const addQualification = async () => {
+
+  }
   return (
     <div className="container-fluid page-body-wrapper col-lg-10">
       <InnerHeader />
@@ -150,7 +198,7 @@ const AcademicQualification = () => {
                         </h4>
                       </div>
                       <div className="form-group col-lg-12 p-0">
-                        
+
                         <input
                           type="text"
                           class="form-control"
@@ -158,72 +206,72 @@ const AcademicQualification = () => {
                           value=""
                           placeholder=""
                           name="tain"
-                          onChange=""
+                          onChange={handleChange}
                         />
                       </div>
                       <button
-                      className="btn btn-success"
-                     
-                    >
-                      Save
-                    </button>
+                        className="btn btn-success"
+
+                      >
+                        Save
+                      </button>
                     </div>
                     <div className="col-lg-6">
-                    <div>
+                      <div>
                         <h4 className="card-title titleback">
-                        Passport Details
+                          Passport Details
                         </h4>
                       </div>
-<div className="row">
-<div className="form-group col-lg-4 ">
-                  <label for="exampleInputUsername1">
-                    Passport No.<span className="text-danger">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="exampleInputUsername1"
-                    value=""
-                    placeholder="University"
-                    name="university"
-                    onChange=""
-                  />
-                </div>
-                <div className="form-group col-lg-4 ">
-                  <label for="exampleInputUsername1">
-                    Issue Date<span className="text-danger">*</span>
-                  </label>
-                  <input
-                    type="date"
-                    class="form-control"
-                    id="exampleInputUsername1"
-                    value=""
-                    placeholder="University"
-                    name="university"
-                    onChange=""
-                  />
-                </div>
-                <div className="form-group col-lg-4 ">
-                  <label for="exampleInputUsername1">
-                  Expiry Date <span className="text-danger">*</span>
-                  </label>
-                  <input
-                    type="date"
-                    class="form-control"
-                    id="exampleInputUsername1"
-                    value=""
-                    placeholder="University"
-                    name="university"
-                    onChange=""
-                  />
-                </div>
-                
+                      <div className="row">
+                        <div className="form-group col-lg-4 ">
+                          <label for="exampleInputUsername1">
+                            Passport No.<span className="text-danger">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="exampleInputUsername1"
+                            value=""
+                            placeholder="University"
+                            name="university"
+                            onChange={handleChange}
+                          />
+                        </div>
+                        <div className="form-group col-lg-4 ">
+                          <label for="exampleInputUsername1">
+                            Issue Date<span className="text-danger">*</span>
+                          </label>
+                          <input
+                            type="date"
+                            class="form-control"
+                            id="exampleInputUsername1"
+                            value=""
+                            placeholder="University"
+                            name="university"
+                            onChange={handleChange}
+                          />
+                        </div>
+                        <div className="form-group col-lg-4 ">
+                          <label for="exampleInputUsername1">
+                            Expiry Date <span className="text-danger">*</span>
+                          </label>
+                          <input
+                            type="date"
+                            class="form-control"
+                            id="exampleInputUsername1"
+                            value=""
+                            placeholder="University"
+                            name="university"
+                            onChange={handleChange}
+                          />
+                        </div>
 
-</div>
-                 
+
+                      </div>
+
 
                     </div>
-                  
+
 
                   </div>
                 </div>
@@ -262,9 +310,9 @@ const AcademicQualification = () => {
                   <select
                     className="form-control form-control-lg"
                     id="exampleFormControlSelect1"
-                    value=""
+                    value={value.qualification}
                     name="qualification"
-                    onChange=""
+                    onChange={handleChange}
                   >
                     <option>B.Tech</option>
                     <option>B.A</option>
@@ -276,9 +324,9 @@ const AcademicQualification = () => {
                   <select
                     className="form-control form-control-lg"
                     id="exampleFormControlSelect1"
-                    value=""
-                    name="discipline"
-                    onChange=""
+                    value={value.descipline}
+                    name="descipline"
+                    onChange={handleChange}
                   >
                     <option>Commerce</option>
                     <option>Electrical</option>
@@ -290,9 +338,9 @@ const AcademicQualification = () => {
                   <select
                     className="form-control form-control-lg"
                     id="exampleFormControlSelect1"
-                    value=""
+                    value={value.college}
                     name="college"
-                    onChange=""
+                    onChange={handleChange}
                   >
                     <option>College of Commerce</option>
                     <option>College of Electrical</option>
@@ -309,10 +357,10 @@ const AcademicQualification = () => {
                     type="text"
                     class="form-control"
                     id="exampleInputUsername1"
-                    value=""
+                    value={value.uni}
                     placeholder="University"
-                    name="university"
-                    onChange=""
+                    name="uni"
+                    onChange={handleChange}
                   />
                 </div>
 
@@ -324,10 +372,10 @@ const AcademicQualification = () => {
                     type="text"
                     class="form-control"
                     id="exampleInputUsername1"
-                    value=""
+                    value={value.passYear}
                     placeholder="Passing Year"
-                    name="passyear"
-                    onChange=""
+                    name="passYear"
+                    onChange={handleChange}
                   />
                 </div>
 
@@ -339,10 +387,10 @@ const AcademicQualification = () => {
                     type="text"
                     class="form-control"
                     id="exampleInputUsername1"
-                    value=""
+                    value={value.grade}
                     placeholder="Grade/Percentage"
-                    name="garde"
-                    onChange=""
+                    name="grade"
+                    onChange={handleChange}
                   />
                 </div>
                 <div className="form-group col-lg-4 ">
@@ -350,9 +398,9 @@ const AcademicQualification = () => {
                   <select
                     className="form-control form-control-lg"
                     id="exampleFormControlSelect1"
-                    value=""
-                    name="college"
-                    onChange=""
+                    value={value.status}
+                    name="status"
+                    onChange={handleChange}
                   >
                     <option>Select</option>
                     <option>Appeared</option>
@@ -369,10 +417,10 @@ const AcademicQualification = () => {
                     type="text"
                     className="form-control"
                     id="exampleInputUsername1"
-                    value=""
+                    value={value.kt}
                     placeholder="Total no. of KTs"
                     name="kt"
-                    onChange=""
+                    onChange={handleChange}
                   />
                 </div>
 
@@ -382,10 +430,10 @@ const AcademicQualification = () => {
                     type="text"
                     className="form-control"
                     id="exampleInputUsername1"
-                    value="Google"
+                    value={value.remark}
                     placeholder="Name*"
                     name="remark"
-                    onChange=""
+                    onChange={handleChange}
                   />
                 </div>
               </div>

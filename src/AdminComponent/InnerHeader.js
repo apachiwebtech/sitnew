@@ -62,6 +62,20 @@ const InnerHeader = () => {
                 return 'Corporate Inquiry';
             case '/Student':
                 return 'Student';
+            case location.pathname.match(/^\/addcorporateinquiry\/\d+$/) ? location.pathname : '':
+                return 'Corporate Inquiry';
+            case location.pathname.match(/^\/admission\/\d+$/) ? location.pathname : '':
+                return 'Admission';
+            case location.pathname.match(/^\/onlineadmissionform\/personalinfo\/\d+$/) ? location.pathname : '':
+                return 'Personal Information ';
+            case location.pathname.match(/^\/onlineadmissionform\/academicqualification\/\d+$/) ? location.pathname : '':
+                return 'Academic Qualification ';
+            case location.pathname.match(/^\/onlineadmissionform\/companyinfo\/\d+$/) ? location.pathname : '':
+                return 'Company Information';
+            case location.pathname.match(/^\/onlineadmissionform\/discussion\/\d+$/) ? location.pathname : '':
+                return 'Discussion';
+            case location.pathname.match(/^\/onlineadmissionform\/documents\/\d+$/) ? location.pathname : '':
+                return 'Documents';
             default:
                 return '';
         }

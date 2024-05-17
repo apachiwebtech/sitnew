@@ -20,9 +20,6 @@ const InquiryCorporate = () => {
     const [data, setData] = useState([]);
 
 
-
-
-
   async function getlisting(){
     axios.post(`${BASE_URL}/getcorporateinquiry`)
     .then((res)=>{
@@ -31,9 +28,27 @@ const InquiryCorporate = () => {
   }
   
 
-
-
-
+  const [value, setValue] = useState({
+    firstname: '',
+    gender: '',
+    dob: '',
+    mobile: '',
+    whatsapp: '',
+    email: '',
+    nationality: '',
+    discussion: '',
+    country: '',
+    InquiryDate: '',
+    modeEnquiry: '',
+    advert: '',
+    programmeEnquired: '',
+    selectedProgramme: '',
+    category: '',
+    batch: '',
+    qualification: '',
+    descipline: '',
+    percentage: '',
+})
 
 
     useEffect(() => {
@@ -119,7 +134,7 @@ const InquiryCorporate = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <Link to={`/addcorporateinquiry/${params.row.id}`} ><EditIcon style={{ cursor: "pointer" }}  /></Link>
+                        <Link to={`/addcorporateinquiry/${params.row.Id}`} ><EditIcon style={{ cursor: "pointer" }}  /></Link>
                         <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.Id)} />
                         <Switch {...label} onChange={() => handleswitchchange(params.row.isActive,params.row.id )} defaultChecked={params.row.isActive == 0 ? false : true} color="secondary" />
                     </>
@@ -127,6 +142,7 @@ const InquiryCorporate = () => {
             }
         },
     ];
+
 
 
     const rowsWithIds = data.map((row, index) => ({ index: index + 1, ...row }));
