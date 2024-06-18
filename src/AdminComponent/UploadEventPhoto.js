@@ -6,7 +6,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
 import decryptedUserId from '../Utils/UserID';
-import { DataGrid ,GridToolbar} from '@mui/x-data-grid';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -20,6 +20,7 @@ import FormLabel from '@mui/material/FormLabel';
 // import { ImageSourcePropType } from 'react-native';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { param } from 'jquery';
 const UploadEventPhoto = () => {
 
     const [brand, setBrand] = useState([])
@@ -32,15 +33,15 @@ const UploadEventPhoto = () => {
     const [checked, setChecked] = React.useState([true, false]);
 
     const handleChange1 = (event) => {
-      setChecked([event.target.checked, event.target.checked]);
+        setChecked([event.target.checked, event.target.checked]);
     };
-  
+
     const handleChange2 = (event) => {
-      setChecked([event.target.checked, checked[1]]);
+        setChecked([event.target.checked, checked[1]]);
     };
-  
+
     const handleChange3 = (event) => {
-      setChecked([checked[0], event.target.checked]);
+        setChecked([checked[0], event.target.checked]);
     };
 
     // const children = (
@@ -57,24 +58,20 @@ const UploadEventPhoto = () => {
     //   );
 
     const [value, setValue] = useState({
-        training : ""|| uid.training,
-        attendee : ""|| uid.attendee,
-        instructor : ""|| uid.instructor,
-        description : ""|| uid.description,
-        feedback : ""|| uid.feedback,
+        event: "" || uid.event,
+        eventheader: "" || uid.eventheader,
+        specification: "" || uid.specification,
 
-        
+
 
 
     })
 
     useEffect(() => {
         setValue({
-            training : uid.training,
-            attendee : uid.attendee,
-            instructor : uid.instructor,
-            description :uid.description,
-            feedback: uid.feedback,
+            event: uid.event,
+            eventheader: uid.eventheader,
+            specification: uid.specification,
 
         })
     }, [uid])
@@ -111,12 +108,12 @@ const UploadEventPhoto = () => {
     }
 
 
-    
+
     async function getEmployeeData() {
         const data = {
-            tablename : "awt_employeerecord"
+            tablename: "awt_uploadeventphoto"
         }
-        axios.post(`${BASE_URL}/get_data`,data)
+        axios.post(`${BASE_URL}/get_data`, data)
             .then((res) => {
                 console.log(res.data)
                 setVendorData(res.data)
@@ -151,14 +148,14 @@ const UploadEventPhoto = () => {
 
     const handleUpdate = (id) => {
         const data = {
-            u_id : id,
-            tablename : "awt_employeerecord"
+            u_id: id,
+            tablename: "awt_uploadeventphoto"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
                 setUid(res.data[0])
 
-                console.log(res.data , "update")
+                console.log(res.data, "update")
             })
             .catch((err) => {
                 console.log(err)
@@ -168,7 +165,7 @@ const UploadEventPhoto = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename : "awt_employeerecord"
+            tablename: "awt_uploadeventphoto"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
@@ -189,31 +186,29 @@ const UploadEventPhoto = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-    // if(validateForm()){
+        // if(validateForm()){
         const data = {
-            
-        training : value.training,
-        attendee : value.attendee,
-        instructor : value.instructor,
-        description :value.description,
-        feedback: value.feedback,
-        uid : uid.id
+
+            event: value.event,
+            eventheader: value.eventheader,
+            specification: specification,
+            uid: uid.id
         }
 
 
-        axios.post(`${BASE_URL}/add_employeerecord`, data)
+        axios.post(`${BASE_URL}/add_uploadeventphoto`, data)
             .then((res) => {
-               console.log(res)
-               getEmployeeData()
+                console.log(res)
+                getEmployeeData()
 
             })
             .catch((err) => {
                 console.log(err)
             })
-    // }
+        // }
 
-   
-        
+
+
 
 
     }
@@ -223,8 +218,8 @@ const UploadEventPhoto = () => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
 
- 
-    
+
+
 
 
 
@@ -237,13 +232,18 @@ const UploadEventPhoto = () => {
             headerAlign: 'center',
             flex: 1,
             filterable: false,
-                                              
+
         },
-        { field: 'attendee', headerName: 'Attendee', flex: 2},
-        { field: 'instructor', headerName: 'Instructor', flex: 2},
-        { field: 'description', headerName: 'Description', flex: 2},
-        { field: 'feedback', headerName: 'FeedBack', flex: 2},
-        
+        { field: 'event', headerName: 'Attendee', flex: 2 },
+        { field: 'eventheader', headerName: 'Instructor', flex: 2 },
+        { field: 'specification', headerName: 'Description', flex: 2, renderCell : (params) =>{
+            return (
+                <>
+                    <div dangerouslySetInnerHTML={{__html: params.row.specification}}></div>
+                </>
+            )
+        }},
+
         {
             field: 'actions',
             type: 'actions',
@@ -265,7 +265,7 @@ const UploadEventPhoto = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper">
+        <div class="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -280,41 +280,48 @@ const UploadEventPhoto = () => {
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Select Event Type</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.region} onChange={onhandleChange} name='region'>
-                                                    <option></option>
-                                                    
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.event} onChange={onhandleChange} name='event'>
+                                                    <option>Select</option>
+                                                    <option>Convocation</option>
+                                                    <option>Seminar</option>
+                                                    <option>Exhibition</option>
+                                                    <option>Induction</option>
+                                                    <option>Testimonials</option>
+
                                                 </select>
                                             </div>
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">Event Header</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.enddate} name='enddate' onChange={onhandleChange} />
-                                                
+                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.eventheader} name='eventheader' onChange={onhandleChange} />
+
                                             </div>
 
                                             <div class="form-group col-lg-6">
                                                 <label for="exampleTextarea1">Event Description</label>
-                                                    <CKEditor
+                                                <CKEditor
                                                     editor={ClassicEditor}
+                                                    data={uid.specification}
+
                                                     // data={uid.specification}
                                                     onReady={editor => {
-                                                    // Allows you to store the editor instance and use it later.
-                                                    // console.log('Editor is ready to use!', editor);
+                                                        // Allows you to store the editor instance and use it later.
+                                                        // console.log('Editor is ready to use!', editor);
                                                     }}
                                                     onChange={(event, editor) => {
-                                                    const data = editor.getData();
-                                                    setSpecification(data)
+                                                        const data = editor.getData();
+                                                        setSpecification(data)
                                                     }}
                                                     onBlur={(event, editor) => {
-                                                    // console.log('Blur.', editor);
+                                                        // console.log('Blur.', editor);
                                                     }}
                                                     onFocus={(event, editor) => {
-                                                    // console.log('Focus.', editor);
+                                                        // console.log('Focus.', editor);
                                                     }}
-                                                    />
+                                                />
                                             </div>
 
-                                            
+
 
                                         </div>
 
@@ -323,7 +330,7 @@ const UploadEventPhoto = () => {
                                         <button type='button' onClick={() => {
                                             window.location.reload()
                                         }} class="btn btn-light">Cancel</button>
-                                       
+
                                     </form>
 
                                 </div>
@@ -370,8 +377,8 @@ const UploadEventPhoto = () => {
                                         )}
                                     </div>
 
-                                    
-                                      {/* <div>
+
+                                    {/* <div>
                                       <button type='button' onClick={() => {
                                             window.location.reload()
                                         }} class="btn btn-primary mr-2">Excel</button>

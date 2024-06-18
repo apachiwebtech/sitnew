@@ -53,11 +53,11 @@ const AssignmentsTaken = () => {
     //   );
 
     const [value, setValue] = useState({
-        training : ""|| uid.training,
-        attendee : ""|| uid.attendee,
-        instructor : ""|| uid.instructor,
-        description : ""|| uid.description,
-        feedback : ""|| uid.feedback,
+        coursename : ""|| uid.coursename,
+        batchcode : ""|| uid.batchcode,
+        assignmentname : ""|| uid.assignmentname,
+        assignmentdate : ""|| uid.assignmentdate,
+        returndate : ""|| uid.returndate,
 
         
 
@@ -66,11 +66,11 @@ const AssignmentsTaken = () => {
 
     useEffect(() => {
         setValue({
-            training : uid.training,
-            attendee : uid.attendee,
-            instructor : uid.instructor,
-            description :uid.description,
-            feedback: uid.feedback,
+            coursename : uid.coursename,
+            batchcode : uid.batchcode,
+            assignmentname : uid.assignmentname,
+            assignmentdate :uid.assignmentdate,
+            returndate: uid.returndate,
 
         })
     }, [uid])
@@ -110,7 +110,7 @@ const AssignmentsTaken = () => {
     
     async function getEmployeeData() {
         const data = {
-            tablename : "awt_employeerecord"
+            tablename : "assignmentstaken"
         }
         axios.post(`${BASE_URL}/get_data`,data)
             .then((res) => {
@@ -148,7 +148,7 @@ const AssignmentsTaken = () => {
     const handleUpdate = (id) => {
         const data = {
             u_id : id,
-            tablename : "awt_employeerecord"
+            tablename : "assignmentstaken"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
@@ -164,7 +164,7 @@ const AssignmentsTaken = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename : "awt_employeerecord"
+            tablename : "assignmentstaken"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
@@ -188,16 +188,17 @@ const AssignmentsTaken = () => {
     // if(validateForm()){
         const data = {
             
-        training : value.training,
-        attendee : value.attendee,
-        instructor : value.instructor,
-        description :value.description,
-        feedback: value.feedback,
+
+        coursename : value.coursename,
+        batchcode : value.batchcode,
+        assignmentname : value.assignmentname,
+        assignmentdate :value.assignmentdate,
+        returndate: value.returndate,
         uid : uid.id
         }
 
 
-        axios.post(`${BASE_URL}/add_employeerecord`, data)
+        axios.post(`${BASE_URL}/add_assignmenttaken`, data)
             .then((res) => {
                console.log(res)
                getEmployeeData()
@@ -235,10 +236,11 @@ const AssignmentsTaken = () => {
             filterable: false,
                                               
         },
-        { field: 'attendee', headerName: 'Attendee', flex: 2},
-        { field: 'instructor', headerName: 'Instructor', flex: 2},
-        { field: 'description', headerName: 'Description', flex: 2},
-        { field: 'feedback', headerName: 'FeedBack', flex: 2},
+        { field: 'coursename', headerName: 'Course Name', flex: 2},
+        { field: 'batchcode', headerName: 'Batch Code', flex: 2},
+        { field: 'assignmentname', headerName: 'Assignmentname', flex: 2},
+        { field: 'assignmentdate', headerName: 'Assignment Date', flex: 2},
+        { filde: 'returndate', headerName: 'Return Date', flex: 2},
         
         {
             field: 'actions',
@@ -261,7 +263,7 @@ const AssignmentsTaken = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper">
+        <div class="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -277,7 +279,7 @@ const AssignmentsTaken = () => {
                                             
                                             <div class="form-group col-lg-4">
                                                 <label for="exampleFormControlSelect1">Course Name<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.department} onChange={onhandleChange} name='department'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.coursename} onChange={onhandleChange} name='coursename'>
                                                     <option>Select</option>
                                                     <option>Administration</option>
                                                     <option>Business Development</option>
@@ -295,23 +297,37 @@ const AssignmentsTaken = () => {
 
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleFormControlSelect1">Batch Code<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.department} onChange={onhandleChange} name='department'>
-                                                    <option></option>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batchcode} onChange={onhandleChange} name='batchcode'>
+                                                    <option>010021</option>
+                                                    <option>010023</option>
+                                                    <option>010024</option>
+                                                    <option>010025</option>
+                                                    <option>010026</option>
+                                                    <option>010027</option>
                                                     
                                                 </select>
                                             </div>
 
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleFormControlSelect1">Assignment Name<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.department} onChange={onhandleChange} name='department'>
-                                                    <option></option>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.assignmentname} onChange={onhandleChange} name='assignmentname'>
+                                                    <option>H.V.A.C-1</option>
+                                                    <option>H.V.A.C-2</option>
+                                                    <option>H.V.A.C-3</option>
+                                                    <option>H.V.A.C-4</option>
+                                                    <option>H.V.A.C-5</option>
+                                                    <option>H.V.A.C-6</option>
+                                                    <option>H.V.A.C-7</option>
+                                                    <option>H.V.A.C-8</option>
+                                                    <option>H.V.A.C-9</option>
+                                                    <option>H.V.A.C-10</option>
                                                     
                                                 </select>
                                             </div>
 
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleFormControlSelect1">Assignment Date<span className='text-danger'>*</span> </label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.returndate} name='returndate' onChange={onhandleChange} />                                                    <option></option>
+                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.assignmentdate} name='assignmentdate' onChange={onhandleChange} />                                                    <option></option>
                                                    
                                                 
                                             </div>

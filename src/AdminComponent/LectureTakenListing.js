@@ -7,8 +7,9 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
+import LectureTaken from "./LectureTaken";
 
-const InquiryListing = () => {
+const LectureTakenListing = () => {
 
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
@@ -17,39 +18,29 @@ const InquiryListing = () => {
     const [checked, setChecked] = React.useState([true, false]);
     const label = { inputProps: { 'aria-label': 'Color switch demo' } };
 
-    const [inquiryData, setInquiryData] = useState([]);
+    const [lecturetakendata, setlecturetakendata] = useState([]);
     const [Discipline, setDescipline] = useState([]);
     const [Course, setCourse] = useState([]);
     const [Education, setEducation] = useState([]);
     const [batch, setBatch] = useState([]);
     const [batchCategoty, setbatchCategory] = useState([]);
     const [value, setValue] = useState({
-        firstname: '',
-        gender: '',
-        dob: '',
-        mobile: '',
-        whatsapp: '',
-        email: '',
-        nationality: '',
-        discussion: '',
-        country: '',
-        InquiryDate: '',
-        modeEnquiry: '',
-        advert: '',
-        programmeEnquired: '',
-        selectedProgramme: '',
-        category: '',
+        course: '',
         batch: '',
-        qualification: '',
-        descipline: '',
-        percentage: '',
+        lecture: '',
+        lecturedate:'',
+        faculty:'',
+        assignment:'',
+        material:'',
+        materialissued:'',
+        topicdiscuss:'',
     })
 
 
 
 
     const getInquiryData = async () => {
-        const response = await fetch(`${BASE_URL}/getadmissionactivity`, {
+        const response = await fetch(`${BASE_URL}/getlecturetakendata`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -57,66 +48,13 @@ const InquiryListing = () => {
         });
         const data = await response.json();
 
-        setInquiryData(data);
+        setlecturetakendata(data);
     }
 
-    const getDiscipline = async () => {
-        const response = await fetch(`${BASE_URL}/getDiscipline`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setDescipline(data);
-    }
-    const getCourse = async () => {
-        const response = await fetch(`${BASE_URL}/getCourses`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setCourse(data);
-    }
-    const getEducation = async () => {
-        const response = await fetch(`${BASE_URL}/getEducation`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setEducation(data);
-    }
-    const getBatch = async () => {
-        const response = await fetch(`${BASE_URL}/getBtach`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setBatch(data);
-    }
-    const getBtachCategory = async () => {
-        const response = await fetch(`${BASE_URL}/getBtachCategory`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setbatchCategory(data);
-    }
+
     useEffect(() => {
         getInquiryData()
-        getDiscipline();
-        getEducation();
-        getCourse();
-        getBatch();
-        getBtachCategory();
+ 
         value.title = ""
         setError({})
         setUid([])
@@ -141,7 +79,7 @@ const InquiryListing = () => {
     const handleUpdate = (id) => {
         const data = {
             u_id: id,
-            tablename: "awt_faculty"
+            tablename: "awt_lecturetaken"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
@@ -160,7 +98,7 @@ const InquiryListing = () => {
             tablename: "Student_Inquiry"
         }
 
-        axios.post(`${BASE_URL}/delete_inquiry_data`, data)
+        axios.post(`${BASE_URL}/delete_lecturetaken_data`, data)
             .then((res) => {
                 getInquiryData()
             })
@@ -178,7 +116,7 @@ const InquiryListing = () => {
  const handleswitchchange = (value,Inquiry_Id) =>{
     const newval = value == 0 ? 1 : 0
 
-    axios.post(`${BASE_URL}/data_status` , {status : newval, Inquiry_Id : Inquiry_Id, table_name : "Student_Inquiry"})
+    axios.post(`${BASE_URL}/data_status` , {status : newval, Inquiry_Id : Inquiry_Id, table_name : "awt_lecturetaken"})
     .then((res)=>{
         console.log(res)
         getInquiryData()
@@ -191,7 +129,6 @@ const InquiryListing = () => {
 
 
     const columns = [
-        
         {
             field: 'index',
             headerName: 'Id',
@@ -200,15 +137,17 @@ const InquiryListing = () => {
             headerAlign: 'center',
             flex: 1,
             filterable: false,
+
         },
-        { field: 'FName', headerName: 'Student Name', flex: 2 },
         { field: 'course', headerName: 'Course Name', flex: 2 },
-        { field: 'inquiry_DT', headerName: 'Inquiry Date', flex: 2 },
-        { field: 'discussion', headerName: 'Discuss', flex: 2 },
-        { field: 'present_mobile', headerName: 'Mobile', flex: 2 },
-        { field: 'Email', headerName: 'Email', flex: 2 },
-        { field: 'Discipline', headerName: 'Discipline', flex: 2 },
-        { field: 'Inquiry_type', headerName: 'Inquiry type', flex: 2 },
+        { field: 'batch', headerName: 'Batch Name', flex: 2 },
+        { field: 'lecture', headerName: 'Lecture', flex: 2 },
+        { field: 'lecturedate', headerName: 'Lecture Date', flex: 2 },
+        { field: 'faculty', headerName: 'Faculty', flex: 2 },
+        { field: 'assignment', headerName: 'Assignment', flex: 2 },
+        { field: 'material', headerName: 'Material', flex: 2 },
+        { field: 'materialissued', headerName: 'Material Issued', flex: 2 },
+        { field: 'topicdiscuss', headerName: 'Topic Discuss', flex: 2 },
         // { field: 'isActive', headerName: 'Options', flex: 2},
         {
             field: 'actions',
@@ -218,7 +157,7 @@ const InquiryListing = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <Link to={`/inquiry/${params.row.id}`} ><EditIcon style={{ cursor: "pointer" }}  /></Link>
+                        <Link to={`/lecturetaken/${params.row.id}`} ><EditIcon style={{ cursor: "pointer" }}  /></Link>
                         <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
                         <Switch {...label} onChange={() => handleswitchchange(params.row.isActive,params.row.id )} defaultChecked={params.row.isActive == 0 ? false : true} color="secondary" />
                     </>
@@ -228,7 +167,7 @@ const InquiryListing = () => {
     ];
 
 
-    const rowsWithIds = inquiryData.map((row, index) => ({ index: index + 1, ...row }));
+    const rowsWithIds = lecturetakendata.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
 
@@ -245,9 +184,9 @@ const InquiryListing = () => {
                                 <div className="card-body">
                                     <div className='d-flex justify-content-between gap-3' style={{ width: "100%", padding: "10px 0" }}>
                                         <div >
-                                            <h4 class="card-title">List Of Inquiry</h4>
+                                            <h4 class="card-title">Add Lecture Details</h4>
                                         </div>
-                                           <Link to='/inquiry/:inquiryid'> <button className='btn btn-success'>Add +</button></Link>
+                                           <Link to='/lecturetaken/:lecturetakenid'> <button className='btn btn-success'>Add +</button></Link>
                                        
 
                                     </div>
@@ -296,4 +235,4 @@ const InquiryListing = () => {
     )
 }
 
-export default InquiryListing
+export default LectureTakenListing

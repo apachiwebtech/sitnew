@@ -6,7 +6,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
 import decryptedUserId from '../Utils/UserID';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { DataGrid ,GridToolbar} from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -17,7 +17,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 
-const UnitTestTaken = () => {
+const FeedBack1 = () => {
 
     const [brand, setBrand] = useState([])
     const [vendordata, setVendorData] = useState([])
@@ -28,15 +28,15 @@ const UnitTestTaken = () => {
     const [checked, setChecked] = React.useState([true, false]);
 
     const handleChange1 = (event) => {
-        setChecked([event.target.checked, event.target.checked]);
+      setChecked([event.target.checked, event.target.checked]);
     };
-
+  
     const handleChange2 = (event) => {
-        setChecked([event.target.checked, checked[1]]);
+      setChecked([event.target.checked, checked[1]]);
     };
-
+  
     const handleChange3 = (event) => {
-        setChecked([checked[0], event.target.checked]);
+      setChecked([checked[0], event.target.checked]);
     };
 
     // const children = (
@@ -53,21 +53,29 @@ const UnitTestTaken = () => {
     //   );
 
     const [value, setValue] = useState({
-        coursename: "" || uid.coursename,
-        batchcode: "" || uid.batchcode,
-        utname: "" || uid.utname,
-        utdate: "" || uid.utdate,
+        course : ""|| uid.course,
+        batch : ""|| uid.batch,
+        student : ""|| uid.student,
+        date : ""|| uid.date,
+        feedback : ""|| uid.feedback,
+        srno : ""|| uid.srno,
 
+
+        
 
 
     })
 
     useEffect(() => {
         setValue({
-            coursename: uid.coursename,
-            batchcode: uid.batchcode,
-            utname: uid.utname,
-            utdate: uid.utname,
+            course : uid.course,
+            batch : uid.batch,
+            student : uid.student,
+            date :uid.date,
+            feedback: uid.feedback,
+            srno : uid.srno,
+
+
         })
     }, [uid])
 
@@ -103,12 +111,12 @@ const UnitTestTaken = () => {
     }
 
 
-
+    
     async function getEmployeeData() {
         const data = {
-            tablename: "awt_unittesttaken"
+            tablename : "feedback1"
         }
-        axios.post(`${BASE_URL}/get_data`, data)
+        axios.post(`${BASE_URL}/get_data`,data)
             .then((res) => {
                 console.log(res.data)
                 setVendorData(res.data)
@@ -143,14 +151,14 @@ const UnitTestTaken = () => {
 
     const handleUpdate = (id) => {
         const data = {
-            u_id: id,
-            tablename: "awt_unittesttaken"
+            u_id : id,
+            tablename : "feedback1"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
                 setUid(res.data[0])
 
-                console.log(res.data, "update")
+                console.log(res.data , "update")
             })
             .catch((err) => {
                 console.log(err)
@@ -160,7 +168,7 @@ const UnitTestTaken = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename: "awt_unittesttaken"
+            tablename : "feedback1"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
@@ -181,30 +189,32 @@ const UnitTestTaken = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        // if(validateForm()){
+    // if(validateForm()){
         const data = {
-
-            coursename: value.coursename,
-            batchcode: value.batchcode,
-            utname: value.utname,
-            utdate: value.utdate,
-            uid: uid.id
+            
+        course : value.course,
+        batch : value.batch,
+        student : value.student,
+        date :value.date,
+        feedback: value.feedback,
+        srno : value.srno,
+        uid : uid.id
         }
 
 
-        axios.post(`${BASE_URL}/add_unittesttaken`, data)
+        axios.post(`${BASE_URL}/add_feedback1`, data)
             .then((res) => {
-                console.log(res)
-                getEmployeeData()
+               console.log(res)
+               getEmployeeData()
 
             })
             .catch((err) => {
                 console.log(err)
             })
-        // }
+    // }
 
-
-
+   
+        
 
 
     }
@@ -214,8 +224,8 @@ const UnitTestTaken = () => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
 
-
-
+ 
+    
 
 
 
@@ -229,12 +239,15 @@ const UnitTestTaken = () => {
             flex: 1,
             filterable: false,
 
+                                          
         },
-        { field: 'coursename', headerName: 'Course Name', flex: 2 },
-        { field: 'batchcode', headerName: 'Batch Code', flex: 2 },
-        { field: 'utname', headerName: 'Unit Test Name', flex: 2 },
-        { field: 'utdate', headerName: 'Unit Test Date', flex: 2 },
-
+        { field: 'course', headerName: 'Course', flex: 2},
+        { field: 'batch', headerName: 'Batch', flex: 2},
+        { field: 'student', headerName: 'Student', flex: 2},
+        { field: 'date', headerName: 'Date', flex: 2},
+        { field: 'feedback', headerName: 'Feedback', flex: 2},
+        { field: 'srno', headerName: 'Sr. No.', flex: 2},
+        
         {
             field: 'actions',
             type: 'actions',
@@ -255,7 +268,7 @@ const UnitTestTaken = () => {
     const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
-
+ 
         <div class="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
             <div class="main-panel">
@@ -264,15 +277,15 @@ const UnitTestTaken = () => {
                         <div class="col-lg-12 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Add Unit Test Details</h4>
+                                    <h4 class="card-title">Add Student Feedback On Training Co-ordination 1</h4>
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
 
-
-                                            <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Course Name<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.coursename} onChange={onhandleChange} name='coursename'>
+                                            
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleFormControlSelect1">Select Course<span className='text-danger'>*</span> </label>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course} onChange={onhandleChange} name='course'>
                                                     <option>Select</option>
                                                     <option>Administration</option>
                                                     <option>Business Development</option>
@@ -288,46 +301,44 @@ const UnitTestTaken = () => {
                                                 </select>
                                             </div>
 
-                                            <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Batch Code<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batchcode} onChange={onhandleChange} name='batchcode'>
-                                                    <option>010021</option>
-                                                    <option>010022</option>
-                                                    <option>010023</option>
-                                                    <option>010024</option>
-                                                    <option>010025</option>
-                                                    <option>010026</option>
-                                                    <option>010027</option>
-                                                    <option>010028</option>
-                                                    <option>010029</option>
-
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleFormControlSelect1">Select Batch<span className='text-danger'>*</span> </label>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batch} onChange={onhandleChange} name='batch'>
+                                                    <option></option>
+                                                    
                                                 </select>
                                             </div>
 
-                                            <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Unit Test Name<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.utname} onChange={onhandleChange} name='utname'>
-                                                    <option>Piping-1</option>
-                                                    <option>Piping-2</option>
-                                                    <option>Piping-3</option>
-                                                    <option>Piping-4</option>
-                                                    <option>Piping-5</option>
-                                                    <option>Piping-6</option>
-                                                    <option>Piping-7</option>
-                                                    <option>Piping-8</option>
-                                                    <option>Piping-9</option>
-                                                    <option>Piping-10</option>
-
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleFormControlSelect1">Student Name<span className='text-danger'>*</span> </label>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.student} onChange={onhandleChange} name='student'>
+                                                    <option></option>
+                                                    
                                                 </select>
                                             </div>
 
-                                            <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Unit Test Date<span className='text-danger'>*</span> </label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.utdate} name='utdate' onChange={onhandleChange} />                                                    <option></option>
+                                            
 
-
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleInputUsername1">Date</label>
+                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.date} name='date' onChange={onhandleChange} />
+                                                
                                             </div>
 
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleFormControlSelect1">Feedback<span className='text-danger'>*</span> </label>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.feedback} onChange={onhandleChange} name='feedback'>
+                                                    <option></option>
+                                                    
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleInputUsername1">Sr No</label>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.srno} name='srno' onChange={onhandleChange} />
+                                                
+                                            </div>
+                                            
 
                                         </div>
 
@@ -336,7 +347,7 @@ const UnitTestTaken = () => {
                                         <button type='button' onClick={() => {
                                             window.location.reload()
                                         }} class="btn btn-light">Cancel</button>
-
+                                       
                                     </form>
 
                                 </div>
@@ -347,7 +358,7 @@ const UnitTestTaken = () => {
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
                                         <div>
-                                            <h4 class="card-title">Unit Test Details</h4>
+                                            <h4 class="card-title">VIEW STUDENT FEEDBACK ON TRAINING CO-ORDINATION - 1</h4>
                                         </div>
 
                                     </div>
@@ -383,8 +394,8 @@ const UnitTestTaken = () => {
                                         )}
                                     </div>
 
-
-                                    {/* <div>
+                                    
+                                      {/* <div>
                                       <button type='button' onClick={() => {
                                             window.location.reload()
                                         }} class="btn btn-primary mr-2">Excel</button>
@@ -403,4 +414,4 @@ const UnitTestTaken = () => {
     )
 }
 
-export default UnitTestTaken
+export default FeedBack1

@@ -6,7 +6,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
 import decryptedUserId from '../Utils/UserID';
-import { DataGrid ,GridToolbar } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -28,15 +28,15 @@ const CollogeFollowUp = () => {
     const [checked, setChecked] = React.useState([true, false]);
 
     const handleChange1 = (event) => {
-      setChecked([event.target.checked, event.target.checked]);
+        setChecked([event.target.checked, event.target.checked]);
     };
-  
+
     const handleChange2 = (event) => {
-      setChecked([event.target.checked, checked[1]]);
+        setChecked([event.target.checked, checked[1]]);
     };
-  
+
     const handleChange3 = (event) => {
-      setChecked([checked[0], event.target.checked]);
+        setChecked([checked[0], event.target.checked]);
     };
 
     // const children = (
@@ -53,23 +53,23 @@ const CollogeFollowUp = () => {
     //   );
 
     const [value, setValue] = useState({
-        training : ""|| uid.training,
-        attendee : ""|| uid.attendee,
-        instructor : ""|| uid.instructor,
-        description : ""|| uid.description,
-        feedback : ""|| uid.feedback,
+        training: "" || uid.training,
+        attendee: "" || uid.attendee,
+        instructor: "" || uid.instructor,
+        description: "" || uid.description,
+        feedback: "" || uid.feedback,
 
-        
+
 
 
     })
 
     useEffect(() => {
         setValue({
-            training : uid.training,
-            attendee : uid.attendee,
-            instructor : uid.instructor,
-            description :uid.description,
+            training: uid.training,
+            attendee: uid.attendee,
+            instructor: uid.instructor,
+            description: uid.description,
             feedback: uid.feedback,
 
         })
@@ -107,12 +107,12 @@ const CollogeFollowUp = () => {
     }
 
 
-    
+
     async function getEmployeeData() {
         const data = {
-            tablename : "awt_employeerecord"
+            tablename: "awt_employeerecord"
         }
-        axios.post(`${BASE_URL}/get_data`,data)
+        axios.post(`${BASE_URL}/get_data`, data)
             .then((res) => {
                 console.log(res.data)
                 setVendorData(res.data)
@@ -147,14 +147,14 @@ const CollogeFollowUp = () => {
 
     const handleUpdate = (id) => {
         const data = {
-            u_id : id,
-            tablename : "awt_employeerecord"
+            u_id: id,
+            tablename: "awt_employeerecord"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
                 setUid(res.data[0])
 
-                console.log(res.data , "update")
+                console.log(res.data, "update")
             })
             .catch((err) => {
                 console.log(err)
@@ -164,7 +164,7 @@ const CollogeFollowUp = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename : "awt_employeerecord"
+            tablename: "awt_employeerecord"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
@@ -185,31 +185,31 @@ const CollogeFollowUp = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-    // if(validateForm()){
+        // if(validateForm()){
         const data = {
-            
-        training : value.training,
-        attendee : value.attendee,
-        instructor : value.instructor,
-        description :value.description,
-        feedback: value.feedback,
-        uid : uid.id
+
+            training: value.training,
+            attendee: value.attendee,
+            instructor: value.instructor,
+            description: value.description,
+            feedback: value.feedback,
+            uid: uid.id
         }
 
 
         axios.post(`${BASE_URL}/add_employeerecord`, data)
             .then((res) => {
-               console.log(res)
-               getEmployeeData()
+                console.log(res)
+                getEmployeeData()
 
             })
             .catch((err) => {
                 console.log(err)
             })
-    // }
+        // }
 
-   
-        
+
+
 
 
     }
@@ -219,8 +219,8 @@ const CollogeFollowUp = () => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
 
- 
-    
+
+
 
 
 
@@ -233,13 +233,13 @@ const CollogeFollowUp = () => {
             headerAlign: 'center',
             flex: 1,
             filterable: false,
-                                              
+
         },
-        { field: 'attendee', headerName: 'Attendee', flex: 2},
-        { field: 'instructor', headerName: 'Instructor', flex: 2},
-        { field: 'description', headerName: 'Description', flex: 2},
-        { field: 'feedback', headerName: 'FeedBack', flex: 2},
-        
+        { field: 'attendee', headerName: 'Attendee', flex: 2 },
+        { field: 'instructor', headerName: 'Instructor', flex: 2 },
+        { field: 'description', headerName: 'Description', flex: 2 },
+        { field: 'feedback', headerName: 'FeedBack', flex: 2 },
+
         {
             field: 'actions',
             type: 'actions',
@@ -274,14 +274,20 @@ const CollogeFollowUp = () => {
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
 
-                                            <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">Date</label>
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleInputUsername1">From Date</label>
                                                 <input type="date" class="form-control" id="exampleInputUsername1" value={value.date} placeholder="From Year" name='date' onChange={onhandleChange} />
-                                                
-                                            </div>
-                                          
 
-                                            <div class="form-group col-lg-3">
+                                            </div>
+
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleInputUsername1">To Date</label>
+                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.date} placeholder="From Year" name='date' onChange={onhandleChange} />
+
+                                            </div>
+
+
+                                            <div class="form-group col-lg-4">
                                                 <label for="exampleFormControlSelect1">Select College<span className='text-danger'>*</span> </label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.college} onChange={onhandleChange} name='college'>
 
@@ -300,133 +306,140 @@ const CollogeFollowUp = () => {
                                                 </select>
                                             </div>
 
-                                            <div class="form-group col-lg-3">
+                                            <div class="form-group col-lg-2">
                                                 <label for="exampleFormControlSelect1">Select City<span className='text-danger'>*</span> </label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.city} onChange={onhandleChange} name='city'>
 
-                                                <option>Select City</option>
-                                                <option> Bharuch, Gujarat</option>
-                                                <option> Indore</option>
-                                                <option>adhya Pradesh</option>
-                                                <option>Ahmedabad</option>
-                                                <option>Ahmednagar</option>
-                                                <option>Alappuzha</option>
-                                                <option>Alathukombai</option>
-                                                <option>Ambarnath</option>
-                                                <option>Ambernath</option>
-                                                <option>Amravati</option>
-                                                <option>Aurangabad</option>
-                                                <option>Badlapur</option>
-                                                <option>BANGALORE</option>
-                                                <option>Bharuch</option>
-                                                <option>Bhatkal</option>
-                                                <option>Bhavnagar</option>
-                                                <option>Bhopal</option>
-                                                <option>Bidar</option>
-                                                <option>Bikaner</option>
-                                                <option>Chandigarh</option>
-                                                <option>Chennai</option>
-                                                <option>CHINCHOLI, NASHIK</option>
-                                                <option>Coimbature</option>
-                                                <option>Davangere</option>
-                                                <option>Dhule</option>
-                                                <option>Ernakulam</option>
-                                                <option>Gandhinagar</option>
-                                                <option>Gujarat</option>
-                                                <option>GULBARGA</option>
-                                                <option>Gwalior</option>
-                                                <option>Hyderabad</option>
-                                                <option>Indore</option>
-                                                <option>Jalgaon</option>
-                                                <option>KANNUR</option>
-                                                <option>Kanyakumari</option>
-                                                <option>Karjat</option>
-                                                <option>Khalapur</option>
-                                                <option>Kolhapur</option>
-                                                <option>Kota</option>
-                                                <option>Kottayam</option>
-                                                <option>Latur</option>
-                                                <option>Madurai</option>
-                                                <option>Mangalore</option>
-                                                <option>Mangaluru</option>
-                                                <option>Meerut</option>
-                                                <option>Mumbai</option>
-                                                <option>Mysore </option>
-                                                <option>Nagpur</option>
-                                                <option>Nanded</option>
-                                                <option>Nashik</option>
-                                                <option>Nashik -</option>
-                                                <option>Nasik</option>
-                                                <option>Navi Mumbai</option>
-                                                <option>Navi Mumbai.</option>
-                                                <option>Navimumbai</option>
-                                                <option >Neral</option>
-                                                <option>Nerul</option>
-                                                <option>New Delhi</option>
-                                                <option>New Panvel</option>
-                                                <option>North Gujarat, INDIA</option>
-                                                <option>Oman</option>
-                                                <option>Palghar</option>
-                                                <option>Palghar (E</option>
-                                                <option>Palghar East </option>
-                                                <option>Pandharpur </option>
-                                                <option>Pune </option>
-                                                <option>Raigad</option>
-                                                <option>Rajkot</option>
-                                                <option>Rajwada, P.O.Box. No.130,</option>
-                                                <option>Ratnagiri</option>
-                                                <option>Sangli</option>
-                                                <option>satara</option>
-                                                <option >Shirpur</option>
-                                                <option>Sikandarabad</option>
-                                                <option>Sindhudurg</option>
-                                                <option>Solapur</option>
-                                                <option>Surat</option>
-                                                <option>Tal- Khalapur</option>
-                                                <option>Thane</option>
-                                                <option>Thanjavur</option>
-                                                <option>Tiruchirappalli</option>
-                                                <option>Valsad</option>
-                                                <option>Wardha</option>
-                                                <option>Yavatmal</option>
-                                                <option>Yemmiganur </option>
+                                                    <option>Select City</option>
+                                                    <option> Bharuch, Gujarat</option>
+                                                    <option> Indore</option>
+                                                    <option>adhya Pradesh</option>
+                                                    <option>Ahmedabad</option>
+                                                    <option>Ahmednagar</option>
+                                                    <option>Alappuzha</option>
+                                                    <option>Alathukombai</option>
+                                                    <option>Ambarnath</option>
+                                                    <option>Ambernath</option>
+                                                    <option>Amravati</option>
+                                                    <option>Aurangabad</option>
+                                                    <option>Badlapur</option>
+                                                    <option>BANGALORE</option>
+                                                    <option>Bharuch</option>
+                                                    <option>Bhatkal</option>
+                                                    <option>Bhavnagar</option>
+                                                    <option>Bhopal</option>
+                                                    <option>Bidar</option>
+                                                    <option>Bikaner</option>
+                                                    <option>Chandigarh</option>
+                                                    <option>Chennai</option>
+                                                    <option>CHINCHOLI, NASHIK</option>
+                                                    <option>Coimbature</option>
+                                                    <option>Davangere</option>
+                                                    <option>Dhule</option>
+                                                    <option>Ernakulam</option>
+                                                    <option>Gandhinagar</option>
+                                                    <option>Gujarat</option>
+                                                    <option>GULBARGA</option>
+                                                    <option>Gwalior</option>
+                                                    <option>Hyderabad</option>
+                                                    <option>Indore</option>
+                                                    <option>Jalgaon</option>
+                                                    <option>KANNUR</option>
+                                                    <option>Kanyakumari</option>
+                                                    <option>Karjat</option>
+                                                    <option>Khalapur</option>
+                                                    <option>Kolhapur</option>
+                                                    <option>Kota</option>
+                                                    <option>Kottayam</option>
+                                                    <option>Latur</option>
+                                                    <option>Madurai</option>
+                                                    <option>Mangalore</option>
+                                                    <option>Mangaluru</option>
+                                                    <option>Meerut</option>
+                                                    <option>Mumbai</option>
+                                                    <option>Mysore </option>
+                                                    <option>Nagpur</option>
+                                                    <option>Nanded</option>
+                                                    <option>Nashik</option>
+                                                    <option>Nashik -</option>
+                                                    <option>Nasik</option>
+                                                    <option>Navi Mumbai</option>
+                                                    <option>Navi Mumbai.</option>
+                                                    <option>Navimumbai</option>
+                                                    <option >Neral</option>
+                                                    <option>Nerul</option>
+                                                    <option>New Delhi</option>
+                                                    <option>New Panvel</option>
+                                                    <option>North Gujarat, INDIA</option>
+                                                    <option>Oman</option>
+                                                    <option>Palghar</option>
+                                                    <option>Palghar</option>
+                                                    <option>Palghar East </option>
+                                                    <option>Pandharpur </option>
+                                                    <option>Pune </option>
+                                                    <option>Raigad</option>
+                                                    <option>Rajkot</option>
+                                                    <option>Rajwada, P.O.Box. No.130,</option>
+                                                    <option>Ratnagiri</option>
+                                                    <option>Sangli</option>
+                                                    <option>satara</option>
+                                                    <option >Shirpur</option>
+                                                    <option>Sikandarabad</option>
+                                                    <option>Sindhudurg</option>
+                                                    <option>Solapur</option>
+                                                    <option>Surat</option>
+                                                    <option>Tal- Khalapur</option>
+                                                    <option>Thane</option>
+                                                    <option>Thanjavur</option>
+                                                    <option>Tiruchirappalli</option>
+                                                    <option>Valsad</option>
+                                                    <option>Wardha</option>
+                                                    <option>Yavatmal</option>
+                                                    <option>Yemmiganur </option>
 
                                                 </select>
                                             </div>
 
-                                            <div class="form-group col-lg-3">
+                                            <div class="form-group col-lg-2">
                                                 <label for="exampleFormControlSelect1">Select Purpose <span className='text-danger'>*</span> </label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.purpose} onChange={onhandleChange} name='purpose'>
 
-                                                <option value="">Select Purpose</option>
-                                                <option>Adertisement</option>
-                                                <option>Advertisement</option>
-                                                <option>Meeting</option>
-                                                <option value="Other">Other</option>
-                                                <option value="Others">Others</option>
-                                                <option value="Placement">Placement</option>
-                                                <option value="Proposal">Proposal</option>
-                                                <option value="Seminar">Seminar</option>
-                                                <option value="Sponsership- stall">Sponsership- stall</option>
-                                                <option value="Training">Training</option>
+                                                    <option value="">Select Purpose</option>
+                                                    <option>Adertisement</option>
+                                                    <option>Advertisement</option>
+                                                    <option>Meeting</option>
+                                                    <option value="Other">Other</option>
+                                                    <option value="Others">Others</option>
+                                                    <option value="Placement">Placement</option>
+                                                    <option value="Proposal">Proposal</option>
+                                                    <option value="Seminar">Seminar</option>
+                                                    <option value="Sponsership- stall">Sponsership- stall</option>
+                                                    <option value="Training">Training</option>
                                                 </select>
                                             </div>
-                                           
-                                            
+
+
 
                                         </div>
                                         <button type="submit" class="btn btn-primary mr-2">Go</button>
-                                            
+
+                                        <button type="submit" class="btn btn-primary mr-2">Excel</button>
+                                        <button type="submit" class="btn btn-primary mr-2">Print</button>
+                                        <button type='button' onClick={() => {
+                                            window.location.reload()
+                                        }} class="btn btn-primary mr-2">Back</button>
 
 
 
-                                        
+
+
+
                                     </form>
 
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-12">
+                        {/* <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
@@ -468,16 +481,11 @@ const CollogeFollowUp = () => {
                                         )}
                                     </div>
 
-                                    <button type="submit" class="btn btn-primary mr-2">Excel</button>
-                                    <button type="submit" class="btn btn-primary mr-2">Print</button>
-                                        <button type='button' onClick={() => {
-                                            window.location.reload()
-                                        }} class="btn btn-primary mr-2">Back</button>
 
 
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div >

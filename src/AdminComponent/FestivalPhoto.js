@@ -24,6 +24,7 @@ const FestivalPhoto = () => {
     const [brand, setBrand] = useState([])
     const [vendordata, setVendorData] = useState([])
     const [uid, setUid] = useState([])
+    const [image , setImage] = useState()
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
@@ -54,12 +55,13 @@ const FestivalPhoto = () => {
     //     </Box>
     //   );
 
+    			
+
     const [value, setValue] = useState({
-        training : ""|| uid.training,
-        attendee : ""|| uid.attendee,
-        instructor : ""|| uid.instructor,
+        startdate : ""|| uid.startdate,
+        enddate : ""|| uid.enddate,
+        file : ""|| uid.file,
         description : ""|| uid.description,
-        feedback : ""|| uid.feedback,
 
         
 
@@ -68,11 +70,10 @@ const FestivalPhoto = () => {
 
     useEffect(() => {
         setValue({
-            training : uid.training,
-            attendee : uid.attendee,
-            instructor : uid.instructor,
+            startdate : uid.startdate,
+            enddate : uid.enddate,
+            file : uid.file,
             description :uid.description,
-            feedback: uid.feedback,
 
         })
     }, [uid])
@@ -112,7 +113,7 @@ const FestivalPhoto = () => {
     
     async function getEmployeeData() {
         const data = {
-            tablename : "awt_employeerecord"
+            tablename : "awt_festival_photo"
         }
         axios.post(`${BASE_URL}/get_data`,data)
             .then((res) => {
@@ -150,7 +151,7 @@ const FestivalPhoto = () => {
     const handleUpdate = (id) => {
         const data = {
             u_id : id,
-            tablename : "awt_employeerecord"
+            tablename : "awt_festival_photo"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
@@ -166,7 +167,7 @@ const FestivalPhoto = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename : "awt_employeerecord"
+            tablename : "awt_festival_photo"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
@@ -188,18 +189,23 @@ const FestivalPhoto = () => {
         e.preventDefault()
 
     // if(validateForm()){
-        const data = {
+        // const data = {
             
-        training : value.training,
-        attendee : value.attendee,
-        instructor : value.instructor,
-        description :value.description,
-        feedback: value.feedback,
-        uid : uid.id
-        }
+        // startdate : value.startdate,
+        // enddate : value.enddate,
+        // file : value.file,
+        // description :value.description,
+        // uid : uid.id
+        // }
 
+         const formdata = new FormData()
 
-        axios.post(`${BASE_URL}/add_employeerecord`, data)
+         formdata.append('image' , image)
+         formdata.append('startdate' , value.startdate)
+         formdata.append('enddate', value.enddate)
+         formdata.append('description', value.description)
+
+        axios.post(`${BASE_URL}/add_festival_photo`, formdata)
             .then((res) => {
                console.log(res)
                getEmployeeData()
@@ -210,10 +216,6 @@ const FestivalPhoto = () => {
             })
     // }
 
-   
-        
-
-
     }
 
 
@@ -223,7 +225,10 @@ const FestivalPhoto = () => {
 
  
     
-
+   const onhandleupload = (e) =>{
+   const image = e.target.files[0]
+   setImage(image)
+   }
 
 
     const columns = [
@@ -237,10 +242,10 @@ const FestivalPhoto = () => {
             filterable: false,
                                               
         },
-        { field: 'attendee', headerName: 'Attendee', flex: 2},
-        { field: 'instructor', headerName: 'Instructor', flex: 2},
+        { field: 'startdate', headerName: 'Start Date', flex: 2},
+        { field: 'enddate', headerName: 'End Date', flex: 2},
+        { field: 'file', headerName: 'File', flex: 2},
         { field: 'description', headerName: 'Description', flex: 2},
-        { field: 'feedback', headerName: 'FeedBack', flex: 2},
         
         {
             field: 'actions',
@@ -263,7 +268,7 @@ const FestivalPhoto = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper">
+        <div class="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -276,19 +281,25 @@ const FestivalPhoto = () => {
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
 
-                                            <div class="form-group col-lg-3">
+                                            <div class="form-group col-lg-2">
                                                 <label for="exampleInputUsername1">Start Date</label>
                                                 <input type="date" class="form-control" id="exampleInputUsername1" value={value.startdate} name='startdate' onChange={onhandleChange} />
                                                 
                                             </div>
 
-                                            <div class="form-group col-lg-3">
+                                            <div class="form-group col-lg-2">
                                                 <label for="exampleInputUsername1">End Date</label>
                                                 <input type="date" class="form-control" id="exampleInputUsername1" value={value.enddate} name='enddate' onChange={onhandleChange} />
                                                 
                                             </div>
 
-                                            <div class="form-group col-lg-3">
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleInputUsername1"></label>
+                                                <input type="file" class="form-control" id="exampleInputUsername1" value={value.file} name='file' onChange={onhandleupload} />
+                                                
+                                            </div>
+
+                                            <div class="form-group col-lg-6">
                                                 <label for="exampleTextarea1">Description<span className='text-danger'>*</span></label>
                                                 <textarea class="form-control" id="exampleTextarea1" value={value.description} placeholder="Description" name='description' onChange={onhandleChange}></textarea>
                                                 

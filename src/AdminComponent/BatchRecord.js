@@ -269,7 +269,7 @@ const BatchRecord = () => {
                         <div class="col-lg-12 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Batch Record</h4>
+                                    <h4 class="card-title">Batch Report</h4>
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
@@ -323,11 +323,17 @@ const BatchRecord = () => {
                                                 <input type="text" class="form-control" id="exampleInputUsername1" value={value.fromyear} placeholder="From Year" name='fromyear' onChange={onhandleChange} />
                                                 
                                             </div>
-                                            <div class="from-group col-lg-12">
-                                                <button type="submit" class="btn btn-primary mr-2">Go</button>
-                                            </div>
+                                            
 
                                         </div>
+
+                                         <button type="submit" class="btn btn-primary mr-2">Excel</button>
+                                        <button type='button' onClick={() => {
+                                            window.location.reload()
+                                        }} class="btn btn-primary">Print</button>
+                                        <button type='button' onClick={() => {
+                                            window.location.reload()
+                                        }} class="btn btn-light">Back</button>
                                             
 
 
@@ -338,7 +344,7 @@ const BatchRecord = () => {
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-12">
+                        {/* <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
@@ -388,7 +394,7 @@ const BatchRecord = () => {
 
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div >

@@ -16,6 +16,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 //import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
+import { data } from 'jquery';
 // import ImageList from '@mui/material/ImageList';
 
 const QSMDoes = () => {
@@ -27,7 +28,7 @@ const QSMDoes = () => {
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
-
+    const [image , setImage] = useState()
 
     // const [selectedFile, setSelectedFile] = useState(null);
 
@@ -55,11 +56,9 @@ const QSMDoes = () => {
     //   );
 
     const [value, setValue] = useState({
-        training : ""|| uid.training,
-        attendee : ""|| uid.attendee,
-        instructor : ""|| uid.instructor,
-        description : ""|| uid.description,
-        feedback : ""|| uid.feedback,
+        qmsname : ""|| uid.qmsname,
+        department : ""|| uid.department,
+        file : ""|| uid.file,
 
         
 
@@ -68,11 +67,9 @@ const QSMDoes = () => {
 
     useEffect(() => {
         setValue({
-            training : uid.training,
-            attendee : uid.attendee,
-            instructor : uid.instructor,
-            description :uid.description,
-            feedback: uid.feedback,
+            qmsname : uid.qmsname,
+            department : uid.department,
+            file : uid.file,
 
         })
     }, [uid])
@@ -112,7 +109,7 @@ const QSMDoes = () => {
     
     async function getEmployeeData() {
         const data = {
-            tablename : "awt_employeerecord"
+            tablename : "awt_qmsdoes"
         }
         axios.post(`${BASE_URL}/get_data`,data)
             .then((res) => {
@@ -150,7 +147,7 @@ const QSMDoes = () => {
     const handleUpdate = (id) => {
         const data = {
             u_id : id,
-            tablename : "awt_employeerecord"
+            tablename : "awt_qmsdoes"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
@@ -166,7 +163,7 @@ const QSMDoes = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename : "awt_employeerecord"
+            tablename : "awt_qmsdoes"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
@@ -187,19 +184,17 @@ const QSMDoes = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
+
     // if(validateForm()){
-        const data = {
-            
-        training : value.training,
-        attendee : value.attendee,
-        instructor : value.instructor,
-        description :value.description,
-        feedback: value.feedback,
-        uid : uid.id
-        }
+
+    const formdata = new FormData()
+
+    formdata.append('image' , image)
+    formdata.append('qmsname' , value.qmsname)
+    formdata.append('department' , value.department)
 
 
-        axios.post(`${BASE_URL}/add_employeerecord`, data)
+        axios.post(`${BASE_URL}/add_qmsdoes`, formdata)
             .then((res) => {
                console.log(res)
                getEmployeeData()
@@ -220,8 +215,13 @@ const QSMDoes = () => {
     const onhandleChange = (e) => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
-
+    
  
+    const onhandleupload = (e) =>{
+        const image = e.target.files[0]
+
+        setImage(image)
+    }
     
 
 
@@ -237,10 +237,9 @@ const QSMDoes = () => {
             filterable: false,
                                               
         },
-        { field: 'attendee', headerName: 'Attendee', flex: 2},
-        { field: 'instructor', headerName: 'Instructor', flex: 2},
-        { field: 'description', headerName: 'Description', flex: 2},
-        { field: 'feedback', headerName: 'FeedBack', flex: 2},
+        { field: 'qmsname', headerName: 'QMS Name', flex: 2},
+        { field: 'department', headerName: 'Department', flex: 2},
+        { field: 'file', headerName: 'File', flex: 2},
         
         {
             field: 'actions',
@@ -263,7 +262,7 @@ const QSMDoes = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper">
+        <div class="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -271,7 +270,7 @@ const QSMDoes = () => {
                         <div class="col-lg-12 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Add QMS document</h4>
+                                    <h4 class="card-title">Add QMS Document</h4>
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
@@ -279,7 +278,7 @@ const QSMDoes = () => {
                                             
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">QMS Name<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course} onChange={onhandleChange} name='course'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.qmsname} onChange={onhandleChange} name='qmsname'>
                                                     <option>Select</option>
                                                     <option>Quality Manual</option>
                                                     <option>Procedure Manual</option>
@@ -305,6 +304,13 @@ const QSMDoes = () => {
                                                     <option>Corporate Training</option>
                                                     <option>Test User</option>
                                                 </select>
+                                            </div>
+
+
+                                            <div class="form-group col-lg-4">
+                                                <label for="exampleInputUsername1">Select File</label>
+                                                <input type="file" class="form-control" id="exampleInputUsername1" value={value.file} name='file' onChange={onhandleupload} />
+                                                
                                             </div>
                                         
 
@@ -337,7 +343,7 @@ const QSMDoes = () => {
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
                                         <div>
-                                            <h4 class="card-title">View Site visit</h4>
+                                            <h4 class="card-title">QMS Docs Details</h4>
                                         </div>
 
                                     </div>

@@ -24,15 +24,15 @@ const BookIssue = () => {
     const [checked, setChecked] = React.useState([true, false]);
 
     const handleChange1 = (event) => {
-      setChecked([event.target.checked, event.target.checked]);
+        setChecked([event.target.checked, event.target.checked]);
     };
-  
+
     const handleChange2 = (event) => {
-      setChecked([event.target.checked, checked[1]]);
+        setChecked([event.target.checked, checked[1]]);
     };
-  
+
     const handleChange3 = (event) => {
-      setChecked([checked[0], event.target.checked]);
+        setChecked([checked[0], event.target.checked]);
     };
 
     // const children = (
@@ -49,24 +49,24 @@ const BookIssue = () => {
     //   );
 
     const [value, setValue] = useState({
-        student : "" || uid.student,
-        book : "" || uid.book,
-        bookcode : "" || uid.bookcode,
-        issuedate : ""|| uid.issuedate,
-        returndate : ""|| uid.status,
-        
+        student: "" || uid.student,
+        book: "" || uid.book,
+        bookcode: "" || uid.bookcode,
+        issuedate: "" || uid.issuedate,
+        returndate: "" || uid.status,
+
 
 
     })
 
     useEffect(() => {
         setValue({
-            student : uid.student,
-            book : uid.book,
-            bookcode : uid.bookcode,
-            issuedate : uid.issuedate,
-            returndate :uid.returndate,
-   
+            student: uid.student,
+            book: uid.book,
+            bookcode: uid.bookcode,
+            issuedate: uid.issuedate,
+            returndate: uid.returndate,
+
 
         })
     }, [uid])
@@ -103,12 +103,12 @@ const BookIssue = () => {
     }
 
 
-    
+
     async function getBookData() {
         const data = {
-            tablename : "awt_bookissue"
+            tablename: "awt_bookissue"
         }
-        axios.post(`${BASE_URL}/get_data`,data)
+        axios.post(`${BASE_URL}/get_data`, data)
             .then((res) => {
                 console.log(res.data)
                 setVendorData(res.data)
@@ -143,14 +143,14 @@ const BookIssue = () => {
 
     const handleUpdate = (id) => {
         const data = {
-            u_id : id,
-            tablename : "awt_bookissue"
+            u_id: id,
+            tablename: "awt_bookissue"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
                 setUid(res.data[0])
 
-                console.log(res.data , "update")
+                console.log(res.data, "update")
             })
             .catch((err) => {
                 console.log(err)
@@ -160,7 +160,7 @@ const BookIssue = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename : "awt_bookissue"
+            tablename: "awt_bookissue"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
@@ -181,31 +181,31 @@ const BookIssue = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-    // if(validateForm()){
+        // if(validateForm()){
         const data = {
-            
-        student : value.student,
-        book : value.book,
-        bookcode : value.bookcode,
-        issuedate : value.issuedate,
-        returndate :value.returndate,
-        uid : uid.id
+
+            student: value.student,
+            book: value.book,
+            bookcode: value.bookcode,
+            issuedate: value.issuedate,
+            returndate: value.returndate,
+            uid: uid.id
         }
 
 
         axios.post(`${BASE_URL}/add_bookissue`, data)
             .then((res) => {
-               console.log(res)
-               getBookData()
+                console.log(res)
+                getBookData()
 
             })
             .catch((err) => {
                 console.log(err)
             })
-    // }
+        // }
 
-   
-        
+
+
 
 
     }
@@ -215,8 +215,8 @@ const BookIssue = () => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
 
- 
-    
+
+
 
 
 
@@ -232,10 +232,10 @@ const BookIssue = () => {
         },
         { field: 'student', headerName: 'Student Name', flex: 2 },
         { field: 'book', headerName: 'Book', flex: 2 },
-        { field: 'bookcode', headerName: 'Book Code', flex: 2},
-        { field: 'issuedate', headerName: 'Issue Date', flex: 2},
-        { field: 'returndate', headerName: 'Return Date.', flex: 2},
-        
+        { field: 'bookcode', headerName: 'Book Code', flex: 2 },
+        { field: 'issuedate', headerName: 'Issue Date', flex: 2 },
+        { field: 'returndate', headerName: 'Return Date.', flex: 2 },
+
         {
             field: 'actions',
             type: 'actions',
@@ -257,7 +257,7 @@ const BookIssue = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper">
+        <div class="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -287,19 +287,19 @@ const BookIssue = () => {
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">Issue Date</label>
                                                 <input type="date" class="form-control" id="exampleInputUsername1" value={value.issuedate} name='issuedate' onChange={onhandleChange} />
-                                               
+
                                             </div>
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">Return Date</label>
                                                 <input type="date" class="form-control" id="exampleInputUsername1" value={value.returndate} name='returndate' onChange={onhandleChange} />
-                                                
-                                            </div>
-                                            
 
-                                            
+                                            </div>
+
+
+
 
                                         </div>
-                                            
+
 
 
 

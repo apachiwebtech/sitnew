@@ -289,24 +289,35 @@ const CorporateInquiry = () => {
 
 
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">Date</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.fromyear} placeholder="From Year" name='fromyear' onChange={onhandleChange} />
+                                                <label for="exampleInputUsername1">From Date</label>
+                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.fromdate} name='fromdate' onChange={onhandleChange} />
                                                 
                                             </div>
                                             
+                                            <div class="form-group col-lg-3">
+                                                <label for="exampleInputUsername1">To Date</label>
+                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.todate} name='todate' onChange={onhandleChange} />
+                                                
+                                            </div>
 
                                         </div>
+
+
+
+
+                                        <button type="submit" class="btn btn-primary mr-2">Show</button>
+                                        <button type='button' onClick={() => {
+                                            window.location.reload()
+                                        }} class="btn btn-primary">Back</button>
+                                        
                                             
 
-
-
-                                        
                                     </form>
 
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-12">
+                        {/* <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
@@ -354,7 +365,7 @@ const CorporateInquiry = () => {
 
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div >

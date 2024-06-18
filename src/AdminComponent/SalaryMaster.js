@@ -16,16 +16,23 @@ import RadioGroup from '@mui/material/RadioGroup';
 //import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
+// import ImageList from '@mui/material/ImageList';
+// import { ImageSourcePropType } from 'react-native';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
-const UnitTestTaken = () => {
+const SalaryMaster = () => {
 
     const [brand, setBrand] = useState([])
     const [vendordata, setVendorData] = useState([])
+    const [specification, setSpecification] = useState("")
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
+
+    console.log(specification)
 
     const handleChange1 = (event) => {
         setChecked([event.target.checked, event.target.checked]);
@@ -53,10 +60,13 @@ const UnitTestTaken = () => {
     //   );
 
     const [value, setValue] = useState({
-        coursename: "" || uid.coursename,
-        batchcode: "" || uid.batchcode,
-        utname: "" || uid.utname,
-        utdate: "" || uid.utdate,
+        formdate: "" || uid.formdate,
+        todate: "" || uid.todate,
+        service: "" || uid.service,
+        empcontri: uid.empcontri,
+        da: uid.da,
+        minbasic: uid.minbasic,
+
 
 
 
@@ -64,10 +74,13 @@ const UnitTestTaken = () => {
 
     useEffect(() => {
         setValue({
-            coursename: uid.coursename,
-            batchcode: uid.batchcode,
-            utname: uid.utname,
-            utdate: uid.utname,
+            formdate: uid.formdate,
+            todate: uid.todate,
+            service: uid.service,
+            empcontri: uid.empcontri,
+            da: uid.da,
+            minbasic: uid.minbasic,
+
         })
     }, [uid])
 
@@ -106,7 +119,7 @@ const UnitTestTaken = () => {
 
     async function getEmployeeData() {
         const data = {
-            tablename: "awt_unittesttaken"
+            tablename: "awt_salarymaster"
         }
         axios.post(`${BASE_URL}/get_data`, data)
             .then((res) => {
@@ -144,7 +157,7 @@ const UnitTestTaken = () => {
     const handleUpdate = (id) => {
         const data = {
             u_id: id,
-            tablename: "awt_unittesttaken"
+            tablename: "awt_salarymaster"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
@@ -160,7 +173,7 @@ const UnitTestTaken = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename: "awt_unittesttaken"
+            tablename: "awt_salarymaster"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
@@ -184,15 +197,17 @@ const UnitTestTaken = () => {
         // if(validateForm()){
         const data = {
 
-            coursename: value.coursename,
-            batchcode: value.batchcode,
-            utname: value.utname,
-            utdate: value.utdate,
+            formdate: value.formdate,
+            todate: value.todate,
+            service: value.service,
+            empcontri: value.empcontri,
+            da: value.da,
+            minbasic: value.minbasic,
             uid: uid.id
         }
 
 
-        axios.post(`${BASE_URL}/add_unittesttaken`, data)
+        axios.post(`${BASE_URL}/add_salarymaster`, data)
             .then((res) => {
                 console.log(res)
                 getEmployeeData()
@@ -230,10 +245,17 @@ const UnitTestTaken = () => {
             filterable: false,
 
         },
-        { field: 'coursename', headerName: 'Course Name', flex: 2 },
-        { field: 'batchcode', headerName: 'Batch Code', flex: 2 },
-        { field: 'utname', headerName: 'Unit Test Name', flex: 2 },
-        { field: 'utdate', headerName: 'Unit Test Date', flex: 2 },
+        { field: 'startdate', headerName: 'Start Date', flex: 2 },
+        { field: 'enddate', headerName: 'End Date', flex: 2 },
+        {
+            field: 'specification', headerName: 'Description', flex: 2, renderCell: (params) => {
+                return (
+                    <>
+                        <div dangerouslySetInnerHTML={{ __html: params.row.specification }}></div>
+                    </>
+                )
+            }
+        },
 
         {
             field: 'actions',
@@ -264,69 +286,43 @@ const UnitTestTaken = () => {
                         <div class="col-lg-12 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Add Unit Test Details</h4>
+                                    <h4 class="card-title">Add Salary Structure</h4>
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
 
-
-                                            <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Course Name<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.coursename} onChange={onhandleChange} name='coursename'>
-                                                    <option>Select</option>
-                                                    <option>Administration</option>
-                                                    <option>Business Development</option>
-                                                    <option>Training &amp; Development</option>
-                                                    <option>Account</option>
-                                                    <option>Placement</option>
-                                                    <option>Purchase</option>
-                                                    <option>Leadership / DD</option>
-                                                    <option>Quality Assurance</option>
-                                                    <option>Human Resources</option>
-                                                    <option>Corporate Training</option>
-                                                    <option>Test User</option>
-                                                </select>
-                                            </div>
-
-                                            <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Batch Code<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batchcode} onChange={onhandleChange} name='batchcode'>
-                                                    <option>010021</option>
-                                                    <option>010022</option>
-                                                    <option>010023</option>
-                                                    <option>010024</option>
-                                                    <option>010025</option>
-                                                    <option>010026</option>
-                                                    <option>010027</option>
-                                                    <option>010028</option>
-                                                    <option>010029</option>
-
-                                                </select>
-                                            </div>
-
-                                            <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Unit Test Name<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.utname} onChange={onhandleChange} name='utname'>
-                                                    <option>Piping-1</option>
-                                                    <option>Piping-2</option>
-                                                    <option>Piping-3</option>
-                                                    <option>Piping-4</option>
-                                                    <option>Piping-5</option>
-                                                    <option>Piping-6</option>
-                                                    <option>Piping-7</option>
-                                                    <option>Piping-8</option>
-                                                    <option>Piping-9</option>
-                                                    <option>Piping-10</option>
-
-                                                </select>
-                                            </div>
-
-                                            <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Unit Test Date<span className='text-danger'>*</span> </label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.utdate} name='utdate' onChange={onhandleChange} />                                                    <option></option>
-
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleInputUsername1">Form Date</label>
+                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.formdate} name='formdate' onChange={onhandleChange} />
 
                                             </div>
+
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleInputUsername1">To Date</label>
+                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.todate} name='todate' onChange={onhandleChange} />
+
+                                            </div>
+
+                                            <div class="form-group col-lg-2">
+                                                <lable for="exampleInputUsername">Service Charge(%)</lable>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.service} placeholder='0' name='service' onChange={onhandleChange} />
+                                            </div>
+
+                                            <div class="form-group col-lg-2">
+                                                <lable for="exampleInputUsername">Emp Contri(%)</lable>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.empcontri} placeholder='0' name='empcontri' onChange={onhandleChange} />
+                                            </div>
+
+                                            <div class="form-group col-lg-2">
+                                                <lable for="exampleInputUsername">DA </lable>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.da} placeholder='0' name='da' onChange={onhandleChange} />
+                                            </div>
+
+                                            <div class="form-group col-lg-2">
+                                                <lable for="exampleInputUsername"> Min. Basic</lable>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.minbasic} placeholder='0' name='minbasic' onChange={onhandleChange} />
+                                            </div>
+
 
 
                                         </div>
@@ -347,7 +343,7 @@ const UnitTestTaken = () => {
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
                                         <div>
-                                            <h4 class="card-title">Unit Test Details</h4>
+                                            <h4 class="card-title">View Salary Structure Details</h4>
                                         </div>
 
                                     </div>
@@ -403,4 +399,4 @@ const UnitTestTaken = () => {
     )
 }
 
-export default UnitTestTaken
+export default SalaryMaster

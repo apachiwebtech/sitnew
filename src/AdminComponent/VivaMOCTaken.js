@@ -53,11 +53,10 @@ const VivaMOCTaken = () => {
     //   );
 
     const [value, setValue] = useState({
-        training : ""|| uid.training,
-        attendee : ""|| uid.attendee,
-        instructor : ""|| uid.instructor,
-        description : ""|| uid.description,
-        feedback : ""|| uid.feedback,
+        coursename : ""|| uid.coursename,
+        batchcode : ""|| uid.batchcode,
+        vivamocname : ""|| uid.vivamocname,
+        date : ""|| uid.date,
 
         
 
@@ -66,12 +65,10 @@ const VivaMOCTaken = () => {
 
     useEffect(() => {
         setValue({
-            training : uid.training,
-            attendee : uid.attendee,
-            instructor : uid.instructor,
-            description :uid.description,
-            feedback: uid.feedback,
-
+            coursename : uid.coursename,
+            batchcode : uid.batchcode,
+            vivamocname : uid.vivamocname,
+            date :uid.date,
         })
     }, [uid])
 
@@ -110,7 +107,7 @@ const VivaMOCTaken = () => {
     
     async function getEmployeeData() {
         const data = {
-            tablename : "awt_employeerecord"
+            tablename : "awt_vivamoctaken"
         }
         axios.post(`${BASE_URL}/get_data`,data)
             .then((res) => {
@@ -148,7 +145,7 @@ const VivaMOCTaken = () => {
     const handleUpdate = (id) => {
         const data = {
             u_id : id,
-            tablename : "awt_employeerecord"
+            tablename : "awt_vivamoctaken"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
@@ -164,7 +161,7 @@ const VivaMOCTaken = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename : "awt_employeerecord"
+            tablename : "awt_vivamoctaken"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
@@ -187,17 +184,16 @@ const VivaMOCTaken = () => {
 
     // if(validateForm()){
         const data = {
-            
-        training : value.training,
-        attendee : value.attendee,
-        instructor : value.instructor,
-        description :value.description,
-        feedback: value.feedback,
+                
+        coursename : value.coursename,
+        batchcode : value.batchcode,
+        vivamocname : value.vivamocname,
+        date :value.date,
         uid : uid.id
         }
 
 
-        axios.post(`${BASE_URL}/add_employeerecord`, data)
+        axios.post(`${BASE_URL}/add_vivamoctaken`, data)
             .then((res) => {
                console.log(res)
                getEmployeeData()
@@ -233,12 +229,13 @@ const VivaMOCTaken = () => {
             headerAlign: 'center',
             flex: 1,
             filterable: false,
+
                                               
         },
-        { field: 'attendee', headerName: 'Attendee', flex: 2},
-        { field: 'instructor', headerName: 'Instructor', flex: 2},
-        { field: 'description', headerName: 'Description', flex: 2},
-        { field: 'feedback', headerName: 'FeedBack', flex: 2},
+        { field: 'coursename', headerName: 'Course Name', flex: 2},
+        { field: 'batchcode', headerName: 'Batch Code', flex: 2},
+        { field: 'vivamocname', headerName: 'Viva/Moc/Name', flex: 2},
+        { field: 'date', headerName: 'Date', flex: 2},
         
         {
             field: 'actions',
@@ -261,7 +258,7 @@ const VivaMOCTaken = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper">
+        <div class="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -276,8 +273,8 @@ const VivaMOCTaken = () => {
 
                                             
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Viva/Moc Name <span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.department} onChange={onhandleChange} name='department'>
+                                                <label for="exampleFormControlSelect1">Course Name <span className='text-danger'>*</span> </label>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.coursename} onChange={onhandleChange} name='coursename'>
                                                     <option>Select</option>
                                                     <option>Administration</option>
                                                     <option>Business Development</option>
@@ -295,16 +292,35 @@ const VivaMOCTaken = () => {
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Batch Code<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.department} onChange={onhandleChange} name='department'>
-                                                    <option></option>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batchcode} onChange={onhandleChange} name='batchcode'>
+                                                    <option>124354</option>
+                                                    <option>547895</option>
+                                                    <option>965847</option>
+                                                    <option>965847</option>
+                                                    <option>965847</option>
+                                                    <option>965847</option>
+                                                    <option>965847</option>
+                                                    <option>965847</option>
+                                                    <option>965847</option>
                                                     
                                                 </select>
                                             </div>
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Viva/Moc Name:<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.department} onChange={onhandleChange} name='department'>
-                                                    <option></option>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.vivamocname} onChange={onhandleChange} name='vivamocname'>
+                                                    <option>Discipline</option>
+                                                    <option>Discipline</option>
+                                                    <option>Discipline</option>
+                                                    <option>Discipline</option>
+                                                    <option>MOC</option>
+                                                    <option>MOC</option>
+                                                    <option>MOC</option>
+                                                    <option>Piping</option>
+                                                    <option>Piping</option>
+                                                    <option>Piping</option>
+                                                    <option>Piping</option>
+
                                                     
                                                 </select>
                                             </div>
@@ -313,7 +329,7 @@ const VivaMOCTaken = () => {
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">Date</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.returndate} name='returndate' onChange={onhandleChange} />
+                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.date} name='date' onChange={onhandleChange} />
                                                 
                                             </div>
 

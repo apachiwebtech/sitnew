@@ -6,7 +6,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
 import decryptedUserId from '../Utils/UserID';
-import { DataGrid ,GridToolbar} from '@mui/x-data-grid';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -33,15 +33,15 @@ const FacultyWorking = () => {
     const [checked, setChecked] = React.useState([true, false]);
 
     const handleChange1 = (event) => {
-      setChecked([event.target.checked, event.target.checked]);
+        setChecked([event.target.checked, event.target.checked]);
     };
-  
+
     const handleChange2 = (event) => {
-      setChecked([event.target.checked, checked[1]]);
+        setChecked([event.target.checked, checked[1]]);
     };
-  
+
     const handleChange3 = (event) => {
-      setChecked([checked[0], event.target.checked]);
+        setChecked([checked[0], event.target.checked]);
     };
 
     // const children = (
@@ -58,24 +58,27 @@ const FacultyWorking = () => {
     //   );
 
     const [value, setValue] = useState({
-        training : ""|| uid.training,
-        attendee : ""|| uid.attendee,
-        instructor : ""|| uid.instructor,
-        description : ""|| uid.description,
-        feedback : ""|| uid.feedback,
-
-        
+        date: "" || uid.date,
+        course: "" || uid.course,
+        batch: "" || uid.batch,
+        faculty: "" || uid.faculty,
+        facultytime: "" || uid.facultytime,
+        to: "" || uid .to,
+        work: "" || uid.work
 
 
     })
 
     useEffect(() => {
         setValue({
-            training : uid.training,
-            attendee : uid.attendee,
-            instructor : uid.instructor,
-            description :uid.description,
-            feedback: uid.feedback,
+            date: uid.date,
+            course: uid.course,
+            batch: uid.batch,
+            faculty: uid.faculty,
+            facultytime: uid.facultytime,
+            to: uid.to,
+            work: uid.work
+
 
         })
     }, [uid])
@@ -112,12 +115,12 @@ const FacultyWorking = () => {
     }
 
 
-    
+
     async function getEmployeeData() {
         const data = {
-            tablename : "awt_employeerecord"
+            tablename: "awt_facultyworking"
         }
-        axios.post(`${BASE_URL}/get_data`,data)
+        axios.post(`${BASE_URL}/get_data`, data)
             .then((res) => {
                 console.log(res.data)
                 setVendorData(res.data)
@@ -152,14 +155,14 @@ const FacultyWorking = () => {
 
     const handleUpdate = (id) => {
         const data = {
-            u_id : id,
-            tablename : "awt_employeerecord"
+            u_id: id,
+            tablename: "awt_facultyworking"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
                 setUid(res.data[0])
 
-                console.log(res.data , "update")
+                console.log(res.data, "update")
             })
             .catch((err) => {
                 console.log(err)
@@ -169,7 +172,7 @@ const FacultyWorking = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename : "awt_employeerecord"
+            tablename: "awt_facultyworking"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
@@ -190,31 +193,33 @@ const FacultyWorking = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-    // if(validateForm()){
+        // if(validateForm()){
         const data = {
-            
-        training : value.training,
-        attendee : value.attendee,
-        instructor : value.instructor,
-        description :value.description,
-        feedback: value.feedback,
-        uid : uid.id
+
+            date: value.date,
+            course: value.course,
+            batch: value.batch,
+            faculty: value.faculty,
+            facultytime: value.facultytime,
+            to: value.to,
+            work: value.work,
+            uid: uid.id
         }
 
 
-        axios.post(`${BASE_URL}/add_employeerecord`, data)
+        axios.post(`${BASE_URL}/add_facultyworking`, data)
             .then((res) => {
-               console.log(res)
-               getEmployeeData()
+                console.log(res)
+                getEmployeeData()
 
             })
             .catch((err) => {
                 console.log(err)
             })
-    // }
+        // }
 
-   
-        
+
+
 
 
     }
@@ -224,8 +229,8 @@ const FacultyWorking = () => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
 
- 
-    
+
+
 
 
 
@@ -238,13 +243,17 @@ const FacultyWorking = () => {
             headerAlign: 'center',
             flex: 1,
             filterable: false,
-                                              
+
         },
-        { field: 'attendee', headerName: 'Attendee', flex: 2},
-        { field: 'instructor', headerName: 'Instructor', flex: 2},
-        { field: 'description', headerName: 'Description', flex: 2},
-        { field: 'feedback', headerName: 'FeedBack', flex: 2},
-        
+        { field: 'date', headerName: 'Date', flex: 2 },
+        { field: 'course', headerName: 'Course', flex: 2 },
+        { field: 'batch', headerName: 'Batch', flex: 2 },
+        { field: 'faculty', headerName: 'Faculty', flex: 2 },
+        { field: 'facultytime', headerName: 'Facultytime', flex: 2 },
+        { field: 'to', headerName: 'To', flex: 2 },
+        { field: 'work', headerName: 'Work', flex: 2 },
+
+
         {
             field: 'actions',
             type: 'actions',
@@ -266,7 +275,7 @@ const FacultyWorking = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper">
+        <div class="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -282,11 +291,11 @@ const FacultyWorking = () => {
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">Date</label>
                                                 <input type="date" class="form-control" id="exampleInputUsername1" value={value.date} name='date' onChange={onhandleChange} />
-                                                
+
                                             </div>
 
 
-                                            
+
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Course<span className='text-danger'>*</span> </label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course} onChange={onhandleChange} name='course'>
@@ -309,15 +318,39 @@ const FacultyWorking = () => {
                                                 <label for="exampleFormControlSelect1">Batch</label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batch} onChange={onhandleChange} name='batch'>
                                                     <option></option>
-                                                    
+                                                    <option></option>
+                                                    <option></option>
+                                                    <option></option>
+
+
                                                 </select>
                                             </div>
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Faculty</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.faculty} onChange={onhandleChange} name='faculti'>
-                                                    <option></option>
-                                                    
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.faculty} onChange={onhandleChange} name='faculty'>
+                                                    <option>A. G. Belwalkar</option>
+                                                    <option>Aadhar Classes</option>
+                                                    <option>Aashay Dedhia</option>
+                                                    <option>Abhay Gaikar</option>
+                                                    <option>Abhijit A Kulkarni.</option>
+                                                    <option>Abhijit Tapare</option>
+                                                    <option>Abhilash Srinivasan</option>
+                                                    <option>Abhishek Pednekar</option>
+                                                    <option>Abhishek Rakesh Gupta</option>
+                                                    <option>Abhishek Vyas</option>
+                                                    <option>ABIDHUSAIN RIZVI</option>
+                                                    <option>Abrar</option>
+                                                    <option>Aditi Surana.</option>
+                                                    <option>Aditya Hivalkar</option>
+                                                    <option>ADWAIT JOGALEKAR</option>
+                                                    <option>Ajay Gharpure</option>
+                                                    <option>Ajinkya Gawande</option>
+                                                    <option>Ajit Khedkar</option>
+                                                    <option>Ajith Mathews</option>
+                                                    <option>Akhil Jalani (Demo)</option>
+                                                    <option>Akhil Jhalani</option>
+
                                                 </select>
                                             </div>
 
@@ -490,13 +523,13 @@ const FacultyWorking = () => {
                                                     <option>12:00AM</option>
                                                 </select>
                                             </div>
-                                            
-                                            
+
+
 
                                             <div class="form-group col-lg-4">
                                                 <label for="exampleTextarea1">Work</label>
                                                 <textarea class="form-control" id="exampleTextarea1" value={value.work} placeholder="Work" name='work' onChange={onhandleChange}></textarea>
-                                               
+
                                             </div>
 
 
@@ -508,7 +541,7 @@ const FacultyWorking = () => {
                                         <button type='button' onClick={() => {
                                             window.location.reload()
                                         }} class="btn btn-light">Cancel</button>
-                                       
+
                                     </form>
 
                                 </div>
@@ -555,8 +588,8 @@ const FacultyWorking = () => {
                                         )}
                                     </div>
 
-                                    
-                                      {/* <div>
+
+                                    {/* <div>
                                       <button type='button' onClick={() => {
                                             window.location.reload()
                                         }} class="btn btn-primary mr-2">Excel</button>

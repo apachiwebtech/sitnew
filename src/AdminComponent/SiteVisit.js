@@ -49,11 +49,9 @@ const SiteVisit = () => {
     //   );
 
     const [value, setValue] = useState({
-        training : ""|| uid.training,
-        attendee : ""|| uid.attendee,
-        instructor : ""|| uid.instructor,
-        description : ""|| uid.description,
-        feedback : ""|| uid.feedback,
+        course : ""|| uid.course,
+        batch : ""|| uid.batch,
+        site : ""|| uid.site,
 
         
 
@@ -62,11 +60,9 @@ const SiteVisit = () => {
 
     useEffect(() => {
         setValue({
-            training : uid.training,
-            attendee : uid.attendee,
-            instructor : uid.instructor,
-            description :uid.description,
-            feedback: uid.feedback,
+            course : uid.course,
+            batch : uid.batch,
+            site : uid.site,
 
         })
     }, [uid])
@@ -106,7 +102,7 @@ const SiteVisit = () => {
     
     async function getEmployeeData() {
         const data = {
-            tablename : "awt_employeerecord"
+            tablename : "awt_sitevisit"
         }
         axios.post(`${BASE_URL}/get_data`,data)
             .then((res) => {
@@ -144,7 +140,7 @@ const SiteVisit = () => {
     const handleUpdate = (id) => {
         const data = {
             u_id : id,
-            tablename : "awt_employeerecord"
+            tablename : "awt_sitevisit"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
@@ -160,7 +156,7 @@ const SiteVisit = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename : "awt_employeerecord"
+            tablename : "awt_sitevisit"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
@@ -184,16 +180,14 @@ const SiteVisit = () => {
     // if(validateForm()){
         const data = {
             
-        training : value.training,
-        attendee : value.attendee,
-        instructor : value.instructor,
-        description :value.description,
-        feedback: value.feedback,
+        course : value.course,
+        batch : value.batch,
+        site : value.site,
         uid : uid.id
         }
 
 
-        axios.post(`${BASE_URL}/add_employeerecord`, data)
+        axios.post(`${BASE_URL}/add_sitevisit`, data)
             .then((res) => {
                console.log(res)
                getEmployeeData()
@@ -231,10 +225,9 @@ const SiteVisit = () => {
             filterable: false,
                                               
         },
-        { field: 'attendee', headerName: 'Attendee', flex: 2},
-        { field: 'instructor', headerName: 'Instructor', flex: 2},
-        { field: 'description', headerName: 'Description', flex: 2},
-        { field: 'feedback', headerName: 'FeedBack', flex: 2},
+        { field: 'course', headerName: 'Course', flex: 2},
+        { field: 'batch', headerName: 'Batch', flex: 2},
+        { field: 'site', headerName: 'Site', flex: 2},
         
         {
             field: 'actions',
@@ -257,7 +250,7 @@ const SiteVisit = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper">
+        <div class="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -273,7 +266,7 @@ const SiteVisit = () => {
 
                                             <div class="form-group col-lg-4">
                                                 <label for="exampleFormControlSelect1">Select Course<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.attendee} onChange={onhandleChange} name='attendee'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course} onChange={onhandleChange} name='course'>
                                                     <option>Select</option>
                                                     <option>Admin</option>
                                                     <option>BalKrishana</option>
@@ -286,25 +279,15 @@ const SiteVisit = () => {
 
                                             <div class="form-group col-lg-4">
                                                 <label for="exampleFormControlSelect1">Select Batch<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.attendee} onChange={onhandleChange} name='attendee'>
-                                                    <option>Select</option>
-                                                    <option>Admin</option>
-                                                    <option>BalKrishana</option>
-                                                    <option>Ankit</option>
-                                                    <option>Athrava</option>
-                                                    <option>Manshi Suresh</option>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batch} onChange={onhandleChange} name='batch'>
+                                                    <option></option>
                                                 </select>
                                             </div>
                                            
                                             <div class="form-group col-lg-4">
                                                 <label for="exampleFormControlSelect1">Select Site<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.attendee} onChange={onhandleChange} name='attendee'>
-                                                    <option>Select</option>
-                                                    <option>Admin</option>
-                                                    <option>BalKrishana</option>
-                                                    <option>Ankit</option>
-                                                    <option>Athrava</option>
-                                                    <option>Manshi Suresh</option>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.site} onChange={onhandleChange} name='site'>
+                                                    <option></option>
                                                 </select>
                                             </div>
 
@@ -327,7 +310,7 @@ const SiteVisit = () => {
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
                                         <div>
-                                            <h4 class="card-title">Employee Training Record</h4>
+                                            <h4 class="card-title">Site Visit Details</h4>
                                         </div>
 
                                     </div>

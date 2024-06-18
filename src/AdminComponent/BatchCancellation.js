@@ -16,16 +16,38 @@ import RadioGroup from '@mui/material/RadioGroup';
 //import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
+// import ImageList from '@mui/material/ImageList';
+// import { ImageSourcePropType } from 'react-native';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
-const UnitTestTaken = () => {
+const BatchCancellation = () => {
+
+
+    const [date, setDate] = useState('');
+
+    useEffect(() => {
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        let month = currentDate.getMonth() + 1;
+        month = month < 10 ? '0' + month : month;
+        let day = currentDate.getDate();
+        day = day < 10 ? '0' + day : day;
+        const formattedDate = `${year}-${month}-${day}`;
+        setDate(formattedDate);
+    }, []);
+
 
     const [brand, setBrand] = useState([])
     const [vendordata, setVendorData] = useState([])
+    const [specification, setSpecification] = useState("")
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
+
+    console.log(specification)
 
     const handleChange1 = (event) => {
         setChecked([event.target.checked, event.target.checked]);
@@ -53,10 +75,13 @@ const UnitTestTaken = () => {
     //   );
 
     const [value, setValue] = useState({
-        coursename: "" || uid.coursename,
-        batchcode: "" || uid.batchcode,
-        utname: "" || uid.utname,
-        utdate: "" || uid.utdate,
+        course: "" || uid.courae,
+        batchno: "" || uid.batchno,
+        student: "" || uid.student,
+        cancellationammount: "" || uid.cancellationammount,
+        date: "" || uid.date,
+
+
 
 
 
@@ -64,10 +89,12 @@ const UnitTestTaken = () => {
 
     useEffect(() => {
         setValue({
-            coursename: uid.coursename,
-            batchcode: uid.batchcode,
-            utname: uid.utname,
-            utdate: uid.utname,
+            course: uid.course,
+            batchno: uid.batchno,
+            student: uid.student,
+            cancellationammount: uid.cancellationammount,
+            date: uid.date,
+
         })
     }, [uid])
 
@@ -106,7 +133,7 @@ const UnitTestTaken = () => {
 
     async function getEmployeeData() {
         const data = {
-            tablename: "awt_unittesttaken"
+            tablename: "awt_batchcancellation"
         }
         axios.post(`${BASE_URL}/get_data`, data)
             .then((res) => {
@@ -144,7 +171,7 @@ const UnitTestTaken = () => {
     const handleUpdate = (id) => {
         const data = {
             u_id: id,
-            tablename: "awt_unittesttaken"
+            tablename: "awt_batchcancellation"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
@@ -160,7 +187,7 @@ const UnitTestTaken = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename: "awt_unittesttaken"
+            tablename: "awt_batchcancellation"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
@@ -184,15 +211,18 @@ const UnitTestTaken = () => {
         // if(validateForm()){
         const data = {
 
-            coursename: value.coursename,
-            batchcode: value.batchcode,
-            utname: value.utname,
-            utdate: value.utdate,
+
+
+            course: value.course,
+            batchno: value.batchno,
+            student: value.student,
+            cancellationammount: value.cancellationammount,
+            date: value.date,
             uid: uid.id
         }
 
 
-        axios.post(`${BASE_URL}/add_unittesttaken`, data)
+        axios.post(`${BASE_URL}/add_batchcancellation`, data)
             .then((res) => {
                 console.log(res)
                 getEmployeeData()
@@ -230,10 +260,11 @@ const UnitTestTaken = () => {
             filterable: false,
 
         },
-        { field: 'coursename', headerName: 'Course Name', flex: 2 },
-        { field: 'batchcode', headerName: 'Batch Code', flex: 2 },
-        { field: 'utname', headerName: 'Unit Test Name', flex: 2 },
-        { field: 'utdate', headerName: 'Unit Test Date', flex: 2 },
+        { field: 'course', headerName: 'Course Name', flex: 2 },
+        { field: 'batchno', headerName: 'Batch No.', flex: 2 },
+        { field: 'student', headerName: 'Student', flex: 2 },
+        { field: 'cancellationammount', headerName: 'Cancellation Ammount', flex: 2 },
+        { field: 'date', headerName: 'Date', flex: 2 },
 
         {
             field: 'actions',
@@ -264,69 +295,87 @@ const UnitTestTaken = () => {
                         <div class="col-lg-12 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Add Unit Test Details</h4>
+                                    <h4 class="card-title">Transfer Batch</h4>
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
 
-
-                                            <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Course Name<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.coursename} onChange={onhandleChange} name='coursename'>
-                                                    <option>Select</option>
-                                                    <option>Administration</option>
-                                                    <option>Business Development</option>
-                                                    <option>Training &amp; Development</option>
-                                                    <option>Account</option>
-                                                    <option>Placement</option>
-                                                    <option>Purchase</option>
-                                                    <option>Leadership / DD</option>
-                                                    <option>Quality Assurance</option>
-                                                    <option>Human Resources</option>
-                                                    <option>Corporate Training</option>
-                                                    <option>Test User</option>
+                                            <div class="form-group col-lg-4">
+                                                <lable for="exampleFormControlSelect1">Course</lable>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course} name='course' onChange={onhandleChange}>
+                                                    <option>Select Course</option>
+                                                    <option> Training in Process Plant System Modelling Using E3D</option>
+                                                    <option>Advance Pipe Stress Analysis </option>
+                                                    <option>Air Conditioning System Design (HVAC)</option>
+                                                    <option>Autocad - Piping</option>
+                                                    <option>Basics AutoCAD – 2D</option>
+                                                    <option>Civil/Structural Design &amp; Drafting </option>
+                                                    <option>Electrical &amp; Instrumentation Design and Drafting </option>
+                                                    <option>Electrical System Design</option>
+                                                    <option>Engineering Design &amp; Drafting </option>
+                                                    <option>Fire Alarm and Protection System </option>
+                                                    <option>Fundamentals of Offshore</option>
+                                                    <option>Health, Safety &amp; Environment in Construction</option>
+                                                    <option>HVAC Design and Drafting</option>
+                                                    <option>Masonry/Carpentry</option>
+                                                    <option>Mechanical Design of Process Equipment</option>
+                                                    <option>MEP Engineering (Mechanical, Electrical &amp; Plumbing)</option>
+                                                    <option>Offshore Engineering</option>
+                                                    <option>Others</option>
+                                                    <option>Pipeline Engineering</option>
+                                                    <option>Piping Design &amp; Drafting </option>
+                                                    <option>Piping Engineering </option>
+                                                    <option>Piping Materials</option>
+                                                    <option>Plant Design Management System (PDMS)</option>
+                                                    <option>PLANT LAYOUT DESIGN</option>
+                                                    <option>Priventive </option>
+                                                    <option>Process Engineering</option>
+                                                    <option>Process Equipment Fabrication Engineering</option>
+                                                    <option>Process Instrumentation &amp; Control</option>
+                                                    <option>PV Elite </option>
+                                                    <option>Rotating Equipment</option>
+                                                    <option>Smart Plant P&amp;ID</option>
+                                                    <option>Solar PV Power System with renewable Energy  </option>
+                                                    <option>Structural Engineering </option>
+                                                    <option>The Art of Developing a Balanced Personality</option>
+                                                    <option>Water &amp; Waste Water Engg.</option>
                                                 </select>
                                             </div>
 
-                                            <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Batch Code<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batchcode} onChange={onhandleChange} name='batchcode'>
-                                                    <option>010021</option>
-                                                    <option>010022</option>
-                                                    <option>010023</option>
-                                                    <option>010024</option>
-                                                    <option>010025</option>
-                                                    <option>010026</option>
-                                                    <option>010027</option>
-                                                    <option>010028</option>
-                                                    <option>010029</option>
-
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleFormControlSelect1">Batch No.</label>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batchno} name='batchno' onChange={onhandleChange}>
+                                                    <option></option>
                                                 </select>
                                             </div>
 
-                                            <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Unit Test Name<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.utname} onChange={onhandleChange} name='utname'>
-                                                    <option>Piping-1</option>
-                                                    <option>Piping-2</option>
-                                                    <option>Piping-3</option>
-                                                    <option>Piping-4</option>
-                                                    <option>Piping-5</option>
-                                                    <option>Piping-6</option>
-                                                    <option>Piping-7</option>
-                                                    <option>Piping-8</option>
-                                                    <option>Piping-9</option>
-                                                    <option>Piping-10</option>
-
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleFomrControlSelect1">Student</label>
+                                                <select className='form-control form-control-lg' id="exampleFormControlSelect1" value={value.student} name='student' onChange={onhandleChange}>
+                                                    <option></option>
                                                 </select>
                                             </div>
 
-                                            <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Unit Test Date<span className='text-danger'>*</span> </label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.utdate} name='utdate' onChange={onhandleChange} />                                                    <option></option>
 
-
+                                            <div class="form-group col-lg-2">
+                                                <lable for="exampleInputUsername1">Cancellation Ammount</lable>
+                                                <input text="text" class="form-control" id="exampleInputUsername1" value={value.cancellationammount} placeholder='00.00' name='cancellationammount' onChange={onhandleChange} />
                                             </div>
+
+
+                                            <div className="form-group col-lg-2">
+                                                <label htmlFor="exampleInputUsername1">Date</label>
+                                                <input
+                                                    type="date"
+                                                    className="form-control"
+                                                    id="exampleInputUsername1"
+                                                    value={date}
+                                                    name="date"
+                                                    onChange={(e) => { }}
+                                                    disabled
+                                                />
+                                            </div>
+
 
 
                                         </div>
@@ -347,7 +396,7 @@ const UnitTestTaken = () => {
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
                                         <div>
-                                            <h4 class="card-title">Unit Test Details</h4>
+                                            <h4 class="card-title">View Batch Transfer</h4>
                                         </div>
 
                                     </div>
@@ -403,4 +452,4 @@ const UnitTestTaken = () => {
     )
 }
 
-export default UnitTestTaken
+export default BatchCancellation

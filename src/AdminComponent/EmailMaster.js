@@ -58,11 +58,12 @@ const EmailMaster = () => {
     //   );
 
     const [value, setValue] = useState({
-        training : ""|| uid.training,
-        attendee : ""|| uid.attendee,
-        instructor : ""|| uid.instructor,
-        description : ""|| uid.description,
-        feedback : ""|| uid.feedback,
+        emailpurpose : ""|| uid.emailpurpose,
+        department : ""|| uid.department,
+        emailsubject : ""|| uid.emailsubject,
+        cc : ""|| uid.cc,
+        bcc : ""|| uid.bcc,
+        specification: uid.specification,
 
         
 
@@ -71,11 +72,12 @@ const EmailMaster = () => {
 
     useEffect(() => {
         setValue({
-            training : uid.training,
-            attendee : uid.attendee,
-            instructor : uid.instructor,
-            description :uid.description,
-            feedback: uid.feedback,
+            emailpurpose : uid.emailpurpose,
+            department : uid.department,
+            emailsubject : uid.emailsubject,
+            cc :uid.cc,
+            bcc: uid.bcc,
+            specification: uid.specification,
 
         })
     }, [uid])
@@ -115,7 +117,7 @@ const EmailMaster = () => {
     
     async function getEmployeeData() {
         const data = {
-            tablename : "awt_employeerecord"
+            tablename : "awt_emailmaster"
         }
         axios.post(`${BASE_URL}/get_data`,data)
             .then((res) => {
@@ -153,7 +155,7 @@ const EmailMaster = () => {
     const handleUpdate = (id) => {
         const data = {
             u_id : id,
-            tablename : "awt_employeerecord"
+            tablename : "awt_emailmaster"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
@@ -169,7 +171,7 @@ const EmailMaster = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename : "awt_employeerecord"
+            tablename : "awt_emailmaster"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
@@ -193,16 +195,17 @@ const EmailMaster = () => {
     // if(validateForm()){
         const data = {
             
-        training : value.training,
-        attendee : value.attendee,
-        instructor : value.instructor,
-        description :value.description,
-        feedback: value.feedback,
+        emailpurpose : value.emailpurpose,
+        department : value.department,
+        emailsubject : value.emailsubject,
+        cc :value.cc,
+        bcc: value.bcc,
+        specification: specification,
         uid : uid.id
         }
 
 
-        axios.post(`${BASE_URL}/add_employeerecord`, data)
+        axios.post(`${BASE_URL}/add_emailmaster`, data)
             .then((res) => {
                console.log(res)
                getEmployeeData()
@@ -240,10 +243,20 @@ const EmailMaster = () => {
             filterable: false,
                                               
         },
-        { field: 'attendee', headerName: 'Attendee', flex: 2},
-        { field: 'instructor', headerName: 'Instructor', flex: 2},
-        { field: 'description', headerName: 'Description', flex: 2},
-        { field: 'feedback', headerName: 'FeedBack', flex: 2},
+        { field: 'emailpurpose', headerName: 'Email Purpose', flex: 2},
+        { field: 'department', headerName: 'Department', flex: 2},
+        { field: 'emailsubject', headerName: 'Email Subject', flex: 2},
+        { field: 'cc', headerName: 'CC', flex: 2},
+        { field: 'bcc', headerName: 'BCC', flex: 2},
+        { field: 'specification', headerName: 'Description', flex: 2, renderCell: (params) => {
+
+            return (
+                <>
+                    <div dangerouslySetInnerHTML={{__html:params.row.specification}}></div>
+                </>
+            )
+
+        }},
         
         {
             field: 'actions',
@@ -266,7 +279,7 @@ const EmailMaster = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper">
+        <div class="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -281,31 +294,31 @@ const EmailMaster = () => {
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">Email Purpose</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.emailpurpose} name='emailpurpose' onChange={onhandleChange} />
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.emailpurpose} placeholder='Email Purpose' name='emailpurpose' onChange={onhandleChange} />
                                                 
                                             </div>
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">Department</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.department} name='department' onChange={onhandleChange} />
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.department} placeholder='Department' name='department' onChange={onhandleChange} />
                                                 
                                             </div>
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">Email Subject</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.emailsubject} name='emailsubject' onChange={onhandleChange} />
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.emailsubject} placeholder='Email Subject' name='emailsubject' onChange={onhandleChange} />
                                                 
                                             </div>
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">CC</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.cc} name='cc' onChange={onhandleChange} />
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.cc} placeholder='CC' name='cc' onChange={onhandleChange} />
                                                 
                                             </div>
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">BCC</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.bcc} name='bcc' onChange={onhandleChange} />
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.bcc} placeholder='BCC' name='bcc' onChange={onhandleChange} />
                                                 
                                             </div>
 
@@ -313,6 +326,8 @@ const EmailMaster = () => {
                                                 <label for="exampleTextarea1">Event Description</label>
                                                     <CKEditor
                                                     editor={ClassicEditor}
+
+                                                    data={uid.specification}
                                                     // data={uid.specification}
                                                     onReady={editor => {
                                                     // Allows you to store the editor instance and use it later.

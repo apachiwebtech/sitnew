@@ -106,7 +106,7 @@ const EmployeeRecord = () => {
     
     async function getEmployeeData() {
         const data = {
-            tablename : "awt_employeerecord"
+            tablename : "awt_employerecord"
         }
         axios.post(`${BASE_URL}/get_data`,data)
             .then((res) => {
@@ -144,7 +144,7 @@ const EmployeeRecord = () => {
     const handleUpdate = (id) => {
         const data = {
             u_id : id,
-            tablename : "awt_employeerecord"
+            tablename : "awt_employerecord"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
@@ -160,7 +160,7 @@ const EmployeeRecord = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename : "awt_employeerecord"
+            tablename : "awt_employerecord"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
@@ -193,7 +193,7 @@ const EmployeeRecord = () => {
         }
 
 
-        axios.post(`${BASE_URL}/add_employeerecord`, data)
+        axios.post(`${BASE_URL}/add_employerecord`, data)
             .then((res) => {
                console.log(res)
                getEmployeeData()
@@ -231,10 +231,11 @@ const EmployeeRecord = () => {
             filterable: false,
                                               
         },
+        { field: 'training', headerName: 'Training Date', flex: 2},
         { field: 'attendee', headerName: 'Attendee', flex: 2},
         { field: 'instructor', headerName: 'Instructor', flex: 2},
         { field: 'description', headerName: 'Description', flex: 2},
-        { field: 'feedback', headerName: 'FeedBack', flex: 2},
+        { field: 'feedback', headerName: 'Feedback', flex: 2},
         
         {
             field: 'actions',
@@ -257,7 +258,7 @@ const EmployeeRecord = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper">
+        <div class="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">

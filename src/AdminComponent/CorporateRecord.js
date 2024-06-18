@@ -297,14 +297,14 @@ const CorporateRecord = () => {
                                             </div>
 
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">Date</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.fromyear} placeholder="From Year" name='fromyear' onChange={onhandleChange} />
+                                                <label for="exampleInputUsername1">From Date</label>
+                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.fromdate} name='fromdate' onChange={onhandleChange} />
                                                 
                                             </div>
 
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1"></label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.fromyear} placeholder="To Date" name='fromyear' onChange={onhandleChange} />
+                                                <label for="exampleInputUsername1">To Date</label>
+                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.todate} name='todate' onChange={onhandleChange} />
                                                 
                                             </div>
 
@@ -344,16 +344,19 @@ const CorporateRecord = () => {
 
 
 
-                                        <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                                        <button type="submit" class="btn btn-primary mr-2">Excel</button>
                                         <button type='button' onClick={() => {
                                             window.location.reload()
-                                        }} class="btn btn-light">Cancel</button>
+                                        }} class="btn btn-primary">Print</button>
+                                        <button type='button' onClick={() => {
+                                            window.location.reload()
+                                        }} class="btn btn-light">Back</button>
                                     </form>
 
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-12">
+                        {/* <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
@@ -398,7 +401,7 @@ const CorporateRecord = () => {
 
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div >

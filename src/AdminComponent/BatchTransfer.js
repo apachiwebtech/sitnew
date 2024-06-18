@@ -16,16 +16,23 @@ import RadioGroup from '@mui/material/RadioGroup';
 //import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
+// import ImageList from '@mui/material/ImageList';
+// import { ImageSourcePropType } from 'react-native';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
-const UnitTestTaken = () => {
+const BatchTransfer = () => {
 
     const [brand, setBrand] = useState([])
     const [vendordata, setVendorData] = useState([])
+    const [specification, setSpecification] = useState("")
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
+
+    console.log(specification)
 
     const handleChange1 = (event) => {
         setChecked([event.target.checked, event.target.checked]);
@@ -54,9 +61,13 @@ const UnitTestTaken = () => {
 
     const [value, setValue] = useState({
         coursename: "" || uid.coursename,
-        batchcode: "" || uid.batchcode,
-        utname: "" || uid.utname,
-        utdate: "" || uid.utdate,
+        oldbatchno: "" || uid.oldbatchno,
+        student: "" || uid.student,
+        newbatch: "" || uid.newbatch,
+        transferammount: "" || uid.transferammount,
+        paymenttype: "" || uid.paymenttype
+
+
 
 
 
@@ -65,9 +76,12 @@ const UnitTestTaken = () => {
     useEffect(() => {
         setValue({
             coursename: uid.coursename,
-            batchcode: uid.batchcode,
-            utname: uid.utname,
-            utdate: uid.utname,
+            oldbatchno: uid.oldbatchno,
+            student: uid.student,
+            newbatch: uid.newbatch,
+            transferammount: uid.transferammount,
+            paymenttype: uid.paymenttype,
+
         })
     }, [uid])
 
@@ -106,7 +120,7 @@ const UnitTestTaken = () => {
 
     async function getEmployeeData() {
         const data = {
-            tablename: "awt_unittesttaken"
+            tablename: "awt_batchtransfer"
         }
         axios.post(`${BASE_URL}/get_data`, data)
             .then((res) => {
@@ -144,7 +158,7 @@ const UnitTestTaken = () => {
     const handleUpdate = (id) => {
         const data = {
             u_id: id,
-            tablename: "awt_unittesttaken"
+            tablename: "awt_batchtransfer"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
@@ -160,7 +174,7 @@ const UnitTestTaken = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename: "awt_unittesttaken"
+            tablename: "awt_batchtransfer"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
@@ -184,15 +198,19 @@ const UnitTestTaken = () => {
         // if(validateForm()){
         const data = {
 
+
+
             coursename: value.coursename,
-            batchcode: value.batchcode,
-            utname: value.utname,
-            utdate: value.utdate,
+            oldbatchno: value.oldbatchno,
+            student: value.student,
+            newbatch: value.newbatch,
+            transferammount: value.transferammount,
+            paymenttype: value.paymenttype,
             uid: uid.id
         }
 
 
-        axios.post(`${BASE_URL}/add_unittesttaken`, data)
+        axios.post(`${BASE_URL}/add_batchtransfer`, data)
             .then((res) => {
                 console.log(res)
                 getEmployeeData()
@@ -231,9 +249,11 @@ const UnitTestTaken = () => {
 
         },
         { field: 'coursename', headerName: 'Course Name', flex: 2 },
-        { field: 'batchcode', headerName: 'Batch Code', flex: 2 },
-        { field: 'utname', headerName: 'Unit Test Name', flex: 2 },
-        { field: 'utdate', headerName: 'Unit Test Date', flex: 2 },
+        { field: 'oldbatchno', headerName: 'Old Batch No.', flex: 2 },
+        { field: 'student', headerName: 'Student', flex: 2 },
+        { field: 'newbatch', headerName: 'New Batch', flex: 2 },
+        { field: 'transferammount', headerName: 'Transfer Ammounts', flex: 2 },
+        { field: 'paymenttype', headerName: 'Payment Type', flex: 2 },
 
         {
             field: 'actions',
@@ -264,70 +284,87 @@ const UnitTestTaken = () => {
                         <div class="col-lg-12 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Add Unit Test Details</h4>
+                                    <h4 class="card-title">Transfer Batch</h4>
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
 
-
-                                            <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Course Name<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.coursename} onChange={onhandleChange} name='coursename'>
-                                                    <option>Select</option>
-                                                    <option>Administration</option>
-                                                    <option>Business Development</option>
-                                                    <option>Training &amp; Development</option>
-                                                    <option>Account</option>
-                                                    <option>Placement</option>
-                                                    <option>Purchase</option>
-                                                    <option>Leadership / DD</option>
-                                                    <option>Quality Assurance</option>
-                                                    <option>Human Resources</option>
-                                                    <option>Corporate Training</option>
-                                                    <option>Test User</option>
+                                            <div class="form-group col-lg-2">
+                                                <lable for="exampleFormControlSelect1">Course Name</lable>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.coursename} name='coursename' onChange={onhandleChange}>
+                                                    <option>Select Course</option>
+                                                    <option> Training in Process Plant System Modelling Using E3D</option>
+                                                    <option>Advance Pipe Stress Analysis </option>
+                                                    <option>Air Conditioning System Design (HVAC)</option>
+                                                    <option>Autocad - Piping</option>
+                                                    <option>Basics AutoCAD – 2D</option>
+                                                    <option>Civil/Structural Design &amp; Drafting </option>
+                                                    <option>Electrical &amp; Instrumentation Design and Drafting </option>
+                                                    <option>Electrical System Design</option>
+                                                    <option>Engineering Design &amp; Drafting </option>
+                                                    <option>Fire Alarm and Protection System </option>
+                                                    <option>Fundamentals of Offshore</option>
+                                                    <option>Health, Safety &amp; Environment in Construction</option>
+                                                    <option>HVAC Design and Drafting</option>
+                                                    <option>Masonry/Carpentry</option>
+                                                    <option>Mechanical Design of Process Equipment</option>
+                                                    <option>MEP Engineering (Mechanical, Electrical &amp; Plumbing)</option>
+                                                    <option>Offshore Engineering</option>
+                                                    <option>Others</option>
+                                                    <option>Pipeline Engineering</option>
+                                                    <option>Piping Design &amp; Drafting </option>
+                                                    <option>Piping Engineering </option>
+                                                    <option>Piping Materials</option>
+                                                    <option>Plant Design Management System (PDMS)</option>
+                                                    <option>PLANT LAYOUT DESIGN</option>
+                                                    <option>Priventive </option>
+                                                    <option>Process Engineering</option>
+                                                    <option>Process Equipment Fabrication Engineering</option>
+                                                    <option>Process Instrumentation &amp; Control</option>
+                                                    <option>PV Elite </option>
+                                                    <option>Rotating Equipment</option>
+                                                    <option>Smart Plant P&amp;ID</option>
+                                                    <option>Solar PV Power System with renewable Energy  </option>
+                                                    <option>Structural Engineering </option>
+                                                    <option>The Art of Developing a Balanced Personality</option>
+                                                    <option>Water &amp; Waste Water Engg.</option>
                                                 </select>
                                             </div>
 
-                                            <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Batch Code<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batchcode} onChange={onhandleChange} name='batchcode'>
-                                                    <option>010021</option>
-                                                    <option>010022</option>
-                                                    <option>010023</option>
-                                                    <option>010024</option>
-                                                    <option>010025</option>
-                                                    <option>010026</option>
-                                                    <option>010027</option>
-                                                    <option>010028</option>
-                                                    <option>010029</option>
-
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleFormControlSelect1">Old Batch No.</label>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.oldbatchno} name='oldbatchno' onChange={onhandleChange}>
+                                                    <option></option>
                                                 </select>
                                             </div>
 
-                                            <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Unit Test Name<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.utname} onChange={onhandleChange} name='utname'>
-                                                    <option>Piping-1</option>
-                                                    <option>Piping-2</option>
-                                                    <option>Piping-3</option>
-                                                    <option>Piping-4</option>
-                                                    <option>Piping-5</option>
-                                                    <option>Piping-6</option>
-                                                    <option>Piping-7</option>
-                                                    <option>Piping-8</option>
-                                                    <option>Piping-9</option>
-                                                    <option>Piping-10</option>
-
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleFomrControlSelect1">Student</label>
+                                                <select className='form-control form-control-lg' id="exampleFormControlSelect1" value={value.student} name='student' onChange={onhandleChange}>
+                                                    <option></option>
                                                 </select>
                                             </div>
 
-                                            <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Unit Test Date<span className='text-danger'>*</span> </label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.utdate} name='utdate' onChange={onhandleChange} />                                                    <option></option>
-
-
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleFomrControlSelect1">New Batch Number</label>
+                                                <select className='form-control form-control-lg' id="exampleFormControlSelect1" value={value.newbatch} name='newbatch' onChange={onhandleChange}>
+                                                    <option></option>
+                                                </select>
                                             </div>
 
+
+                                            <div class="form-group col-lg-2">
+                                                <lable for="exampleInputUsername1">Transfer Ammount</lable>
+                                                <input text="text" class="form-control" id="exampleInputUsername1" value={value.transferammount} placeholder='00.00' name='transferammount' onChange={onhandleChange} />
+                                            </div>
+
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleFomrControlSelect1">Payment Type</label>
+                                                <select className='form-control form-control-lg' id="exampleFormControlSelect1" value={value.paymenttype} name='paymenttype' onChange={onhandleChange}>
+                                                    <option>Lumpsum</option>
+                                                    <option>Installment</option>
+                                                </select>
+                                            </div>
 
                                         </div>
 
@@ -347,7 +384,7 @@ const UnitTestTaken = () => {
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
                                         <div>
-                                            <h4 class="card-title">Unit Test Details</h4>
+                                            <h4 class="card-title">View Batch Transfer</h4>
                                         </div>
 
                                     </div>
@@ -403,4 +440,4 @@ const UnitTestTaken = () => {
     )
 }
 
-export default UnitTestTaken
+export default BatchTransfer

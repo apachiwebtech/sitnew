@@ -53,11 +53,15 @@ const VisitSite = () => {
     //   );
 
     const [value, setValue] = useState({
-        training : ""|| uid.training,
-        attendee : ""|| uid.attendee,
-        instructor : ""|| uid.instructor,
-        description : ""|| uid.description,
-        feedback : ""|| uid.feedback,
+        course : ""|| uid.course,
+        batch : ""|| uid.batch,
+        region : ""|| uid.region,
+        location : ""|| uid.location,
+        student : ""|| uid.student,
+        date : ""|| uid.date,
+        time : ""|| uid.time,
+        confirmdate : ""|| uid.confirmdate,
+
 
         
 
@@ -66,11 +70,15 @@ const VisitSite = () => {
 
     useEffect(() => {
         setValue({
-            training : uid.training,
-            attendee : uid.attendee,
-            instructor : uid.instructor,
-            description :uid.description,
-            feedback: uid.feedback,
+            course : uid.course,
+            batch : uid.batch,
+            region : uid.region,
+            location :uid.location,
+            student: uid.student,
+            date : uid.date,
+            time :uid.time,
+            confirmdate: uid.confirmdate,
+
 
         })
     }, [uid])
@@ -110,7 +118,7 @@ const VisitSite = () => {
     
     async function getEmployeeData() {
         const data = {
-            tablename : "awt_employeerecord"
+            tablename : "awt_visitsite"
         }
         axios.post(`${BASE_URL}/get_data`,data)
             .then((res) => {
@@ -148,7 +156,7 @@ const VisitSite = () => {
     const handleUpdate = (id) => {
         const data = {
             u_id : id,
-            tablename : "awt_employeerecord"
+            tablename : "awt_visitsite"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
@@ -164,7 +172,7 @@ const VisitSite = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename : "awt_employeerecord"
+            tablename : "awt_visitsite"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
@@ -188,16 +196,19 @@ const VisitSite = () => {
     // if(validateForm()){
         const data = {
             
-        training : value.training,
-        attendee : value.attendee,
-        instructor : value.instructor,
-        description :value.description,
-        feedback: value.feedback,
+        course : value.course,
+        batch : value.batch,
+        region : value.region,
+        location :value.location,
+        student: value.student,
+        date : value.date,
+        time :value.time,
+        confirmdate: value.confirmdate,
         uid : uid.id
         }
 
 
-        axios.post(`${BASE_URL}/add_employeerecord`, data)
+        axios.post(`${BASE_URL}/add_visitsite`, data)
             .then((res) => {
                console.log(res)
                getEmployeeData()
@@ -233,12 +244,17 @@ const VisitSite = () => {
             headerAlign: 'center',
             flex: 1,
             filterable: false,
-                                              
+
+                                          
         },
-        { field: 'attendee', headerName: 'Attendee', flex: 2},
-        { field: 'instructor', headerName: 'Instructor', flex: 2},
-        { field: 'description', headerName: 'Description', flex: 2},
-        { field: 'feedback', headerName: 'FeedBack', flex: 2},
+        { field: 'course', headerName: 'course', flex: 2},
+        { field: 'batch', headerName: 'batch', flex: 2},
+        { field: 'region', headerName: 'region', flex: 2},
+        { field: 'location', headerName: 'location', flex: 2},
+        { field: 'student', headerName: 'student', flex: 2},
+        { field: 'date', headerName: 'date', flex: 2},
+        { field: 'time', headerName: 'time', flex: 2},
+        { field: 'confirmdate', headerName: 'confirm Date', flex: 2},
         
         {
             field: 'actions',
@@ -260,8 +276,8 @@ const VisitSite = () => {
     const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
-
-        <div class="container-fluid page-body-wrapper">
+ 
+        <div class="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">

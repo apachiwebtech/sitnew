@@ -20,7 +20,23 @@ import FormLabel from '@mui/material/FormLabel';
 // import { ImageSourcePropType } from 'react-native';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-const UploadTestimonial = () => {
+
+const MaterialConsumption = () => {
+
+
+    // const [date, setDate] = useState('');
+
+    // useEffect(() => {
+    //     const currentDate = new Date();
+    //     const year = currentDate.getFullYear();
+    //     let month = currentDate.getMonth() + 1;
+    //     month = month < 10 ? '0' + month : month;
+    //     let day = currentDate.getDate();
+    //     day = day < 10 ? '0' + day : day;
+    //     const formattedDate = `${year}-${month}-${day}`;
+    //     setDate(formattedDate);
+    // }, []);
+
 
     const [brand, setBrand] = useState([])
     const [vendordata, setVendorData] = useState([])
@@ -30,6 +46,8 @@ const UploadTestimonial = () => {
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
+
+    console.log(specification)
 
     const handleChange1 = (event) => {
         setChecked([event.target.checked, event.target.checked]);
@@ -57,18 +75,34 @@ const UploadTestimonial = () => {
     //   );
 
     const [value, setValue] = useState({
+        isussed: "" || uid.isussed,
+        startdate: "" || uid.startdate,
         course: "" || uid.course,
-        batch: "" || uid.batch,
-
-
-
+        qtyinstock: "" || uid.qtyinstock,
+        batchno: "" || uid.batchno,
+        student: "" || uid.student,
+        selectitem: "" || uid.selectitem,
+        qtyissue: "" || uid.qtyissue,
+        price: "" || uid.price,
+        ammounts: "" || uid.ammounts,
+        purpose: "" || uid.purpose,
 
     })
 
     useEffect(() => {
         setValue({
+
+            isussed: uid.isussed,
+            startdate: uid.startdate,
             course: uid.course,
-            batch: uid.batch,
+            qtyinstock: uid.qtyinstock,
+            batchno: uid.student,
+            student: uid.student,
+            selectitem: uid.selectitem,
+            qtyissue: uid.qtyissue,
+            price: uid.price,
+            ammounts: uid.ammounts,
+            purpose: uid.purpose,
 
         })
     }, [uid])
@@ -108,7 +142,7 @@ const UploadTestimonial = () => {
 
     async function getEmployeeData() {
         const data = {
-            tablename: "awt_uploadtestimonial"
+            tablename: "awt_materialconsumption"
         }
         axios.post(`${BASE_URL}/get_data`, data)
             .then((res) => {
@@ -146,7 +180,7 @@ const UploadTestimonial = () => {
     const handleUpdate = (id) => {
         const data = {
             u_id: id,
-            tablename: "awt_uploadtestimonial"
+            tablename: "awt_materialconsumption"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
@@ -162,7 +196,7 @@ const UploadTestimonial = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename: "awt_uploadtestimonial"
+            tablename: "awt_materialconsumption"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
@@ -186,13 +220,24 @@ const UploadTestimonial = () => {
         // if(validateForm()){
         const data = {
 
+
+
+            isussed: value.isussed,
+            startdate: value.startdate,
             course: value.course,
-            batch: value.batch,
+            qtyinstock: value.qtyinstock,
+            batchno: value.batchno,
+            student: value.student,
+            selectitem: value.selectitem,
+            qtyissue: value.qtyissue,
+            price: value.price,
+            ammounts: value.ammounts,
+            purpose: value.purpose,
             uid: uid.id
         }
 
 
-        axios.post(`${BASE_URL}/add_uploadtestimonial`, data)
+        axios.post(`${BASE_URL}/add_materialconsumption`, data)
             .then((res) => {
                 console.log(res)
                 getEmployeeData()
@@ -230,8 +275,17 @@ const UploadTestimonial = () => {
             filterable: false,
 
         },
-        { field: 'course', headerName: 'Course Name', flex: 2 },
-        { field: 'batch', headerName: 'Batch Name', flex: 2 },
+        { field: 'isussed', headerName: 'Isussed', flex: 2 },
+        { field: 'startdate', headerName: 'Start Date', flex: 2 },
+        { field: 'course', headerName: 'Course', flex: 2 },
+        { field: 'qtyinstock', headerName: 'QTY Instock', flex: 2 },
+        { field: 'batchno', headerName: 'Batch No.', flex: 2 },
+        { field: 'student', headerName: 'Student', flex: 2 },
+        { field: 'selectitem', headerName: 'Select Item', flex: 2 },
+        { field: 'qtyissue', headerName: 'QTY Issue', flex: 2 },
+        { field: 'price', headerName: 'Price', flex: 2 },
+        { field: 'ammounts', headerName: 'Ammounts', flex: 2 },
+        { field: 'purpose', headerName: 'Purpose', flex: 2 }, 
 
         {
             field: 'actions',
@@ -262,15 +316,48 @@ const UploadTestimonial = () => {
                         <div class="col-lg-12 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Add Testimonial Details</h4>
+                                    <h4 class="card-title">Add Material Consumption</h4>
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
 
-                                            <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Course</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course} onChange={onhandleChange} name='course'>
+                                            <div class="form-group col-lg-2">
+                                                <lable for="exampleFormControlSelect1">Isussed By</lable>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.isussed} name='isussed' onChange={onhandleChange}>
                                                     <option>Select</option>
+                                                    <option> Vivek Vijay Meghade</option>
+                                                    <option>Aakash Vaijnath Shirsat</option>
+                                                    <option>Akanksha Anil Tambe</option>
+                                                    <option>Aniket Suryakant Parab</option>
+                                                    <option>Anisha Ajay Haryan</option>
+                                                    <option>Ankit Jaideep Nijai</option>
+                                                    <option>Atharva Vijay Prabhu</option>
+                                                    <option>Balkrishna  Tirodkar</option>
+                                                    <option>Charudatta Kashinath Dabholkar</option>
+                                                    <option>Chetan Narayan Masurkar</option>
+                                                    <option>Harshada Harishchandra Vajantri</option>
+                                                    <option>Harshada Harishchandra Vajantri</option>
+                                                    <option>Jeena Peter Fernandes</option>
+                                                    <option>Kiran Chandrakant Panchal</option>
+                                                    <option>Lavanya Komaraiah Mandvaraj</option>
+                                                    <option>Manasi Mahesh Panchal</option>
+                                                    <option>Mansi Suresh Sakat</option>
+                                                    <option>Mayur Dattatraya Patil</option>
+                                                    <option>Parag Digambar Mestry</option>
+                                                    <option>Parag Vikas Nikam</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleInputUsername1">Start Date</label>
+                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.startdate} name='startdate' onChange={onhandleChange} />
+
+                                            </div>
+
+                                            <div class="form-group col-lg-2">
+                                                <lable for="exampleFormControlSelect1">Select Course</lable>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course} name='course' onChange={onhandleChange}>
+                                                    <option>Select Course</option>
                                                     <option> Training in Process Plant System Modelling Using E3D</option>
                                                     <option>Advance Pipe Stress Analysis </option>
                                                     <option>Air Conditioning System Design (HVAC)</option>
@@ -279,44 +366,76 @@ const UploadTestimonial = () => {
                                                     <option>Civil/Structural Design &amp; Drafting </option>
                                                     <option>Electrical &amp; Instrumentation Design and Drafting </option>
                                                     <option>Electrical System Design</option>
-                                                    <option>Engineering Design &amp; Drafting </option>
-                                                    <option>Fire Alarm and Protection System </option>
-                                                    <option>Fundamentals of Offshore</option>
-                                                    <option>Health, Safety &amp; Environment in Construction</option>
-                                                    <option>HVAC Design and Drafting</option>
-                                                    <option>Masonry/Carpentry</option>
-                                                    <option>Mechanical Design of Process Equipment</option>
-                                                    <option>MEP Engineering (Mechanical, Electrical &amp; Plumbing)</option>
-                                                    <option>Offshore Engineering</option>
-                                                    <option>Others</option>
-                                                    <option>Pipeline Engineering</option>
-                                                    <option>Piping Design &amp; Drafting </option>
-                                                    <option>Piping Engineering </option>
-                                                    <option>Piping Materials</option>
-                                                    <option>Plant Design Management System (PDMS)</option>
-                                                    <option>PLANT LAYOUT DESIGN</option>
-                                                    <option>Priventive </option>
-                                                    <option>Process Engineering</option>
-                                                    <option>Process Equipment Fabrication Engineering</option>
-                                                    <option>Process Instrumentation &amp; Control</option>
-                                                    <option>PV Elite </option>
-                                                    <option>Rotating Equipment</option>
-                                                    <option>Smart Plant P&amp;ID</option>
-                                                    <option>Solar PV Power System with renewable Energy  </option>
-                                                    <option>Structural Engineering </option>
-                                                    <option>The Art of Developing a Balanced Personality</option>
-                                                    <option>Water &amp; Waste Water Engg.</option>
-
                                                 </select>
                                             </div>
 
-                                            <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Batch</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batch} onChange={onhandleChange} name='batch'>
+                                            <div class="form-group col-lg-2">
+                                                <lable for="exampleInputUsername1">Qty In Stock</lable>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.qtyinstock} placeholder='Qty In Stock' name='qtyinstock' onChange={onhandleChange} />
+                                            </div>
+
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleFormControlSelect1">Select Batch</label>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batchno} name='batchno' onChange={onhandleChange}>
                                                     <option></option>
-
                                                 </select>
                                             </div>
+
+
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleFomrControlSelect1">Select Student</label>
+                                                <select className='form-control form-control-lg' id="exampleFormControlSelect1" value={value.student} name='student' onChange={onhandleChange}>
+                                                    <option></option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleFomrControlSelect1">Select Item</label>
+                                                <select className='form-control form-control-lg' id="exampleFormControlSelect1" value={value.selectitem} name='selectitem' onChange={onhandleChange}>
+                                                    <option>Select Material Type</option>
+                                                    <option>PEN</option>
+                                                    <option>Apsara Pencil</option>
+                                                    <option>Asignment front Pages</option>
+                                                    <option>A4 Papers</option>
+                                                    <option>A3 Papers</option>
+                                                    <option>A2 Papers</option>
+                                                    <option>Blue Pen</option>
+                                                    <option>Bags for gifts</option>
+                                                    <option>CD Markers</option>
+                                                    <option>Dusters</option>
+                                                    <option>Erasers</option>
+                                                    <option>Full Size Papers</option>
+                                                    <option>Glue Sticks</option>
+                                                    <option>Gift Pens</option>
+                                                    <option>Highlighters</option>
+                                                    <option>Leads</option>
+                                                </select>
+                                            </div>
+
+
+                                            <div class="form-group col-lg-2">
+                                                <lable for="exampleInputUsername1">Qty Issue</lable>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.qtyissue} placeholder='Quantity' name='qtyissue' onChange={onhandleChange} />
+                                            </div>
+
+                                            <div class="form-group col-lg-2">
+                                                <lable for="exmpaleInputUsername">Price</lable>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.price} placeholder='Price' name='price' onChange={onhandleChange} />
+                                            </div>
+
+                                            <div class="form-group col-lg-2">
+                                                <lable for="exampleInputUsernamae">Total Ammounts</lable>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.ammounts} placeholder='Total Ammount' name='ammounts' onChange={onhandleChange} />
+                                            </div>
+
+                                            <div class="form-group col-lg-4">
+                                                <label for="exampleTextarea1">Purpose</label>
+                                                <textarea class="form-control" id="exampleTextarea1" name='purpose' value={value.purpose} placeholder="Purpose" onChange={onhandleChange}></textarea>
+
+                                            </div>
+
+
+
 
 
 
@@ -340,7 +459,7 @@ const UploadTestimonial = () => {
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
                                         <div>
-                                            <h4 class="card-title">View Testimonial Details</h4>
+                                            <h4 class="card-title">View Batch Transfer</h4>
                                         </div>
 
                                     </div>
@@ -396,4 +515,4 @@ const UploadTestimonial = () => {
     )
 }
 
-export default UploadTestimonial 
+export default MaterialConsumption

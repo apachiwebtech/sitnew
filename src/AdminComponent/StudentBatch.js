@@ -6,7 +6,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
 import decryptedUserId from '../Utils/UserID';
-import { DataGrid ,GridToolbar } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -26,17 +26,17 @@ const StudentBatch = () => {
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
-
+    const  [category , setCat] = useState('')
     const handleChange1 = (event) => {
-      setChecked([event.target.checked, event.target.checked]);
+        setChecked([event.target.checked, event.target.checked]);
     };
-  
+
     const handleChange2 = (event) => {
-      setChecked([event.target.checked, checked[1]]);
+        setChecked([event.target.checked, checked[1]]);
     };
-  
+
     const handleChange3 = (event) => {
-      setChecked([checked[0], event.target.checked]);
+        setChecked([checked[0], event.target.checked]);
     };
 
     // const children = (
@@ -53,24 +53,20 @@ const StudentBatch = () => {
     //   );
 
     const [value, setValue] = useState({
-        training : ""|| uid.training,
-        attendee : ""|| uid.attendee,
-        instructor : ""|| uid.instructor,
-        description : ""|| uid.description,
-        feedback : ""|| uid.feedback,
+        course: "" || uid.course,
+        batch: "" || uid.batch,
+        // category: "" || uid.category
 
-        
+
 
 
     })
 
     useEffect(() => {
         setValue({
-            training : uid.training,
-            attendee : uid.attendee,
-            instructor : uid.instructor,
-            description :uid.description,
-            feedback: uid.feedback,
+            training: uid.training,
+            attendee: uid.attendee,
+            // category: uid.category
 
         })
     }, [uid])
@@ -107,12 +103,12 @@ const StudentBatch = () => {
     }
 
 
-    
+
     async function getEmployeeData() {
         const data = {
-            tablename : "awt_employeerecord"
+            tablename: "awt_studentbatch"
         }
-        axios.post(`${BASE_URL}/get_data`,data)
+        axios.post(`${BASE_URL}/get_data`, data)
             .then((res) => {
                 console.log(res.data)
                 setVendorData(res.data)
@@ -147,14 +143,14 @@ const StudentBatch = () => {
 
     const handleUpdate = (id) => {
         const data = {
-            u_id : id,
-            tablename : "awt_employeerecord"
+            u_id: id,
+            tablename: "awt_studentbatch"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
                 setUid(res.data[0])
 
-                console.log(res.data , "update")
+                console.log(res.data, "update")
             })
             .catch((err) => {
                 console.log(err)
@@ -164,7 +160,7 @@ const StudentBatch = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename : "awt_employeerecord"
+            tablename: "awt_studentbatch"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
@@ -185,31 +181,30 @@ const StudentBatch = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-    // if(validateForm()){
+        // if(validateForm()){
         const data = {
+
+            course: value.course,
+            batch: value.batch,
+            // category: value.category,
+            uid: uid.id,
             
-        training : value.training,
-        attendee : value.attendee,
-        instructor : value.instructor,
-        description :value.description,
-        feedback: value.feedback,
-        uid : uid.id
         }
 
 
-        axios.post(`${BASE_URL}/add_employeerecord`, data)
+        axios.post(`${BASE_URL}/add_studentbatch`, data)
             .then((res) => {
-               console.log(res)
-               getEmployeeData()
+                console.log(res)
+                getEmployeeData()
 
             })
             .catch((err) => {
                 console.log(err)
             })
-    // }
+        // }
 
-   
-        
+
+
 
 
     }
@@ -219,8 +214,8 @@ const StudentBatch = () => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
 
- 
-    
+
+
 
 
 
@@ -233,13 +228,12 @@ const StudentBatch = () => {
             headerAlign: 'center',
             flex: 1,
             filterable: false,
-                                              
+
         },
-        { field: 'attendee', headerName: 'Attendee', flex: 2},
-        { field: 'instructor', headerName: 'Instructor', flex: 2},
-        { field: 'description', headerName: 'Description', flex: 2},
-        { field: 'feedback', headerName: 'FeedBack', flex: 2},
-        
+        { field: 'course', headerName: 'Course', flex: 2 },
+        { field: 'batch', headerName: 'Batch', flex: 2 },
+        // { field: 'category', headerName: 'Category', flex: 2 },
+
         {
             field: 'actions',
             type: 'actions',
@@ -259,9 +253,15 @@ const StudentBatch = () => {
 
     const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
 
+
+    const handleradiochange = (e) => {
+        console.log(e.target.value)
+
+        setCat(e.target.value)
+    }
     return (
 
-        <div class="container-fluid page-body-wrapper">
+        <div class="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -278,35 +278,50 @@ const StudentBatch = () => {
                                                 <FormControl>
                                                     <RadioGroup
                                                         row
+                                                        onChange={(e) =>handleradiochange(e)}
                                                         aria-labelledby="demo-row-radio-buttons-group-label"
-                                                        name="row-radio-buttons-group" >
-                                                        <FormControlLabel value="student" control={<Radio />} label="Student Name" />
-                                                        <FormControlLabel value="batch" control={<Radio />} label="Assignment" />
-                                                        <FormControlLabel value="yearly" control={<Radio />} label="Lecture Plan" />
-                                                        <FormControlLabel value="forcard" control={<Radio />} label="Study Material" />
-                                                        <FormControlLabel value="month" control={<Radio />} label="Standard Lecture Plan" />
-                                                        <FormControlLabel value="document" control={<Radio />} label="Session Plan" />
-                                                        <FormControlLabel value="left" control={<Radio />} label="Time Sheet" />
-                                                        <FormControlLabel value="cancelled" control={<Radio />} label="Lecture Taken" />
-                                                        <FormControlLabel value="placed" control={<Radio />} label="Acomodation" />
-                                                        <FormControlLabel value="month" control={<Radio />} label="Viva/MOC" />
-                                                        <FormControlLabel value="document" control={<Radio />} label="Blank Attendance" />
-                                                        <FormControlLabel value="left" control={<Radio />} label="Assignment Receipt" />
-                                                        <FormControlLabel value="cancelled" control={<Radio />} label="Test Taken" />
-                                                        <FormControlLabel value="placed" control={<Radio />} label="Analysis" />
-                                                        <FormControlLabel value="month" control={<Radio />} label="ID Card" />
-                                                        <FormControlLabel value="document" control={<Radio />} label="New Lecture Mail" />
-                                                        <FormControlLabel value="left" control={<Radio />} label="Student Label" />
+                                                        name="row-radio-buttons-group"  >
+                                                        <FormControlLabel value="0102" control={<Radio />} label="Student Name" />
+                                                        <FormControlLabel value="0103" control={<Radio />} label="Assignment" />
+                                                        <FormControlLabel value="0104" control={<Radio />} label="Lecture Plan" />
+                                                        <FormControlLabel value="0105" control={<Radio />} label="Study Material" />
+                                                        <FormControlLabel value="0106" control={<Radio />} label="Standard Lecture Plan" />
+                                                        <FormControlLabel value="0107" control={<Radio />} label="Session Plan" />
+                                                        <FormControlLabel value="0108" control={<Radio />} label="Time Sheet" />
+                                                        <FormControlLabel value="0109" control={<Radio />} label="Lecture Taken" />
+                                                        <FormControlLabel value="0110" control={<Radio />} label="Acomodation" />
+                                                        <FormControlLabel value="0111" control={<Radio />} label="Viva/MOC" />
+                                                        <FormControlLabel value="0112" control={<Radio />} label="Blank Attendance" />
+                                                        <FormControlLabel value="0113" control={<Radio />} label="Assignment Receipt" />
+                                                        <FormControlLabel value="0114" control={<Radio />} label="Test Taken" />
+                                                        <FormControlLabel value="0115" control={<Radio />} label="Analysis" />
+                                                        <FormControlLabel value="0116" control={<Radio />} label="ID Card" />
+                                                        <FormControlLabel value="0117" control={<Radio />} label="New Lecture Mail" />
+                                                        <FormControlLabel value="0118" control={<Radio />} label="Student Label" />
 
                                                     </RadioGroup>
                                                 </FormControl>
-                                                
+
+                                                {/* <FormControl>
+                                                    <FormLabel id="demo-radio-buttons-group-label">Gender</FormLabel>
+                                                    <RadioGroup
+                                                      onChange={handleradiochange}
+                                                        aria-labelledby="demo-radio-buttons-group-label"
+                                                        defaultValue="female"
+                                                        name="radio-buttons-group"
+                                                    >
+                                                        <FormControlLabel value="female" control={<Radio />} label="Female" />
+                                                        <FormControlLabel value="male" control={<Radio />} label="Male" />
+                                                        <FormControlLabel value="other" control={<Radio />} label="Other" />
+                                                    </RadioGroup>
+                                                </FormControl> */}
+
                                             </div>
-                                          
+
 
                                             <div class="form-group col-lg-4">
                                                 <label for="exampleFormControlSelect1">Select Course<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.attendee} onChange={onhandleChange} name='attendee'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course} onChange={onhandleChange} name='course'>
                                                     <option>Select</option>
                                                     <option>Piping Design & Drafting</option>
                                                     <option>MEP Engineering (Mechanical, Electrical & Plumbing)</option>
@@ -319,13 +334,13 @@ const StudentBatch = () => {
 
                                             <div class="form-group col-lg-4">
                                                 <label for="exampleFormControlSelect1">Select Batch<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.attendee} onChange={onhandleChange} name='attendee'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batch} onChange={onhandleChange} name='batch'>
                                                     <option></option>
                                                 </select>
                                             </div>
 
                                         </div>
-                                            
+
 
 
 

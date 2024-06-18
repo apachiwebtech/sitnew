@@ -16,15 +16,11 @@ import RadioGroup from '@mui/material/RadioGroup';
 //import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
-// import ImageList from '@mui/material/ImageList';
-// import { ImageSourcePropType } from 'react-native';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-const UploadTestimonial = () => {
+
+const InquiryReport = () => {
 
     const [brand, setBrand] = useState([])
     const [vendordata, setVendorData] = useState([])
-    const [specification, setSpecification] = useState("")
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
@@ -57,8 +53,10 @@ const UploadTestimonial = () => {
     //   );
 
     const [value, setValue] = useState({
-        course: "" || uid.course,
-        batch: "" || uid.batch,
+        coursename: "" || uid.coursename,
+        batchcode: "" || uid.batchcode,
+        vivamocname: "" || uid.vivamocname,
+        date: "" || uid.date,
 
 
 
@@ -67,9 +65,10 @@ const UploadTestimonial = () => {
 
     useEffect(() => {
         setValue({
-            course: uid.course,
-            batch: uid.batch,
-
+            coursename: uid.coursename,
+            batchcode: uid.batchcode,
+            vivamocname: uid.vivamocname,
+            date: uid.date,
         })
     }, [uid])
 
@@ -108,7 +107,7 @@ const UploadTestimonial = () => {
 
     async function getEmployeeData() {
         const data = {
-            tablename: "awt_uploadtestimonial"
+            tablename: "awt_vivamoctaken"
         }
         axios.post(`${BASE_URL}/get_data`, data)
             .then((res) => {
@@ -146,7 +145,7 @@ const UploadTestimonial = () => {
     const handleUpdate = (id) => {
         const data = {
             u_id: id,
-            tablename: "awt_uploadtestimonial"
+            tablename: "awt_vivamoctaken"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
@@ -162,7 +161,7 @@ const UploadTestimonial = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename: "awt_uploadtestimonial"
+            tablename: "awt_vivamoctaken"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
@@ -186,13 +185,15 @@ const UploadTestimonial = () => {
         // if(validateForm()){
         const data = {
 
-            course: value.course,
-            batch: value.batch,
+            coursename: value.coursename,
+            batchcode: value.batchcode,
+            vivamocname: value.vivamocname,
+            date: value.date,
             uid: uid.id
         }
 
 
-        axios.post(`${BASE_URL}/add_uploadtestimonial`, data)
+        axios.post(`${BASE_URL}/add_vivamoctaken`, data)
             .then((res) => {
                 console.log(res)
                 getEmployeeData()
@@ -219,38 +220,41 @@ const UploadTestimonial = () => {
 
 
 
-    const columns = [
-        {
-            field: 'index',
-            headerName: 'Id',
-            type: 'number',
-            align: 'center',
-            headerAlign: 'center',
-            flex: 1,
-            filterable: false,
-
-        },
-        { field: 'course', headerName: 'Course Name', flex: 2 },
-        { field: 'batch', headerName: 'Batch Name', flex: 2 },
-
-        {
-            field: 'actions',
-            type: 'actions',
-            headerName: 'Action',
-            flex: 1,
-            renderCell: (params) => {
-                return (
-                    <>
-                        <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
-                    </>
-                )
-            }
-        },
-    ];
+    // const columns = [
+    //     {
+    //         field: 'index',
+    //         headerName: 'Id',
+    //         type: 'number',
+    //         align: 'center',
+    //         headerAlign: 'center',
+    //         flex: 1,
+    //         filterable: false,
 
 
-    const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
+    //     },
+    //     { field: 'coursename', headerName: 'Course Name', flex: 2 },
+    //     { field: 'batchcode', headerName: 'Batch Code', flex: 2 },
+    //     { field: 'vivamocname', headerName: 'Viva/Moc/Name', flex: 2 },
+    //     { field: 'date', headerName: 'Date', flex: 2 },
+
+    //     {
+    //         field: 'actions',
+    //         type: 'actions',
+    //         headerName: 'Action',
+    //         flex: 1,
+    //         renderCell: (params) => {
+    //             return (
+    //                 <>
+    //                     <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />
+    //                     <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
+    //                 </>
+    //             )
+    //         }
+    //     },
+    // ];
+
+
+    // const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
 
@@ -262,15 +266,29 @@ const UploadTestimonial = () => {
                         <div class="col-lg-12 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Add Testimonial Details</h4>
+                                    <h4 class="card-title">Inquiry Report</h4>
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
 
-                                            <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Course</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course} onChange={onhandleChange} name='course'>
-                                                    <option>Select</option>
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleInputUsername1">From Date</label>
+                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.date} name='date' onChange={onhandleChange} />
+
+                                            </div>
+
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleInputUsername1">To Date</label>
+                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.todate} name='todate' onChange={onhandleChange} />
+
+                                            </div>
+
+                                            
+
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleFormControlSelect1"><span className='text-danger'></span> </label>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.attendee} onChange={onhandleChange} name='attendee'>
+                                                    <option>All</option>
                                                     <option> Training in Process Plant System Modelling Using E3D</option>
                                                     <option>Advance Pipe Stress Analysis </option>
                                                     <option>Air Conditioning System Design (HVAC)</option>
@@ -306,26 +324,63 @@ const UploadTestimonial = () => {
                                                     <option>Structural Engineering </option>
                                                     <option>The Art of Developing a Balanced Personality</option>
                                                     <option>Water &amp; Waste Water Engg.</option>
-
                                                 </select>
                                             </div>
 
-                                            <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Batch</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batch} onChange={onhandleChange} name='batch'>
-                                                    <option></option>
-
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleFormControlSelect1"><span className='text-danger'></span> </label>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.attendee} onChange={onhandleChange} name='attendee'>
+                                                    <option>All</option>
+                                                    <option>Full Time</option>
+                                                    <option>Part Time</option>
+                                                    <option>Weekend Batch</option>
+                                                    <option>ONLINE</option>
                                                 </select>
                                             </div>
 
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleFormControlSelect1"><span className='text-danger'></span> </label>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.attendee} onChange={onhandleChange} name='attendee'>
+                                                    <option>All Inquiries</option>
+                                                    <option>Actual Iquiries</option>
+                                                    <option>Admited</option>
+                                                    <option>Non-Admited</option>
+                                                    <option>New Batchwise</option>
+                                                    <option>New Coursewise</option>
+                                                    <option>On Hold</option>
+                                                    <option>Follow Up</option>
+                                                    <option>Closed</option>
+                                                    <option>Junk</option>
+                                                    <option>Duplicate Inquiries</option>
+                                                </select>
+                                            </div>
 
-
-
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleFormControlSelect1"><span className='text-danger'></span> </label>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.attendee} onChange={onhandleChange} name='attendee'>
+                                                    <option>All</option>
+                                                    <option>Exhibition</option>
+                                                    <option>Reference</option>
+                                                    <option>TV interview</option>
+                                                    <option>Website</option>
+                                                    <option>Advertisement</option>
+                                                    <option>Shiksha</option>
+                                                    <option>Ex.Student</option>
+                                                    <option>Facebook</option>
+                                                    <option>Google</option>
+                                                    <option>India Mart</option>
+                                                    <option>News Paper</option>
+                                                    <option>Reference</option>
+                                                    <option>TV interview</option>
+                                                    <option>Seminar</option>
+                                                    <option>Website</option>
+                                                </select>
+                                            </div>
 
                                         </div>
 
 
-                                        <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                                        <button type="submit" class="btn btn-primary mr-2">Search</button>
                                         <button type='button' onClick={() => {
                                             window.location.reload()
                                         }} class="btn btn-light">Cancel</button>
@@ -340,12 +395,12 @@ const UploadTestimonial = () => {
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
                                         <div>
-                                            <h4 class="card-title">View Testimonial Details</h4>
+                                            <h4 class="card-title">Details</h4>
                                         </div>
 
                                     </div>
 
-                                    <div>
+                                    {/* <div>
                                         <DataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
@@ -374,7 +429,7 @@ const UploadTestimonial = () => {
                                                 <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
                                             </div>
                                         )}
-                                    </div>
+                                    </div> */}
 
 
                                     {/* <div>
@@ -396,4 +451,4 @@ const UploadTestimonial = () => {
     )
 }
 
-export default UploadTestimonial 
+export default InquiryReport

@@ -52,12 +52,12 @@ const OnlineStudent = () => {
     //     </Box>
     //   );
 
+    			
     const [value, setValue] = useState({
-        training: "" || uid.training,
-        attendee: "" || uid.attendee,
-        instructor: "" || uid.instructor,
-        description: "" || uid.description,
-        feedback: "" || uid.feedback,
+        course: "" || uid.course,
+        admission: "" || uid.admission,
+        fromdate: "" || uid.fromdate,
+        todate: "" || uid.todate,
 
 
 
@@ -66,11 +66,10 @@ const OnlineStudent = () => {
 
     useEffect(() => {
         setValue({
-            training: uid.training,
-            attendee: uid.attendee,
-            instructor: uid.instructor,
-            description: uid.description,
-            feedback: uid.feedback,
+            course: uid.course,
+            admission: uid.admission,
+            fromdate: uid.fromdate,
+            todate: uid.todate,
 
         })
     }, [uid])
@@ -110,7 +109,7 @@ const OnlineStudent = () => {
 
     async function getEmployeeData() {
         const data = {
-            tablename: "awt_employeerecord"
+            tablename: "awt_onlinestudent"
         }
         axios.post(`${BASE_URL}/get_data`, data)
             .then((res) => {
@@ -148,7 +147,7 @@ const OnlineStudent = () => {
     const handleUpdate = (id) => {
         const data = {
             u_id: id,
-            tablename: "awt_employeerecord"
+            tablename: "awt_onlinestudent"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
@@ -164,7 +163,7 @@ const OnlineStudent = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename: "awt_employeerecord"
+            tablename: "awt_onlinestudent"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
@@ -188,16 +187,15 @@ const OnlineStudent = () => {
         // if(validateForm()){
         const data = {
 
-            training: value.training,
-            attendee: value.attendee,
-            instructor: value.instructor,
-            description: value.description,
-            feedback: value.feedback,
+            course: value.course,
+            admission: value.admission,
+            fromdate: value.fromdate,
+            todate: value.todate,
             uid: uid.id
         }
 
 
-        axios.post(`${BASE_URL}/add_employeerecord`, data)
+        axios.post(`${BASE_URL}/add_onlinestudent`, data)
             .then((res) => {
                 console.log(res)
                 getEmployeeData()
@@ -235,10 +233,10 @@ const OnlineStudent = () => {
             filterable: false,
 
         },
-        { field: 'attendee', headerName: 'Attendee', flex: 2 },
-        { field: 'instructor', headerName: 'Instructor', flex: 2 },
-        { field: 'description', headerName: 'Description', flex: 2 },
-        { field: 'feedback', headerName: 'FeedBack', flex: 2 },
+        { field: 'course', headerName: 'Course', flex: 2 },
+        { field: 'admission', headerName: 'Admission', flex: 2 },
+        { field: 'fromdate', headerName: 'From Date', flex: 2 },
+        { field: 'todate', headerName: 'To Date', flex: 2 },
 
         {
             field: 'actions',
@@ -261,7 +259,7 @@ const OnlineStudent = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper">
+        <div class="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -269,14 +267,14 @@ const OnlineStudent = () => {
                         <div class="col-lg-12 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Online Srudent</h4>
+                                    <h4 class="card-title">Online Student</h4>
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Select Course<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.attendee} onChange={onhandleChange} name='attendee'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course} onChange={onhandleChange} name='course'>
                                                     <option>Select</option>
                                                     <option>Civil/Structural Design & Drafting</option>
                                                     <option>Electrical & Instrumentation Design and Drafting</option>
@@ -288,7 +286,7 @@ const OnlineStudent = () => {
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Admission Status<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.attendee} onChange={onhandleChange} name='attendee'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.admission} onChange={onhandleChange} name='admission'>
                                                     <option>Select</option>
                                                     <option>Accepted</option>
                                                     <option>Denied</option>
@@ -296,22 +294,16 @@ const OnlineStudent = () => {
 
                                                 </select>
                                             </div>
-                                            <div class="from-group col-lg-3">
-                                                <label for="exampleFormControlSelect1"></label>
-                                                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                    <DemoContainer components={['DatePicker']}>
-                                                        <DatePicker label="From Date" />
-                                                    </DemoContainer>
-                                                </LocalizationProvider>
+                                            <div class="form-group col-lg-3">
+                                                <label for="exampleInputUsername1">From Date</label>
+                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.fromdate} name='fromdate' onChange={onhandleChange} />
+                                                
                                             </div>
 
-                                            <div class="from-group col-lg-3">
-                                                <label for="exampleFormControlSelect1"></label>
-                                                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                    <DemoContainer components={['DatePicker']}>
-                                                        <DatePicker label="To Date" />
-                                                    </DemoContainer>
-                                                </LocalizationProvider>
+                                            <div class="form-group col-lg-3">
+                                                <label for="exampleInputUsername1">To Date</label>
+                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.todate} name='todate' onChange={onhandleChange} />
+                                                
                                             </div>
 
 

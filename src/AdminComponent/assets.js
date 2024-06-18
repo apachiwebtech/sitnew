@@ -16,16 +16,23 @@ import RadioGroup from '@mui/material/RadioGroup';
 //import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
+// import ImageList from '@mui/material/ImageList';
+// import { ImageSourcePropType } from 'react-native';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
-const UnitTestTaken = () => {
+const Assets = () => {
 
     const [brand, setBrand] = useState([])
     const [vendordata, setVendorData] = useState([])
+    const [specification, setSpecification] = useState("")
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
+
+    console.log(specification)
 
     const handleChange1 = (event) => {
         setChecked([event.target.checked, event.target.checked]);
@@ -53,10 +60,14 @@ const UnitTestTaken = () => {
     //   );
 
     const [value, setValue] = useState({
-        coursename: "" || uid.coursename,
-        batchcode: "" || uid.batchcode,
-        utname: "" || uid.utname,
-        utdate: "" || uid.utdate,
+        startdate: "" || uid.startdate,
+        vindername: "" || uid.vindername,
+        assets: "" || uid.assets,
+        quantity: "" || uid.quantity,
+        price: "" || uid.price,
+        location: "" || uid.location
+
+
 
 
 
@@ -64,10 +75,13 @@ const UnitTestTaken = () => {
 
     useEffect(() => {
         setValue({
-            coursename: uid.coursename,
-            batchcode: uid.batchcode,
-            utname: uid.utname,
-            utdate: uid.utname,
+            startdate: uid.startdate,
+            vindername: uid.vindername,
+            assets: uid.assets,
+            quantity: uid.quantity,
+            price: uid.price,
+            location: uid.location,
+
         })
     }, [uid])
 
@@ -106,7 +120,7 @@ const UnitTestTaken = () => {
 
     async function getEmployeeData() {
         const data = {
-            tablename: "awt_unittesttaken"
+            tablename: "awt_assets"
         }
         axios.post(`${BASE_URL}/get_data`, data)
             .then((res) => {
@@ -144,7 +158,7 @@ const UnitTestTaken = () => {
     const handleUpdate = (id) => {
         const data = {
             u_id: id,
-            tablename: "awt_unittesttaken"
+            tablename: "awt_assets"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
@@ -160,7 +174,7 @@ const UnitTestTaken = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename: "awt_unittesttaken"
+            tablename: "awt_assets"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
@@ -184,15 +198,19 @@ const UnitTestTaken = () => {
         // if(validateForm()){
         const data = {
 
-            coursename: value.coursename,
-            batchcode: value.batchcode,
-            utname: value.utname,
-            utdate: value.utdate,
+
+
+            startdate: value.startdate,
+            vindername: value.vindername,
+            assets: value.assets,
+            quantity: value.quantity,
+            price: value.price,
+            location: value.location,
             uid: uid.id
         }
 
 
-        axios.post(`${BASE_URL}/add_unittesttaken`, data)
+        axios.post(`${BASE_URL}/add_assets`, data)
             .then((res) => {
                 console.log(res)
                 getEmployeeData()
@@ -230,10 +248,12 @@ const UnitTestTaken = () => {
             filterable: false,
 
         },
-        { field: 'coursename', headerName: 'Course Name', flex: 2 },
-        { field: 'batchcode', headerName: 'Batch Code', flex: 2 },
-        { field: 'utname', headerName: 'Unit Test Name', flex: 2 },
-        { field: 'utdate', headerName: 'Unit Test Date', flex: 2 },
+        { field: 'startdate', headerName: 'Start Date', flex: 2 },
+        { field: 'vindername', headerName: 'Vinder Name', flex: 2 },
+        { field: 'assets', headerName: 'Assets', flex: 2 },
+        { field: 'quantity', headerName: 'Quantity', flex: 2 },
+        { field: 'price', headerName: 'Price', flex: 2 },
+        { field: 'location', headerName: 'Location', flex: 2 },
 
         {
             field: 'actions',
@@ -264,69 +284,111 @@ const UnitTestTaken = () => {
                         <div class="col-lg-12 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Add Unit Test Details</h4>
+                                    <h4 class="card-title">Add Asset</h4>
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
 
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleInputUsername1">Date</label>
+                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.startdate} name='startdate' onChange={onhandleChange} />
 
-                                            <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Course Name<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.coursename} onChange={onhandleChange} name='coursename'>
-                                                    <option>Select</option>
-                                                    <option>Administration</option>
-                                                    <option>Business Development</option>
-                                                    <option>Training &amp; Development</option>
-                                                    <option>Account</option>
-                                                    <option>Placement</option>
-                                                    <option>Purchase</option>
-                                                    <option>Leadership / DD</option>
-                                                    <option>Quality Assurance</option>
-                                                    <option>Human Resources</option>
-                                                    <option>Corporate Training</option>
-                                                    <option>Test User</option>
+                                            </div>
+
+                                            <div class="form-group col-lg-2">
+                                                <lable for="exampleFormControlSelect1">Vinder Name</lable>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.vindername} name='vindername' onChange={onhandleChange}>
+                                                    <option>Select Vendor</option>
+                                                    <option>Anupam Stationery Mart</option>
+                                                    <option>Modern General Stores</option>
+                                                    <option>Parle Book Depot</option>
+                                                    <option>Balaji Stationery Mart</option>
+                                                    <option>Avenue Hotel</option>
+                                                    <option>A To Z Digital Prints</option>
+                                                    <option>Swati Gurav</option>
+                                                    <option>Vinayak  Books &amp; Stationery</option>
+                                                    <option>Vandana Graphics</option>
+                                                    <option>Bombay Book Buraue</option>
+                                                    <option>Super Jumbo Xerox</option>
+                                                    <option>OPENING STOCK - 141210</option>
+                                                    <option>Shree Balaji Computers</option>
+                                                    <option>Deltron Bussiness system</option>
+                                                    <option>Add Cool</option>
+                                                    <option>Eureka Forbs Ltd</option>
+                                                    <option>Other</option>
+                                                    <option>All Ark</option>
+                                                    <option>Hiral Tektronix Pvt Ltd</option>
+                                                    <option>Eureka</option>
+                                                    <option>Vishwakarma Furnitures</option>
+                                                    <option>KLG</option>
+                                                    <option>Plus Business</option>
+                                                    <option>Harsh Electrical</option>
+                                                    <option>Aquagaurd</option>
                                                 </select>
                                             </div>
 
-                                            <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Batch Code<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batchcode} onChange={onhandleChange} name='batchcode'>
-                                                    <option>010021</option>
-                                                    <option>010022</option>
-                                                    <option>010023</option>
-                                                    <option>010024</option>
-                                                    <option>010025</option>
-                                                    <option>010026</option>
-                                                    <option>010027</option>
-                                                    <option>010028</option>
-                                                    <option>010029</option>
-
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleFormControlSelect1">Assets Category</label>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.assets} name='assets' onChange={onhandleChange}>
+                                                    <option>Select Category</option>
+                                                    <option>AIR CONDITIONERS</option>
+                                                    <option>AQUA GUARD MACHINE</option>
+                                                    <option>ASSIGNMENT BOX</option>
+                                                    <option>BIOMETRIC FINGER SCANNING MACHINE</option>
+                                                    <option>CARS</option>
+                                                    <option>CCTV CAMERA</option>
+                                                    <option>CD DRIVE EXTRA</option>
+                                                    <option>CEASOR LOCK</option>
+                                                    <option>CEILLING FANS</option>
+                                                    <option>COMPLAINT BOX</option>
+                                                    <option>COMPUTERS</option>
+                                                    <option>D.V.R MACHINE</option>
+                                                    <option>DATA SWITCH</option>
+                                                    <option>DRAWING BOARD</option>
+                                                    <option>EPBX</option>
+                                                    <option>EXHAUST FANS</option>
+                                                    <option>EXTERNAL HARDDISK</option>
+                                                    <option>FIRE INSTRUMENTS</option>
+                                                    <option>LANDLINE TELEPHONE INSTRUMENT</option>
+                                                    <option>LAPTOP MACHINE</option>
+                                                    <option>LCD PROJECTOR</option>
+                                                    <option>LCD T.V.</option>
+                                                    <option>MOBILE HANDSET</option>
+                                                    <option>NORMAL CALCULATOR</option>
+                                                    <option>NOTICE BOARD</option>
+                                                    <option>OFFICE CHAIRS</option>
+                                                    <option>OFFICE TABLE</option>
+                                                    <option>OVERHEAD PROJECTOR(OHP)</option>
                                                 </select>
                                             </div>
 
-                                            <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Unit Test Name<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.utname} onChange={onhandleChange} name='utname'>
-                                                    <option>Piping-1</option>
-                                                    <option>Piping-2</option>
-                                                    <option>Piping-3</option>
-                                                    <option>Piping-4</option>
-                                                    <option>Piping-5</option>
-                                                    <option>Piping-6</option>
-                                                    <option>Piping-7</option>
-                                                    <option>Piping-8</option>
-                                                    <option>Piping-9</option>
-                                                    <option>Piping-10</option>
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleInputUsername1">Quantity</label>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.quantity} placeholder='Quantity' name='quantity' onChange={onhandleChange} />
 
+                                            </div>
+
+                                            <div class="form-group col-lg-2">
+                                                <lable for="exampleInputUsername1">Price</lable>
+                                                <input text="text" class="form-control" id="exampleInputUsername1" value={value.price} placeholder='Price' name='price' onChange={onhandleChange} />
+                                            </div>
+
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleFomrControlSelect1">Location</label>
+                                                <select className='form-control form-control-lg' id="exampleFormControlSelect1" value={value.location} name='location' onChange={onhandleChange}>
+                                                    <option>Select Location</option>
+                                                    <option>TR-001</option>
+                                                    <option>TR-002</option>
+                                                    <option>TR-003</option>
+                                                    <option>TR-004</option>
+                                                    <option>OFFICE</option>
+                                                    <option>OTHER</option>
                                                 </select>
                                             </div>
 
-                                            <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Unit Test Date<span className='text-danger'>*</span> </label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.utdate} name='utdate' onChange={onhandleChange} />                                                    <option></option>
 
 
-                                            </div>
+
 
 
                                         </div>
@@ -347,7 +409,7 @@ const UnitTestTaken = () => {
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
                                         <div>
-                                            <h4 class="card-title">Unit Test Details</h4>
+                                            <h4 class="card-title">View Asset Master</h4>
                                         </div>
 
                                     </div>
@@ -403,4 +465,4 @@ const UnitTestTaken = () => {
     )
 }
 
-export default UnitTestTaken
+export default Assets

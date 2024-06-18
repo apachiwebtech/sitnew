@@ -24,7 +24,7 @@ import BatchCategory from './AdminComponent/BatchCategory';
 // import Faculty from './AdminComponent/LibraryBook';
 // import { Feedback, LibraryBooks } from '@mui/icons-material';
 import LibraryBook from './AdminComponent/LibraryBook';
-import Feedback from './AdminComponent/Feedback';
+// import Feedback from './AdminComponent/Feedback';
 import Faculty from './AdminComponent/Faculty';
 import AnnualBatch from './AdminComponent/AnnualBatch';
 import BookIssue from './AdminComponent/BookIssue';
@@ -83,6 +83,16 @@ import Documents from './AdminComponent/Documents.js';
 import AdmissionListing from './AdminComponent/AdmissionListing.js';
 import Admission from './AdminComponent/Admission.js';
 import AddCorporateInquiry from './AdminComponent/AddCorporateInquiry.js';
+import LectureTakenListing from './AdminComponent/LectureTakenListing.js';
+import FeedBack1 from './AdminComponent/FeedBack1.js';
+import UploadBanner from './AdminComponent/Uploadbanner.js';
+import InquiryReport from './AdminComponent/InquiryReport.js';
+import Assets from './AdminComponent/assets.js';
+import BatchTransfer from './AdminComponent/BatchTransfer.js';
+import BatchCancellation from './AdminComponent/BatchCancellation.js';
+import MaterialConsumption from './AdminComponent/MaterialConsumption.js';
+import SalaryMaster from './AdminComponent/SalaryMaster.js';
+import BatchLeft from './AdminComponent/BatchLeft.js';
 
 
 
@@ -137,10 +147,10 @@ const Router = createBrowserRouter([
         path: '/librarybook',
         element: <LibraryBook/>
       },
-      {
-        path: '/feedback',
-        element: <Feedback/>
-      },
+      // {
+      //   path: '/feedback',
+      //   element: <Feedback/>
+      // },
       {
         path: '/faculty',
         element: <Faculty/>
@@ -229,6 +239,10 @@ const Router = createBrowserRouter([
         path: '/studentsearch',
         element: <StudentSearch/>
       },
+      {
+        path: '/inquiryreport',
+        element: <InquiryReport/>
+      },
       // =====================Admission Activity===================
 
       {
@@ -255,6 +269,11 @@ const Router = createBrowserRouter([
 
       {
         path: '/lecturetaken',
+        element: <LectureTakenListing/>
+      },
+
+      {
+        path: '/lecturetaken/:lecturetakenid',
         element: <LectureTaken/>
       },
       {
@@ -286,6 +305,11 @@ const Router = createBrowserRouter([
         element: <VisitSite/>
       },
 
+      {
+        path: '/feedback1',
+        element: <FeedBack1/>
+      },
+
       //================Utility======================
 
       {
@@ -299,6 +323,10 @@ const Router = createBrowserRouter([
       {
         path: '/uploadeventphoto',
         element: <UploadEventPhoto/>
+      },
+      {
+        path: '/uploadbanner',
+        element: <UploadBanner/>
       },
       {
         path: '/uploadtestimonial',
@@ -372,6 +400,42 @@ const Router = createBrowserRouter([
         path: '/onlineadmissionform/documents/:admissionid',
         element: <Documents/>
       },
+
+    // ======================Account Master
+
+      {
+        path: '/assets',
+        element: <Assets/>
+      },
+
+      {
+        path: '/batchtransfer',
+        element: <BatchTransfer/>
+      },
+
+      {
+        path: '/batchcancellation',
+        element: <BatchCancellation/>
+      },
+
+      {
+        path: '/materialconsumption',
+        element: <MaterialConsumption/>
+      },
+
+      {
+        path: '/salarymaster',
+        element: <SalaryMaster />
+      },
+      {
+        path: '/batchleft',
+        element: <BatchLeft/>
+      }
+
+
+  
+
+      
    
 
     

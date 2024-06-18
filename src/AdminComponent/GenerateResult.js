@@ -6,7 +6,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
 import decryptedUserId from '../Utils/UserID';
-import { DataGrid ,GridToolbar} from '@mui/x-data-grid';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -28,15 +28,15 @@ const GenerateResult = () => {
     const [checked, setChecked] = React.useState([true, false]);
 
     const handleChange1 = (event) => {
-      setChecked([event.target.checked, event.target.checked]);
+        setChecked([event.target.checked, event.target.checked]);
     };
-  
+
     const handleChange2 = (event) => {
-      setChecked([event.target.checked, checked[1]]);
+        setChecked([event.target.checked, checked[1]]);
     };
-  
+
     const handleChange3 = (event) => {
-      setChecked([checked[0], event.target.checked]);
+        setChecked([checked[0], event.target.checked]);
     };
 
     // const children = (
@@ -53,24 +53,28 @@ const GenerateResult = () => {
     //   );
 
     const [value, setValue] = useState({
-        training : ""|| uid.training,
-        attendee : ""|| uid.attendee,
-        instructor : ""|| uid.instructor,
-        description : ""|| uid.description,
-        feedback : ""|| uid.feedback,
+        course: "" || uid.course,
+        batch: "" || uid.batch,
+        returndate: "" || uid.returndate,
+        printdate: "" || uid.printdate,
+        prepared: "" || uid.prepared,
+        checked: uid.checked,
+        approved: uid.approved,
 
-        
+
 
 
     })
 
     useEffect(() => {
         setValue({
-            training : uid.training,
-            attendee : uid.attendee,
-            instructor : uid.instructor,
-            description :uid.description,
-            feedback: uid.feedback,
+            course: uid.course,
+            batch: uid.batch,
+            returndate: uid.returndate,
+            printdate: uid.printdate,
+            prepared: uid.prepared,
+            checked: uid.checked,
+            approved: uid.approved,
 
         })
     }, [uid])
@@ -107,12 +111,12 @@ const GenerateResult = () => {
     }
 
 
-    
+
     async function getEmployeeData() {
         const data = {
-            tablename : "awt_employeerecord"
+            tablename: "awt_generateresult"
         }
-        axios.post(`${BASE_URL}/get_data`,data)
+        axios.post(`${BASE_URL}/get_data`, data)
             .then((res) => {
                 console.log(res.data)
                 setVendorData(res.data)
@@ -147,14 +151,14 @@ const GenerateResult = () => {
 
     const handleUpdate = (id) => {
         const data = {
-            u_id : id,
-            tablename : "awt_employeerecord"
+            u_id: id,
+            tablename: "awt_generateresult"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
                 setUid(res.data[0])
 
-                console.log(res.data , "update")
+                console.log(res.data, "update")
             })
             .catch((err) => {
                 console.log(err)
@@ -164,7 +168,7 @@ const GenerateResult = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename : "awt_employeerecord"
+            tablename: "awt_generateresult"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
@@ -185,31 +189,33 @@ const GenerateResult = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-    // if(validateForm()){
+        // if(validateForm()){
         const data = {
-            
-        training : value.training,
-        attendee : value.attendee,
-        instructor : value.instructor,
-        description :value.description,
-        feedback: value.feedback,
-        uid : uid.id
+
+            course: value.course,
+            batch: value.batch,
+            returndate: value.returndate,
+            printdate: value.printdate,
+            prepared: value.prepared,
+            checked: value.checked,
+            approved: value.approved,
+            uid: uid.id
         }
 
 
-        axios.post(`${BASE_URL}/add_employeerecord`, data)
+        axios.post(`${BASE_URL}/add_generateresult`, data)
             .then((res) => {
-               console.log(res)
-               getEmployeeData()
+                console.log(res)
+                getEmployeeData()
 
             })
             .catch((err) => {
                 console.log(err)
             })
-    // }
+        // }
 
-   
-        
+
+
 
 
     }
@@ -219,8 +225,8 @@ const GenerateResult = () => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
 
- 
-    
+
+
 
 
 
@@ -233,13 +239,19 @@ const GenerateResult = () => {
             headerAlign: 'center',
             flex: 1,
             filterable: false,
-                                              
+
         },
-        { field: 'attendee', headerName: 'Attendee', flex: 2},
-        { field: 'instructor', headerName: 'Instructor', flex: 2},
-        { field: 'description', headerName: 'Description', flex: 2},
-        { field: 'feedback', headerName: 'FeedBack', flex: 2},
-        
+
+
+        { field: 'course', headerName: 'Course', flex: 2 },
+        { field: 'batch', headerName: 'Batch', flex: 2 },
+        { field: 'returndate', headerName: 'Return Date', flex: 2 },
+        { field: 'printdate', headerName: 'Print Date', flex: 2 },
+        { field: 'prepared', headerName: 'Prepared', flex: 2 },
+        { field: 'checked', headerName: 'Checked', flex: 2 },
+        { field: 'approved', headerName: 'Approved', flex: 2 },
+
+
         {
             field: 'actions',
             type: 'actions',
@@ -261,7 +273,7 @@ const GenerateResult = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper">
+        <div class="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -269,12 +281,12 @@ const GenerateResult = () => {
                         <div class="col-lg-12 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Add Batch</h4>
+                                    <h4 class="card-title">Generate Final Result</h4>
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
 
-                                            
+
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Course<span className='text-danger'>*</span> </label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course} onChange={onhandleChange} name='course'>
@@ -296,38 +308,116 @@ const GenerateResult = () => {
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Batch<span className='text-danger'>*</span> </label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batch} onChange={onhandleChange} name='batch'>
-                                                    <option></option>
-                                                    
+                                                    <option>00001</option>
+                                                    <option>01002</option>
+                                                    <option>01003</option>
+                                                    <option>01004</option>
+                                                    <option>01005</option>
+                                                    <option>01006</option>
+                                                    <option>01007</option>
+                                                    <option>01008</option>
+                                                    <option>01009</option>
+
+
                                                 </select>
                                             </div>
 
-                                            <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Viva/Moc Name:<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.vivamocname} onChange={onhandleChange} name='vivamocname'>
-                                                    <option></option>
-                                                    
-                                                </select>
-                                            </div>
 
-                                            
 
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">Date</label>
+                                                <label for="exampleInputUsername1">Result Date</label>
                                                 <input type="date" class="form-control" id="exampleInputUsername1" value={value.returndate} name='returndate' onChange={onhandleChange} />
-                                                
+
                                             </div>
 
-                                            
+                                            <div class="form-group col-lg-3">
+                                                <label for="exampleInputUsername1">Print Date</label>
+                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.printdate} name='printdate' onChange={onhandleChange} />
+
+                                            </div>
+
+                                            <div class="form-group col-lg-3">
+                                                <label for="exampleFormControlSelect1">Prepared By<span className='text-danger'>*</span> </label>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.prepared} onChange={onhandleChange} name='prepared'>
+                                                    <option>A. G. Belwalkar</option>
+                                                    <option>Aashay Dedhia</option>
+                                                    <option>A. G. Belwalkar</option>
+                                                    <option>Aashay Dedhia</option>
+                                                    <option>A. G. Belwalkar</option>
+                                                    <option>Aashay Dedhia</option>
+                                                    <option>A. G. Belwalkar</option>
+                                                    <option>Aashay Dedhia</option>
+                                                    <option>A. G. Belwalkar</option>
+                                                    <option>Aashay Dedhia</option>
+
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group col-lg-3">
+                                                <label for="exampleFormControlSelect1">Checked By<span className='text-danger'>*</span> </label>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.checked} onChange={onhandleChange} name='checked'>
+                                                    <option>A. G. Belwalkar</option>
+                                                    <option>Aashay Dedhia</option>
+                                                    <option>A. G. Belwalkar</option>
+                                                    <option>Aashay Dedhia</option>
+                                                    <option>A. G. Belwalkar</option>
+                                                    <option>Aashay Dedhia</option>
+                                                    <option>A. G. Belwalkar</option>
+                                                    <option>Aashay Dedhia</option>
+                                                    <option>A. G. Belwalkar</option>
+                                                    <option>Aashay Dedhia</option>
+                                                    <option>A. G. Belwalkar</option>
+                                                    <option>Aashay Dedhia</option>
+
+
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group col-lg-3">
+                                                <label for="exampleFormControlSelect1">Approved By<span className='text-danger'>*</span> </label>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.approved} onChange={onhandleChange} name='approved'>
+                                                    <option>A. G. Belwalkar</option>
+                                                    <option>Aashay Dedhia</option>
+                                                    <option>A. G. Belwalkar</option>
+                                                    <option>Aashay Dedhia</option>
+                                                    <option>A. G. Belwalkar</option>
+                                                    <option>Aashay Dedhia</option>
+                                                    <option>A. G. Belwalkar</option>
+                                                    <option>Aashay Dedhia</option>
+                                                    <option>A. G. Belwalkar</option>
+                                                    <option>Aashay Dedhia</option>
+                                                    <option>A. G. Belwalkar</option>
+                                                    <option>Aashay Dedhia</option>
+
+
+                                                </select>
+                                            </div>
+
+
+
+
 
                                         </div>
 
 
-                                        <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                                        <button type="submit" class="btn btn-primary mr-2">Generate</button>
                                         <button type='button' onClick={() => {
                                             window.location.reload()
                                         }} class="btn btn-light">Cancel</button>
-                                       
+
+
+
                                     </form>
+
+                                    <button type="submit" class="btn btn-primary mr-2">Save</button>
+                                    <button type="submit" class="btn btn-primary mr-2">Without Absent Rule</button>
+                                    <button type="submit" class="btn btn-primary mr-2">Without Absent Rule with Full Attendance</button>
+                                    <button type="submit" class="btn btn-primary mr-2">Print Report Card</button>
+                                    <button type="submit" class="btn btn-primary mr-2">MarkSheet</button>
+                                    <button type="submit" class="btn btn-primary mr-2">Certificate Print</button>
+                                    <button type="submit" class="btn btn-primary mr-2">Print Sheet</button>
+
+
 
                                 </div>
                             </div>
@@ -337,7 +427,7 @@ const GenerateResult = () => {
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
                                         <div>
-                                            <h4 class="card-title">Add Batch</h4>
+                                            <h4 class="card-title">View  Final Result</h4>
                                         </div>
 
                                     </div>
@@ -373,8 +463,8 @@ const GenerateResult = () => {
                                         )}
                                     </div>
 
-                                    
-                                      {/* <div>
+
+                                    {/* <div>
                                       <button type='button' onClick={() => {
                                             window.location.reload()
                                         }} class="btn btn-primary mr-2">Excel</button>

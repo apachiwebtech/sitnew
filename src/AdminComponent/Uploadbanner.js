@@ -11,13 +11,20 @@ import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { LibraryBooks } from '@mui/icons-material';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+//import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
+// import ImageList from '@mui/material/ImageList';
+// import { ImageSourcePropType } from 'react-native';
 
-
-const Feedback = () => {
+const UploadBanner = () => {
 
     const [brand, setBrand] = useState([])
     const [vendordata, setVendorData] = useState([])
     const [uid, setUid] = useState([])
+    const [image , setImage] = useState()
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
@@ -35,48 +42,36 @@ const Feedback = () => {
       setChecked([checked[0], event.target.checked]);
     };
 
-    // const suggestion = (
-    //     <Box sx={{flexDirection: 'column', }}>
+    // const children = (
+    //     <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
     //       <FormControlLabel
-    //         label="Suggestion Required"
+    //         label="Child 1"
     //         control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
     //       />
     //       <FormControlLabel
-    //         label="Brief answer required"
+    //         label="Child 2"
     //         control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
     //       />
     //     </Box>
     //   );
 
-        const [selectedOption, setSelectedOption] = useState('');
-      
-        //Function to handle radio button change
-        const handleOptionChange = (event) => {
-          setSelectedOption(event.target.value);
-        };
-
-
-
+    			
 
     const [value, setValue] = useState({
-        questionfor : ""|| uid.questionfor,
-        category : ""|| uid.category,
-        question : ""|| uid.question,
-        selection : ""|| uid.selection,
-        order : ""|| uid.order
+        titlename : ""|| uid.titlename,
+        file : ""|| uid.file,
+        seqno : ""|| uid.seqno,
+
+        
 
 
     })
 
     useEffect(() => {
         setValue({
-
-        questionfor : uid.questionfor,
-        category : uid.category,
-        question : uid.question,
-        selection : uid.selection,
-        order :uid.order
-   
+            titlename : uid.titlename,
+            file : uid.file,
+            seqno : uid.seqno,
 
         })
     }, [uid])
@@ -100,7 +95,7 @@ const Feedback = () => {
     // }
 
 
-    async function getFeedData() {
+    async function getEmployeeData() {
 
         axios.post(`${BASE_URL}/vendor_details`)
             .then((res) => {
@@ -114,9 +109,9 @@ const Feedback = () => {
 
 
     
-    async function getFeedData() {
+    async function getEmployeeData() {
         const data = {
-            tablename : "awt_feedback"
+            tablename : "awt_uploadbanner"
         }
         axios.post(`${BASE_URL}/get_data`,data)
             .then((res) => {
@@ -129,7 +124,7 @@ const Feedback = () => {
     }
 
     useEffect(() => {
-        getFeedData()
+        getEmployeeData()
         value.title = ""
         setError({})
         setUid([])
@@ -154,7 +149,7 @@ const Feedback = () => {
     const handleUpdate = (id) => {
         const data = {
             u_id : id,
-            tablename : "awt_feedback"
+            tablename : "awt_uploadbanner"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
@@ -170,12 +165,12 @@ const Feedback = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename : "awt_feedback"
+            tablename : "awt_uploadbanner"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
             .then((res) => {
-                getFeedData()
+                getEmployeeData()
 
             })
             .catch((err) => {
@@ -192,21 +187,25 @@ const Feedback = () => {
         e.preventDefault()
 
     // if(validateForm()){
-        const data = {
+        // const data = {
             
-        questionfor : value.questionfor,
-        category : value.category,
-        question : value.question,
-        selection : value.selection,
-        order :value.order,
-        uid : uid.id
-        }
+        // startdate : value.startdate,
+        // enddate : value.enddate,
+        // file : value.file,
+        // description :value.description,
+        // uid : uid.id
+        // }
 
+         const formdata = new FormData()
 
-        axios.post(`${BASE_URL}/add_feedback`, data)
+         formdata.append('image' , image)
+         formdata.append('titlename' , value.titlename)
+         formdata.append('seqno', value.seqno)
+
+        axios.post(`${BASE_URL}/add_uploadbanner`, formdata)
             .then((res) => {
                console.log(res)
-               getFeedData()
+               getEmployeeData()
 
             })
             .catch((err) => {
@@ -227,7 +226,10 @@ const Feedback = () => {
 
  
     
-
+   const onhandleupload = (e) =>{
+   const image = e.target.files[0]
+   setImage(image)
+   }
 
 
     const columns = [
@@ -239,10 +241,11 @@ const Feedback = () => {
             headerAlign: 'center',
             flex: 1,
             filterable: false,
+                                              
         },
-        { field: 'questionfor', headerName: 'Question For', flex: 2 },
-        { field: 'question', headerName: 'Question', flex: 2 },
-        { field: 'order', headerName: 'Question Order', flex: 2},
+        { field: 'titlename', headerName: 'Title Name', flex: 2},
+        { field: 'file', headerName: 'File', flex: 2},
+        { field: 'seqno', headerName: 'Seq. No.', flex: 2},
         
         {
             field: 'actions',
@@ -265,7 +268,7 @@ const Feedback = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper">
+        <div class="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -273,91 +276,42 @@ const Feedback = () => {
                         <div class="col-lg-12 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Feedback Questions</h4>
+                                    <h4 class="card-title">Add Banner Image Details</h4>
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleFormControlSelect1">Question For </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.questionfor} onChange={onhandleChange} name='questionfor'>
-                                                    <option>Question For</option>
-                                                    <option>Training in Process Plant System Modelling Using E3D</option>
-                                                    <option>Advance Pipe Stress Analysis</option>
-                                                    <option>Air Conditioning System Design (HVAC)</option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleFormControlSelect1">Category </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.category} onChange={onhandleChange} name='category'>
-                                                    <option>Category</option>
-                                                    <option>1</option>
-                                                    <option>2</option>
-                                                </select>
-                                            </div>
-                                            
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleFormControlSelect1">Selection Type</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.selection} onChange={onhandleChange} name='selection'>
-                                                    <option>Select</option>
-                                                    <option>FreeTextBox</option>
-                                                    <option>Numeric</option>
-                                                    <option>Multiple Selection</option>
-                                                    <option>Yes /No /May Be</option>
-                                                </select>
-                                            </div>
 
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">Order</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.order} placeholder="Order" name='order' onChange={onhandleChange} />
-                                               
+                                            <div class="form-group col-lg-4">
+                                                <label for="exampleInputUsername1">Image Title Name</label>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.titlename} placeholder='Title' name='titlename' onChange={onhandleChange} />
+                                                
                                             </div>
 
 
                                             <div class="form-group col-lg-4">
-                                                <label for="exampleInputUsername1">Question</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.question} placeholder="Question" name='question' onChange={onhandleChange} />
-                                               
+                                                <label for="exampleInputUsername1"></label>
+                                                <input type="file" class="form-control" id="exampleInputUsername1" value={value.file} name='file' onChange={onhandleupload} />
+                                                
+                                            </div>
+
+                                            <div class="form-group col-lg-4">
+                                                <label for="exampleInputUsername1">Seq. No.</label>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.seqno} placeholder='No.' name='seqno' onChange={onhandleChange} />
+                                                
                                             </div>
 
                                             
 
-                                        </div>
-                                        <div>
-                                            <div>
-                                                <label>
-                                                    <input
-                                                    name='suggestion'
-                                                    type="radio"
-                                                    value="Suggestion Required"
-                                                    checked={selectedOption === "Suggestion Required"}
-                                                    onChange={handleOptionChange}
-                                                    />
-                                                    Suggestion Required
-                                                </label>
-
-                                                <label className='mx-5'>
-                                                    <input
-                                                    name='brief'
-                                                    type="radio"
-                                                    value="Brief answer required"
-                                                    checked={selectedOption === "Brief answer required"}
-                                                    onChange={handleOptionChange}
-                                                    />
-                                                    Brief answer required
-                                                </label>
-
-
-                                                <div>Selected option: {selectedOption}</div>
-                                            </div>
-                                        </div>
                                             
 
+                                        </div>
 
 
                                         <button type="submit" class="btn btn-primary mr-2">Submit</button>
                                         <button type='button' onClick={() => {
                                             window.location.reload()
                                         }} class="btn btn-light">Cancel</button>
+                                       
                                     </form>
 
                                 </div>
@@ -368,13 +322,13 @@ const Feedback = () => {
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
                                         <div>
-                                            <h4 class="card-title">Feedback Details</h4>
+                                            <h4 class="card-title">View Banner Image</h4>
                                         </div>
 
                                     </div>
 
                                     <div>
-                                    <DataGrid
+                                        <DataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
                                             disableColumnFilter
@@ -404,6 +358,13 @@ const Feedback = () => {
                                         )}
                                     </div>
 
+                                    
+                                      {/* <div>
+                                      <button type='button' onClick={() => {
+                                            window.location.reload()
+                                        }} class="btn btn-primary mr-2">Excel</button>
+                                      </div> */}
+
 
 
                                 </div>
@@ -417,4 +378,4 @@ const Feedback = () => {
     )
 }
 
-export default Feedback
+export default UploadBanner

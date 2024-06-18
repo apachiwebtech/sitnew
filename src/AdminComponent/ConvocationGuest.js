@@ -6,7 +6,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
 import decryptedUserId from '../Utils/UserID';
-import { DataGrid ,GridToolbar} from '@mui/x-data-grid';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -28,15 +28,15 @@ const ConvocationGuest = () => {
     const [checked, setChecked] = React.useState([true, false]);
 
     const handleChange1 = (event) => {
-      setChecked([event.target.checked, event.target.checked]);
+        setChecked([event.target.checked, event.target.checked]);
     };
-  
+
     const handleChange2 = (event) => {
-      setChecked([event.target.checked, checked[1]]);
+        setChecked([event.target.checked, checked[1]]);
     };
-  
+
     const handleChange3 = (event) => {
-      setChecked([checked[0], event.target.checked]);
+        setChecked([checked[0], event.target.checked]);
     };
 
     // const children = (
@@ -53,23 +53,23 @@ const ConvocationGuest = () => {
     //   );
 
     const [value, setValue] = useState({
-        training : ""|| uid.training,
-        attendee : ""|| uid.attendee,
-        instructor : ""|| uid.instructor,
-        description : ""|| uid.description,
-        feedback : ""|| uid.feedback,
+        training: "" || uid.training,
+        attendee: "" || uid.attendee,
+        instructor: "" || uid.instructor,
+        description: "" || uid.description,
+        feedback: "" || uid.feedback,
 
-        
+
 
 
     })
 
     useEffect(() => {
         setValue({
-            training : uid.training,
-            attendee : uid.attendee,
-            instructor : uid.instructor,
-            description :uid.description,
+            training: uid.training,
+            attendee: uid.attendee,
+            instructor: uid.instructor,
+            description: uid.description,
             feedback: uid.feedback,
 
         })
@@ -107,12 +107,12 @@ const ConvocationGuest = () => {
     }
 
 
-    
+
     async function getEmployeeData() {
         const data = {
-            tablename : "awt_employeerecord"
+            tablename: "awt_employeerecord"
         }
-        axios.post(`${BASE_URL}/get_data`,data)
+        axios.post(`${BASE_URL}/get_data`, data)
             .then((res) => {
                 console.log(res.data)
                 setVendorData(res.data)
@@ -147,14 +147,14 @@ const ConvocationGuest = () => {
 
     const handleUpdate = (id) => {
         const data = {
-            u_id : id,
-            tablename : "awt_employeerecord"
+            u_id: id,
+            tablename: "awt_employeerecord"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
                 setUid(res.data[0])
 
-                console.log(res.data , "update")
+                console.log(res.data, "update")
             })
             .catch((err) => {
                 console.log(err)
@@ -164,7 +164,7 @@ const ConvocationGuest = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename : "awt_employeerecord"
+            tablename: "awt_employeerecord"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
@@ -185,31 +185,31 @@ const ConvocationGuest = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-    // if(validateForm()){
+        // if(validateForm()){
         const data = {
-            
-        training : value.training,
-        attendee : value.attendee,
-        instructor : value.instructor,
-        description :value.description,
-        feedback: value.feedback,
-        uid : uid.id
+
+            training: value.training,
+            attendee: value.attendee,
+            instructor: value.instructor,
+            description: value.description,
+            feedback: value.feedback,
+            uid: uid.id
         }
 
 
         axios.post(`${BASE_URL}/add_employeerecord`, data)
             .then((res) => {
-               console.log(res)
-               getEmployeeData()
+                console.log(res)
+                getEmployeeData()
 
             })
             .catch((err) => {
                 console.log(err)
             })
-    // }
+        // }
 
-   
-        
+
+
 
 
     }
@@ -219,8 +219,8 @@ const ConvocationGuest = () => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
 
- 
-    
+
+
 
 
 
@@ -233,13 +233,13 @@ const ConvocationGuest = () => {
             headerAlign: 'center',
             flex: 1,
             filterable: false,
-                                              
+
         },
-        { field: 'attendee', headerName: 'Attendee', flex: 2},
-        { field: 'instructor', headerName: 'Instructor', flex: 2},
-        { field: 'description', headerName: 'Description', flex: 2},
-        { field: 'feedback', headerName: 'FeedBack', flex: 2},
-        
+        { field: 'attendee', headerName: 'Attendee', flex: 2 },
+        { field: 'instructor', headerName: 'Instructor', flex: 2 },
+        { field: 'description', headerName: 'Description', flex: 2 },
+        { field: 'feedback', headerName: 'FeedBack', flex: 2 },
+
         {
             field: 'actions',
             type: 'actions',
@@ -273,10 +273,10 @@ const ConvocationGuest = () => {
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
-                                          
+
                                             <div class="form-group col-lg-4">
                                                 <label for="exampleFormControlSelect1">Select Year<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.attendee} onChange={onhandleChange} name='attendee'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.year} onChange={onhandleChange} name='year'>
                                                     <option>2024</option>
                                                     <option>2023</option>
                                                     <option>2022</option>
@@ -305,15 +305,15 @@ const ConvocationGuest = () => {
                                             </div>
 
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1"></label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.fromyear} placeholder="From Year" name='fromyear' onChange={onhandleChange} />
-                                                
+                                                <label for="exampleInputUsername1">To Years</label>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.toyears} name='toyears' onChange={onhandleChange} />
+
                                             </div>
 
 
                                             <div class="form-group col-lg-4">
                                                 <label for="exampleFormControlSelect1">Select Course<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.attendee} onChange={onhandleChange} name='attendee'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course} onChange={onhandleChange} name='course'>
                                                     <option>All</option>
                                                     <option>Piping Design & Drafting</option>
                                                     <option>MEP Engineering (Mechanical, Electrical & Plumbing)</option>
@@ -322,20 +322,24 @@ const ConvocationGuest = () => {
                                                     <option>Training in Process Plant System Modelling Using E3D</option>
                                                 </select>
                                             </div>
-                                        
+
 
                                         </div>
-                                            
+
+
+                                        <button type="submit" class="btn btn-primary mr-2">Show</button>
+                                        <button type='button' onClick={() => {
+                                            window.location.reload()
+                                        }} class="btn btn-primary mr-2">Back</button>
 
 
 
-                                        
                                     </form>
 
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-12">
+                        {/* <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
@@ -375,15 +379,12 @@ const ConvocationGuest = () => {
                                             </div>
                                         )}
                                     </div>
-                                    <button type="submit" class="btn btn-primary mr-2">Show</button>
-                                        <button type='button' onClick={() => {
-                                            window.location.reload()
-                                        }} class="btn btn-primary mr-2">Back</button>
+
 
 
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div >

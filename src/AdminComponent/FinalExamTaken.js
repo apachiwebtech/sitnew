@@ -53,11 +53,10 @@ const FinalExamTaken = () => {
     //   );
 
     const [value, setValue] = useState({
-        training : ""|| uid.training,
-        attendee : ""|| uid.attendee,
-        instructor : ""|| uid.instructor,
-        description : ""|| uid.description,
-        feedback : ""|| uid.feedback,
+        coursename : ""|| uid.coursename,
+        batchcode : ""|| uid.batchcode,
+        examtestname : ""|| uid.examtestname,
+        data : ""|| uid.date,
 
         
 
@@ -66,11 +65,10 @@ const FinalExamTaken = () => {
 
     useEffect(() => {
         setValue({
-            training : uid.training,
-            attendee : uid.attendee,
-            instructor : uid.instructor,
-            description :uid.description,
-            feedback: uid.feedback,
+            coursename : uid.coursename,
+            batchcode : uid.batchcode,
+            examtestname : uid.examtestname,
+            data :uid.date,
 
         })
     }, [uid])
@@ -110,7 +108,7 @@ const FinalExamTaken = () => {
     
     async function getEmployeeData() {
         const data = {
-            tablename : "awt_employeerecord"
+            tablename : "awt_finalexamtaken"
         }
         axios.post(`${BASE_URL}/get_data`,data)
             .then((res) => {
@@ -148,7 +146,7 @@ const FinalExamTaken = () => {
     const handleUpdate = (id) => {
         const data = {
             u_id : id,
-            tablename : "awt_employeerecord"
+            tablename : "awt_finalexamtaken"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
@@ -164,7 +162,7 @@ const FinalExamTaken = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename : "awt_employeerecord"
+            tablename : "awt_finalexamtaken"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
@@ -188,16 +186,15 @@ const FinalExamTaken = () => {
     // if(validateForm()){
         const data = {
             
-        training : value.training,
-        attendee : value.attendee,
-        instructor : value.instructor,
-        description :value.description,
-        feedback: value.feedback,
+        coursename : value.coursename,
+        batchcode : value.batchcode,
+        examtestname : value.examtestname,
+        date :value.date,
         uid : uid.id
         }
 
 
-        axios.post(`${BASE_URL}/add_employeerecord`, data)
+        axios.post(`${BASE_URL}/add_finalexamtaken`, data)
             .then((res) => {
                console.log(res)
                getEmployeeData()
@@ -235,10 +232,10 @@ const FinalExamTaken = () => {
             filterable: false,
                                               
         },
-        { field: 'attendee', headerName: 'Attendee', flex: 2},
-        { field: 'instructor', headerName: 'Instructor', flex: 2},
-        { field: 'description', headerName: 'Description', flex: 2},
-        { field: 'feedback', headerName: 'FeedBack', flex: 2},
+        { field: 'coursename', headerName: 'Course Name', flex: 2},
+        { field: 'batchcode', headerName: 'Batch Code', flex: 2},
+        { field: 'examtestname', headerName: 'Exam Test Name', flex: 2},
+        { field: 'date', headerName: 'Date', flex: 2},
         
         {
             field: 'actions',
@@ -261,7 +258,7 @@ const FinalExamTaken = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper">
+        <div class="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -277,7 +274,7 @@ const FinalExamTaken = () => {
                                             
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Course Name<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.codename} onChange={onhandleChange} name='codename'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.coursename} onChange={onhandleChange} name='coursename'>
                                                     <option>Select</option>
                                                     <option>Administration</option>
                                                     <option>Business Development</option>
@@ -295,16 +292,35 @@ const FinalExamTaken = () => {
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Batch Code<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.bathcode} onChange={onhandleChange} name='batchcode'>
-                                                    <option></option>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batchcode} onChange={onhandleChange} name='batchcode'>
+                                                    <option>01201</option>
+                                                    <option>01202</option>
+                                                    <option>01203</option>
+                                                    <option>01204</option>
+                                                    <option>01205</option>
+                                                    <option>01206</option>
+                                                    <option>01207</option>
+                                                    <option>01208</option>
+                                                    <option>01209</option>
+                                                    <option>01210</option>
                                                     
                                                 </select>
                                             </div>
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Exam Test Name<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.examtestcode} onChange={onhandleChange} name='examtestcode'>
-                                                    <option></option>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.examtestname} onChange={onhandleChange} name='examtestname'>
+                                                    <option>H.V.A.C</option>
+                                                    <option>LayOut</option>
+                                                    <option>Final Exam - 0201 - 1</option>
+                                                    <option>Final Exam - 0201 - 2</option>
+                                                    <option>Final Exam - 0201 - 3</option>
+                                                    <option>Final Exam - 0201 - 4</option>
+                                                    <option>Final Exam - 0201 - 5</option>
+                                                    <option>Auto Cad</option>
+                                                    <option>Final</option>
+                                                    <option>Theory</option>
+
                                                     
                                                 </select>
                                             </div>
@@ -313,7 +329,7 @@ const FinalExamTaken = () => {
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">Date</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.data} name='date' onChange={onhandleChange} />
+                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.date} name='date' onChange={onhandleChange} />
                                                 
                                             </div>
 

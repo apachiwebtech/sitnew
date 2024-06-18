@@ -32,6 +32,8 @@ const NoticeBoard = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
 
+    console.log(specification)
+
     const handleChange1 = (event) => {
       setChecked([event.target.checked, event.target.checked]);
     };
@@ -58,11 +60,9 @@ const NoticeBoard = () => {
     //   );
 
     const [value, setValue] = useState({
-        training : ""|| uid.training,
-        attendee : ""|| uid.attendee,
-        instructor : ""|| uid.instructor,
-        description : ""|| uid.description,
-        feedback : ""|| uid.feedback,
+        startdate : ""|| uid.startdate,
+        enddate : ""|| uid.enddate,
+        specification : ""|| uid.specification,
 
         
 
@@ -71,11 +71,9 @@ const NoticeBoard = () => {
 
     useEffect(() => {
         setValue({
-            training : uid.training,
-            attendee : uid.attendee,
-            instructor : uid.instructor,
-            description :uid.description,
-            feedback: uid.feedback,
+            startdate : uid.startdate,
+            enddate : uid.enddate,
+            specification : uid.specification,
 
         })
     }, [uid])
@@ -115,7 +113,7 @@ const NoticeBoard = () => {
     
     async function getEmployeeData() {
         const data = {
-            tablename : "awt_employeerecord"
+            tablename : "awt_noticeboard"
         }
         axios.post(`${BASE_URL}/get_data`,data)
             .then((res) => {
@@ -153,7 +151,7 @@ const NoticeBoard = () => {
     const handleUpdate = (id) => {
         const data = {
             u_id : id,
-            tablename : "awt_employeerecord"
+            tablename : "awt_noticeboard"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
@@ -169,7 +167,7 @@ const NoticeBoard = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename : "awt_employeerecord"
+            tablename : "awt_noticeboard"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
@@ -193,16 +191,16 @@ const NoticeBoard = () => {
     // if(validateForm()){
         const data = {
             
-        training : value.training,
-        attendee : value.attendee,
-        instructor : value.instructor,
-        description :value.description,
-        feedback: value.feedback,
+            		
+
+        startdate : value.startdate,
+        enddate : value.enddate,
+        specification: specification,
         uid : uid.id
         }
 
 
-        axios.post(`${BASE_URL}/add_employeerecord`, data)
+        axios.post(`${BASE_URL}/add_noticeboard`, data)
             .then((res) => {
                console.log(res)
                getEmployeeData()
@@ -240,10 +238,15 @@ const NoticeBoard = () => {
             filterable: false,
                                               
         },
-        { field: 'attendee', headerName: 'Attendee', flex: 2},
-        { field: 'instructor', headerName: 'Instructor', flex: 2},
-        { field: 'description', headerName: 'Description', flex: 2},
-        { field: 'feedback', headerName: 'FeedBack', flex: 2},
+        { field: 'startdate', headerName: 'Start Date', flex: 2},
+        { field: 'enddate', headerName: 'End Date', flex: 2},
+        { field: 'specification', headerName: 'Description', flex: 2, renderCell : (params) => {
+            return (
+                <>
+                 <div dangerouslySetInnerHTML={{ __html: params.row.specification }}></div>
+                </>
+            )
+        }},
         
         {
             field: 'actions',
@@ -266,7 +269,7 @@ const NoticeBoard = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper">
+        <div class="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -295,7 +298,8 @@ const NoticeBoard = () => {
                                                 <label for="exampleTextarea1">Basic Study Preparation required:</label>
                                                     <CKEditor
                                                     editor={ClassicEditor}
-                                                    // data={uid.specification}
+                                                  
+                                                    data={uid.specification}
                                                     onReady={editor => {
                                                     // Allows you to store the editor instance and use it later.
                                                     // console.log('Editor is ready to use!', editor);

@@ -6,11 +6,13 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
 import decryptedUserId from '../Utils/UserID';
-import { DataGrid ,GridToolbar } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { LibraryBooks } from '@mui/icons-material';
+import { Button, Card, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
+import AddBoxIcon from '@mui/icons-material/AddBox';
 
 
 const LectureTaken = () => {
@@ -23,201 +25,209 @@ const LectureTaken = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
 
-    const handleChange1 = (event) => {
-      setChecked([event.target.checked, event.target.checked]);
-    };
-  
-    const handleChange2 = (event) => {
-      setChecked([event.target.checked, checked[1]]);
-    };
-  
-    const handleChange3 = (event) => {
-      setChecked([checked[0], event.target.checked]);
-    };
-
-    // const suggestion = (
-    //     <Box sx={{flexDirection: 'column', }}>
-    //       <FormControlLabel
-    //         label="Suggestion Required"
-    //         control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
-    //       />
-    //       <FormControlLabel
-    //         label="Brief answer required"
-    //         control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
-    //       />
-    //     </Box>
-    //   );
-
-        const [selectedOption, setSelectedOption] = useState('');
-      
-        //Function to handle radio button change
-        const handleOptionChange = (event) => {
-          setSelectedOption(event.target.value);
-        };
-
-
-
-
+    const { lecturetakenid } = useParams();
+    const [inquiryData, setInquiryData] = useState([]);
+    const [Discipline, setDescipline] = useState([]);
+    const [Course, setCourse] = useState([]);
+    const [Education, setEducation] = useState([]);
+    const [batch, setBatch] = useState([]);
+    const [batchCategoty, setbatchCategory] = useState([]);
     const [value, setValue] = useState({
-        questionfor : ""|| uid.questionfor,
-        category : ""|| uid.category,
-        question : ""|| uid.question,
-        selection : ""|| uid.selection,
-        order : ""|| uid.order
 
-
+        course: '',
+        batch: '',
+        lecture: '',
+        lecturedate: '',
+        faculty: '',
+        assignment: '',
+        material: '',
+        materialissued: '',
+        topicdiscuss: '',
     })
 
-    useEffect(() => {
-        setValue({
 
-        questionfor : uid.questionfor,
-        category : uid.category,
-        question : uid.question,
-        selection : uid.selection,
-        order :uid.order
-   
-
-        })
-    }, [uid])
+    const validateForm = () => {
+        let isValid = true
+        const newErrors = {}
 
 
-    // const validateForm = () => {
-    //     let isValid = true
-    //     const newErrors = {}
-
-
-    //    if (!value.college) {
-    //     isValid = false;
-    //     newErrors.name = "Name is require"
-    //    }
-    //     if (!value.email) {
-    //         isValid = false;
-    //         newErrors.email = "Email is require"
-    //     }
-    //     setError(newErrors)
-    //     return isValid
-    // }
-
-
-    async function getFeedData() {
-
-        axios.post(`${BASE_URL}/vendor_details`)
-            .then((res) => {
-                console.log(res.data)
-                setBrand(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
-
-
-    
-    async function getFeedData() {
-        const data = {
-            tablename : "awt_feedback"
+        if (!value.facultyname) {
+            isValid = false;
+            newErrors.name = "Name is require"
         }
-        axios.post(`${BASE_URL}/get_data`,data)
-            .then((res) => {
-                console.log(res.data)
-                setVendorData(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
+
+        setError(newErrors)
+        return isValid
     }
 
+
+    const getInquiryData = async () => {
+        const response = await fetch(`${BASE_URL}/getadmissionactivity`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const data = await response.json();
+
+        setInquiryData(data);
+    }
+
+    const getDiscipline = async () => {
+        const response = await fetch(`${BASE_URL}/getDiscipline`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const data = await response.json();
+        setDescipline(data);
+    }
+    const getCourse = async () => {
+        const response = await fetch(`${BASE_URL}/getCourses`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const data = await response.json();
+        setCourse(data);
+    }
+    const getEducation = async () => {
+        const response = await fetch(`${BASE_URL}/getEducation`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const data = await response.json();
+        setEducation(data);
+    }
+    const getBatch = async () => {
+        const response = await fetch(`${BASE_URL}/getBtach`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const data = await response.json();
+        setBatch(data);
+    }
+    const getBtachCategory = async () => {
+        const response = await fetch(`${BASE_URL}/getBtachCategory`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const data = await response.json();
+        setbatchCategory(data);
+    }
+
+    async function getStudentDetail() {
+        const response = await fetch(`${BASE_URL}/studentDetail`, {
+            method: 'POST',
+            body: JSON.stringify({
+                id: lecturetakenid,
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        const data = await response.json();
+
+        console.log(data, "DATA A GAYA!");
+
+        setValue(prevState => ({
+            ...prevState,
+            course: data[0].Course_Name,
+            batch: data[0].Batch,
+            lecture: data[0].Lecture,
+            lecturedata: data[0].Lecture_Data,
+            faculty: data[0].Faculty,
+            assignment: data[0].Email,
+            material: data[0].Nationality,
+            materialissued: data[0].discussion,
+            topicdiscuss: data[0].topicdiscuss
+        }))
+    }
     useEffect(() => {
-        getFeedData()
+        if (lecturetakenid !== ":lecturetakenid") {
+            getStudentDetail()
+        }
+        getInquiryData()
+        getDiscipline();
+        getEducation();
+        getCourse();
+        getBatch();
+        getBtachCategory();
         value.title = ""
         setError({})
         setUid([])
     }, [])
 
-    const handleClick = (id) => {
-        setCid(id)
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: true,
-        }));
-    };
 
-    const handleCancel = (id) => {
-        // Hide the confirmation dialog without performing the delete action
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
-    };
 
-    const handleUpdate = (id) => {
-        const data = {
-            u_id : id,
-            tablename : "awt_feedback"
-        }
-        axios.post(`${BASE_URL}/update_data`, data)
-            .then((res) => {
-                setUid(res.data[0])
 
-                console.log(res.data , "update")
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
 
-    const handleDelete = (id) => {
-        const data = {
-            cat_id: id,
-            tablename : "awt_feedback"
-        }
 
-        axios.post(`${BASE_URL}/delete_data`, data)
-            .then((res) => {
-                getFeedData()
 
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
-    }
-
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
+        let response
+        // if(validateForm()){
+        if (lecturetakenid == ":lecturetakenid") {
+            response = await fetch(`${BASE_URL}/add_lecturetaken`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    course: value.course,
+                    batch: value.batch,
+                    lecture: value.lecture,
+                    lecturedata: value.lecturedate,
+                    faculty: value.faculty,
+                    assignment: value.assignment,
+                    material: value.material,
+                    materialissued: value.materialissued,
+                    topicdiscuss: value.topicdiscuss,
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+        } else {
 
-    // if(validateForm()){
-        const data = {
-            
-        questionfor : value.questionfor,
-        category : value.category,
-        question : value.question,
-        selection : value.selection,
-        order :value.order,
-        uid : uid.id
+            response = await fetch(`${BASE_URL}/updatelecturetaken`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    course: value.course,
+                    batch: value.batch,
+                    lecture: value.lecture,
+                    lecturedata: value.lecturedate,
+                    faculti: value.faculty,
+                    assignment: value.whatsapp,
+                    material: value.email,
+                    materialissued: value.nationality,
+                    topicdiscuss: value.discussion,
+
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
         }
 
 
-        axios.post(`${BASE_URL}/add_feedback`, data)
-            .then((res) => {
-               console.log(res)
-               getFeedData()
-
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    // }
-
-   
-        
 
 
+
+        const data = await response.json();
+
+        alert(data.message)
+        //   window.location.pathname = '/inquirylisting'
+
+
+        // }        
     }
 
 
@@ -225,207 +235,189 @@ const LectureTaken = () => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
 
- 
-    
 
-
-
-    const columns = [
-        {
-            field: 'index',
-            headerName: 'Id',
-            type: 'number',
-            align: 'center',
-            headerAlign: 'center',
-            flex: 1,
-            filterable: false,
-        },
-        { field: 'questionfor', headerName: 'Question For', flex: 2 },
-        { field: 'question', headerName: 'Question', flex: 2 },
-        { field: 'order', headerName: 'Question Order', flex: 2},
-        
-        {
-            field: 'actions',
-            type: 'actions',
-            headerName: 'Action',
-            flex: 1,
-            renderCell: (params) => {
-                return (
-                    <>
-                        <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
-                    </>
-                )
-            }
-        },
-    ];
-
-
-    const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
 
-        <div class="container-fluid page-body-wrapper col-lg-10">
+        <div className="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
-            <div class="main-panel">
-                <div class="content-wrapper">
-                    <div class="row">
-                        <div class="col-lg-12 grid-margin stretch-card">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h4 class="card-title">Add Lecture Details</h4>
-                                    <hr></hr>
-                                    <form class="forms-sample py-3" onSubmit={handleSubmit}>
-                                        <div class='row'>
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleFormControlSelect1">Course</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course} onChange={onhandleChange} name='course'>
-                                                    <option>Select Course</option>
-                                                    <option>Training in Process Plant System Modelling Using E3D</option>
-                                                    <option>Advance Pipe Stress Analysis</option>
-                                                    <option>Air Conditioning System Design (HVAC)</option>
-                                                </select>
+            <div className="main-panel">
+
+                <div className="content-wrapper">
+
+                    <div className="row">
+                        <div className="col-lg-12 grid-margin">
+                            <div className="card">
+
+                                <div className='container-fluid'>
+                                    <div className='row d-flex justify-content-between'>
+                                        <div className='col-md-12 col-lg-12'>
+                                            <div className='row justify-content-center'>
+                                                <div className='p-3' style={{ width: "100%" }}>
+                                                    <div>
+                                                        <h4 className="card-title titleback">Lecture Taken</h4>
+                                                    </div>
+                                                    <div className='row'>
+                                                        <div className="form-group col-lg-6 ">
+                                                            <label for="exampleInputUsername1">Course</label>
+                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course} name='course' onChange={onhandleChange} >
+                                                                <option selected="selected" value="Select Course">Select Course</option>
+                                                                <option> Training in Process Plant System Modelling Using E3D</option>
+                                                                <option>Advance Pipe Stress Analysis </option>
+                                                                <option>Air Conditioning System Design (HVAC)</option>
+                                                                <option>Autocad - Piping</option>
+                                                                <option>Basics AutoCAD – 2D</option>
+                                                                <option>Civil/Structural Design &amp; Drafting </option>
+                                                                <option>Electrical &amp; Instrumentation Design and Drafting </option>
+                                                                <option>Electrical System Design</option>
+                                                                <option>Engineering Design &amp; Drafting </option>
+                                                                <option>Fire Alarm and Protection System </option>
+                                                                <option>Fundamentals of Offshore</option>
+                                                                <option>Health, Safety &amp; Environment in Construction</option>
+                                                                <option>HVAC Design and Drafting</option>
+                                                                <option>Masonry/Carpentry</option>
+                                                                <option>Mechanical Design of Process Equipment</option>
+                                                                <option>MEP Engineering (Mechanical, Electrical &amp; Plumbing)</option>
+                                                                <option>Offshore Engineering</option>
+                                                                <option>Others</option>
+                                                                <option>Pipeline Engineering</option>
+                                                                <option>Piping Design &amp; Drafting </option>
+                                                                <option>Piping Engineering </option>
+                                                                <option>Piping Materials</option>
+                                                                <option>Plant Design Management System (PDMS)</option>
+                                                                <option>PLANT LAYOUT DESIGN</option>
+                                                                <option>Priventive </option>
+                                                                <option>Process Engineering</option>
+                                                                <option>Process Equipment Fabrication Engineering</option>
+                                                                <option>Process Instrumentation &amp; Control</option>
+                                                                <option>PV Elite </option>
+                                                                <option>Rotating Equipment</option>
+                                                                <option>Smart Plant P&amp;ID</option>
+                                                                <option>Solar PV Power System with renewable Energy  </option>
+                                                                <option>Structural Engineering </option>
+                                                                <option>The Art of Developing a Balanced Personality</option>
+                                                                <option>Water &amp; Waste Water Engg.</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div className="form-group col-lg-2 ">
+                                                            <label for="exampleInputUsername1">Batch</label>
+                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batch} name='batch' onChange={onhandleChange} >
+                                                                <option></option>
+                                                            </select>
+                                                        </div>
+
+
+                                                        <div className="form-group col-lg-2 ">
+                                                            <label for="exampleInputUsername1">Lecture</label>
+                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.lecture} name='lecture' onChange={onhandleChange} >
+                                                                <option></option>
+                                                            </select>
+                                                        </div>
+                                                        <div className="form-group col-lg-2 ">
+                                                            <label for="exampleInputUsername1">Class Room</label>
+                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.classroom} name='class' onChange={onhandleChange} >
+                                                                <option>1</option>
+                                                                <option>2</option>
+                                                                <option>3</option>
+                                                                <option>4</option>
+                                                            </select>
+                                                        </div>
+                                                        <div className='form-group col-2'>
+                                                            <label for="exampleInputUsername1">Lecture Date</label>
+                                                            <input type="date" className="form-control" id="exampleInputUsername1" value={value.lecturedate} placeholder="Date" name='lecturedate' onChange={onhandleChange} />
+                                                        </div>
+
+                                                        <div className="form-group col-lg-2 ">
+                                                            <label for="exampleInputUsername1">Assignment/Test Start Date<span className='text-danger'>*</span></label>
+                                                            <input type="date" class="form-control" id="exampleInputUsername1" value={value.assignmentdate} placeholder="Assignment*" name='assignmentadate' onChange={onhandleChange} />
+                                                            {error.assignmentdate && <span className='text-danger'>{error.assignmentdate}</span>}
+                                                        </div>
+
+                                                        <div className="form-group col-lg-2 ">
+                                                            <label for="exampleInputUsername1">End Date<span className='text-danger'>*</span></label>
+                                                            <input type="date" class="form-control" id="exampleInputUsername1" value={value.enddate} placeholder="End Date*" name='enddate' onChange={onhandleChange} />
+                                                            {error.enddate && <span className='text-danger'>{error.enddate}</span>}
+                                                        </div>
+
+                                                        <div className="form-group col-lg-2 ">
+                                                            <label for="exampleInputUsername1">Material Issued</label>
+                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.materialissued} name='materialissued' onChange={onhandleChange} >
+                                                                <option>No</option>
+                                                                <option>Yes</option>
+                                                            </select>
+                                                        </div>
+                                                        <div className="form-group col-lg-2 ">
+                                                            <label for="exampleInputUsername1">Material</label>
+                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.material} name='material' onChange={onhandleChange} >
+                                                                <option>Documents</option>
+                                                                <option>LCD</option>
+                                                                <option>None</option>
+                                                                <option>Course Material</option>
+                                                                <option>Xerox</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div className="form-group col-lg-2 ">
+                                                            <label for="exampleInputUsername1">Assignment Given</label>
+                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.assignmentgive} name='assignmentgiven' onChange={onhandleChange} >
+                                                                <option>No</option>
+                                                                <option>Yes</option>
+                                                            </select>
+                                                        </div>
+
+
+                                                        <div className="form-group col-lg-2 ">
+                                                            <label for="exampleInputUsername1">Assignment</label>
+                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.assignment} name='assignment' onChange={onhandleChange} >
+                                                                <option></option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div className="form-group col-lg-2 ">
+                                                            <label for="exampleInputUsername1">Test Given</label>
+                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.testgiven} name='testgiven' onChange={onhandleChange} >
+                                                                <option>No</option>
+                                                                <option>Yes</option>
+                                                            </select>
+                                                        </div>
+                                                        <div className="form-group col-lg-2 ">
+                                                            <label for="exampleInputUsername1">Test</label>
+                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.test} name='test' onChange={onhandleChange} >
+                                                                <option>No</option>
+                                                                <option>Yes</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="form-group col-lg-6">
+                                                            <label for="exampleTextarea1">Topic Descuss</label>
+                                                            <textarea class="form-control" id="exampleTextarea1" name='topicdescuss' value={value.topicdescuss} placeholder="Topic Descuss*" onChange={onhandleChange}></textarea>
+                                                            {error.topicdescuss && <div className="text-danger">{error.topicdescuss}</div>}
+                                                        </div>
+                                                        <div class="form-group col-lg-6">
+                                                            <label for="exampleTextarea1">Next Planning</label>
+                                                            <textarea class="form-control" id="exampleTextarea1" name='nextplanning' value={value.nextplanning} placeholder="Next Panning*" onChange={onhandleChange}></textarea>
+                                                            {error.nextplanning && <div className="text-danger">{error.nextplanning}</div>}
+                                                        </div>
+
+                                                    </div>
+
+
+                                                </div>
                                             </div>
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleFormControlSelect1">Batch</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batch} onChange={onhandleChange} name='batch'>
-                                                    <option></option>
-                                                </select>
+
+
+                                            <div className='row p-2 gap-2'>
+                                                <button className='mr-2 btn btn-primary' onClick={handleSubmit}>Save</button>
+                                                {/* <button className='col-2'>close</button> */}
                                             </div>
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleFormControlSelect1">Lecture</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.lecture} onChange={onhandleChange} name='lecture'>
-                                                    <option></option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleFormControlSelect1">Class Room No.</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.classroom} onChange={onhandleChange} name='classroom'>
-                                                    <option>1</option>
-                                                    <option>2</option>
-                                                    <option>3</option>
-                                                    <option>4</option>
-                                                    <option>5</option>
-                                                </select>
-                                            </div>
-
-
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">Lecture Date</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.lecturedate} name='lecturedate' onChange={onhandleChange} />
-                                               
-                                            </div>
-
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleFormControlSelect1">Faculty</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.faculty} onChange={onhandleChange} name='faculty'>
-                                                    <option>Select</option>
-                                                    <option>A. G. Belwalkar</option>
-                                                    <option>Aadhar Classes</option>
-                                                    <option>Aashay Dedhia</option>
-                                                    <option>Abhay Gaikar</option>
-                                                    <option>Abhijit A Kulkarni.</option>
-                                                    <option>Abhijit Tapare</option>
-                                                    <option>Abhilash Srinivasan</option>
-                                                    <option>Abhishek Pednekar</option>
-                                                    <option>Abhishek Rakesh Gupta</option>
-                                                    <option>Abhishek Vyas</option>
-                                                    <option>ABIDHUSAIN RIZVI</option>
-                                                    <option>Abrar</option>
-                                                    <option>Aditi Surana.</option>
-                                                </select>
-                                            </div>
-
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">Assignment/Test Start Date:	</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.assignment} name='assignment' onChange={onhandleChange} />
-                                               
-                                            </div>
-
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleFormControlSelect1">Material</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.material} onChange={onhandleChange} name='material'>
-                                                    <option>Select</option>
-                                                    <option>Document</option>
-                                                    <option>LCD</option>
-                                                    <option>None</option>
-                                                    <option>Xerox</option>
-                                                </select>
-                                            </div>
-
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleFormControlSelect1">Material Issued</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.materialissued} onChange={onhandleChange} name='issued'>
-                                                    <option>Select</option>
-                                                    <option>Yes</option>
-                                                    <option>No</option>
-                                                </select>
-                                            </div>
-
-                                            <div class="form-group col-lg-4">
-                                                <label for="exampleTextarea1">Topic Discuss</label>
-                                                <textarea class="form-control" id="exampleTextarea1" value={value.topicdiscuss} placeholder="Topik Discuss*" name='topicdiscuss' onChange={onhandleChange}></textarea>
-                                                
-                                            </div>
-
-                                        </div>
-
-
-                                        <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                        <button type='button' onClick={() => {
-                                            window.location.reload()
-                                        }} class="btn btn-light">Cancel</button>
-                                    </form>
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div className='d-flex justify-content-between'>
-                                        <div>
-                                            <h4 class="card-title">Feedback Details</h4>
                                         </div>
 
                                     </div>
-
-                                    <div>
-                                    <DataGrid
-                                            rows={rowsWithIds}
-                                            columns={columns}
-                                            disableColumnFilter
-                                            disableColumnSelector
-                                            disableDensitySelector
-                                            rowHeight={35}
-                                            getRowId={(row) => row.id}
-                                            initialState={{
-                                                pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
-                                                },
-                                            }}
-                                            slots={{ toolbar: GridToolbar }}
-                                            slotProps={{
-                                                toolbar: {
-                                                    showQuickFilter: true,
-                                                },
-                                            }}
-                                        />
-
-                                        {confirmationVisibleMap[cid] && (
-                                            <div className='confirm-delete'>
-                                                <p>Are you sure you want to delete?</p>
-                                                <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
-                                                <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
-                                            </div>
-                                        )}
-                                    </div>
-
-
-
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div >
