@@ -1374,7 +1374,7 @@ app.post('/add_visitsite', (req, res) => {
 
   if (uid == undefined) {
     sql = "insert into awt_visitsite(`course`,`batch`,`location`,`student`,`date`,`time`,`confirmdate`) values(?,?,?,?,?,?,?)"
-    location
+
     param = [course, batch, location, student, date, time, confirmdate,]
 
   } else {
@@ -2051,7 +2051,7 @@ app.post('/nodeapp/add_batchmoving', (req, res) => {
 })
 
 
-app.post('/nodeapp/add_employeeloan', (req, pes) => {
+app.post('/nodeapp/add_employeeloan', (req, res) => {
   let {selectcourse,date,loanamt,monthly,totalmonths,comments,uid} = req.body
 
   let sql
@@ -2059,7 +2059,7 @@ app.post('/nodeapp/add_employeeloan', (req, pes) => {
 
   if (uid == undefined) {
 
-    qsl = "insert into awt_employeeloan(`selectcourse`,`date`,`loanamt`,`monthly`,`totalmonths`,`comments`) value(?,?,?,?,?,?)"
+    sql = "insert into awt_employeeloan(`selectcourse`,`date`,`loanamt`,`monthly`,`totalmonths`,`comments`) value(?,?,?,?,?,?)"
 
     param = [selectcourse,date,loanamt,monthly,totalmonths,comments,]
   }else{
@@ -2072,7 +2072,7 @@ app.post('/nodeapp/add_employeeloan', (req, pes) => {
       return res.json(err)
     }
     else{
-      returnres.json(date)
+      return res.json(date)
     }
   })
 
@@ -2095,7 +2095,7 @@ app.post('/noodapp/add_mlwfmaster', (req, res) => {
     if (err) {
       return req.json(err)
     }else{
-      returnres.json(date)
+      return res.json(date)
     }
   })
 
