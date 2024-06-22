@@ -6,7 +6,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
 import decryptedUserId from '../Utils/UserID';
-import { DataGrid ,GridToolbar} from '@mui/x-data-grid';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -16,27 +16,49 @@ import RadioGroup from '@mui/material/RadioGroup';
 //import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
+// import ImageList from '@mui/material/ImageList';
+// import { ImageSourcePropType } from 'react-native';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
-const StudentReport = () => {
+const AddFeedbackNewQuestion = () => {
+
+
+    // const [date, setDate] = useState('');
+
+    // useEffect(() => {
+    //     const currentDate = new Date();
+    //     const year = currentDate.getFullYear();
+    //     let month = currentDate.getMonth() + 1;
+    //     month = month < 10 ? '0' + month : month;
+    //     let day = currentDate.getDate();
+    //     day = day < 10 ? '0' + day : day;
+    //     const formattedDate = `${year}-${month}-${day}`;
+    //     setDate(formattedDate);
+    // }, []);
+
 
     const [brand, setBrand] = useState([])
     const [vendordata, setVendorData] = useState([])
+    const [specification, setSpecification] = useState("")
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
 
+    console.log(specification)
+
     const handleChange1 = (event) => {
-      setChecked([event.target.checked, event.target.checked]);
+        setChecked([event.target.checked, event.target.checked]);
     };
-  
+
     const handleChange2 = (event) => {
-      setChecked([event.target.checked, checked[1]]);
+        setChecked([event.target.checked, checked[1]]);
     };
-  
+
     const handleChange3 = (event) => {
-      setChecked([checked[0], event.target.checked]);
+        setChecked([checked[0], event.target.checked]);
     };
 
     // const children = (
@@ -53,24 +75,29 @@ const StudentReport = () => {
     //   );
 
     const [value, setValue] = useState({
-        training : ""|| uid.training,
-        attendee : ""|| uid.attendee,
-        instructor : ""|| uid.instructor,
-        description : ""|| uid.description,
-        feedback : ""|| uid.feedback,
+        questionfor: "" || uid.questionfor,
+        category: "" || uid.category,
+        question: "" || uid.question,
+        selectiontype: "" || uid.selectiontype,
+        order: "" || uid.order,
+        suggestion: "" || uid.suggestion,
+        brief: "" || uid.brief,
 
-        
+
+
 
 
     })
 
     useEffect(() => {
         setValue({
-            training : uid.training,
-            attendee : uid.attendee,
-            instructor : uid.instructor,
-            description :uid.description,
-            feedback: uid.feedback,
+            questionfor: uid.questionfor,
+            category: uid.category,
+            question: uid.question,
+            selectiontype: uid.selectiontype,
+            order: uid.order,
+            suggestion: uid.suggestion,
+            brief: uid.brief,
 
         })
     }, [uid])
@@ -107,12 +134,12 @@ const StudentReport = () => {
     }
 
 
-    
+
     async function getEmployeeData() {
         const data = {
-            tablename : "awt_employeerecord"
+            tablename: "awt_addfeedbacknewquestion"
         }
-        axios.post(`${BASE_URL}/get_data`,data)
+        axios.post(`${BASE_URL}/get_data`, data)
             .then((res) => {
                 console.log(res.data)
                 setVendorData(res.data)
@@ -147,14 +174,14 @@ const StudentReport = () => {
 
     const handleUpdate = (id) => {
         const data = {
-            u_id : id,
-            tablename : "awt_employeerecord"
+            u_id: id,
+            tablename: "awt_addfeedbacknewquestion"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
                 setUid(res.data[0])
 
-                console.log(res.data , "update")
+                console.log(res.data, "update")
             })
             .catch((err) => {
                 console.log(err)
@@ -164,7 +191,7 @@ const StudentReport = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename : "awt_employeerecord"
+            tablename: "awt_addfeedbacknewquestion"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
@@ -185,31 +212,35 @@ const StudentReport = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-    // if(validateForm()){
+        // if(validateForm()){
         const data = {
-            
-        training : value.training,
-        attendee : value.attendee,
-        instructor : value.instructor,
-        description :value.description,
-        feedback: value.feedback,
-        uid : uid.id
+
+
+
+            questionfor: value.questionfor,
+            category: value.category,
+            question: value.question,
+            selectiontype: value.selectiontype,
+            order: value.order,
+            suggestion: value.suggestion,
+            brief: value.brief,
+            uid: uid.id
         }
 
 
-        axios.post(`${BASE_URL}/add_employeerecord`, data)
+        axios.post(`${BASE_URL}/add_addfeedbacknewquestion`, data)
             .then((res) => {
-               console.log(res)
-               getEmployeeData()
+                console.log(res)
+                getEmployeeData()
 
             })
             .catch((err) => {
                 console.log(err)
             })
-    // }
+        // }
 
-   
-        
+
+
 
 
     }
@@ -219,8 +250,8 @@ const StudentReport = () => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
 
- 
-    
+
+
 
 
 
@@ -233,13 +264,14 @@ const StudentReport = () => {
             headerAlign: 'center',
             flex: 1,
             filterable: false,
-                                              
+
         },
-        { field: 'attendee', headerName: 'Attendee', flex: 2},
-        { field: 'instructor', headerName: 'Instructor', flex: 2},
-        { field: 'description', headerName: 'Description', flex: 2},
-        { field: 'feedback', headerName: 'FeedBack', flex: 2},
-        
+        { field: 'questionfor', headerName: 'Question For', flex: 2 },
+        { field: 'category', headerName: 'Batch Category.', flex: 2 },
+        { field: 'question', headerName: 'Question', flex: 2 },
+        { field: 'selectiontype', headerName: 'Selectiontype', flex: 2 },
+        { field: 'order', headerName: 'Order', flex: 2 },
+
         {
             field: 'actions',
             type: 'actions',
@@ -269,10 +301,49 @@ const StudentReport = () => {
                         <div class="col-lg-12 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Student Report</h4>
+                                    <h4 class="card-title">Add Question</h4>
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
+
+                                            <div class="form-group col-lg-4">
+                                                <lable for="exampleFormControlSelect1">Question For</lable>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.questionfor} name='questionfor' onChange={onhandleChange}>
+                                                    <option>Program</option>
+                                                    <option>Executive</option>
+                                                    <option>Trainer</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleFormControlSelect1">Category</label>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.category} name='category' onChange={onhandleChange}>
+                                                    <option>1</option>
+                                                    <option>2</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group col-lg-2">
+                                                <lable for="exampleInputUsername1">Question</lable>
+                                                <input text="text" class="form-control" id="exampleInputUsername1" value={value.question} name='question' onChange={onhandleChange} />
+                                            </div>
+
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleFomrControlSelect1">Selection Type</label>
+                                                <select className='form-control form-control-lg' id="exampleFormControlSelect1" value={value.selectiontype} name='selectiontype' onChange={onhandleChange}>
+                                                    <option>Free TextBox</option>
+                                                    <option>Numeric</option>
+                                                    <option>Single Selection</option>
+                                                    <option>Multiple Selection</option>
+                                                    <option>Yes/No/May Be</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group col-lg-2">
+                                                <lable for="exampleInputUsername1">Order</lable>
+                                                <input text="text" class="form-control" id="exampleInputUsername1" value={value.order} name='order' onChange={onhandleChange} />
+                                            </div>
+
 
                                             <div class="from-group col-lg-12">
                                                 <FormControl>
@@ -280,51 +351,41 @@ const StudentReport = () => {
                                                         row
                                                         aria-labelledby="demo-row-radio-buttons-group-label"
                                                         name="row-radio-buttons-group" >
-                                                        <FormControlLabel value="student" control={<Radio />} label="Student List" />
-                                                        <FormControlLabel value="batch" control={<Radio />} label="Batch Wise" />
-                                                        <FormControlLabel value="yearly" control={<Radio />} label="Yearly" />
-                                                        <FormControlLabel value="forcard" control={<Radio />} label="For Card List" />
-                                                        <FormControlLabel value="month" control={<Radio />} label="Month Wise" />
-                                                        <FormControlLabel value="document" control={<Radio />} label="Documents" />
-                                                        <FormControlLabel value="left" control={<Radio />} label="Left" />
-                                                        <FormControlLabel value="cancelled" control={<Radio />} label="Cancelled Students" />
-                                                        <FormControlLabel value="placed" control={<Radio />} label="Placed Students" />
+                                                        <FormControlLabel value="suggestion" control={<Radio />} label="Suggestion Required" />
+                                                        <FormControlLabel value="brief" control={<Radio />} label="Brief answer required" />
 
                                                     </RadioGroup>
                                                 </FormControl>
                                                 
                                             </div>
-                                          
-
-                                            <div class="form-group col-lg-4">
-                                                <label for="exampleFormControlSelect1">Select Course<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.attendee} onChange={onhandleChange} name='attendee'>
-                                                    <option>Select</option>
-                                                    <option>Piping Design & Drafting</option>
-                                                    <option>MEP Engineering (Mechanical, Electrical & Plumbing)</option>
-                                                    <option>Engineering Design & Drafting</option>
-                                                    <option>Electrical & Instrumentation Design and Drafting</option>
-                                                    <option>Training in Process Plant System Modelling Using E3D</option>
-                                                </select>
-                                            </div>
 
 
-                                            <div class="form-group col-lg-4">
-                                                <label for="exampleFormControlSelect1">Select Batch<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.attendee} onChange={onhandleChange} name='attendee'>
-                                                    <option></option>
-                                                </select>
-                                            </div>
+                                           
+
+
+                                            {/* <div className="form-group col-lg-2">
+                                                <label htmlFor="exampleInputUsername1">Date</label>
+                                                <input
+                                                    type="date"
+                                                    className="form-control"
+                                                    id="exampleInputUsername1"
+                                                    value={date}
+                                                    name="date"
+                                                    onChange={(e) => { }}
+                                                    disabled
+                                                />
+                                            </div> */}
+
+
 
                                         </div>
-                                            
-
 
 
                                         <button type="submit" class="btn btn-primary mr-2">Submit</button>
                                         <button type='button' onClick={() => {
                                             window.location.reload()
                                         }} class="btn btn-light">Cancel</button>
+
                                     </form>
 
                                 </div>
@@ -335,7 +396,7 @@ const StudentReport = () => {
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
                                         <div>
-                                            <h4 class="card-title">Student Record</h4>
+                                            <h4 class="card-title">Feedback Question</h4>
                                         </div>
 
                                     </div>
@@ -372,6 +433,13 @@ const StudentReport = () => {
                                     </div>
 
 
+                                    {/* <div>
+                                      <button type='button' onClick={() => {
+                                            window.location.reload()
+                                        }} class="btn btn-primary mr-2">Excel</button>
+                                      </div> */}
+
+
 
                                 </div>
                             </div>
@@ -384,4 +452,4 @@ const StudentReport = () => {
     )
 }
 
-export default StudentReport
+export default AddFeedbackNewQuestion

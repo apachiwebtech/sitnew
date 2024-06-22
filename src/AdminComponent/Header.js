@@ -271,10 +271,10 @@ const Header = () => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/feedback">
+              <Link className="nav-link" to="/addfeedbacknewquestion">
                 {/* <Icon path={mdiCircleMedium } size={1} className='mx-3' /> */}
                 <Icon path={mdiCircleMedium} size={1} className='mx-3' />
-                <span className="menu-title">Feedback</span>
+                <span className="menu-title">Feedback Question</span>
               </Link>
             </li>
 
@@ -539,7 +539,7 @@ const Header = () => {
           <ul className='inner-item'>
 
             <li className="nav-item">
-              <Link className="nav-link" to="/employeetraining">
+              <Link className="nav-link" to="/employeetrainingplan">
                 {/* <Icon path={mdiCircleMedium } size={1} className='mx-3' /> */}
                 <Icon path={mdiCircleMedium} size={1} className='mx-3' />
                 <span className="menu-title">Employee Training Plan</span>

@@ -492,6 +492,39 @@ app.post('/add_librarybook', (req, res) => {
   })
 })
 
+
+app.post('/add_addfeedbacknewquestion', (req, res) => {
+
+  let { questionfor,category,question,selectiontype,order,suggestion,brief,uid } = req.body
+
+  let sql
+  let param;
+
+  console.log(uid)
+
+  if (uid == undefined) {
+    sql = "insert into awt_addfeedbacknewquestion(`questionfor`,`category`,`question`,`selectiontype`,`order`,`suggestion`,`brief`) values(?,?,?,?,?,?,?)"
+
+    param = [questionfor, category, question, selectiontype, order, suggestion, brief,]
+
+  } else {
+    sql = "update `awt_addfeedbacknewquestion` set `questionfor` =? , `category` =? , `question` =? , `selectiontype` =? , `order` =? , `suggestion` =? , `brief` =? where id = ?"
+
+    param = [questionfor, category, question, selectiontype, order, suggestion, brief, uid]
+
+  }
+
+
+  con.query(sql, param, (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+})
+
 app.post('/add_feedback', (req, res) => {
 
   let { questionfor, category, question, selection, order, uid } = req.body
@@ -2051,7 +2084,7 @@ app.post('/nodeapp/add_batchmoving', (req, res) => {
 })
 
 
-app.post('/nodeapp/add_employeeloan', (req, pes) => {
+app.post('/nodeapp/add_employeeloan', (req, res) => {
   let {selectcourse,date,loanamt,monthly,totalmonths,comments,uid} = req.body
 
   let sql
@@ -2059,7 +2092,7 @@ app.post('/nodeapp/add_employeeloan', (req, pes) => {
 
   if (uid == undefined) {
 
-    qsl = "insert into awt_employeeloan(`selectcourse`,`date`,`loanamt`,`monthly`,`totalmonths`,`comments`) value(?,?,?,?,?,?)"
+    sql = "insert into awt_employeeloan(`selectcourse`,`date`,`loanamt`,`monthly`,`totalmonths`,`comments`) value(?,?,?,?,?,?)"
 
     param = [selectcourse,date,loanamt,monthly,totalmonths,comments,]
   }else{

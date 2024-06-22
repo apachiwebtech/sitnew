@@ -6,7 +6,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
 import decryptedUserId from '../Utils/UserID';
-import { DataGrid ,GridToolbar} from '@mui/x-data-grid';
+import { DataGrid ,GridToolbar } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -17,7 +17,22 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 
-const StudentReport = () => {
+const EmployeeTrainingPlan = () => {
+
+
+    const [date, setDate] = useState('');
+
+    useEffect(() => {
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        let month = currentDate.getMonth() + 1;
+        month = month < 10 ? '0' + month : month;
+        let day = currentDate.getDate();
+        day = day < 10 ? '0' + day : day;
+        const formattedDate = `${year}-${month}-${day}`;
+        setDate(formattedDate);
+    }, []);
+
 
     const [brand, setBrand] = useState([])
     const [vendordata, setVendorData] = useState([])
@@ -261,7 +276,7 @@ const StudentReport = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper col-lg-10">
+        <div class="container-fluid page-body-wrapper">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -269,62 +284,53 @@ const StudentReport = () => {
                         <div class="col-lg-12 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Student Report</h4>
+                                    <h4 class="card-title">Add Employee Training Plan</h4>
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
-
-                                            <div class="from-group col-lg-12">
-                                                <FormControl>
-                                                    <RadioGroup
-                                                        row
-                                                        aria-labelledby="demo-row-radio-buttons-group-label"
-                                                        name="row-radio-buttons-group" >
-                                                        <FormControlLabel value="student" control={<Radio />} label="Student List" />
-                                                        <FormControlLabel value="batch" control={<Radio />} label="Batch Wise" />
-                                                        <FormControlLabel value="yearly" control={<Radio />} label="Yearly" />
-                                                        <FormControlLabel value="forcard" control={<Radio />} label="For Card List" />
-                                                        <FormControlLabel value="month" control={<Radio />} label="Month Wise" />
-                                                        <FormControlLabel value="document" control={<Radio />} label="Documents" />
-                                                        <FormControlLabel value="left" control={<Radio />} label="Left" />
-                                                        <FormControlLabel value="cancelled" control={<Radio />} label="Cancelled Students" />
-                                                        <FormControlLabel value="placed" control={<Radio />} label="Placed Students" />
-
-                                                    </RadioGroup>
-                                                </FormControl>
-                                                
-                                            </div>
                                           
 
-                                            <div class="form-group col-lg-4">
-                                                <label for="exampleFormControlSelect1">Select Course<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.attendee} onChange={onhandleChange} name='attendee'>
-                                                    <option>Select</option>
-                                                    <option>Piping Design & Drafting</option>
-                                                    <option>MEP Engineering (Mechanical, Electrical & Plumbing)</option>
-                                                    <option>Engineering Design & Drafting</option>
-                                                    <option>Electrical & Instrumentation Design and Drafting</option>
-                                                    <option>Training in Process Plant System Modelling Using E3D</option>
-                                                </select>
+                                            <div class="form-group col-lg-3">
+                                                <label for="exampleInputUsername1">Subject</label>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.fromyear} placeholder="From Year" name='fromyear' onChange={onhandleChange} />
+                                                
                                             </div>
-
-
-                                            <div class="form-group col-lg-4">
-                                                <label for="exampleFormControlSelect1">Select Batch<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.attendee} onChange={onhandleChange} name='attendee'>
-                                                    <option></option>
-                                                </select>
+                                            <div class="form-group col-lg-3">
+                                                <label for="exampleInputUsername1">Internal/External By</label>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.fromyear} placeholder="From Year" name='fromyear' onChange={onhandleChange} />
+                                                
                                             </div>
+                                            <div class="form-group col-lg-3">
+                                                <label for="exampleInputUsername1">Identified By</label>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.fromyear} placeholder="From Year" name='fromyear' onChange={onhandleChange} />
+                                                
+                                            </div>
+                                            <div className="form-group col-lg-3">
+                                                <label htmlFor="exampleInputUsername1">Date</label>
+                                                <input
+                                                    type="date"
+                                                    className="form-control"
+                                                    id="exampleInputUsername1"
+                                                    value={date}
+                                                    name="date"
+                                                    onChange={(e) => { }}
+                                                    disabled
+                                                />
+                                            </div>
+                                            
 
                                         </div>
+
+                                         <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                                       
+                                        <button type='button' onClick={() => {
+                                            window.location.reload()
+                                        }} class="btn btn-light">Back</button>
                                             
 
 
 
-                                        <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                        <button type='button' onClick={() => {
-                                            window.location.reload()
-                                        }} class="btn btn-light">Cancel</button>
+                                        
                                     </form>
 
                                 </div>
@@ -335,7 +341,7 @@ const StudentReport = () => {
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
                                         <div>
-                                            <h4 class="card-title">Student Record</h4>
+                                            <h4 class="card-title">Employee Training Plan</h4>
                                         </div>
 
                                     </div>
@@ -371,6 +377,11 @@ const StudentReport = () => {
                                         )}
                                     </div>
 
+                                    <button type="submit" class="btn btn-primary mr-2">Excel</button>
+                                    <button type="submit" class="btn btn-primary mr-2">Print</button>
+                                        <button type='button' onClick={() => {
+                                            window.location.reload()
+                                        }} class="btn btn-primary mr-2">Back</button>
 
 
                                 </div>
@@ -384,4 +395,4 @@ const StudentReport = () => {
     )
 }
 
-export default StudentReport
+export default EmployeeTrainingPlan

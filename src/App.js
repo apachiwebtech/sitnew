@@ -97,6 +97,8 @@ import BatchMoving from './AdminComponent/BatchMoving.js';
 import EmployeeLoan from './AdminComponent/EmployeeLoan.js';
 import ProjectMaster from './AdminComponent/ProjectMaster.js';
 import MLWFMaster from './AdminComponent/MLWFMaster.js';
+import EmployeeTrainingPlan from './AdminComponent/EmployeeTrainingPlan.js';
+import AddFeedbackNewQuestion from './AdminComponent/AddFeedbackNewQuestion.js';
 
 
 
@@ -151,10 +153,11 @@ const Router = createBrowserRouter([
         path: '/librarybook',
         element: <LibraryBook/>
       },
-      // {
-      //   path: '/feedback',
-      //   element: <Feedback/>
-      // },
+      {
+        path: '/addfeedbacknewquestion',
+        element: <AddFeedbackNewQuestion/>
+      },
+      
       {
         path: '/faculty',
         element: <Faculty/>
@@ -171,14 +174,16 @@ const Router = createBrowserRouter([
         path: '/returnbook',
         element: <ReturnBook/>
       },
+
       {
-        path: '/employeetrainig',
-        element: <EmployeeTraining/>
+        path: '/employeetrainingplan',
+        element: <EmployeeTrainingPlan/>
       },
       {
         path: '/employeerecord',
         element: <EmployeeRecord/>
       },
+
       {
         path: '/onlinestudent',
         element: <OnlineStudent/>
@@ -443,6 +448,7 @@ const Router = createBrowserRouter([
         path: '/employeeloan',
         element: <EmployeeLoan/>
       },
+
       {
         path: '/projectmaster',
         element: <ProjectMaster/>
