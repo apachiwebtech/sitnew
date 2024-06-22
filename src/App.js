@@ -93,6 +93,10 @@ import BatchCancellation from './AdminComponent/BatchCancellation.js';
 import MaterialConsumption from './AdminComponent/MaterialConsumption.js';
 import SalaryMaster from './AdminComponent/SalaryMaster.js';
 import BatchLeft from './AdminComponent/BatchLeft.js';
+import BatchMoving from './AdminComponent/BatchMoving.js';
+import EmployeeLoan from './AdminComponent/EmployeeLoan.js';
+import ProjectMaster from './AdminComponent/ProjectMaster.js';
+import MLWFMaster from './AdminComponent/MLWFMaster.js';
 
 
 
@@ -430,7 +434,24 @@ const Router = createBrowserRouter([
       {
         path: '/batchleft',
         element: <BatchLeft/>
+      },
+      {
+        path: '/batchmoving',
+        element: <BatchMoving/>
+      },
+      {
+        path: '/employeeloan',
+        element: <EmployeeLoan/>
+      },
+      {
+        path: '/projectmaster',
+        element: <ProjectMaster/>
+      },
+      {
+        path: '/mlwfmaster',
+        element: <MLWFMaster/>
       }
+      
 
 
   

@@ -1989,7 +1989,7 @@ app.post('/nodeapp/add_salarymaster', (req, res) => {
 })
 
 
-app.post('/add_batchleft', (req, res) => {
+app.post('/nodeapp/add_batchleft', (req, res) => {
 
 
 
@@ -2022,3 +2022,82 @@ app.post('/add_batchleft', (req, res) => {
     }
   })
 })
+
+app.post('/nodeapp/add_batchmoving', (req, res) => {
+
+  let {course,batchno,student,newbatch,uid} = req.body
+
+  let sql
+  let param;
+
+  if (uid == undefined) {
+    sql = "insert into awt_batchmoving(`course`,`batchno`,`student`,`newbatch`) values(?,?,?,?)"
+
+    param = [course,batchno,student,newbatch,]
+  } else {
+    sql = "update `awt_batchmoving` set 'course' =? , `batchno` =? , `student` =? , `newbatch` =? where id =?"
+
+    param = [course,batchno,student,newbatch,uid]
+  }
+  con.query(sql, param, (err, data) => {
+    if (err) {
+      return res.json(err)
+
+    }
+    else{
+      return res.json(data)
+    }
+  })
+})
+
+
+app.post('/nodeapp/add_employeeloan', (req, pes) => {
+  let {selectcourse,date,loanamt,monthly,totalmonths,comments,uid} = req.body
+
+  let sql
+  let param;
+
+  if (uid == undefined) {
+
+    qsl = "insert into awt_employeeloan(`selectcourse`,`date`,`loanamt`,`monthly`,`totalmonths`,`comments`) value(?,?,?,?,?,?)"
+
+    param = [selectcourse,date,loanamt,monthly,totalmonths,comments,]
+  }else{
+    sql = "update `awt_employeeloan` set `selectcourse` =? , `date` =? , `loanamt` =? , `monthly` =? , `totalmonths` =? , `comments` =? where id =?"
+
+    param = [selectcourse,date,loanamt,monthly,totalmonths,comments,uid]
+  }
+  con.query(sql, param, (err, date) => {
+    if (err) {
+      return res.json(err)
+    }
+    else{
+      returnres.json(date)
+    }
+  })
+
+
+})
+
+app.post('/noodapp/add_mlwfmaster', (req, res) => {
+  let {formdate,todate,grossupto,chargeswill,otherwise,uid} = req.body
+  let sql
+  let param;
+
+  if (uid == undefined) {
+    sql = "insert into awt_mlwfmaster(`formdate`,`todate`,`grossupto`,`chargeswill`,`otherwise`) value(?,?,?,?,?)"
+     param = [formdate,todate,grossupto,chargeswill,otherwise,]
+  }else{
+    sql = "update `awt_mlwfmaster` set `formdate` =? , `todate` =? , `chargeswill` =? , `otherwise` =? where id =?"
+    param = [formdate,todate,grossupto,chargeswill,otherwise,uid]
+  }
+  con.query(sql, param, (err, date) => {
+    if (err) {
+      return req.json(err)
+    }else{
+      returnres.json(date)
+    }
+  })
+
+})
+
