@@ -1407,7 +1407,7 @@ app.post('/add_visitsite', (req, res) => {
 
   if (uid == undefined) {
     sql = "insert into awt_visitsite(`course`,`batch`,`location`,`student`,`date`,`time`,`confirmdate`) values(?,?,?,?,?,?,?)"
-    location
+
     param = [course, batch, location, student, date, time, confirmdate,]
 
   } else {
@@ -2105,7 +2105,7 @@ app.post('/nodeapp/add_employeeloan', (req, res) => {
       return res.json(err)
     }
     else{
-      returnres.json(date)
+      return res.json(date)
     }
   })
 
@@ -2128,7 +2128,7 @@ app.post('/noodapp/add_mlwfmaster', (req, res) => {
     if (err) {
       return req.json(err)
     }else{
-      returnres.json(date)
+      return res.json(date)
     }
   })
 
