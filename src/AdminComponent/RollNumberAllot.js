@@ -6,7 +6,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
 import decryptedUserId from '../Utils/UserID';
-import { DataGrid ,GridToolbar } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -17,21 +17,21 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 
-const EmployeeTrainingPlan = () => {
+const RollNumberAllot = () => {
 
 
-    const [date, setDate] = useState('');
+    // const [date, setDate] = useState('');
 
-    useEffect(() => {
-        const currentDate = new Date();
-        const year = currentDate.getFullYear();
-        let month = currentDate.getMonth() + 1;
-        month = month < 10 ? '0' + month : month;
-        let day = currentDate.getDate();
-        day = day < 10 ? '0' + day : day;
-        const formattedDate = `${year}-${month}-${day}`;
-        setDate(formattedDate);
-    }, []);
+    // useEffect(() => {
+    //     const currentDate = new Date();
+    //     const year = currentDate.getFullYear();
+    //     let month = currentDate.getMonth() + 1;
+    //     month = month < 10 ? '0' + month : month;
+    //     let day = currentDate.getDate();
+    //     day = day < 10 ? '0' + day : day;
+    //     const formattedDate = `${year}-${month}-${day}`;
+    //     setDate(formattedDate);
+    // }, []);
 
 
     const [brand, setBrand] = useState([])
@@ -43,15 +43,15 @@ const EmployeeTrainingPlan = () => {
     const [checked, setChecked] = React.useState([true, false]);
 
     const handleChange1 = (event) => {
-      setChecked([event.target.checked, event.target.checked]);
+        setChecked([event.target.checked, event.target.checked]);
     };
-  
+
     const handleChange2 = (event) => {
-      setChecked([event.target.checked, checked[1]]);
+        setChecked([event.target.checked, checked[1]]);
     };
-  
+
     const handleChange3 = (event) => {
-      setChecked([checked[0], event.target.checked]);
+        setChecked([checked[0], event.target.checked]);
     };
 
     // const children = (
@@ -68,20 +68,24 @@ const EmployeeTrainingPlan = () => {
     //   );
 
     const [value, setValue] = useState({
-        subject : ""|| uid.subject,
-        internal : ""|| uid.internal,
-        identified : ""|| uid.identified,
+        training: "" || uid.training,
+        attendee: "" || uid.attendee,
+        instructor: "" || uid.instructor,
+        description: "" || uid.description,
+        feedback: "" || uid.feedback,
 
-        
+
 
 
     })
 
     useEffect(() => {
         setValue({
-            subject : uid.subject,
-            internal : uid.internal,
-            identified : uid.identified,
+            training: uid.training,
+            attendee: uid.attendee,
+            instructor: uid.instructor,
+            description: uid.description,
+            feedback: uid.feedback,
 
         })
     }, [uid])
@@ -118,12 +122,12 @@ const EmployeeTrainingPlan = () => {
     }
 
 
-    
+
     async function getEmployeeData() {
         const data = {
-            tablename : "awt_employeetrainingplan"
+            tablename: "awt_employeerecord"
         }
-        axios.post(`${BASE_URL}/get_data`,data)
+        axios.post(`${BASE_URL}/get_data`, data)
             .then((res) => {
                 console.log(res.data)
                 setVendorData(res.data)
@@ -158,14 +162,14 @@ const EmployeeTrainingPlan = () => {
 
     const handleUpdate = (id) => {
         const data = {
-            u_id : id,
-            tablename : "awt_employeetrainingplan"
+            u_id: id,
+            tablename: "awt_employeerecord"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
                 setUid(res.data[0])
 
-                console.log(res.data , "update")
+                console.log(res.data, "update")
             })
             .catch((err) => {
                 console.log(err)
@@ -175,7 +179,7 @@ const EmployeeTrainingPlan = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename : "awt_employeetrainingplan"
+            tablename: "awt_employeerecord"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
@@ -196,28 +200,31 @@ const EmployeeTrainingPlan = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-    // if(validateForm()){
+        // if(validateForm()){
         const data = {
-            
-        subject : value.subject,
-        internal : value.internal,
-        identified : value.identified,
+
+            training: value.training,
+            attendee: value.attendee,
+            instructor: value.instructor,
+            description: value.description,
+            feedback: value.feedback,
+            uid: uid.id
         }
 
 
-        axios.post(`${BASE_URL}/awt_employeetrainingplan`, data)
+        axios.post(`${BASE_URL}/add_employeerecord`, data)
             .then((res) => {
-               console.log(res)
-               getEmployeeData()
+                console.log(res)
+                getEmployeeData()
 
             })
             .catch((err) => {
                 console.log(err)
             })
-    // }
+        // }
 
-   
-        
+
+
 
 
     }
@@ -227,8 +234,8 @@ const EmployeeTrainingPlan = () => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
 
- 
-    
+
+
 
 
 
@@ -241,12 +248,13 @@ const EmployeeTrainingPlan = () => {
             headerAlign: 'center',
             flex: 1,
             filterable: false,
-                                              
+
         },
-        { field: 'subject', headerName: 'Subject', flex: 2},
-        { field: 'internal', headerName: 'Internal/External', flex: 2},
-        { field: 'identified', headerName: 'Identified', flex: 2},
-        
+        { field: 'attendee', headerName: 'Attendee', flex: 2 },
+        { field: 'instructor', headerName: 'Instructor', flex: 2 },
+        { field: 'description', headerName: 'Description', flex: 2 },
+        { field: 'feedback', headerName: 'FeedBack', flex: 2 },
+
         {
             field: 'actions',
             type: 'actions',
@@ -268,7 +276,7 @@ const EmployeeTrainingPlan = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper">
+        <div class="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -276,28 +284,37 @@ const EmployeeTrainingPlan = () => {
                         <div class="col-lg-12 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Add Employee Training Plan</h4>
+                                    <h4 class="card-title">View Roll No. Allocated Batches</h4>
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
-                                          
 
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">Subject</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.subject} placeholder="From Year" name='fromyear' onChange={onhandleChange} />
-                                                
+                                                <label for="exampleFormControlSelect1">Select Course</label>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.selectcourse} name='selectcourse' onChange={onhandleChange}>
+                                                    <option>Select Course</option>
+                                                    <option>Training in Process Plant System Modelling Using E3D</option>
+                                                    <option>Advance Pipe Stress Analysis </option>
+                                                    <option>Air Conditioning System Design (HVAC)</option>
+                                                    <option>Autocad - Piping</option>
+                                                    <option>Basics AutoCAD – 2D</option>
+                                                    <option>Civil/Structural Design &amp; Drafting </option>
+                                                    <option>Electrical &amp; Instrumentation Design and Drafting </option>
+                                                    <option>Electrical System Design</option>
+                                                    <option>Engineering Design &amp; Drafting </option>
+                                                    <option>Fire Alarm and Protection System </option>
+                                                </select>
+
                                             </div>
+
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">Internal/External By</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.internal} placeholder="From Year" name='fromyear' onChange={onhandleChange} />
-                                                
+                                            <label for="exampleFormControlSelect1"></label>
+                                            <select class="form-control form-control-lg" id="exampleFromControlSelect1" value={value.rollnumberallot} name='rollnumberallot' onChange={onhandleChange}>
+                                                <option></option>
+                                            </select>
                                             </div>
-                                            <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">Identified By</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.identified} placeholder="From Year" name='fromyear' onChange={onhandleChange} />
-                                                
-                                            </div>
-                                            <div className="form-group col-lg-3">
+
+                                            {/* <div className="form-group col-lg-3">
                                                 <label htmlFor="exampleInputUsername1">Date</label>
                                                 <input
                                                     type="date"
@@ -308,21 +325,17 @@ const EmployeeTrainingPlan = () => {
                                                     onChange={(e) => { }}
                                                     disabled
                                                 />
-                                            </div>
-                                            
+                                            </div> */}
+
 
                                         </div>
 
-                                         <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                       
+                                        <button type="submit" class="btn btn-primary mr-2">Allot Roll Number</button>
+
                                         <button type='button' onClick={() => {
                                             window.location.reload()
-                                        }} class="btn btn-light">Back</button>
-                                            
+                                        }} class="btn btn-light">Save</button>
 
-
-
-                                        
                                     </form>
 
                                 </div>
@@ -333,32 +346,13 @@ const EmployeeTrainingPlan = () => {
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
                                         <div>
-                                            <h4 class="card-title">Employee Training Plan</h4>
+                                            <h4 class="card-title">Allot Roll Number List</h4>
                                         </div>
 
                                     </div>
 
                                     <div>
-                                        <DataGrid
-                                            rows={rowsWithIds}
-                                            columns={columns}
-                                            disableColumnFilter
-                                            disableColumnSelector
-                                            disableDensitySelector
-                                            rowHeight={35}
-                                            getRowId={(row) => row.id}
-                                            initialState={{
-                                                pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
-                                                },
-                                            }}
-                                            slots={{ toolbar: GridToolbar }}
-                                            slotProps={{
-                                                toolbar: {
-                                                    showQuickFilter: true,
-                                                },
-                                            }}
-                                        />
+                                       
 
                                         {confirmationVisibleMap[cid] && (
                                             <div className='confirm-delete'>
@@ -368,13 +362,6 @@ const EmployeeTrainingPlan = () => {
                                             </div>
                                         )}
                                     </div>
-
-                                    {/* <button type="submit" class="btn btn-primary mr-2">Excel</button>
-                                    <button type="submit" class="btn btn-primary mr-2">Print</button>
-                                        <button type='button' onClick={() => {
-                                            window.location.reload()
-                                        }} class="btn btn-primary mr-2">Back</button> */}
-
 
                                 </div>
                             </div>
@@ -387,4 +374,4 @@ const EmployeeTrainingPlan = () => {
     )
 }
 
-export default EmployeeTrainingPlan
+export default RollNumberAllot

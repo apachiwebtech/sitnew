@@ -655,6 +655,35 @@ app.post('/add_bookissue', (req, res) => {
 })
 
 
+app.post('/nodeapp/add_employeetrainingplan', (req, res) => {
+
+  let {subject,internal,identified,uid} = req.body
+
+  let sql
+  let param;
+
+  console.log(uid)
+
+  if (uid == undefined) {
+    sql = "insert into awt_employeetrainingplan(`subject`,`internal`,`identified`) values(?,?,?)"
+
+    param = [subject,internal,identified,]
+
+  }else {
+    sql = "update `awt_employeetrainingplan` set `subject` =? , `internal` =? , `identified` =? where id = ?"
+
+    param = [subject,internal,identified,uid]
+  }
+
+  con.query(sql, param, (err, data) => {
+    if (err) {
+      return res.json(err)
+    }else{
+      return res.json(data)
+    }
+  })
+})
+
 
 app.post('/add_employeerecord', (req, res) => {
 

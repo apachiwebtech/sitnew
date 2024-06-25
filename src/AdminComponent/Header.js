@@ -397,7 +397,7 @@ const Header = () => {
           <ul className='inner-item'>
 
             <li className="nav-item">
-              <Link className="nav-link" to="/allotroll">
+              <Link className="nav-link" to="/rollnumberallot">
                 {/* <Icon path={mdiCircleMedium } size={1} className='mx-3' /> */}
                 <Icon path={mdiCircleMedium} size={1} className='mx-3' />
                 <span className="menu-title">Allot Roll Number</span>
@@ -882,7 +882,7 @@ const Header = () => {
             </li>
 
             <li className="nav-item">
-              <Link className="nav-link" to='/webapp/gallery'>
+              <Link className="nav-link" to='purchasematerial'>
 
                 <Icon path={mdiCircleMedium} size={1} className='mx-3' />
                 <span className="menu-title">Purchase Material</span>

@@ -6,7 +6,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
 import decryptedUserId from '../Utils/UserID';
-import { DataGrid ,GridToolbar } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -17,7 +17,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 
-const EmployeeTrainingPlan = () => {
+const PurchaseMaterial = () => {
 
 
     const [date, setDate] = useState('');
@@ -43,15 +43,15 @@ const EmployeeTrainingPlan = () => {
     const [checked, setChecked] = React.useState([true, false]);
 
     const handleChange1 = (event) => {
-      setChecked([event.target.checked, event.target.checked]);
+        setChecked([event.target.checked, event.target.checked]);
     };
-  
+
     const handleChange2 = (event) => {
-      setChecked([event.target.checked, checked[1]]);
+        setChecked([event.target.checked, checked[1]]);
     };
-  
+
     const handleChange3 = (event) => {
-      setChecked([checked[0], event.target.checked]);
+        setChecked([checked[0], event.target.checked]);
     };
 
     // const children = (
@@ -68,20 +68,20 @@ const EmployeeTrainingPlan = () => {
     //   );
 
     const [value, setValue] = useState({
-        subject : ""|| uid.subject,
-        internal : ""|| uid.internal,
-        identified : ""|| uid.identified,
+        subject: "" || uid.subject,
+        internal: "" || uid.internal,
+        identified: "" || uid.identified,
 
-        
+
 
 
     })
 
     useEffect(() => {
         setValue({
-            subject : uid.subject,
-            internal : uid.internal,
-            identified : uid.identified,
+            subject: uid.subject,
+            internal: uid.internal,
+            identified: uid.identified,
 
         })
     }, [uid])
@@ -118,12 +118,12 @@ const EmployeeTrainingPlan = () => {
     }
 
 
-    
+
     async function getEmployeeData() {
         const data = {
-            tablename : "awt_employeetrainingplan"
+            tablename: "awt_employeetrainingplan"
         }
-        axios.post(`${BASE_URL}/get_data`,data)
+        axios.post(`${BASE_URL}/get_data`, data)
             .then((res) => {
                 console.log(res.data)
                 setVendorData(res.data)
@@ -158,14 +158,14 @@ const EmployeeTrainingPlan = () => {
 
     const handleUpdate = (id) => {
         const data = {
-            u_id : id,
-            tablename : "awt_employeetrainingplan"
+            u_id: id,
+            tablename: "awt_employeetrainingplan"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
                 setUid(res.data[0])
 
-                console.log(res.data , "update")
+                console.log(res.data, "update")
             })
             .catch((err) => {
                 console.log(err)
@@ -175,7 +175,7 @@ const EmployeeTrainingPlan = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename : "awt_employeetrainingplan"
+            tablename: "awt_employeetrainingplan"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
@@ -196,28 +196,28 @@ const EmployeeTrainingPlan = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-    // if(validateForm()){
+        // if(validateForm()){
         const data = {
-            
-        subject : value.subject,
-        internal : value.internal,
-        identified : value.identified,
+
+            subject: value.subject,
+            internal: value.internal,
+            identified: value.identified,
         }
 
 
         axios.post(`${BASE_URL}/awt_employeetrainingplan`, data)
             .then((res) => {
-               console.log(res)
-               getEmployeeData()
+                console.log(res)
+                getEmployeeData()
 
             })
             .catch((err) => {
                 console.log(err)
             })
-    // }
+        // }
 
-   
-        
+
+
 
 
     }
@@ -227,8 +227,8 @@ const EmployeeTrainingPlan = () => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
 
- 
-    
+
+
 
 
 
@@ -241,12 +241,12 @@ const EmployeeTrainingPlan = () => {
             headerAlign: 'center',
             flex: 1,
             filterable: false,
-                                              
+
         },
-        { field: 'subject', headerName: 'Subject', flex: 2},
-        { field: 'internal', headerName: 'Internal/External', flex: 2},
-        { field: 'identified', headerName: 'Identified', flex: 2},
-        
+        { field: 'subject', headerName: 'Subject', flex: 2 },
+        { field: 'internal', headerName: 'Internal/External', flex: 2 },
+        { field: 'identified', headerName: 'Identified', flex: 2 },
+
         {
             field: 'actions',
             type: 'actions',
@@ -273,32 +273,29 @@ const EmployeeTrainingPlan = () => {
             <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="row">
-                        <div class="col-lg-12 grid-margin stretch-card">
+                        <div class="col-lg-12 grid-margin stretch-card col-lg-10">
                             <div class="card">
                                 <div class="card-body">
                                     <h4 class="card-title">Add Employee Training Plan</h4>
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
-                                          
 
-                                            <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">Subject</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.subject} placeholder="From Year" name='fromyear' onChange={onhandleChange} />
-                                                
+                                            <div class="form-group col-lg-2">
+                                                <lable class="exampleFormControlSelect1">Company</lable>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.company} name='company' onChange={onhandleChange}>
+                                                    <option></option>
+                                                </select>
                                             </div>
-                                            <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">Internal/External By</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.internal} placeholder="From Year" name='fromyear' onChange={onhandleChange} />
-                                                
+                                            <div class="form-group col-lg-2">
+                                                <lable class="exampleFormControlSelect1">Item</lable>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.item} name='item' onChange={onhandleChange}>
+                                                    <option></option>
+                                                </select>
                                             </div>
-                                            <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">Identified By</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.identified} placeholder="From Year" name='fromyear' onChange={onhandleChange} />
-                                                
-                                            </div>
-                                            <div className="form-group col-lg-3">
-                                                <label htmlFor="exampleInputUsername1">Date</label>
+
+                                            <div className="form-group col-lg-2">
+                                                <label htmlFor="exampleInputUsername1">Purchase Date</label>
                                                 <input
                                                     type="date"
                                                     className="form-control"
@@ -309,20 +306,69 @@ const EmployeeTrainingPlan = () => {
                                                     disabled
                                                 />
                                             </div>
-                                            
+                                            <div class="form-group col-lg-2">
+                                                <label class="exampleFormControlSelect1">Who Purchase</label>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.puechase} name='puechase' onChange={onhandleChange}>
+                                                    <option></option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-lg-2">
+                                                <label class="exampleFormControlSelect1">Vendor Name</label>
+                                                <select class="form-control form-control-lg" id="exampleFormCorntrolSelect1" value={value.vendor} name='vendor' onChange={onhandleChange}>
+                                                    <option></option>
+                                                </select>
+                                            </div>
+
+
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleInputUsername1">Voucher No</label>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.voucherno} placeholder="Voucher No" name='voucherno' onChange={onhandleChange} />
+
+                                            </div>
+
+                                            <div class="form-group col-lg-2">
+                                                <lable class="exampleFormControlSelect1">Purpose</lable>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.purpose} name='purpose' onChange={onhandleChange}>
+                                                    <option></option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleInputUsername1">Required Date</label>
+                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.required} placeholder="Required Date" name='required' onChange={onhandleChange} />
+
+                                            </div>
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleInputUsername1">Price</label>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.price} placeholder="price" name='price' onChange={onhandleChange} />
+
+                                            </div>
+
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleInputUsername1">Quantity</label>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.quantity} placeholder="Quantity" name='quantity' onChange={onhandleChange} />
+
+                                            </div>
+
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleInputUsername1">Total Amt</label>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.totalamt} placeholder="Total Amt" name='totalamt' onChange={onhandleChange} />
+
+                                            </div>
+
+
 
                                         </div>
 
-                                         <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                       
+                                        <button type="submit" class="btn btn-primary mr-2">Submit</button>
+
                                         <button type='button' onClick={() => {
                                             window.location.reload()
                                         }} class="btn btn-light">Back</button>
-                                            
 
 
 
-                                        
+
+
                                     </form>
 
                                 </div>
@@ -387,4 +433,4 @@ const EmployeeTrainingPlan = () => {
     )
 }
 
-export default EmployeeTrainingPlan
+export default PurchaseMaterial

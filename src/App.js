@@ -99,6 +99,8 @@ import ProjectMaster from './AdminComponent/ProjectMaster.js';
 import MLWFMaster from './AdminComponent/MLWFMaster.js';
 import EmployeeTrainingPlan from './AdminComponent/EmployeeTrainingPlan.js';
 import AddFeedbackNewQuestion from './AdminComponent/AddFeedbackNewQuestion.js';
+import RollNumberAllot from './AdminComponent/RollNumberAllot.js';
+import PurchaseMaterial from './AdminComponent/PurchaseMaterial.js';
 
 
 
@@ -275,6 +277,10 @@ const Router = createBrowserRouter([
         element: <AddCorporateInquiry/>
       },
       //================Daily Activities======================
+
+      {
+        path: '/rollnumberallot',
+        element: <RollNumberAllot/>      },
 
       {
         path: '/lecturetaken',
@@ -456,6 +462,10 @@ const Router = createBrowserRouter([
       {
         path: '/mlwfmaster',
         element: <MLWFMaster/>
+      },
+      {
+        path: '/purchasematerial',
+        element: <PurchaseMaterial/>
       }
       
 
