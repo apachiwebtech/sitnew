@@ -76,7 +76,7 @@ const CompanyInfo = () => {
   };
   const columns = [
     {
-      field: "Student_id",
+      field: "index",
       headerName: "Id",
       type: "number",
       align: "center",
@@ -304,7 +304,7 @@ const CompanyInfo = () => {
                       id="exampleInputUsername1"
 
                       placeholder="Designation"
-                      name="garde"
+                      name="Designation"
                       onChange={handleChange}
                     />
                   </div>

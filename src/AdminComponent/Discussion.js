@@ -11,6 +11,9 @@ import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import decryptedUserId from "../Utils/UserID";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -23,11 +26,46 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 
 const Discussion = () => {
   const [open, setOpen] = React.useState(false);
-  const [discussion , setDiscussion] = useState({
-    date : "",
-    remark : "",
-    department : "",
+  const [uid, setUid] = useState([])
+  const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
+  const [cid, setCid] = useState("")
+
+  const [error, setError] = useState({})
+
+  const [discussion, setDiscussion] = useState({
+    date: "",
+    remark: "",
+    department: "",
   });
+
+  useEffect(() => {
+    setDiscussion({
+      date: "" || uid.date,
+      remark: "" || uid.discussion,
+      department: "" || uid.department,
+    })
+  }, [uid])
+
+  const validateForm = () => {
+    let isValid = true
+    const newErrors = {}
+
+    if (!discussion.date) {
+      isValid = false;
+      newErrors.date = "date is require"
+    }
+    if (!discussion.remark) {
+      isValid = false;
+      newErrors.discussion = "discussion is require"
+    }
+    if (!discussion.department) {
+      isValid = false;
+      newErrors.department = "department is require"
+    }
+
+    setError(newErrors)
+    return isValid
+  }
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -37,60 +75,128 @@ const Discussion = () => {
 
   const [onlineAdmissions, setOnlineAdmissions] = useState([]);
 
-  useEffect(()=>{
+  useEffect(() => {
     getDisscussionData()
-  },[])
+  }, [])
 
   async function getDisscussionData() {
-    let id = localStorage.getItem(`Admissionid`)
-    
-    axios.post(`${BASE_URL}/getdiscussion`, {student_id : id }).then((res) => {
-      console.log(res.data,">>>>>>")
-      setOnlineAdmissions(res.data)
-      // setDiscussion      // setOnlineAdmissions((prevState)=>{
 
-      // })
+
+    axios.post(`${BASE_URL}/getadmissiondiscussion`, { admissionid: admissionid }).then((res) => {
+
+      setOnlineAdmissions(res.data)
+
     })
-    .catch((err)=> {
-      console.log(err)
-    })
+      .catch((err) => {
+        console.log(err)
+      })
   }
- 
+
   const handleChange = (e) => {
-    
+
     setDiscussion((prev) => ({ ...prev, [e.target.name]: e.target.value }))
-    
+
   };
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    const data = {
-      student_id : localStorage.getItem(`Admissionid`),
-      date : discussion.date,
-      remark : discussion.remark,
-      department : discussion.department,
-    }
-      axios.post(`${BASE_URL}/` , data ).then((res)=> {
+
+    if (validateForm()) {
+      const data = {
+        admissionid: localStorage.getItem('Admissionid'),
+        date: discussion.date,
+        discussion: discussion.remark,
+        department: discussion.department,
+        u_id: uid.id,
+        user_id: decryptedUserId(),
+      }
+      axios.post(`${BASE_URL}/add_oadmissiondiscussion`, data).then((res) => {
         setOpen(false);
-      }).catch((err)=> {
+        getDisscussionData()
+      }).catch((err) => {
         console.log(err)
       })
-    
+    }
+
+
     //add discussion api
   }
 
-  const{admissionid}  = useParams();
+  const { admissionid } = useParams();
 
-  useEffect(()=>{
-      localStorage.setItem("Admissionid", admissionid);
-  },[admissionid])
+  useEffect(() => {
+    localStorage.setItem("Admissionid", admissionid);
+  }, [admissionid])
+
+  const handleDelete = (id) => {
+    const data = {
+      discuss_id: id
+    }
+
+    axios.post(`${BASE_URL}/oadmissiondiscuss_delete`, data)
+      .then((res) => {
+        getDisscussionData()
+
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+
+    setConfirmationVisibleMap((prevMap) => ({
+      ...prevMap,
+      [id]: false,
+    }));
+  }
+
+
+  const handleClick = (id) => {
+    setCid(id)
+    setConfirmationVisibleMap((prevMap) => ({
+      ...prevMap,
+      [id]: true,
+    }));
+  };
+
+  const handleCancel = (id) => {
+    // Hide the confirmation dialog without performing the delete action
+    setConfirmationVisibleMap((prevMap) => ({
+      ...prevMap,
+      [id]: false,
+    }));
+  };
+
+  const handleUpdate = (id) => {
+    setOpen(true)
+    axios.post(`${BASE_URL}/oadmissiondiscussion_update`, { u_id: id })
+      .then((res) => {
+        setUid(res.data[0])
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+
+  }
 
   const columns = [
-   
-    { field: "Disscussion_date", headerName: "Discussion Date", flex: 2 },
-    { field: "Remark", headerName: "Remark", flex: 4 },
-    { field: "Department", headerName: "Department", flex: 2 },
-    
+
+    { field: "date", headerName: "Discussion Date", flex: 2 },
+    { field: "discussion", headerName: "Remark", flex: 4 },
+    { field: "department", headerName: "Department", flex: 2 },
+    {
+      field: 'actions',
+      type: 'actions',
+      headerName: 'Action',
+      flex: 1,
+      renderCell: (params) => {
+        return (
+          <>
+            <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />
+            <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
+          </>
+        )
+      }
+    },
+
   ];
 
   const rowsWithIds = onlineAdmissions.map((row, index) => ({
@@ -144,8 +250,21 @@ const Discussion = () => {
                         },
                       }}
                     />
+                    {
+                      confirmationVisibleMap[cid] && (
+                        <div className='confirm-delete'>
+                          <p>Are you sure you want to delete?</p>
+                          <button
+                            onClick={() => handleDelete(cid)}
+                            className='btn btn-sm btn-primary'>OK</button>
+                          <button
+                            onClick={() => handleCancel(cid)}
+                            className='btn btn-sm btn-danger'>Cancel</button>
+                        </div>
+                      )
+                    }
                   </div>
-                  
+
                 </div>
               </div>
             </div>
@@ -174,69 +293,85 @@ const Discussion = () => {
           <CloseIcon />
         </IconButton>
         <DialogContent dividers>
-          
+
           <form onSubmit={handleSubmit}>
-          <div className="row justify-content-center">
-            <div className="p-3" style={{ width: "100%" }}>
-              <div className="row">
-                <div className="form-group col-lg-6 ">
-                  <label for="exampleInputUsername1">
-                  Discussion Date<span className="text-danger">*</span>
-                  </label>
-                  <input
-                    type="date"
-                    class="form-control"
-                    id="exampleInputUsername1"
+            <div className="row justify-content-center">
+              <div className="p-3" style={{ width: "100%" }}>
+                <div className="row">
+                  <div className="form-group col-lg-6 ">
+                    <label for="exampleInputUsername1">
+                      Discussion Date<span className="text-danger">*</span>
+                    </label>
+                    <input
+                      type="date"
+                      class="form-control"
+                      id="exampleInputUsername1"
+                       value={discussion.date}
+                      placeholder="Discussion Date"
+                      name="date"
+                      onChange={handleChange}
+                    />
+                       {error.date && <span className='text-danger'>{error.date}</span>}
+                  </div>
+                  <div className="form-group col-lg-6 ">
+                    <label for="exampleInputUsername1">Department</label>
+                    <select
+                      className="form-control form-control-lg"
+                      id="exampleFormControlSelect1"
+                      name="department"
+                      onChange={handleChange}
+                      value={discussion.department}
+                      defaultValue={discussion.department}
+                    >
+                      <option value="0">Select</option>
+                      <option value="Administration">Administration</option>
+                      <option value="Businessdevelopment">Business Development</option>
+                      <option value="TrainingDevelopment">Training Development</option>
+                      <option value="Account">Account</option>
+                      <option value="Placement">Placement</option>
+                      <option value="Purchase">Purchase</option>
+                      <option value="Leadership">Leadership / DD</option>
+                      <option value="QualityAssurance">Quality Assurance</option>
+                      <option value="HumanResources">Human Resources</option>
+                      <option value="CorporateTraining">Corporate Training</option>
+                      <option value="TestUser">Test User</option>
+                    </select>
+                    {error.department && <span className='text-danger'>{error.department}</span>}
+                  </div>
 
-                    placeholder="Discussion Date"
-                    name="date"
-                    onChange={handleChange}
-                  />
-                </div>
-                <div className="form-group col-lg-6 ">
-                  <label for="exampleInputUsername1">Department</label>
-                  <select
-                    className="form-control form-control-lg"
-                    id="exampleFormControlSelect1"
-                    name="department"
-                    onChange={handleChange}
-                  >
-                    <option>Account</option>
-                    <option>Library</option>
-                    <option>Administrator</option>
-                  </select>
-                </div>
+                  <div className="form-group col-lg-12">
+                    <label for="exampleInputUsername1">
+                      Remark<span className="text-danger">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="exampleInputUsername1"
+                      placeholder=" Remark"
+                      name="remark"
+                      onChange={handleChange}
+                      value={discussion.remark}
+                      defaultValue={discussion.remark}
+                    />
+                       {error.discussion && <span className='text-danger'>{error.discussion}</span>}
+                  </div>
 
-                <div className="form-group col-lg-12">
-                  <label for="exampleInputUsername1">
-                  Remark<span className="text-danger">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="exampleInputUsername1"
-                    placeholder=" Remark"
-                    name="remark"
-                    onChange={handleChange}
-                  />
-                </div>
-                
 
-               
+
+                </div>
               </div>
             </div>
-          </div>
-          <div>
-            <button type="submit">save</button>
-          </div>
+            <div>
+              <button type="submit">save</button>
+            </div>
 
-          <div className="row p-2 gap-2">
-            {/* <button className='mr-2 btn btn-primary'>Save</button> */}
-            {/* <button className='col-2'>close</button> */}
-          </div>
-      </form>
+            <div className="row p-2 gap-2">
+              {/* <button className='mr-2 btn btn-primary'>Save</button> */}
+              {/* <button className='col-2'>close</button> */}
+            </div>
+          </form>
         </DialogContent>
-     
+
       </BootstrapDialog>
     </div>
   );

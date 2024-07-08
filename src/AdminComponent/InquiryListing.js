@@ -14,36 +14,10 @@ const InquiryListing = () => {
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
     const label = { inputProps: { 'aria-label': 'Color switch demo' } };
 
     const [inquiryData, setInquiryData] = useState([]);
-    const [Discipline, setDescipline] = useState([]);
-    const [Course, setCourse] = useState([]);
-    const [Education, setEducation] = useState([]);
-    const [batch, setBatch] = useState([]);
-    const [batchCategoty, setbatchCategory] = useState([]);
-    const [value, setValue] = useState({
-        firstname: '',
-        gender: '',
-        dob: '',
-        mobile: '',
-        whatsapp: '',
-        email: '',
-        nationality: '',
-        discussion: '',
-        country: '',
-        InquiryDate: '',
-        modeEnquiry: '',
-        advert: '',
-        programmeEnquired: '',
-        selectedProgramme: '',
-        category: '',
-        batch: '',
-        qualification: '',
-        descipline: '',
-        percentage: '',
-    })
+   
 
 
 
@@ -60,64 +34,14 @@ const InquiryListing = () => {
         setInquiryData(data);
     }
 
-    const getDiscipline = async () => {
-        const response = await fetch(`${BASE_URL}/getDiscipline`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setDescipline(data);
-    }
-    const getCourse = async () => {
-        const response = await fetch(`${BASE_URL}/getCourses`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setCourse(data);
-    }
-    const getEducation = async () => {
-        const response = await fetch(`${BASE_URL}/getEducation`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setEducation(data);
-    }
-    const getBatch = async () => {
-        const response = await fetch(`${BASE_URL}/getBtach`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setBatch(data);
-    }
-    const getBtachCategory = async () => {
-        const response = await fetch(`${BASE_URL}/getBtachCategory`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setbatchCategory(data);
-    }
+
+
+
+
+
     useEffect(() => {
         getInquiryData()
-        getDiscipline();
-        getEducation();
-        getCourse();
-        getBatch();
-        getBtachCategory();
-        value.title = ""
+
         setError({})
         setUid([])
     }, [])
@@ -138,21 +62,6 @@ const InquiryListing = () => {
         }));
     };
 
-    const handleUpdate = (id) => {
-        const data = {
-            u_id: id,
-            tablename: "awt_faculty"
-        }
-        axios.post(`${BASE_URL}/update_data`, data)
-            .then((res) => {
-                setUid(res.data[0])
-
-                console.log(res.data, "update")
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
 
     const handleDelete = (id) => {
         const data = {
@@ -175,15 +84,15 @@ const InquiryListing = () => {
     }
 
 
- const handleswitchchange = (value,Inquiry_Id) =>{
-    const newval = value == 0 ? 1 : 0
+    const handleswitchchange = (value, Inquiry_Id) => {
+        const newval = value == 0 ? 1 : 0
 
-    axios.post(`${BASE_URL}/data_status` , {status : newval, Inquiry_Id : Inquiry_Id, table_name : "Student_Inquiry"})
-    .then((res)=>{
-        console.log(res)
-        getInquiryData()
-    })
- }
+        axios.post(`${BASE_URL}/data_status`, { status: newval, Inquiry_Id: Inquiry_Id, table_name: "Student_Inquiry" })
+            .then((res) => {
+                alert("Status changed...")
+                getInquiryData()
+            })
+    }
 
 
 
@@ -191,7 +100,7 @@ const InquiryListing = () => {
 
 
     const columns = [
-        
+
         {
             field: 'index',
             headerName: 'Id',
@@ -201,15 +110,22 @@ const InquiryListing = () => {
             flex: 1,
             filterable: false,
         },
-        { field: 'FName', headerName: 'Student Name', flex: 2 },
-        { field: 'course', headerName: 'Course Name', flex: 2 },
+        { field: 'Student_Name', headerName: 'Student Name', flex: 2 },
+        { field: 'Course_Name', headerName: 'Course Name', flex: 2 },
         { field: 'inquiry_DT', headerName: 'Inquiry Date', flex: 2 },
-        { field: 'discussion', headerName: 'Discuss', flex: 2 },
+        { field: 'Discussion', headerName: 'Discuss', flex: 4 },
         { field: 'present_mobile', headerName: 'Mobile', flex: 2 },
-        { field: 'Email', headerName: 'Email', flex: 2 },
-        { field: 'Discipline', headerName: 'Discipline', flex: 2 },
+        { field: 'Deciplin', headerName: 'Discipline', flex: 2 },
         { field: 'Inquiry_type', headerName: 'Inquiry type', flex: 2 },
-        // { field: 'isActive', headerName: 'Options', flex: 2},
+        { field: 'Status', headerName: 'Status', flex: 2,renderCell: (params) => {
+            return (
+                <>
+                  {params.row.IsUnread == 0 ?<p className ="text-danger" >{params.row.Status}</p> : <p>{params.row.Status}</p> }  
+                </>
+            )
+        }
+
+         },
         {
             field: 'actions',
             type: 'actions',
@@ -218,9 +134,9 @@ const InquiryListing = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <Link to={`/inquiry/${params.row.id}`} ><EditIcon style={{ cursor: "pointer" }}  /></Link>
+                        <Link to={`/inquiry/${params.row.id}`} ><EditIcon style={{ cursor: "pointer" }} /></Link>
                         <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
-                        <Switch {...label} onChange={() => handleswitchchange(params.row.isActive,params.row.id )} defaultChecked={params.row.isActive == 0 ? false : true} color="secondary" />
+                        <Switch {...label} onChange={() => handleswitchchange(params.row.isActive, params.row.id)} defaultChecked={params.row.isActive == 0 ? false : true} color="secondary" />
                     </>
                 )
             }
@@ -237,26 +153,26 @@ const InquiryListing = () => {
             <div className="main-panel">
 
                 <div className="content-wrapper">
-                 
+
                     <div className="row">
-                     
+
                         <div className="col-lg-12">
-                            <div className="card">
-                                <div className="card-body">
+                            <div className="">
+                                {/* <div className="card-body"> */}
                                     <div className='d-flex justify-content-between gap-3' style={{ width: "100%", padding: "10px 0" }}>
                                         <div >
-                                            <h4 class="card-title">List Of Inquiry</h4>
+                                            {/* <h4 class="card-title">List Of Inquiry</h4> */}
                                         </div>
-                                           <Link to='/inquiry/:inquiryid'> <button className='btn btn-success'>Add +</button></Link>
-                                       
+                                        <Link to='/onlineinquiry/inquiryform/:inquiryid'> <button className='btn btn-success'>Add +</button></Link>
+
 
                                     </div>
 
-                                    <div>
+                                    <div className="card">
                                         <DataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
-                                            disableColumnFilter
+                                            // disableColumnFilter
                                             disableColumnSelector
                                             disableDensitySelector
                                             rowHeight={37}
@@ -285,7 +201,7 @@ const InquiryListing = () => {
 
 
 
-                                </div>
+                                {/* </div> */}
                             </div>
                         </div>
                     </div>

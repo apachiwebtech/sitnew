@@ -1,30 +1,21 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
-import decryptedUserId from '../Utils/UserID';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { Button, Card, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import IconButton from '@mui/material/IconButton';
-import AddBoxIcon from '@mui/icons-material/AddBox';
+import InquiryForm from './InquiryForm';
 
 
 const Inquiry = () => {
 
     const [brand, setBrand] = useState([])
-    const [vendordata, setVendorData] = useState([])
+    const [descipline, getDescipline] = useState([])
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
-
+    const [status, setStatus] = useState([])
     const { inquiryid } = useParams();
     const [inquiryData, setInquiryData] = useState([]);
     const [Discipline, setDescipline] = useState([]);
@@ -52,6 +43,8 @@ const Inquiry = () => {
         qualification: '',
         descipline: '',
         percentage: '',
+        statusdate: '',
+        status: ''
     })
 
 
@@ -70,17 +63,17 @@ const Inquiry = () => {
     }
 
 
-    const getInquiryData = async () => {
-        const response = await fetch(`${BASE_URL}/getadmissionactivity`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
+    // const getInquiryData = async () => {
+    //     const response = await fetch(`${BASE_URL}/getadmissionactivity`, {
+    //         method: 'GET',
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         }
+    //     });
+    //     const data = await response.json();
 
-        setInquiryData(data);
-    }
+    //     setInquiryData(data);
+    // }
 
     const getDiscipline = async () => {
         const response = await fetch(`${BASE_URL}/getDiscipline`, {
@@ -146,36 +139,37 @@ const Inquiry = () => {
 
         const data = await response.json();
 
-        console.log(data, "DATA A GAYA!");
 
         setValue(prevState => ({
             ...prevState,
             firstname: data[0].Student_Name,
             gender: data[0].Sex,
             dob: data[0].DOB,
-            mobile: data[0].present_mobile,
-            whatsapp: '',
+            mobile: data[0].Present_Mobile,
+            whatsapp: data[0].Present_Mobile,
             email: data[0].Email,
             nationality: data[0].Nationality,
-            discussion: data[0].discussion,
-            country: '',
-            InquiryDate: data[0].Inquiry_Dt,
-            modeEnquiry: data[0].Inquiry_Type,
-            advert: '',
-            programmeEnquired: '',
+            discussion: data[0].Discussion,
+            country: data[0].Present_Country,
+            InquiryDate: data[0].inquiry_DT,
+            modeEnquiry: data[0].Inquiry_type,
+            advert: data[0].Refered_By,
+            programmeEnquired: data[0].Inquiry,
             selectedProgramme: data[0].Course_Id,
-            category: '',
-            batch: '',
+            category: data[0].Batch_Category_id,
+            batch: data[0].Batch_Code,
             qualification: data[0].Qualification,
             descipline: data[0].Discipline,
             percentage: data[0].Percentage,
+            statusdate: data[0].StateChangeDt,
+            status: data[0].OnlineState
         }))
     }
     useEffect(() => {
         if (inquiryid !== ":inquiryid") {
             getStudentDetail()
         }
-        getInquiryData()
+        // getInquiryData()
         getDiscipline();
         getEducation();
         getCourse();
@@ -187,10 +181,20 @@ const Inquiry = () => {
     }, [])
 
 
+    async function getStatus() {
+        axios.get(`${BASE_URL}/getstatus`)
+            .then((res) => {
+                setStatus(res.data)
+            })
+    }
 
 
+    useEffect(() => {
+        getStatus()
+    }, [])
 
 
+const navigate = useNavigate()
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -219,6 +223,8 @@ const Inquiry = () => {
                     qualification: value.qualification,
                     descipline: value.descipline,
                     percentage: value.percentage,
+                    statusdate: value.statusdate,
+                    status: value.status
                 }),
                 headers: {
                     'Content-Type': 'application/json'
@@ -249,6 +255,8 @@ const Inquiry = () => {
                     qualification: value.qualification,
                     descipline: value.descipline,
                     percentage: value.percentage,
+                    statusdate: value.statusdate,
+                    status: value.status
                 }),
                 headers: {
                     'Content-Type': 'application/json'
@@ -264,6 +272,8 @@ const Inquiry = () => {
 
         alert(data.message)
         //   window.location.pathname = '/inquirylisting'
+
+        navigate('/inquirylisting')
 
 
         // }        
@@ -283,6 +293,8 @@ const Inquiry = () => {
             <div className="main-panel">
 
                 <div className="content-wrapper">
+
+                    <InquiryForm inquiryid={inquiryid} />
 
                     <div className="row">
                         <div className="col-lg-12 grid-margin">
@@ -305,10 +317,10 @@ const Inquiry = () => {
 
                                                         <div className="form-group col-lg-4 ">
                                                             <label for="exampleInputUsername1">Gender</label>
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.gender} name='gender' onChange={onhandleChange} >
-                                                                <option>Male</option>
-                                                                <option>Female</option>
-                                                                <option>Other</option>
+                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.gender} name='gender' onChange={onhandleChange} defaultValue={value.gender}>
+                                                                <option value="male">Male</option>
+                                                                <option value="female">Female</option>
+                                                                <option value="other">Other</option>
                                                             </select>
                                                         </div>
 
@@ -328,7 +340,6 @@ const Inquiry = () => {
                                                             <input type="number" className="form-control" id="exampleInputUsername1" value={value.whatsapp} placeholder="Number" name='whatsapp' onChange={onhandleChange} />
                                                         </div>
                                                     </div>
-
 
                                                     <div className='row'>
                                                         <div className="form-group col-lg-6 ">
@@ -366,15 +377,18 @@ const Inquiry = () => {
                                                     <div className='row'>
                                                         <div class="form-group col-lg-6 ">
                                                             <label for="exampleInputUsername1">Date</label>
-                                                            <input type="date" className="form-control" id="exampleInputUsername1" value={value.dob} placeholder="Contact Person" name='dob' onChange={onhandleChange} disabled />
+                                                            <input type="date" className="form-control" id="exampleInputUsername1" value={value.statusdate} placeholder="Contact Person" name='statusdate' onChange={onhandleChange} />
 
                                                         </div>
                                                         <div className="form-group col-lg-6 ">
                                                             <label for="exampleInputUsername1">Set Status</label>
-                                                            <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.gender} name='gender' onChange={onhandleChange} disabled>
-                                                                <option>Male</option>
-                                                                <option>Female</option>
-                                                                <option>Other</option>
+                                                            <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.status} defaultValue={value.status} name='status' onChange={onhandleChange} >
+                                                                {status.map((item) => {
+                                                                    return (
+                                                                        <option value={item.Id} >{item.Status}</option>
+                                                                    )
+                                                                })}
+
                                                             </select>
                                                         </div>
                                                     </div>
@@ -399,21 +413,33 @@ const Inquiry = () => {
                                                             <input type="date" className="form-control" id="exampleInputUsername1" value={value.InquiryDate} placeholder="Contact Person" name='InquiryDate' onChange={onhandleChange} />
 
                                                         </div>
-                                                        <div className="form-group col-lg-3 ">
+                                                        <div className="form-group col-lg-3">
                                                             <label for="exampleInputUsername1">Mode Of Inquiry</label>
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.modeEnquiry} name='modeEnquiry' onChange={onhandleChange} >
-                                                                <option>Mail</option>
-                                                                <option>Person</option>
-                                                                <option>Phone</option>
-                                                                <option>OnlineMail</option>
+                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.modeEnquiry} name='modeEnquiry' defaultValue={value.modeEnquiry} onChange={onhandleChange} >
+                                                                <option value="mail" >Mail</option>
+                                                                <option value="person" >Person</option>
+                                                                <option value="phone" >Phone</option>
+                                                                <option value="omail" >OnlineMail</option>
                                                             </select>
                                                         </div>
                                                         <div className="form-group col-lg-5 ">
                                                             <label for="exampleInputUsername1">How they come to know about SIT	    </label>
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.advert} name='advert' onChange={onhandleChange} >
-                                                                <option>Advertisement</option>
-                                                                <option>facebook</option>
-                                                                <option>Google</option>
+                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.advert} defaultValue={value.advert} name='advert' onChange={onhandleChange} >
+                                                                <option value="">Select</option>
+                                                                <option value="Website">Website</option>
+                                                                <option value="Exhibition">Exhibition</option>
+                                                                <option value="Reference">Reference</option>
+                                                                <option value="TV interview">TV interview</option>
+                                                                <option value="Advertisement">Advertisement</option>
+                                                                <option value="Shiksha">Shiksha</option>
+                                                                <option value="India Mart">India Mart</option>
+                                                                <option value="Emagister">Emagister</option>
+                                                                <option value="News Paper">News Paper</option>
+                                                                <option value="Ex.student">Ex.student</option>
+                                                                <option value="Google">Google</option>
+                                                                <option value="Seminar">Seminar</option>
+                                                                <option value="Facebook">Facebook</option>
+
                                                             </select>
                                                         </div>
 
@@ -426,37 +452,55 @@ const Inquiry = () => {
                                                     <div>
                                                         <h4 className="card-title titleback">Training Programme & batch details</h4>
                                                     </div>
-                                                    <div className='row'>
+                                                    {/* <div className='row'>
                                                         <div className="form-group col-lg-12">
                                                             <label for="exampleTextarea1">Programme inquired	</label>
                                                             <textarea class="form-control" id="exampleTextarea1" value={value.programmeEnquired} placeholder="Discussion" name='programmeEnquired' onChange={onhandleChange}></textarea>
 
                                                         </div>
-                                                    </div>
+                                                    </div> */}
 
                                                     <div className='row'>
                                                         <div className="form-group col-lg-5">
-                                                            <label for="exampleInputUsername1">Selected Training Programme	</label>
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.selectedProgramme} name='selectedProgramme' onChange={onhandleChange} >
-                                                                {Course.map((item) => {
-                                                                    return <option>{item.Course_Name}</option>
-                                                                })}
+                                                            <label htmlFor="exampleInputUsername1">Selected Training Programme</label>
+                                                            <select
+                                                                className="form-control form-control-lg"
+                                                                id="exampleFormControlSelect1"
+                                                                value={value.selectedProgramme}
+                                                                name='selectedProgramme'
+                                                                onChange={onhandleChange}
+                                                                defaultValue={value.selectedProgramme}
+                                                            >
+                                                                {Course.map((item) => (
+
+                                                                    <option key={item.id} value={item.Course_Id}>
+                                                                        {item.Course_Name}
+                                                                    </option>
+                                                                ))}
                                                             </select>
                                                         </div>
+
                                                         <div className="form-group col-lg-4">
                                                             <label for="exampleInputUsername1">Category</label>
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.category} name='category' onChange={onhandleChange} >
+                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.category} defaultValue={value.category} name='category' onChange={onhandleChange} >
+
+
                                                                 {batchCategoty?.map((item) => {
-                                                                    return <option>{item.BatchCategory}</option>
+                                                                    return <option value={item.id}>{item.BatchCategory}</option>
                                                                 })}
                                                             </select>
                                                         </div>
                                                         <div className="form-group col-lg-3">
                                                             <label for="exampleInputUsername1">Batch</label>
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batch} name='batch' onChange={onhandleChange} >
-                                                                <option>Male</option>
-                                                                <option>Female</option>
-                                                                <option>Other</option>
+                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batch} defaultValue={value.batch} name='batch' onChange={onhandleChange} >
+                                                                <option>Select Batch</option>
+                                                                {batch.map((item) => {
+                                                                    return (
+
+                                                                        <option value={item.Batch_Id}>{item.Batch_code}</option>
+                                                                    )
+                                                                })}
+
                                                             </select>
                                                         </div>
                                                     </div>
@@ -471,11 +515,12 @@ const Inquiry = () => {
                                                     <div className='row'>
                                                         <div className="form-group col-lg-4 ">
                                                             <label for="exampleInputUsername1">Qualification</label>
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.qualification} name='qualification' onChange={onhandleChange} >
+                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.qualification}
+                                                                defaultValue={value.qualification} name='qualification' onChange={onhandleChange} >
                                                                 {
                                                                     Education.map((item) => {
                                                                         return (
-                                                                            <option>{item.Education}</option>
+                                                                            <option value={item.Id}>{item.Education}</option>
                                                                         )
                                                                     })
                                                                 }
@@ -483,11 +528,12 @@ const Inquiry = () => {
                                                         </div>
                                                         <div className="form-group col-lg-4 ">
                                                             <label for="exampleInputUsername1">Descipline</label>
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.descipline} name='descipline' onChange={onhandleChange} >
+                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.descipline}
+                                                                defaultValue={value.descipline} name='descipline' onChange={onhandleChange} >
                                                                 {
                                                                     Discipline.map((item) => {
                                                                         return (
-                                                                            <option>{item.Deciplin}</option>
+                                                                            <option value={item.Id}>{item.Deciplin}</option>
                                                                         )
                                                                     })
                                                                 }

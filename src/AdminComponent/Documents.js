@@ -111,6 +111,7 @@ const Documents = () => {
       .then((res) => {
       
         alert("File Uploaded")
+        getOnlineAdmissions()
     
       })
 

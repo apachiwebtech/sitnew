@@ -12,7 +12,7 @@ const Students = () => {
     const [onlineAdmissions, setOnlineAdmissions] = useState([])
     const label = { inputProps: { 'aria-label': 'Color switch demo' } };
     const getOnlineAdmissions = async () => {
-        const response = await fetch(`${BASE_URL}/getStudents`, {
+        const response = await fetch(`${BASE_URL}/getFinalStudents`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -56,9 +56,9 @@ const Students = () => {
         { field: 'Student_Name', headerName: 'Student Name', flex: 2 },
         { field: 'Present_Address', headerName: 'Address', flex: 2 },
         { field: 'Email', headerName: 'Email', flex: 2 },
-        { field: 'present_mobile', headerName: 'mobile', flex: 2 },
-        { field: 'Qualification', headerName: 'Qualification', flex: 2 },
-        { field: 'IsActive', headerName: 'Status', flex: 2 },
+        { field: 'Present_Mobile', headerName: 'mobile', flex: 2 },
+        // { field: 'Qualification', headerName: 'Qualification', flex: 2 },
+        { field: 'Status', headerName: 'Status', flex: 2 },
         {
             field: 'actions',
             type: 'actions',

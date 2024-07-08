@@ -98,9 +98,11 @@ const WebLogin = () => {
         .then((res) => {
           console.log(res.data.err)
           if (res.data.id) {
+            const role = res.data.data[0].role
             // localStorage.setItem("userid", res.data.id)
             const ciphertext = CryptoJS.AES.encrypt(res.data.id.toString(), encryptionKey).toString();
             Cookies.set('userid', ciphertext, { expires: 1 });
+            Cookies.set('role', role, { expires: 2 });
             navigate('/')
           }
           else {

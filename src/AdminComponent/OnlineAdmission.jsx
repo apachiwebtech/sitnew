@@ -57,9 +57,8 @@ const OnlineAdmissions = () => {
         { field: 'Student_Name', headerName: 'Student Name', flex: 2 },
         { field: 'Present_Address', headerName: 'Address', flex: 2 },
         { field: 'Email', headerName: 'Email', flex: 2 },
-        { field: 'present_mobile', headerName: 'mobile', flex: 2 },
-        { field: 'Qualification', headerName: 'Qualification', flex: 2 },
-        { field: 'IsActive', headerName: 'Status', flex: 2 },
+        { field: 'Present_Mobile', headerName: 'mobile', flex: 2 },
+        { field: 'Status', headerName: 'Status', flex: 2 },
         {
             field: 'actions',
             type: 'actions',
@@ -87,25 +86,25 @@ const OnlineAdmissions = () => {
                     <div className="row">
 
                         <div className="col-lg-12">
-                            <div className="card">
-                                <div className="card-body">
-                                    <div className='d-flex justify-content-between gap-3' style={{ width: "100%", padding: "10px 0" }}>
+                            {/* <div className="card"> */}
+                                <div className="">
+                                    {/* <div className='d-flex justify-content-between gap-3' style={{ width: "100%", padding: "10px 0" }}>
                                         <div >
                                             <h4 class="card-title">Online Admission</h4>
                                         </div>
                             
 
-                                    </div>
+                                    </div> */}
 
-                                    <div>
+                                    <div className="card">
                                         <DataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
-                                            disableColumnFilter
+                                            // disableColumnFilter
                                             disableColumnSelector
                                             disableDensitySelector
                                             rowHeight={37}
-                                            getRowId={(row) => row.Present_Mobile}
+                                            getRowId={(row) => row.Student_Id}
                                             initialState={{
                                                 pagination: {
                                                     paginationModel: { pageSize: 10, page: 0 },
@@ -123,7 +122,7 @@ const OnlineAdmissions = () => {
 
 
                                 </div>
-                            </div>
+                            {/* </div> */}
                         </div>
                     </div>
                 </div>

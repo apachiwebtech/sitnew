@@ -49,7 +49,7 @@ const AdmissionListing = () => {
 
 
     const getInquiryData = async () => {
-        const response = await fetch(`${BASE_URL}/getadmissionactivity`, {
+        const response = await fetch(`${BASE_URL}/getadmissiondata`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -200,14 +200,14 @@ const AdmissionListing = () => {
         flex: 1,
         filterable: false,
     },
-    { field: 'FName', headerName: 'Student Name', flex: 2 },
-    { field: 'course', headerName: 'Course Name', flex: 2 },
-    { field: 'inquiry_DT', headerName: 'Inquiry Date', flex: 2 },
-    { field: 'discussion', headerName: 'Discuss', flex: 2 },
-    { field: 'present_mobile', headerName: 'Mobile', flex: 2 },
+    { field: 'Student_Name', headerName: 'Student Name', flex: 2 },
+    { field: 'Course_Name', headerName: 'Course Name', flex: 2 },
+    // { field: 'Inquiry_Dt', headerName: 'Inquiry Date', flex: 2 },
+    { field: 'Discussion', headerName: 'Discuss', flex: 2 },
+    { field: 'Present_Mobile', headerName: 'Mobile', flex: 2 },
     { field: 'Email', headerName: 'Email', flex: 2 },
     { field: 'Discipline', headerName: 'Discipline', flex: 2 },
-    { field: 'Inquiry_type', headerName: 'Inquiry type', flex: 2 },
+    { field: 'Inquiry_Type', headerName: 'Inquiry type', flex: 2 },
     // { field: 'isActive', headerName: 'Options', flex: 2},
     {
         field: 'actions',
@@ -217,7 +217,7 @@ const AdmissionListing = () => {
         renderCell: (params) => {
             return (
                 <>
-                    <Link to={`/admission/${params.row.id}`}><EditIcon style={{ cursor: "pointer" }}  /></Link>
+                    <Link to={`/admission/${params.row.Student_Id}`}><EditIcon style={{ cursor: "pointer" }}  /></Link>
                     <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
                     <Switch {...label} onChange={() => handleswitchchange(params.row.isActive,params.row.id )} defaultChecked={params.row.isActive == 0 ? false : true} color="secondary" />
                 </>
@@ -259,7 +259,7 @@ const AdmissionListing = () => {
                                             disableColumnSelector
                                             disableDensitySelector
                                             rowHeight={37}
-                                            getRowId={(row) => row.id}
+                                            getRowId={(row) => row.Student_Id}
                                             initialState={{
                                                 pagination: {
                                                     paginationModel: { pageSize: 10, page: 0 },

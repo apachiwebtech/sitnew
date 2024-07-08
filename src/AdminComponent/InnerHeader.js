@@ -6,7 +6,7 @@ import NotificationsActiveTwoToneIcon from '@mui/icons-material/NotificationsAct
 import { Link } from 'react-router-dom';
 import { useNavigate, useLocation } from 'react-router-dom';
 import img1 from "../assets/images/prof.png";
-
+import ArrowCircleLeftSharpIcon from "@mui/icons-material/ArrowCircleLeftSharp";
 const InnerHeader = () => {
 
     const location = useLocation();
@@ -80,16 +80,21 @@ const InnerHeader = () => {
                 return '';
         }
     };
+
+    const navigate = useNavigate()
+
+
     return (
         <div>
             <header class="main-header">
                 <div class="container-fluid">
                     <div class="main-header-inner">
-                        <div class="page-title">
+                    <ArrowCircleLeftSharpIcon onClick={() => navigate(-1)} class="arrow" />
+                        <div class="page-title px-2">
                             <h1>{getPageName()}</h1>
                         </div>
                         <div class="main-header-toolbar">
-                            <div class="header-action">
+                            {/* <div class="header-action">
                                 <div class="header-action__item">
                                     <Link class="link"><DesktopWindowsRoundedIcon style={{ fontSize: "17px" }} /></Link>
                                 </div>
@@ -108,7 +113,7 @@ const InnerHeader = () => {
 
                                 </div>
 
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </div>

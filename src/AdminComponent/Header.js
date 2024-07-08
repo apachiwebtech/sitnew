@@ -523,6 +523,47 @@ const Header = () => {
           </ul>
         </Collapse>
 
+        <li className="nav-item" onClick={() => handleToggle('role')}>
+          <div className="nav-link" >
+
+            <Icon path={mdiFormatListBulletedSquare} size={1} className='mx-3' />
+            <span className="menu-title">Role Rights</span>
+            {openStates.role ? <ExpandLess className='mx-3' /> : <ExpandMore className='mx-3' />}
+          </div>
+
+
+        </li>
+        <Collapse in={openStates.role} timeout="auto" unmountOnExit>
+          <ul className='inner-item'>
+       
+            <li className="nav-item">
+              <Link className="nav-link" to="/addrole">
+                {/* <Icon path={mdiCircleMedium } size={1} className='mx-3' /> */}
+                <Icon path={mdiCircleMedium} size={1} className='mx-3' />
+                <span className="menu-title">Add Role</span>
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/adminuser">
+                {/* <Icon path={mdiCircleMedium } size={1} className='mx-3' /> */}
+                <Icon path={mdiCircleMedium} size={1} className='mx-3' />
+                <span className="menu-title">Admin User</span>
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/roleassign">
+                {/* <Icon path={mdiCircleMedium } size={1} className='mx-3' /> */}
+                <Icon path={mdiCircleMedium} size={1} className='mx-3' />
+                <span className="menu-title">Role Page</span>
+              </Link>
+            </li>
+
+
+
+
+          </ul>
+        </Collapse>
+
 
 
         <li className="nav-item" onClick={() => handleToggle('employee')}>
