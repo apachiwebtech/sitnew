@@ -23,13 +23,19 @@ const BatchCategory = () => {
  
 
     const [value, setValue] = useState({
-        batchcat: "" || uid.batch,
+        batchcat: "" || uid.BatchCategory,
+        batchtype: "" || uid.Batch_Type,
+        prefix: "" || uid.Prefix,
+        description: "" || uid.Description,
 
     })
 
     useEffect(() => {
         setValue({
-            batchcat: uid.batch,
+            batchcat: uid.BatchCategory,
+            batchtype: "" || uid.Batch_Type,
+            prefix: "" || uid.Prefix,
+            description: "" || uid.Description,
         })
     }, [uid])
 
@@ -128,7 +134,7 @@ const BatchCategory = () => {
 
         if (validateForm()) {
             const data = {
-                batch: value.batch,
+                batch: value.batchcat,
                 batchtype: value.batchtype,
                 prefix: value.prefix,
                 description: value.description,
@@ -209,29 +215,29 @@ const BatchCategory = () => {
                                         <div class='row'>
                                             <div class="form-group col-lg-12">
                                                 <label for="exampleInputUsername1">Batch Category<span className='text-danger'>*</span></label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.batch} placeholder="Batch Category*" name='batch' batchcategory={onhandleChange} />
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.batchcat} placeholder="Batch Category*" name='batchcat' onChange={onhandleChange} />
                                                 {error.batchcat && <span className='text-danger'>{error.batchcat}</span>}
                                             </div>
                                             
                                             <div class="form-group col-lg-12">
                                                 <label for="exampleFormControlSelect1">Batch Type </label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batchtype} onChange={onhandleChange} name='batchtype'>
-                                                    <option></option>
-                                                    <option value="1">Inhouse</option>
-                                                    <option value="2">Corporate</option>
-                                                    <option value="3">Transfer</option>
+                                                    <option>Select Type</option>
+                                                    <option value="inhouse">Inhouse</option>
+                                                    <option value="corporate">Corporate</option>
+                                                    <option value="transfer">Transfer</option>
                                                 </select>
                                             </div>
                                             <div class="form-group col-lg-12">
                                                 <label for="exampleInputUsername1">Prefix</label>
                                                 <input type="text" class="form-control" id="exampleInputUsername1" value={value.prefix} placeholder="Course Code*" name='prefix' onChange={onhandleChange} />
-                                                {/* {error.course_code && <span className='text-danger'>{error.course_code}</span>} */}
+                                             
                                             </div>
 
                                             <div class="form-group col-lg-12">
                                                 <label for="exampleTextarea1">Description</label>
                                                 <textarea class="form-control" id="exampleTextarea1" name='description' value={value.description} placeholder="Description*" onChange={onhandleChange}></textarea>
-                                                {/* {error.introducation && <div className="text-danger">{error.introducation}</div>} */}
+                                     
                                             </div>
 
 
