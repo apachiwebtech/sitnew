@@ -1,69 +1,35 @@
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import Switch from '@mui/material/Switch';
-import { DataGrid, GridToolbar, GridToolbarContainer, GridToolbarFilterButton } from '@mui/x-data-grid';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react'
 import { BASE_URL } from './BaseUrl';
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import InnerHeader from './InnerHeader';
+import { Link } from 'react-router-dom';
 
-function CustomToolbar() {
-    return (
-      <GridToolbarContainer>
-        {/* <GridToolbarExport /> */}
-        <GridToolbarFilterButton />
-      </GridToolbarContainer>
-    );
-  }
+const AnnualBatchListing = () => {
 
-const InquiryCorporate = () => {
-
-    const [uid, setUid] = useState([])
+    const [annulbatch, setAnnulBatch] = useState([])
     const [cid, setCid] = useState("")
-    const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
-    const label = { inputProps: { 'aria-label': 'Color switch demo' } };
-
-    const [data, setData] = useState([]);
+    const [uid, setUid] = useState([])
 
 
-  async function getlisting(){
-    axios.post(`${BASE_URL}/getcorporateinquiry`)
-    .then((res)=>{
-        setData(res.data)
-    })
-  }
-  
-
-  const [value, setValue] = useState({
-    firstname: '',
-    gender: '',
-    dob: '',
-    mobile: '',
-    whatsapp: '',
-    email: '',
-    nationality: '',
-    discussion: '',
-    country: '',
-    InquiryDate: '',
-    modeEnquiry: '',
-    advert: '',
-    programmeEnquired: '',
-    selectedProgramme: '',
-    category: '',
-    batch: '',
-    qualification: '',
-    descipline: '',
-    percentage: '',
-})
-
+    async function getAnnualData() {
+    
+        axios.get(`${BASE_URL}/getannualbatch`)
+            .then((res) => {
+                console.log(res.data)
+                setAnnulBatch(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
 
     useEffect(() => {
-
-     getlisting()
-        setError({})
+        getAnnualData()
         setUid([])
     }, [])
 
@@ -87,13 +53,14 @@ const InquiryCorporate = () => {
 
     const handleDelete = (id) => {
         const data = {
-            cat_id: id,
-            tablename: "CorporateInquiry"
+            delete_id: id,
+            tablename: "Batch_Mst",
+            column_name: 'Batch_Id'
         }
 
-        axios.post(`${BASE_URL}/delete_corporate_data`, data)
+        axios.post(`${BASE_URL}/new_delete_data`, data)
             .then((res) => {
-                getlisting()
+                getAnnualData()
             })
             .catch((err) => {
                 console.log(err)
@@ -105,22 +72,6 @@ const InquiryCorporate = () => {
         }));
     }
 
-
- const handleswitchchange = (value,Inquiry_Id) =>{
-    const newval = value == 0 ? 1 : 0
-
-    axios.post(`${BASE_URL}/data_status` , {status : newval, Inquiry_Id : Inquiry_Id, table_name : "CorporateInquiry"})
-    .then((res)=>{
-        console.log(res)
-   
-    })
- }
-
-
-
-
-
-
     const columns = [
         {
             field: 'index',
@@ -131,21 +82,26 @@ const InquiryCorporate = () => {
             flex: 1,
             filterable: false,
         },
-        { field: 'FullName', headerName: 'Inquirer', flex: 2 },
-        { field: 'Course_Id', headerName: 'Course', flex: 2 },
-        { field: 'Email', headerName: 'Email', flex: 2 },
-        
+        { field: 'Course_Id', headerName: 'Course Name', flex: 2 },
+        { field: 'Batch_code', headerName: 'Batch No.', flex: 2 },
+        { field: 'Category', headerName: 'Category', flex: 2 },
+        { field: 'Timings', headerName: 'Timings', flex: 2 },
+        { field: 'SDate', headerName: 'Planned Start Date', flex: 2 },
+        { field: 'SDate', headerName: 'Actual Start Date', flex: 2 },
+        { field: 'EDate', headerName: 'Last Date of Admission', flex: 2 },
+        { field: 'EDate', headerName: 'Training Completion Date', flex: 2 },
+        { field: 'Duration', headerName: 'Duration', flex: 2 },
+        { field: 'Training_Coordinator', headerName: 'Training Coordinator', flex: 2 },
         {
             field: 'actions',
             type: 'actions',
             headerName: 'Action',
-            flex: 2,
+            flex: 1,
             renderCell: (params) => {
                 return (
                     <>
-                        <Link to={`/addcorporateinquiry/${params.row.Id}`} ><EditIcon style={{ cursor: "pointer" }}  /></Link>
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.Id)} />
-                        <Switch {...label} onChange={() => handleswitchchange(params.row.isActive,params.row.id )} defaultChecked={params.row.isActive == 0 ? false : true} color="secondary" />
+                        <Link to={`/annualbatch/${params.row.Batch_Id}`}><EditIcon style={{ cursor: "pointer" }}  /></Link>
+                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.Batch_Id)} />
                     </>
                 )
             }
@@ -153,28 +109,24 @@ const InquiryCorporate = () => {
     ];
 
 
-
-    const rowsWithIds = data.map((row, index) => ({ index: index + 1, ...row }));
-
+    const rowsWithIds = annulbatch.map((row, index) => ({ index: index + 1, ...row }));
     return (
-
         <div className="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
             <div className="main-panel">
 
                 <div className="content-wrapper">
-                 
+
                     <div className="row">
-                     
-                        <div className="col-lg-12">
-                            <div className="card">
-                                <div className="card-body">
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-body">
                                     <div className='d-flex justify-content-between gap-3' style={{ width: "100%", padding: "10px 0" }}>
-                                        <div >
-                                            <h4 class="card-title">List Of Corporate Inquiry</h4>
+                                        <div>
+                                            <h4 class="card-title">Annual Batch</h4>
+                             
                                         </div>
-                                           {/* <Link to='/inquiry/:inquiryid'> <button className='btn btn-success'>Add +</button></Link> */}
-                                       
+                                        <Link to='/annualbatch/:batch_id'> <button className='btn btn-success'>Add +</button></Link>
 
                                     </div>
 
@@ -185,14 +137,14 @@ const InquiryCorporate = () => {
                                             // disableColumnFilter
                                             disableColumnSelector
                                             disableDensitySelector
-                                            rowHeight={37}
-                                            getRowId={(row) => row.Id}
+                                            rowHeight={35}
+                                            getRowId={(row) => row.Batch_Id}
                                             initialState={{
                                                 pagination: {
                                                     paginationModel: { pageSize: 10, page: 0 },
                                                 },
                                             }}
-                                            slots={{ toolbar: CustomToolbar }}
+                                            slots={{ toolbar: GridToolbar }}
                                             slotProps={{
                                                 toolbar: {
                                                     showQuickFilter: true,
@@ -216,10 +168,9 @@ const InquiryCorporate = () => {
                         </div>
                     </div>
                 </div>
-            </div >
-        </div >
-
+            </div>
+        </div>
     )
 }
 
-export default InquiryCorporate
+export default AnnualBatchListing;

@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import './Sidebar.css';
 
 
-const Header = () => {
+const Header = ({click}) => {
 
   const [openStates, setOpenStates] = useState({
     order: false,
@@ -37,7 +37,7 @@ const Header = () => {
   };
 
   return (
-    <nav className="sidebar sidebar-offcanvas col-lg-2" id="sidebar" wordBreak='break-word' overflowWrap='break-word'>
+    <nav className= {`sidebar sidebar-offcanvas ${click ? 'col-lg-2' :''}`}  id="sidebar" wordBreak='break-word' overflowWrap='break-word'>
       <ul className="nav p-2">
 
         <li className="nav-item">
@@ -176,58 +176,30 @@ const Header = () => {
             <span className="menu-title">Masters</span>
             {openStates.home ? <ExpandLess className='mx-3' /> : <ExpandMore className='mx-3' />}
           </div>
-
-
         </li>
         <Collapse in={openStates.home} timeout="auto" unmountOnExit>
           <ul className='inner-item'>
-            {/* <li className="nav-item">
-              <Link className="nav-link" to='/webapp/banner'>
-
-                <Icon path={mdiCircleMedium } size={1} className='mx-3' />
+          <li className="nav-item">
+              <Link className="nav-link" to="/courselisting">
+                {/* <Icon path={mdiCircleMedium } size={1} className='mx-3' /> */}
+                <Icon path={mdiCircleMedium} size={1} className='mx-3' />
                 <span className="menu-title">Course</span>
-              </Link>
-            </li> */}
-            {/* <li className="nav-item">
-              <Link className="nav-link" to='/webapp/socialmedia'>
-                <Icon path={mdiCircleMedium } size={1} className='mx-3' />
-                <span className="menu-title">Annual Batch</span>
-              </Link>
-            </li> */}
-            {/* <li className="nav-item">
-              <Link className="nav-link" to='/webapp/gallery'>
-            
-                <Icon path={mdiCircleMedium } size={1} className='mx-3' />
-                <span className="menu-title">Batch</span>
-              </Link>
-            </li> */}
-            {/* <li className="nav-item">
-              <Link className="nav-link" to='/webapp/gallery'>
-            
-                <Icon path={mdiCircleMedium } size={1} className='mx-3' />
-                <span className="menu-title">Employee</span>
-              </Link>
-            </li> */}
-            {/* <li className="nav-item">
-              <Link className="nav-link" to='/webapp/gallery'>
-             
-                <Icon path={mdiCircleMedium } size={1} className='mx-3' />
-                <span className="menu-title">Faculty</span>
-              </Link>
-            </li> */}
-            {/* <li className="nav-item">
-              <Link className="nav-link" to='/webapp/gallery'>
-                <Icon path={mdiCircleMedium } size={1} className='mx-3' />
-                <span className="menu-title">Batch Category</span>
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to='/webapp/gallery'>
-             
-                <Icon path={mdiCircleMedium } size={1} className='mx-3' />
-                <span className="menu-title">College</span>
+              <Link className="nav-link" to="/annualbatchlisting">
+                {/* <Icon path={mdiCircleMedium } size={1} className='mx-3' /> */}
+                <Icon path={mdiCircleMedium} size={1} className='mx-3' />
+                <span className="menu-title">Annual Batch</span>
               </Link>
-            </li> */}
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/batchcategory">
+                {/* <Icon path={mdiCircleMedium } size={1} className='mx-3' /> */}
+                <Icon path={mdiCircleMedium} size={1} className='mx-3' />
+                <span className="menu-title">Batch Category</span>
+              </Link>
+            </li>
             <li className="nav-item">
               <Link className="nav-link" to={`/twofieldform/${"awt_status"}/${"Status"}/${"Description"}/${"text"}/${"Status"}`}>
                 {/* <Icon path={mdiCircleMedium } size={1} className='mx-3' /> */}
@@ -242,13 +214,7 @@ const Header = () => {
                 <span className="menu-title">Book Code</span>
               </Link>
             </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/course">
-                {/* <Icon path={mdiCircleMedium } size={1} className='mx-3' /> */}
-                <Icon path={mdiCircleMedium} size={1} className='mx-3' />
-                <span className="menu-title">Course</span>
-              </Link>
-            </li>
+     
             <li className="nav-item">
               <Link className="nav-link" to="/college">
                 {/* <Icon path={mdiCircleMedium } size={1} className='mx-3' /> */}
@@ -256,13 +222,7 @@ const Header = () => {
                 <span className="menu-title">College</span>
               </Link>
             </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/batchcategory">
-                {/* <Icon path={mdiCircleMedium } size={1} className='mx-3' /> */}
-                <Icon path={mdiCircleMedium} size={1} className='mx-3' />
-                <span className="menu-title">Batch Category</span>
-              </Link>
-            </li>
+     
             <li className="nav-item">
               <Link className="nav-link" to="/librarybook">
                 {/* <Icon path={mdiCircleMedium } size={1} className='mx-3' /> */}
@@ -286,13 +246,7 @@ const Header = () => {
               </Link>
             </li>
 
-            <li className="nav-item">
-              <Link className="nav-link" to="/annualbatch">
-                {/* <Icon path={mdiCircleMedium } size={1} className='mx-3' /> */}
-                <Icon path={mdiCircleMedium} size={1} className='mx-3' />
-                <span className="menu-title">Annual Batch</span>
-              </Link>
-            </li>
+     
 
             {/* <li className="nav-item">
               <Link className="nav-link" to='/webapp/gallery'

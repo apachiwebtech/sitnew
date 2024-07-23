@@ -1,7 +1,7 @@
 import axios from 'axios';
 import "bootstrap-icons/font/bootstrap-icons.css";
 import Cookies from 'js-cookie';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Outlet, createBrowserRouter, useNavigate } from 'react-router-dom';
 import AdminDashBoard from './AdminComponent/AdminDashBoard';
 import { BASE_URL } from './AdminComponent/BaseUrl';
@@ -39,7 +39,6 @@ import YearlyMock from './AdminComponent/YearlyMock';
 import AnnualBatchPlan from './AdminComponent/AnnualBatchPlan';
 import CorporateRecord from './AdminComponent/CorporateRecord';
 import BatchRecord from './AdminComponent/BatchRecord';
-import CorporateInquiry from './AdminComponent/CorporateInquiry';
 import CollogeFollowUp from './AdminComponent/CollegeFollowUp';
 import ConvocationGuest from './AdminComponent/ConvocationGuest';
 import FinalExam from './AdminComponent/FinalExam';
@@ -103,6 +102,12 @@ import RollNumberAllot from './AdminComponent/RollNumberAllot.js';
 import PurchaseMaterial from './AdminComponent/PurchaseMaterial.js';
 
 
+import AddRole from './AdminComponent/AddRole.js'
+import RoleAssignment from './AdminComponent/RoleAssignment.js';
+import AdminUser from './AdminComponent/AdminUser.js'
+import InquiryDiscussuion from './AdminComponent/InquiryDiscussuion.js';
+import AnnualBatchListing from './AdminComponent/AnnualBatchListing.jsx';
+import CourseListing from './AdminComponent/CourseListing.jsx';
 
 
 
@@ -139,7 +144,11 @@ const Router = createBrowserRouter([
         element: <VendorMaster />
       },
       {
-        path: '/course',
+        path: '/courselisting',
+        element: <CourseListing/>
+      },
+      {
+        path: '/course/:courseid',
         element: <Course/>
       },
       {
@@ -165,8 +174,12 @@ const Router = createBrowserRouter([
         element: <Faculty/>
       },
       {
-        path: '/annualbatch',
+        path: '/annualbatch/:batch_id',
         element: <AnnualBatch/>
+      },
+      {
+        path: '/annualbatchlisting',
+        element: <AnnualBatchListing/>
       },
       {
         path: '/bookissue',
@@ -217,10 +230,6 @@ const Router = createBrowserRouter([
       {
         path: '/batchrecord',
         element: <BatchRecord/>
-      },
-      {
-        path: '/corporateinquiry',
-        element: <CorporateInquiry/>
       },
       {
         path: '/collegefollowup',
@@ -415,6 +424,19 @@ const Router = createBrowserRouter([
         path: '/onlineadmissionform/documents/:admissionid',
         element: <Documents/>
       },
+      // ======================Inquiry form
+      
+      {
+        path: '/onlineinquiry/inquiryform/:inquiryid',
+        element: <Inquiry/>
+      },
+      {
+        path: '/onlineinquiry/inquirydiscussion/:inquiryid',
+        element: <InquiryDiscussuion/>
+      },
+
+
+       
 
     // ======================Account Master
 
@@ -466,11 +488,25 @@ const Router = createBrowserRouter([
       {
         path: '/purchasematerial',
         element: <PurchaseMaterial/>
-      }
+      },
       
 
 
-  
+    // ====================Role Rights
+
+      
+    {
+      path: '/addrole',
+      element: <AddRole/>
+    },
+    {
+      path: '/adminuser',
+      element: <AdminUser/>
+    },
+    {
+      path: '/roleassign',
+      element: <RoleAssignment/>
+    }
 
       
    
@@ -498,6 +534,8 @@ function checkLocalStorageAndRedirect(navigate) {
 
 function WebApp() {
 
+  const [click ,setClick] = useState(false) 
+
 
   async function accessSession() {
     axios.get(`${BASE_URL}/checkauth`)
@@ -524,7 +562,8 @@ function WebApp() {
   return (
     <>
       <div className="container-scroller row">
-        <Header />
+        {/* <button onClick={() =>setClick(!click)} style={{background :"red", position:"absolute",top :"0px",left:"1px", zIndex:"100"}}>click</button> */}
+        <Header click={click}/>
         <Outlet />
       </div>
     </>

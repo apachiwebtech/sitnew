@@ -1,7 +1,7 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import Switch from '@mui/material/Switch';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar, GridToolbarContainer, GridToolbarFilterButton } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -18,8 +18,6 @@ const InquiryListing = () => {
 
     const [inquiryData, setInquiryData] = useState([]);
    
-
-
 
 
     const getInquiryData = async () => {
@@ -94,9 +92,14 @@ const InquiryListing = () => {
             })
     }
 
-
-
-
+    function CustomToolbar() {
+        return (
+          <GridToolbarContainer>
+            {/* <GridToolbarExport /> */}
+            <GridToolbarFilterButton />
+          </GridToolbarContainer>
+        );
+      }
 
 
     const columns = [
@@ -107,17 +110,59 @@ const InquiryListing = () => {
             type: 'number',
             align: 'center',
             headerAlign: 'center',
-            flex: 1,
+            width: 50,
             filterable: false,
         },
-        { field: 'Student_Name', headerName: 'Student Name', flex: 2 },
-        { field: 'Course_Name', headerName: 'Course Name', flex: 2 },
-        { field: 'inquiry_DT', headerName: 'Inquiry Date', flex: 2 },
-        { field: 'Discussion', headerName: 'Discuss', flex: 4 },
-        { field: 'present_mobile', headerName: 'Mobile', flex: 2 },
-        { field: 'Deciplin', headerName: 'Discipline', flex: 2 },
-        { field: 'Inquiry_type', headerName: 'Inquiry type', flex: 2 },
-        { field: 'Status', headerName: 'Status', flex: 2,renderCell: (params) => {
+        { field: 'Student_Name', headerName: 'Student Name',  width : 200 , renderCell:(params) =>{
+            return(
+                <>
+                  {params.row.IsUnread == 0 ?<p className ="text-danger" >{params.row.Student_Name}</p> : <p>{params.row.Student_Name}</p> }  
+                </>
+            )
+        } },
+        { field: 'Course_Name', headerName: 'Course Name',  width : 150 , renderCell:(params) =>{
+            return(
+                <>
+                  {params.row.IsUnread == 0 ?<p className ="text-danger" >{params.row.Course_Name}</p> : <p>{params.row.Course_Name}</p> }  
+                </>
+            )
+        }},
+        { field: 'inquiry_DT', headerName: 'Inquiry Date', width : 100 , renderCell:(params) =>{
+            return(
+                <>
+                  {params.row.IsUnread == 0 ?<p className ="text-danger" >{params.row.inquiry_DT}</p> : <p>{params.row.inquiry_DT}</p> }  
+                </>
+            )
+        }},
+        { field: 'Discussion', headerName: 'Discuss', width : 200 , renderCell:(params) =>{
+            return(
+                <>
+                  {params.row.IsUnread == 0 ?<p className ="text-danger" >{params.row.Discussion}</p> : <p>{params.row.Discussion}</p> }  
+                </>
+            )
+        }},
+        { field: 'present_mobile', headerName: 'Mobile', width : 100 , renderCell:(params) =>{
+            return(
+                <>
+                  {params.row.IsUnread == 0 ?<p className ="text-danger" >{params.row.present_mobile}</p> : <p>{params.row.present_mobile}</p> }  
+                </>
+            )
+        }},
+        { field: 'Deciplin', headerName: 'Discipline',  width : 150 , renderCell:(params) =>{
+            return(
+                <>
+                  {params.row.IsUnread == 0 ?<p className ="text-danger" >{params.row.Deciplin}</p> : <p>{params.row.Deciplin}</p> }  
+                </>
+            )
+        }},
+        { field: 'Inquiry_type', headerName: 'Inquiry type', width : 100 , renderCell:(params) =>{
+            return(
+                <>
+                  {params.row.IsUnread == 0 ?<p className ="text-danger" >{params.row.Inquiry_type}</p> : <p>{params.row.Inquiry_type}</p> }  
+                </>
+            )
+        }},
+        { field: 'Status', headerName: 'Status', width : 150,renderCell: (params) => {
             return (
                 <>
                   {params.row.IsUnread == 0 ?<p className ="text-danger" >{params.row.Status}</p> : <p>{params.row.Status}</p> }  
@@ -130,7 +175,6 @@ const InquiryListing = () => {
             field: 'actions',
             type: 'actions',
             headerName: 'Action',
-            flex: 2,
             renderCell: (params) => {
                 return (
                     <>
@@ -172,17 +216,17 @@ const InquiryListing = () => {
                                         <DataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
-                                            // disableColumnFilter
                                             disableColumnSelector
                                             disableDensitySelector
                                             rowHeight={37}
+                                            
                                             getRowId={(row) => row.id}
                                             initialState={{
                                                 pagination: {
                                                     paginationModel: { pageSize: 10, page: 0 },
                                                 },
                                             }}
-                                            slots={{ toolbar: GridToolbar }}
+                                            slots={{ toolbar: CustomToolbar }}
                                             slotProps={{
                                                 toolbar: {
                                                     showQuickFilter: true,

@@ -13,38 +13,28 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 const Course = () => {
 
-    const [brand, setBrand] = useState([])
-    const [vendordata, setVendorData] = useState([])
     const [specification, setSpecification] = useState("")
     const [specification2, setSpecification2] = useState("")
     const [specification3, setSpecification3] = useState("")
     const [uid, setUid] = useState([])
-    const [cid, setCid] = useState("")
     const [error, setError] = useState({})
-    const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
+    const {courseid} = useParams()
 
  
 
     const [value, setValue] = useState({
-        course: "" || uid.course,
-        course_code: "" || uid.course_code,
-        eligibility: "" || uid.eligibility,
-        introduction: "" || uid.introduction,
-        specification: "" || uid.specification,
-        specification2: "" || uid.specification2,
-        specification3: "" || uid.specification3
-
+        course: "" || uid.Course_Name,
+        course_code: "" || uid.Course_Code,
+        eligibility: "" || uid.Eligibility,
+        introduction: '' || uid.Introduction,
     })
 
     useEffect(() => {
         setValue({
-            course: uid.course,
-            course_code: uid.course_code,
-            eligibility: uid.eligibility,
-            introduction: uid.introduction,
-            specification : uid.specification,
-            specification2 : uid.specification2,
-            specification3 : uid.specification3
+            course: uid.Course_Name,
+            course_code: uid.Course_Code,
+            eligibility: uid.Eligibility,
+            introduction: '' || uid.Introduction,
         })
     }, [uid])
 
@@ -64,63 +54,14 @@ const Course = () => {
     }
 
 
-    async function getCourseData() {
+    async function getupdatedata(){
 
-        axios.post(`${BASE_URL}/vendor_details`)
-            .then((res) => {
-                console.log(res.data)
-                setBrand(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
-
-
-
-    async function getCourseData() {
         const data = {
-            tablename: "awt_course"
+            u_id: courseid,
+            uidname: "Course_Id",
+            tablename: "Course_Mst"
         }
-        axios.post(`${BASE_URL}/get_data`, data)
-            .then((res) => {
-                console.log(res.data)
-                setVendorData(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
-
-    useEffect(() => {
-        getCourseData()
-        value.title = ""
-        setError({})
-        setUid([])
-    }, [])
-
-    const handleClick = (id) => {
-        setCid(id)
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: true,
-        }));
-    };
-
-    const handleCancel = (id) => {
-        // Hide the confirmation dialog without performing the delete action
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
-    };
-
-    const handleUpdate = (id) => {
-        const data = {
-            u_id: id,
-            tablename: "awt_course"
-        }
-        axios.post(`${BASE_URL}/update_data`, data)
+        axios.post(`${BASE_URL}/new_update_data`, data)
             .then((res) => {
                 setUid(res.data[0])
 
@@ -131,26 +72,22 @@ const Course = () => {
             })
     }
 
-    const handleDelete = (id) => {
-        const data = {
-            cat_id: id,
-            tablename: "awt_course"
+
+
+
+
+    useEffect(() => {
+
+        if(courseid !== ':courseid'){
+
+            getupdatedata()
         }
+        setError({})
+    }, [courseid])
 
-        axios.post(`${BASE_URL}/delete_data`, data)
-            .then((res) => {
-                getCourseData()
 
-            })
-            .catch((err) => {
-                console.log(err)
-            })
 
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
-    }
+
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -161,18 +98,17 @@ const Course = () => {
                 course_code: value.course_code,
                 eligibility: value.eligibility,
                 introduction: value.introduction,
-                specification :specification,
-                specification2 :specification2,
-                specification3 :specification3,
-                uid : uid.id
+                keypoint :specification,
+                objective :specification2,
+                studyprep :specification3,
+                uid : uid.Course_Id
             }
 
 
             axios.post(`${BASE_URL}/add_course`, data)
                 .then((res) => {
                     console.log(res)
-                    getCourseData()
-
+                    alert("form submitted")
                 })
                 .catch((err) => {
                     console.log(err)
@@ -191,45 +127,9 @@ const Course = () => {
     }
 
 
-
-
-
-
-    const columns = [
-        {
-            field: 'index',
-            headerName: 'Id',
-            type: 'number',
-            align: 'center',
-            headerAlign: 'center',
-            flex: 1,
-            filterable: false,
-        },
-        { field: 'course', headerName: 'Course Name', flex: 2 },
-        { field: 'course_code', headerName: 'Course Code', flex: 2 },
-        { field: 'eligibility', headerName: 'Eligibility', flex: 2 },
-        { field: 'introduction', headerName: 'Introduction', flex: 2 },
-        {
-            field: 'actions',
-            type: 'actions',
-            headerName: 'Action',
-            flex: 1,
-            renderCell: (params) => {
-                return (
-                    <>
-                        <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
-                    </>
-                )
-            }
-        },
-    ];
-
-
-    const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
+  console.log(uid.Basic_Subject , "@@@")
 
     return (
-
         <div class="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
             <div class="main-panel">
@@ -252,22 +152,23 @@ const Course = () => {
                                                 <input type="text" class="form-control" id="exampleInputUsername1" value={value.course_code} placeholder="Course Code*" name='course_code' onChange={onhandleChange} />
                                                 {error.course_code && <span className='text-danger'>{error.course_code}</span>}
                                             </div>
-                                            <div class="form-group col-lg-3">
+                                            <div class="form-group col-lg-6">
                                                 <label for="exampleTextarea1">Eligibility</label>
                                                 <textarea class="form-control" id="exampleTextarea1" name='eligibility' value={value.eligibility} placeholder="Eligibility*" onChange={onhandleChange}></textarea>
                                                 {error.eligibility && <div className="text-danger">{error.eligibility}</div>}
                                             </div>
-                                            <div class="form-group col-lg-3">
+                                            <div class="form-group col-lg-12">
                                                 <label for="exampleInputUsername1">Introduction</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.introducation} placeholder="Introduction" name='introduction' onChange={onhandleChange} />
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.introduction} placeholder="Introduction" name='introduction' onChange={onhandleChange} />
                                                 
                                             </div>
 
-                                            <div class="form-group col-lg-6">
+                                            <div class="form-group col-lg-12">
                                                 <label for="exampleTextarea1">Key Points of Syllabus:</label>
                                                 <CKEditor
+                                            
                                                     editor={ClassicEditor}
-                                                    // data={uid.specification}
+                                                    data={uid.Course_Description || specification}
                                                     onReady={editor => {
                                                         // Allows you to store the editor instance and use it later.
                                                         // console.log('Editor is ready to use!', editor);
@@ -282,14 +183,15 @@ const Course = () => {
                                                     onFocus={(event, editor) => {
                                                         // console.log('Focus.', editor);
                                                     }}
+                                                    
                                                 />
                                             </div>
 
-                                            <div class="form-group col-lg-6">
+                                            <div class="form-group col-lg-12">
                                             <label for="exampleTextarea1">Objective:</label>
                                                  <CKEditor
                                                     editor={ClassicEditor}
-                                                    // data={uid.specification}
+                                                    data={uid.Objective || specification2}
                                                     onReady={editor => {
                                                     // Allows you to store the editor instance and use it later.
                                                     // console.log('Editor is ready to use!', editor);
@@ -308,11 +210,11 @@ const Course = () => {
                                             </div>
                                             
 
-                                            <div class="form-group col-lg-6">
+                                            <div class="form-group col-lg-12">
                                             <label for="exampleTextarea1">Basic Study Preparation required:</label>
                                                  <CKEditor
                                                     editor={ClassicEditor}
-                                                    // data={uid.specification}
+                                                    data={uid.Basic_Subject || specification3}
                                                     onReady={editor => {
                                                     // Allows you to store the editor instance and use it later.
                                                     // console.log('Editor is ready to use!', editor);
@@ -344,53 +246,7 @@ const Course = () => {
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div className='d-flex justify-content-between'>
-                                        <div>
-                                            <h4 class="card-title">View Course Information</h4>
-                                            
-                                        </div>
-
-                                    </div>
-
-                                    <div>
-                                        <DataGrid
-                                            rows={rowsWithIds}
-                                            columns={columns}
-                                            disableColumnFilter
-                                            disableColumnSelector
-                                            disableDensitySelector
-                                            rowHeight={35}
-                                            getRowId={(row) => row.id}
-                                            initialState={{
-                                                pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
-                                                },
-                                            }}
-                                            slots={{ toolbar: GridToolbar }}
-                                            slotProps={{
-                                                toolbar: {
-                                                    showQuickFilter: true,
-                                                },
-                                            }}
-                                        />
-
-                                        {confirmationVisibleMap[cid] && (
-                                            <div className='confirm-delete'>
-                                                <p>Are you sure you want to delete?</p>
-                                                <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
-                                                <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
-                                            </div>
-                                        )}
-                                    </div>
-
-
-
-                                </div>
-                            </div>
-                        </div>
+                    
                     </div>
                 </div>
             </div >

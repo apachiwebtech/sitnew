@@ -16,47 +16,57 @@ import { Select } from '@mui/material';
 const AnnualBatch = () => {
 
     const [brand, setBrand] = useState([])
-    const [vendordata, setVendorData] = useState([])
-    const [uid, setUid] = useState([])
-    const [cid, setCid] = useState("")
     const [error, setError] = useState({})
-    const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
+    const [uid, setUid] = useState([])
+    const [batchcat , setBatchCat] = useState([])
+    const [course , setCourseData] = useState([])
 
-
+    const {batch_id} = useParams()
 
 
     const [value, setValue] = useState({
             selectcourse : ""|| uid.selectcourse,
-            category : ""|| uid.category,
+            batchcategory : ""|| uid.category,
             description : ""|| uid.description,
-            training : ""|| uid.training,
+            trainingdate : ""|| uid.training,
             actualdate : ""|| uid.actualdate,
             timings : ""|| uid.timings,
+            basicinr : ""|| uid.basicinr,
+            servicetaxI : ""|| uid.servicetaxI,
             coursename : ""|| uid.coursename,
             batchcode: ""|| uid.batchcode,
             planned :""|| uid.planned,
-            admission: ""|| uid.admission,
+            admissiondate: ""|| uid.admissiondate,
             duration:""|| uid.duration,
-            coordinator: ""|| uid.coordinator
+            coordinator: ""|| uid.coordinator,
+            taxrate: ""|| uid.taxrate,
+            totalinr: ""|| uid.totalinr,
+            servicetax: ""|| uid.servicetax,
+            publish: ""|| uid.publish,
 
     })
 
     useEffect(() => {
         setValue({
-
-            selectcourse : uid.selectcourse,
-            category : uid.category,
-            description : uid.description,
-            training : uid.training,
-            actualdate : uid.actualdate,
-            timings : uid.timings,
-            coursename : uid.coursename,
-            batchcode: uid.batchcode,
+            selectcourse :  uid.selectcourse,
+            batchcategory :  uid.category,
+            description :  uid.description,
+            trainingdate :  uid.training,
+            actualdate :  uid.actualdate,
+            timings :  uid.timings,
+            basicinr :  uid.basicinr,
+            servicetaxI :  uid.servicetaxI,
+            coursename :  uid.coursename,
+            batchcode:  uid.batchcode,
             planned : uid.planned,
-            admission: uid.admission,
+            admissiondate:  uid.admissiondate,
             duration: uid.duration,
-            coordinator: uid.coordinator,
+            coordinator:  uid.coordinator,
+            taxrate:  uid.taxrate,
+            totalinr:  uid.totalinr,
+            servicetax:  uid.servicetax,
+            publish:  uid.publish,
+    
             uid:uid.id
    
 
@@ -71,7 +81,35 @@ const AnnualBatch = () => {
 
        if (!value.selectcourse) {
         isValid = false;
-        newErrors.name = "Name is require"
+        newErrors.selectcourse = "Course is required"
+       }
+       if (!value.batchcategory) {
+        isValid = false;
+        newErrors.batchcategory = "Category is required"
+       }
+       if (!value.trainingdate) {
+        isValid = false;
+        newErrors.trainingdate = "Date is required"
+       }
+       if (!value.timings) {
+        isValid = false;
+        newErrors.timings = "Timing is required"
+       }
+       if (!value.coursename) {
+        isValid = false;
+        newErrors.coursename = "Coursename is required"
+       }
+       if (!value.planned) {
+        isValid = false;
+        newErrors.planned = "Date is required"
+       }
+       if (!value.duration) {
+        isValid = false;
+        newErrors.duration = "Duration is required"
+       }
+       if (!value.taxrate) {
+        isValid = false;
+        newErrors.taxrate = "Taxrate is required"
        }
         
         setError(newErrors)
@@ -79,98 +117,69 @@ const AnnualBatch = () => {
     }
 
 
-    async function getAnnualData() {
-
-        axios.post(`${BASE_URL}/vendor_details`)
-            .then((res) => {
-                console.log(res.data)
-                setBrand(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
 
 
     
-    async function getAnnualData() {
+
+
+    async function getupdatedata(){
+
         const data = {
-            tablename : "awt_annual"
+            u_id: batch_id,
+            uidname: "Batch_Id",
+            tablename: "Batch_Mst"
         }
-        axios.post(`${BASE_URL}/get_data`,data)
-            .then((res) => {
-                console.log(res.data)
-                setVendorData(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
-
-    useEffect(() => {
-        getAnnualData()
-        value.title = ""
-        setError({})
-        setUid([])
-    }, [])
-
-    const handleClick = (id) => {
-        setCid(id)
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: true,
-        }));
-    };
-
-    const handleCancel = (id) => {
-        // Hide the confirmation dialog without performing the delete action
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
-    };
-
-    const handleUpdate = (id) => {
-        const data = {
-            u_id : id,
-            tablename : "awt_annual"
-        }
-        axios.post(`${BASE_URL}/update_data`, data)
+        axios.post(`${BASE_URL}/new_update_data`, data)
             .then((res) => {
                 setUid(res.data[0])
 
-                console.log(res.data , "update")
+                console.log(res.data, "update")
             })
             .catch((err) => {
                 console.log(err)
             })
     }
 
-    const handleDelete = (id) => {
-        const data = {
-            cat_id: id,
-            tablename : "awt_annual"
-        }
+    async function getBatchData() {
 
-        axios.post(`${BASE_URL}/delete_data`, data)
+        axios.get(`${BASE_URL}/get_batchcategory`)
             .then((res) => {
-                getAnnualData()
-
+                console.log(res.data)
+                setBatchCat(res.data)
             })
             .catch((err) => {
                 console.log(err)
             })
-
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
     }
+
+    async function getCourseData() {
+    
+        axios.get(`${BASE_URL}/getCourse`)
+            .then((res) => {
+                console.log(res.data)
+                setCourseData(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+
+
+    useEffect(()=>{
+        if(batch_id !== ':batch_id'){
+            getupdatedata()
+        }
+        getBatchData()
+        getCourseData()
+    },[])
+
+
+
 
     const handleSubmit = (e) => {
         e.preventDefault()
 
-    // if(validateForm()){
+    if(validateForm()){
         const data = {
             selectcourse : value.selectcourse,
             category : value.category,
@@ -191,13 +200,12 @@ const AnnualBatch = () => {
         axios.post(`${BASE_URL}/add_annual`, data)
             .then((res) => {
                console.log(res)
-               getAnnualData()
 
             })
             .catch((err) => {
                 console.log(err)
             })
-    // }
+    }
 
    
         
@@ -215,44 +223,7 @@ const AnnualBatch = () => {
 
 
 
-    const columns = [
-        {
-            field: 'index',
-            headerName: 'Id',
-            type: 'number',
-            align: 'center',
-            headerAlign: 'center',
-            flex: 1,
-            filterable: false,
-        },
-        { field: 'selectcourse', headerName: 'Course Name', flex: 2 },
-        { field: 'batchcode', headerName: 'Batch No.', flex: 2 },
-        { field: 'category', headerName: 'Category', flex: 2},
-        { field: 'description', headerName: 'Timings', flex: 2},
-        { field: 'planned', headerName: 'Planned Start Date', flex: 2},
-        { field: 'actualdate', headerName: 'Actual Start Date', flex: 2},
-        { field: 'admission', headerName: 'Last Date of Admission', flex: 2},
-        { field: 'training', headerName: 'Training Completion Date', flex: 2},
-        { field: 'duration', headerName: 'Duration', flex: 2},
-        { field: 'coordinator', headerName: 'Training Coordinator', flex: 2},
-        {
-            field: 'actions',
-            type: 'actions',
-            headerName: 'Action',
-            flex: 1,
-            renderCell: (params) => {
-                return (
-                    <>
-                        <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
-                    </>
-                )
-            }
-        },
-    ];
 
-
-    const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
 
@@ -271,46 +242,42 @@ const AnnualBatch = () => {
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleInputUsername1">Select Course<span className='text-danger'>*</span></label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.selectcourse} name='selectcourse' onChange={onhandleChange} >
+                                                    <option>Select</option>
+                                                    {course.map((item) =>{
+                                                        return(
+                                                            
+                                                            <option value={item.Course_Id}>{item.Course_Name}</option>
+                                                        )
+                                                    })}
+                                                </select>
                                                     {error.selectcourse && <span className='text-danger'>{error.selectcourse}</span>}
-                                                    <option>Select</option>
-                                                    <option>Training in Process Plant System Modelling Using E3D</option>
-                                                    <option>Advance Pipe Stress Analysis</option>
-                                                    <option>Air Conditioning System Design (HVAC)</option>
-                                                    <option>Autocad - Piping</option>
-                                                    <option>Civil/Structural Design & Drafting</option>
-                                                    <option>Electrical & Instrumentation Design and Drafting</option>
-                                                    <option>Electrical System Design</option>
-                                                </select>
                                             </div>
-
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleInputUsername1">Batch Category<span className='text-danger'>*</span></label>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batchcategory} name='batchcategory' onChange={onhandleChange} >
+                                                    <option>Select category</option>
+                                                    {batchcat.map((item) =>{
+                                                        return(
+                                                            
+                                                            <option value={item.id}>{item.BatchCategory}</option>
+                                                        )
+                                                    })}
+                                        
+                                                </select>
+                                                    {error.batchcategory && <span className='text-danger'>{error.batchcategory}</span>}
+                                            </div>
                                             
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">Batch Code</label>
-                                                <input type="number" class="form-control" id="exampleInputUsername1" value={value.batchcode} placeholder="Batch Code" name='batchcode' onChange={onhandleChange} />
-                                                
-                                            </div>
-
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">Category</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.category} name='category' onChange={onhandleChange} >
-                                                    {error.category && <span className='text-danger'>{error.category}</span>}
-                                                    <option>Select</option>
-                                                    <option>Full Times</option>
-                                                    <option>Part Times</option>
-                                                    <option>Corporate Training</option>
-                                                    <option>Weekend Batches</option>
-                                                    <option>Transfer</option>
-                                                    <option>ONLINE</option>
-                                                </select>
-                                            </div>
+                                   
+                                        
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleInputUsername1">Description</label>
                                                 <input type="text" class="form-control" id="exampleInputUsername1" value={value.description} placeholder="Description" name='description' onChange={onhandleChange} />
                                                
                                             </div>
                                             <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">Training completion Date</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.training} placeholder="End Date" name='training' onChange={onhandleChange} />
+                                                <label for="exampleInputUsername1">Training completion Date<span className='text-danger'>*</span></label>
+                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.trainingdate} placeholder="End Date" name='trainingdate' onChange={onhandleChange} />
+                                                {error.trainingdate && <span className='text-danger'>{error.trainingdate}</span>}
                                                 
                                             </div>
 
@@ -322,8 +289,20 @@ const AnnualBatch = () => {
                                             </div>
 
                                             <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">Timings</label>
+                                                <label for="exampleInputUsername1">Timings<span className='text-danger'>*</span></label>
                                                 <input type="text" class="form-control" id="exampleInputUsername1" value={value.timings} placeholder="Timings" name='timings' onChange={onhandleChange} />
+                                                {error.timings && <span className='text-danger'>{error.timings}</span>}
+                                                
+                                            </div>
+
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleInputUsername1">Basic(INR)</label>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.basicinr} placeholder="Timings" name='basicinr' onChange={onhandleChange} />
+                                                
+                                            </div>
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleInputUsername1">Service Tax(INR)</label>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.servicetaxI} placeholder="Timings" name='servicetaxI' onChange={onhandleChange} />
                                                 
                                             </div>
 
@@ -332,29 +311,64 @@ const AnnualBatch = () => {
                                                 <hr></hr>
                                             </div>
                                             <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">Course Name (if changed)</label>
+                                                <label for="exampleInputUsername1">Course Name (if changed)<span className='text-danger'>*</span></label>
                                                 <input type="text" class="form-control" id="exampleInputUsername1" value={value.coursename} placeholder="Course Name" name='coursename' onChange={onhandleChange} />
                                                 
+                                                {error.coursename && <span className='text-danger'>{error.coursename}</span>}
                                             </div>
+
                                             <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">Planned Start Date</label>
+                                                <label for="exampleInputUsername1">Batch Code</label>
+                                                <input type="number" class="form-control" id="exampleInputUsername1" value={value.batchcode} placeholder="Batch Code" name='batchcode' onChange={onhandleChange} />
+                                                
+                                            </div>
+
+                                     
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleInputUsername1">Planned Start Date<span className='text-danger'>*</span></label>
                                                 <input type="date" class="form-control" id="exampleInputUsername1" value={value.planned} placeholder="Planned Start Date" name='planned' onChange={onhandleChange} />
+                                                {error.planned && <span className='text-danger'>{error.planned}</span>}
                                                 
                                             </div>
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleInputUsername1">Last Date of Admission</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.admission} placeholder="Last Date of Admission" name='admission' onChange={onhandleChange} />
+                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.admissiondate} placeholder="Last Date of Admission" name='admissiondate' onChange={onhandleChange} />
                                                 
                                             </div>
                                             <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">Duration</label>
+                                                <label for="exampleInputUsername1">Duration<span className='text-danger'>*</span></label>
                                                 <input type="text" class="form-control" id="exampleInputUsername1" value={value.duration} placeholder="Duration" name='duration' onChange={onhandleChange} />
-                                                
+                                                {error.duration && <span className='text-danger'>{error.duration}</span>}
                                             </div>
-                                            <div class="form-group col-lg-3">
+                                            <div class="form-group col-lg-2">
                                                 <label for="exampleInputUsername1">Training Coordinator</label>
                                                 <input type="text" class="form-control" id="exampleInputUsername1" value={value.coordinator} placeholder="Training Coordinator" name='coordinator' onChange={onhandleChange} />
                                                 
+                                            </div>
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleInputUsername1">Tax Rate<span className='text-danger'>*</span></label>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.taxrate} placeholder="Tax Rate" name='taxrate' onChange={onhandleChange} />
+                                                {error.taxrate && <span className='text-danger'>{error.taxrate}</span>}
+                                            </div>
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleInputUsername1">Total(INR)</label>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.totalinr} placeholder="Total(INR)" name='totalinr' onChange={onhandleChange} />
+                                                
+                                            </div>
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleInputUsername1">Service Tax($)</label>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.servicetax} placeholder="Total(INR)" name='servicetax' onChange={onhandleChange} />
+                                                
+                                            </div>
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleInputUsername1">Publish</label>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.publish} name='publish' onChange={onhandleChange} >
+                                                    {error.selectcourse && <span className='text-danger'>{error.selectcourse}</span>}
+                                                    <option>Select</option>
+                                                    <option>Yes</option>
+                                                    <option>No</option>
+                                                    
+                                                </select>
                                             </div>
 
                                             
@@ -376,52 +390,7 @@ const AnnualBatch = () => {
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div className='d-flex justify-content-between'>
-                                        <div>
-                                            <h4 class="card-title">Annual Batch</h4>
-                                        </div>
-
-                                    </div>
-
-                                    <div>
-                                    <DataGrid
-                                            rows={rowsWithIds}
-                                            columns={columns}
-                                            disableColumnFilter
-                                            disableColumnSelector
-                                            disableDensitySelector
-                                            rowHeight={35}
-                                            getRowId={(row) => row.id}
-                                            initialState={{
-                                                pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
-                                                },
-                                            }}
-                                            slots={{ toolbar: GridToolbar }}
-                                            slotProps={{
-                                                toolbar: {
-                                                    showQuickFilter: true,
-                                                },
-                                            }}
-                                        />
-
-                                        {confirmationVisibleMap[cid] && (
-                                            <div className='confirm-delete'>
-                                                <p>Are you sure you want to delete?</p>
-                                                <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
-                                                <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
-                                            </div>
-                                        )}
-                                    </div>
-
-
-
-                                </div>
-                            </div>
-                        </div>
+                     
                     </div>
                 </div>
             </div >

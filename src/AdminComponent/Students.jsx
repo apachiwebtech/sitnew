@@ -1,13 +1,23 @@
 import React, { useEffect, useState } from 'react'
 import { BASE_URL } from './BaseUrl'
 import EditIcon from "@mui/icons-material/Edit";
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar, GridToolbarContainer, GridToolbarFilterButton } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
 import InnerHeader from './InnerHeader';
 import axios from 'axios';
 import { Switch } from '@mui/material';
 
 const Students = () => {
+
+
+    function CustomToolbar() {
+        return (
+          <GridToolbarContainer>
+            {/* <GridToolbarExport /> */}
+            <GridToolbarFilterButton />
+          </GridToolbarContainer>
+        );
+      }
 
     const [onlineAdmissions, setOnlineAdmissions] = useState([])
     const label = { inputProps: { 'aria-label': 'Color switch demo' } };
@@ -100,7 +110,7 @@ const Students = () => {
                                         <DataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
-                                            disableColumnFilter
+                                            // disableColumnFilter
                                             disableColumnSelector
                                             disableDensitySelector
                                             rowHeight={37}
@@ -110,7 +120,7 @@ const Students = () => {
                                                     paginationModel: { pageSize: 10, page: 0 },
                                                 },
                                             }}
-                                            slots={{ toolbar: GridToolbar }}
+                                            slots={{ toolbar: CustomToolbar }}
                                             slotProps={{
                                                 toolbar: {
                                                     showQuickFilter: true,
