@@ -11,9 +11,9 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 
-const BatchCategory = () => {
+const Status = () => {
 
-    const [vendordata, setVendorData] = useState([])
+    const [status, setStatusdata] = useState([])
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
@@ -22,20 +22,17 @@ const BatchCategory = () => {
  
 
     const [value, setValue] = useState({
-        batchcat: "" || uid.BatchCategory,
-        batchtype: "" || uid.Batch_Type,
-        prefix: "" || uid.Prefix,
+        statusname: "" || uid.Status,
         description: "" || uid.Description,
 
     })
 
     useEffect(() => {
         setValue({
-            batchcat:'' || uid.BatchCategory,
-            batchtype: "" || uid.Batch_Type,
-            prefix: "" || uid.Prefix,
+            statusname:'' || uid.Status,
             description: "" || uid.Description,
         })
+
     }, [uid])
 
 
@@ -44,9 +41,9 @@ const BatchCategory = () => {
         const newErrors = {}
 
 
-        if (!value.batchcat) {
+        if (!value.statusname) {
             isValid = false;
-            newErrors.batchcat = "Name is require"
+            newErrors.statusname = "Name is require"
         }
 
         setError(newErrors)
@@ -56,12 +53,12 @@ const BatchCategory = () => {
 
 
 
-    async function getBatchData() {
+    async function getStatusData() {
 
-        axios.get(`${BASE_URL}/get_batchcategory`)
+        axios.get(`${BASE_URL}/get_status`)
             .then((res) => {
                 console.log(res.data)
-                setVendorData(res.data)
+                setStatusdata(res.data)
             })
             .catch((err) => {
                 console.log(err)
@@ -69,7 +66,7 @@ const BatchCategory = () => {
     }
 
     useEffect(() => {
-        getBatchData()
+        getStatusData()
         value.title = ""
         setError({})
         setUid([])
@@ -93,15 +90,13 @@ const BatchCategory = () => {
 
     const handleUpdate = (id) => {
         setValue({
-            batchcat: "",
-            batchtype: "" ,
-            prefix: "" ,
-            description: "",
+           statusname :"",
+           description :""
         })
         const data = {
             u_id: id,
-            uidname: "id",
-            tablename: "MST_BatchCategory"
+            uidname: "Id",
+            tablename: "Status_Master"
         }
         axios.post(`${BASE_URL}/new_update_data`, data)
             .then((res) => {
@@ -117,13 +112,13 @@ const BatchCategory = () => {
     const handleDelete = (id) => {
         const data = {
             delete_id: id,
-            tablename: "MST_BatchCategory",
-            column_name: 'id'
+            tablename: "Status_Master",
+            column_name: 'Id'
         }
 
         axios.post(`${BASE_URL}/new_delete_data`, data)
             .then((res) => {
-                getBatchData()
+                getStatusData()
 
             })
             .catch((err) => {
@@ -141,19 +136,21 @@ const BatchCategory = () => {
 
         if (validateForm()) {
             const data = {
-                batch: value.batchcat,
-                batchtype: value.batchtype,
-                prefix: value.prefix,
-                description: value.description,
-                uid : uid.id
+                statusname:  value.statusname,
+                description:  value.description,
+                u_id : uid.Id
             }
 
 
-            axios.post(`${BASE_URL}/batch_category`, data)
+            axios.post(`${BASE_URL}/add_status`, data)
                 .then((res) => {
                     console.log(res)
-                    getBatchData()
+                    getStatusData()
                     alert("Data Submitted Successfully")
+                    setValue({
+                        statusname :"",
+                        description :""
+                     })
                 })
                 .catch((err) => {
                     console.log(err)
@@ -186,7 +183,8 @@ const BatchCategory = () => {
             flex: 1,
             filterable: false,
         },
-        { field: 'BatchCategory', headerName: 'Batch Category', flex: 2 },
+        { field: 'Status', headerName: 'Status', flex: 2 },
+        { field: 'Description', headerName: 'Description', flex: 2 },
         {
             field: 'actions',
             type: 'actions',
@@ -204,7 +202,7 @@ const BatchCategory = () => {
     ];
 
 
-    const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
+    const rowsWithIds = status.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
 
@@ -216,31 +214,17 @@ const BatchCategory = () => {
                         <div class="col-lg-5 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Batch Information</h4>
+                                    <h4 class="card-title">Status</h4>
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
                                             <div class="form-group col-lg-12">
-                                                <label for="exampleInputUsername1">Batch Category<span className='text-danger'>*</span></label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.batchcat} placeholder="Batch Category*" name='batchcat' onChange={onhandleChange} />
-                                                {error.batchcat && <span className='text-danger'>{error.batchcat}</span>}
+                                                <label for="exampleInputUsername1">Status<span className='text-danger'>*</span></label>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.statusname} placeholder="Status" name='statusname' onChange={onhandleChange} />
+                                                {error.statusname && <span className='text-danger'>{error.statusname}</span>}
                                             </div>
                                             
-                                            <div class="form-group col-lg-12">
-                                                <label for="exampleFormControlSelect1">Batch Type </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batchtype} onChange={onhandleChange} name='batchtype'>
-                                                    <option>Select Type</option>
-                                                    <option value="Inhouse">Inhouse</option>
-                                                    <option value="Corporate">Corporate</option>
-                                                    <option value="Transfer">Transfer</option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group col-lg-12">
-                                                <label for="exampleInputUsername1">Prefix</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.prefix} placeholder="Course Code*" name='prefix' onChange={onhandleChange} />
-                                             
-                                            </div>
-
+                           
                                             <div class="form-group col-lg-12">
                                                 <label for="exampleTextarea1">Description</label>
                                                 <textarea class="form-control" id="exampleTextarea1" name='description' value={value.description} placeholder="Description*" onChange={onhandleChange}></textarea>
@@ -266,7 +250,7 @@ const BatchCategory = () => {
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
                                         <div>
-                                            <h4 class="card-title">View Batch Category</h4>
+                                            <h4 class="card-title">List of Status</h4>
                                             
                                         </div>
 
@@ -316,4 +300,4 @@ const BatchCategory = () => {
     )
 }
 
-export default BatchCategory
+export default Status

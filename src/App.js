@@ -108,6 +108,7 @@ import AdminUser from './AdminComponent/AdminUser.js'
 import InquiryDiscussuion from './AdminComponent/InquiryDiscussuion.js';
 import AnnualBatchListing from './AdminComponent/AnnualBatchListing.jsx';
 import CourseListing from './AdminComponent/CourseListing.jsx';
+import Status from './AdminComponent/Status.jsx';
 import AssignmentsTakenListing from './AdminComponent/AssignmentsTakenListing.js';
 
 
@@ -143,6 +144,10 @@ const Router = createBrowserRouter([
       {
         path: '/vendormaster',
         element: <VendorMaster />
+      },
+      {
+        path: '/status',
+        element: <Status />
       },
       {
         path: '/courselisting',

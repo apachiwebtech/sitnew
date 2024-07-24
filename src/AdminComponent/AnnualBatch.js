@@ -1,21 +1,12 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
-import decryptedUserId from '../Utils/UserID';
-import { DataGrid ,GridToolbar} from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { Select } from '@mui/material';
 
 
 const AnnualBatch = () => {
 
-    const [brand, setBrand] = useState([])
     const [error, setError] = useState({})
     const [uid, setUid] = useState([])
     const [batchcat , setBatchCat] = useState([])
@@ -25,47 +16,47 @@ const AnnualBatch = () => {
 
 
     const [value, setValue] = useState({
-            selectcourse : ""|| uid.selectcourse,
-            batchcategory : ""|| uid.category,
-            description : ""|| uid.description,
-            trainingdate : ""|| uid.training,
-            actualdate : ""|| uid.actualdate,
-            timings : ""|| uid.timings,
-            basicinr : ""|| uid.basicinr,
-            servicetaxI : ""|| uid.servicetaxI,
-            coursename : ""|| uid.coursename,
-            batchcode: ""|| uid.batchcode,
-            planned :""|| uid.planned,
-            admissiondate: ""|| uid.admissiondate,
-            duration:""|| uid.duration,
-            coordinator: ""|| uid.coordinator,
-            taxrate: ""|| uid.taxrate,
-            totalinr: ""|| uid.totalinr,
-            servicetax: ""|| uid.servicetax,
-            publish: ""|| uid.publish,
+            selectcourse : ""|| uid.Course_Id,
+            batchcategory : ""|| uid.Category,
+            description : ""|| uid.Course_description,
+            trainingdate : ""|| uid.EDate,
+            actualdate : ""|| uid.ActualDate,
+            timings : ""|| uid.Timings,
+            basicinr : ""|| uid.INR_Basic,
+            servicetaxI : ""|| uid.INR_ServiceTax,
+            coursename : ""|| uid.CourseName,
+            batchcode: ""|| uid.Batch_code,
+            planned :""|| uid.SDate,
+            admissiondate: ""|| uid.Admission_Date,
+            duration:""|| uid.Duration,
+            coordinator: ""|| uid.Training_Coordinator,
+            taxrate: '' || uid.TaxRate,
+            totalinr: ""|| uid.INR_Total,
+            servicetax: ""|| uid.Dollar_ServiceTax,
+            publish: ""|| uid.Corporate,
 
     })
 
     useEffect(() => {
         setValue({
-            selectcourse :  uid.selectcourse,
-            batchcategory :  uid.category,
-            description :  uid.description,
-            trainingdate :  uid.training,
-            actualdate :  uid.actualdate,
-            timings :  uid.timings,
-            basicinr :  uid.basicinr,
-            servicetaxI :  uid.servicetaxI,
-            coursename :  uid.coursename,
-            batchcode:  uid.batchcode,
-            planned : uid.planned,
-            admissiondate:  uid.admissiondate,
-            duration: uid.duration,
-            coordinator:  uid.coordinator,
-            taxrate:  uid.taxrate,
-            totalinr:  uid.totalinr,
-            servicetax:  uid.servicetax,
-            publish:  uid.publish,
+            selectcourse : ""|| uid.Course_Id,
+            batchcategory : ""|| uid.Category,
+            description : ""|| uid.Course_description,
+            trainingdate : ""|| uid.EDate,
+            actualdate : ""|| uid.ActualDate,
+            timings : ""|| uid.Timings,
+            basicinr : ""|| uid.INR_Basic,
+            servicetaxI : ""|| uid.INR_ServiceTax,
+            coursename : ""|| uid.CourseName,
+            batchcode: ""|| uid.Batch_code,
+            planned :""|| uid.SDate,
+            admissiondate: ""|| uid.Admission_Date,
+            duration:""|| uid.Duration,
+            coordinator: ""|| uid.Training_Coordinator,
+            taxrate: "" || uid.TaxRate,
+            totalinr: ""|| uid.INR_Total,
+            servicetax: ""|| uid.Dollar_ServiceTax,
+            publish: ""|| uid.Corporate,
     
             uid:uid.id
    
@@ -95,10 +86,10 @@ const AnnualBatch = () => {
         isValid = false;
         newErrors.timings = "Timing is required"
        }
-       if (!value.coursename) {
-        isValid = false;
-        newErrors.coursename = "Coursename is required"
-       }
+    //    if (!value.coursename) {
+    //     isValid = false;
+    //     newErrors.coursename = "Coursename is required"
+    //    }
        if (!value.planned) {
         isValid = false;
         newErrors.planned = "Date is required"
@@ -107,10 +98,10 @@ const AnnualBatch = () => {
         isValid = false;
         newErrors.duration = "Duration is required"
        }
-       if (!value.taxrate) {
-        isValid = false;
-        newErrors.taxrate = "Taxrate is required"
-       }
+    //    if (!value.taxrate) {
+    //     isValid = false;
+    //     newErrors.taxrate = "Taxrate is required"
+    //    }
         
         setError(newErrors)
         return isValid
@@ -182,28 +173,36 @@ const AnnualBatch = () => {
     if(validateForm()){
         const data = {
             selectcourse : value.selectcourse,
-            category : value.category,
+            batchcategory : value.batchcategory,
             description : value.description,
-            training : value.timings,
+            trainingdate : value.trainingdate,
             actualdate : value.actualdate,
             timings : value.timings,
+            basicinr : value.basicinr,
+            servicetaxI : value.servicetaxI,
             coursename : value.coursename,
             batchcode: value.batchcode,
-            planned : value.planned,
-            admission: value.admission,
+            planned :value.planned,
+            admissiondate: value.admissiondate,
             duration: value.duration,
             coordinator: value.coordinator,
-            uid:uid.id
+            taxrate: value.taxrate,
+            totalinr: value.totalinr,
+            servicetax: value.servicetax,
+            publish: value.publish,
+            uid:uid.Batch_Id
         }
 
 
         axios.post(`${BASE_URL}/add_annual`, data)
             .then((res) => {
                console.log(res)
+               alert("Date Submitted successfully")
 
             })
             .catch((err) => {
                 console.log(err)
+                alert("Something is wrong")
             })
     }
 
@@ -240,7 +239,7 @@ const AnnualBatch = () => {
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
                                             <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">Select Course<span className='text-danger'>*</span></label>
+                                                <label for="exampleInputUsername1">Select Course</label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.selectcourse} name='selectcourse' onChange={onhandleChange} >
                                                     <option>Select</option>
                                                     {course.map((item) =>{
@@ -258,8 +257,7 @@ const AnnualBatch = () => {
                                                     <option>Select category</option>
                                                     {batchcat.map((item) =>{
                                                         return(
-                                                            
-                                                            <option value={item.id}>{item.BatchCategory}</option>
+                                                            <option value={item.BatchCategory}>{item.BatchCategory}</option>
                                                         )
                                                     })}
                                         
@@ -297,12 +295,12 @@ const AnnualBatch = () => {
 
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleInputUsername1">Basic(INR)</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.basicinr} placeholder="Timings" name='basicinr' onChange={onhandleChange} />
+                                                <input type="number" class="form-control" id="exampleInputUsername1" value={value.basicinr} placeholder="Timings" name='basicinr' onChange={onhandleChange} />
                                                 
                                             </div>
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleInputUsername1">Service Tax(INR)</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.servicetaxI} placeholder="Timings" name='servicetaxI' onChange={onhandleChange} />
+                                                <input type="number" class="form-control" id="exampleInputUsername1" value={value.servicetaxI} placeholder="Timings" name='servicetaxI' onChange={onhandleChange} />
                                                 
                                             </div>
 
@@ -347,17 +345,17 @@ const AnnualBatch = () => {
                                             </div>
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleInputUsername1">Tax Rate<span className='text-danger'>*</span></label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.taxrate} placeholder="Tax Rate" name='taxrate' onChange={onhandleChange} />
+                                                <input type="number" class="form-control" id="exampleInputUsername1" value={value.taxrate } placeholder="Tax Rate" name='taxrate' onChange={onhandleChange} />
                                                 {error.taxrate && <span className='text-danger'>{error.taxrate}</span>}
                                             </div>
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleInputUsername1">Total(INR)</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.totalinr} placeholder="Total(INR)" name='totalinr' onChange={onhandleChange} />
+                                                <input type="number" class="form-control" id="exampleInputUsername1" value={value.totalinr} placeholder="Total(INR)" name='totalinr' onChange={onhandleChange} />
                                                 
                                             </div>
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleInputUsername1">Service Tax($)</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.servicetax} placeholder="Total(INR)" name='servicetax' onChange={onhandleChange} />
+                                                <input type="number" class="form-control" id="exampleInputUsername1" value={value.servicetax} placeholder="Total(INR)" name='servicetax' onChange={onhandleChange} />
                                                 
                                             </div>
                                             <div class="form-group col-lg-2">

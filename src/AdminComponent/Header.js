@@ -201,7 +201,7 @@ const Header = ({click}) => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to={`/twofieldform/${"awt_status"}/${"Status"}/${"Description"}/${"text"}/${"Status"}`}>
+              <Link className="nav-link" to='/status'>
                 {/* <Icon path={mdiCircleMedium } size={1} className='mx-3' /> */}
                 <Icon path={mdiCircleMedium} size={1} className='mx-3' />
                 <span className="menu-title">Status</span>
@@ -230,13 +230,13 @@ const Header = ({click}) => {
                 <span className="menu-title">Library Book</span>
               </Link>
             </li>
-            <li className="nav-item">
+            {/* <li className="nav-item">
               <Link className="nav-link" to="/addfeedbacknewquestion">
-                {/* <Icon path={mdiCircleMedium } size={1} className='mx-3' /> */}
+
                 <Icon path={mdiCircleMedium} size={1} className='mx-3' />
                 <span className="menu-title">Feedback Question</span>
               </Link>
-            </li>
+            </li> */}
 
             <li className="nav-item">
               <Link className="nav-link" to="/faculty">
