@@ -25,214 +25,220 @@ const LectureTakenListing = () => {
     const [batch, setBatch] = useState([]);
     const [batchCategoty, setbatchCategory] = useState([]);
     const [value, setValue] = useState({
-        course: '',
-        batch: '',
-        lecture: '',
-        lecturedate:'',
-        faculty:'',
-        assignment:'',
-        material:'',
-        materialissued:'',
-        topicdiscuss:'',
-    })
+        course: ' ',
+        batch: ' ',
+        lecture: ' ',
+        classroom: ' ',
+        lecturedate: ' ',
+        time: ' ',
+        to: ' ',
+        faculty: ' ',
+        facultytime: ' ',
+        timeto: ' ',
+        assignmentadate: ' ',
+        enddate: ' ',
+        materialissued: ' ',
+        material: ' ',
+        assignmentgive: ' ',
+        assignment: ' ',
+        testgiven: ' ',
+        test: ' ',
+        topicdescuss: ' ',
+    
+})
 
 
 
 
-    const getInquiryData = async () => {
-        const response = await fetch(`${BASE_URL}/getlecturetakendata`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-
-        setlecturetakendata(data);
-    }
-
-
-    useEffect(() => {
-        getInquiryData()
- 
-        value.title = ""
-        setError({})
-        setUid([])
-    }, [])
-
-    const handleClick = (id) => {
-        setCid(id)
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: true,
-        }));
-    };
-
-    const handleCancel = (id) => {
-        // Hide the confirmation dialog without performing the delete action
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
-    };
-
-    const handleUpdate = (id) => {
-        const data = {
-            u_id: id,
-            tablename: "awt_lecturetaken"
+const getInquiryData = async () => {
+    const response = await fetch(`${BASE_URL}/getlecturetakendata`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
         }
-        axios.post(`${BASE_URL}/update_data`, data)
-            .then((res) => {
-                setUid(res.data[0])
+    });
+    const data = await response.json();
 
-                console.log(res.data, "update")
-            })
-            .catch((err) => {
-                console.log(err)
-            })
+    setlecturetakendata(data);
+}
+
+
+useEffect(() => {
+    getInquiryData()
+
+    value.title = ""
+    setError({})
+    setUid([])
+}, [])
+
+const handleClick = (id) => {
+    setCid(id)
+    setConfirmationVisibleMap((prevMap) => ({
+        ...prevMap,
+        [id]: true,
+    }));
+};
+
+const handleCancel = (id) => {
+    // Hide the confirmation dialog without performing the delete action
+    setConfirmationVisibleMap((prevMap) => ({
+        ...prevMap,
+        [id]: false,
+    }));
+};
+
+const handleUpdate = (id) => {
+    const data = {
+        u_id: id,
+        tablename: "awt_lecturetaken"
+        
+    }
+    axios.post(`${BASE_URL}/update_data`, data)
+        .then((res) => {
+            setUid(res.data[0])
+
+            console.log(res.data, "update")
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+}
+
+const handleDelete = (id) => {
+    const data = {
+        cat_id: id,
+        tablename: "Student_Inquiry"
     }
 
-    const handleDelete = (id) => {
-        const data = {
-            cat_id: id,
-            tablename: "Student_Inquiry"
-        }
+    axios.post(`${BASE_URL}/delete_lecturetaken_data`, data)
+        .then((res) => {
+            getInquiryData()
+        })
+        .catch((err) => {
+            console.log(err)
+        })
 
-        axios.post(`${BASE_URL}/delete_lecturetaken_data`, data)
-            .then((res) => {
-                getInquiryData()
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
-    }
+    setConfirmationVisibleMap((prevMap) => ({
+        ...prevMap,
+        [id]: false,
+    }));
+}
 
 
- const handleswitchchange = (value,Inquiry_Id) =>{
+const handleswitchchange = (value, Inquiry_Id) => {
     const newval = value == 0 ? 1 : 0
 
-    axios.post(`${BASE_URL}/data_status` , {status : newval, Inquiry_Id : Inquiry_Id, table_name : "awt_lecturetaken"})
-    .then((res)=>{
-        console.log(res)
-        getInquiryData()
-    })
- }
+    axios.post(`${BASE_URL}/data_status`, { status: newval, Inquiry_Id: Inquiry_Id, table_name: "awt_lecturetaken" })
+        .then((res) => {
+            console.log(res)
+            getInquiryData()
+        })
+}
 
 
 
 
 
 
-    const columns = [
-        {
-            field: 'index',
-            headerName: 'Id',
-            type: 'number',
-            align: 'center',
-            headerAlign: 'center',
-            flex: 1,
-            filterable: false,
+const columns = [
+    {
+        field: 'index',
+        headerName: 'Id',
+        type: 'number',
+        align: 'center',
+        headerAlign: 'center',
+        flex: 1,
+        filterable: false,
 
-        },
-        { field: 'course', headerName: 'Course Name', flex: 2 },
-        { field: 'batch', headerName: 'Batch Name', flex: 2 },
-        { field: 'lecture', headerName: 'Lecture', flex: 2 },
-        { field: 'lecturedate', headerName: 'Lecture Date', flex: 2 },
-        { field: 'faculty', headerName: 'Faculty', flex: 2 },
-        { field: 'assignment', headerName: 'Assignment', flex: 2 },
-        { field: 'material', headerName: 'Material', flex: 2 },
-        { field: 'materialissued', headerName: 'Material Issued', flex: 2 },
-        { field: 'topicdiscuss', headerName: 'Topic Discuss', flex: 2 },
-        // { field: 'isActive', headerName: 'Options', flex: 2},
-        {
-            field: 'actions',
-            type: 'actions',
-            headerName: 'Action',
-            flex: 2,
-            renderCell: (params) => {
-                return (
-                    <>
-                        <Link to={`/lecturetaken/${params.row.id}`} ><EditIcon style={{ cursor: "pointer" }}  /></Link>
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
-                        <Switch {...label} onChange={() => handleswitchchange(params.row.isActive,params.row.id )} defaultChecked={params.row.isActive == 0 ? false : true} color="secondary" />
-                    </>
-                )
-            }
-        },
-    ];
+    },
+    { field: 'lecture', headerName: 'Lecture', flex: 2 },
+    { field: 'date', headerName: 'Date', flex: 2 },
+    { field: 'batch', headerName: 'Batch Code', flex: 2 },
+    { field: 'topicdescuss', headerName: 'Topic', flex: 2 },
+    {
+        field: 'actions',
+        type: 'actions',
+        headerName: 'Action',
+        flex: 2,
+        renderCell: (params) => {
+            return (
+                <>
+                    <Link to={`/lecturetaken/${params.row.id}`} ><EditIcon style={{ cursor: "pointer" }} /></Link>
+                    <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
+                    <Switch {...label} onChange={() => handleswitchchange(params.row.isActive, params.row.id)} defaultChecked={params.row.isActive == 0 ? false : true} color="secondary" />
+                </>
+            )
+        }
+    },
+];
 
 
-    const rowsWithIds = lecturetakendata.map((row, index) => ({ index: index + 1, ...row }));
+const rowsWithIds = lecturetakendata.map((row, index) => ({ index: index + 1, ...row }));
 
-    return (
+return (
 
-        <div className="container-fluid page-body-wrapper col-lg-10">
-            <InnerHeader />
-            <div className="main-panel">
+    <div className="container-fluid page-body-wrapper col-lg-10">
+        <InnerHeader />
+        <div className="main-panel">
 
-                <div className="content-wrapper">
-                 
-                    <div className="row">
-                     
-                        <div className="col-lg-12">
-                            <div className="card">
-                                <div className="card-body">
-                                    <div className='d-flex justify-content-between gap-3' style={{ width: "100%", padding: "10px 0" }}>
-                                        <div >
-                                            <h4 class="card-title">Add Lecture Details</h4>
-                                        </div>
-                                           <Link to='/lecturetaken/:lecturetakenid'> <button className='btn btn-success'>Add +</button></Link>
-                                       
+            <div className="content-wrapper">
 
+                <div className="row">
+
+                    <div className="col-lg-12">
+                        <div className="card">
+                            <div className="card-body">
+                                <div className='d-flex justify-content-between gap-3' style={{ width: "100%", padding: "10px 0" }}>
+                                    <div >
+                                        <h4 class="card-title">Add Lecture Details</h4>
                                     </div>
-
-                                    <div>
-                                        <DataGrid
-                                            rows={rowsWithIds}
-                                            columns={columns}
-                                            disableColumnFilter
-                                            disableColumnSelector
-                                            disableDensitySelector
-                                            rowHeight={37}
-                                            getRowId={(row) => row.id}
-                                            initialState={{
-                                                pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
-                                                },
-                                            }}
-                                            slots={{ toolbar: GridToolbar }}
-                                            slotProps={{
-                                                toolbar: {
-                                                    showQuickFilter: true,
-                                                },
-                                            }}
-                                        />
-
-                                        {confirmationVisibleMap[cid] && (
-                                            <div className='confirm-delete'>
-                                                <p>Are you sure you want to delete?</p>
-                                                <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
-                                                <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
-                                            </div>
-                                        )}
-                                    </div>
-
+                                    <Link to='/lecturetaken/:lecturetakenid'> <button className='btn btn-success'>Add +</button></Link>
 
 
                                 </div>
+
+                                <div>
+                                    <DataGrid
+                                        rows={rowsWithIds}
+                                        columns={columns}
+                                        disableColumnFilter
+                                        disableColumnSelector
+                                        disableDensitySelector
+                                        rowHeight={37}
+                                        getRowId={(row) => row.id}
+                                        initialState={{
+                                            pagination: {
+                                                paginationModel: { pageSize: 10, page: 0 },
+                                            },
+                                        }}
+                                        slots={{ toolbar: GridToolbar }}
+                                        slotProps={{
+                                            toolbar: {
+                                                showQuickFilter: true,
+                                            },
+                                        }}
+                                    />
+
+                                    {confirmationVisibleMap[cid] && (
+                                        <div className='confirm-delete'>
+                                            <p>Are you sure you want to delete?</p>
+                                            <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
+                                            <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
+                                        </div>
+                                    )}
+                                </div>
+
+
+
                             </div>
                         </div>
                     </div>
                 </div>
-            </div >
+            </div>
         </div >
+    </div >
 
-    )
+)
 }
 
 export default LectureTakenListing

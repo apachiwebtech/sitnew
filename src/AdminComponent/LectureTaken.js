@@ -34,15 +34,26 @@ const LectureTaken = () => {
     const [batchCategoty, setbatchCategory] = useState([]);
     const [value, setValue] = useState({
 
-        course: '',
-        batch: '',
-        lecture: '',
-        lecturedate: '',
-        faculty: '',
-        assignment: '',
-        material: '',
-        materialissued: '',
-        topicdiscuss: '',
+        course: ' ',
+        batch: ' ',
+        lecture: ' ',
+        classroom: ' ',
+        lecturedate: ' ',
+        time: ' ',
+        to: ' ',
+        faculty: ' ',
+        facultytime: ' ',
+        timeto: ' ',
+        assignmentadate: ' ',
+        enddate: ' ',
+        materialissued: ' ',
+        material: ' ',
+        assignmentgive:' ',
+        assignment: ' ',
+        testgiven: ' ',
+        test: ' ',
+        topicdescuss: ' ',
+        nextplanning: ' ',
     })
 
 
@@ -141,15 +152,26 @@ const LectureTaken = () => {
 
         setValue(prevState => ({
             ...prevState,
-            course: data[0].Course_Name,
-            batch: data[0].Batch,
-            lecture: data[0].Lecture,
-            lecturedata: data[0].Lecture_Data,
-            faculty: data[0].Faculty,
-            assignment: data[0].Email,
-            material: data[0].Nationality,
-            materialissued: data[0].discussion,
-            topicdiscuss: data[0].topicdiscuss
+            course: data[0].course,
+            batch: data[0].batch,
+            lecture: data[0].lecture,
+            classroom: data[0].classroom,
+            lecturedate: data[0].lecturedate,
+            time: data[0].time,
+            to: data[0].to,
+            faculty: data[0].faculty,
+            facultytime: data[0].facultytime,
+            timeto: data[0].timeto,
+            assignmentadate: data[0].assignmentadate,
+            enddate: data[0].enddate,
+            materialissued: data[0].materialissued,
+            material: data[0].material,
+            assignmentgive: data[0].assignmentgive,
+            assignment: data[0].assignment,
+            testgiven: data[0].testgiven,
+            test: data[0].test,
+            topicdescuss: data[0].topicdiscuss,
+            nextplanning: data[0].nextplanning,
         }))
     }
     useEffect(() => {
@@ -184,12 +206,23 @@ const LectureTaken = () => {
                     course: value.course,
                     batch: value.batch,
                     lecture: value.lecture,
-                    lecturedata: value.lecturedate,
+                    classroom: value.classroom,
+                    lecturedate: value.lecturedate,
+                    time: value.time,
+                    to: value.to,
                     faculty: value.faculty,
-                    assignment: value.assignment,
-                    material: value.material,
+                    facultytime: value.facultytime,
+                    timeto: value.timeto,
+                    assignmentadate: value.assignmentadate,
+                    enddate: value.enddate,
                     materialissued: value.materialissued,
-                    topicdiscuss: value.topicdiscuss,
+                    material: value.material,
+                    assignmentgive: value.assignmentgive,
+                    assignment: value.assignment,
+                    testgiven: value.testgiven,
+                    test: value.test,
+                    topicdescuss: value.topicdiscuss,
+                    nextplanning: value.nextplanning,
                 }),
                 headers: {
                     'Content-Type': 'application/json'
@@ -200,15 +233,28 @@ const LectureTaken = () => {
             response = await fetch(`${BASE_URL}/updatelecturetaken`, {
                 method: 'POST',
                 body: JSON.stringify({
+
                     course: value.course,
                     batch: value.batch,
                     lecture: value.lecture,
-                    lecturedata: value.lecturedate,
-                    faculti: value.faculty,
-                    assignment: value.whatsapp,
-                    material: value.email,
-                    materialissued: value.nationality,
-                    topicdiscuss: value.discussion,
+                    classroom: value.classroom,
+                    lecturedate: value.lecturedate,
+                    time: value.time,
+                    to: value.to,
+                    faculty: value.faculty,
+                    facultytime: value.facultytime,
+                    timeto: value.timeto,
+                    assignmentadate: value.assignmentadate,
+                    enddate: value.enddate,
+                    materialissued: value.materialissued,
+                    material: value.material,
+                    assignmentgive: value.assignmentgive,
+                    assignment: value.assignment,
+                    testgiven: value.testgiven,
+                    test: value.test,
+                    topicdescuss: value.topicdiscuss,
+                    nextplanning: value.nextplanning,
+
 
                 }),
                 headers: {
@@ -259,8 +305,9 @@ const LectureTaken = () => {
                                                     </div>
                                                     <div className='row'>
                                                         <div className="form-group col-lg-6 ">
-                                                            <label for="exampleInputUsername1">Course</label>
+                                                            <label for="exampleFormControlSelect1">Course</label>
                                                             <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course} name='course' onChange={onhandleChange} >
+                                                            
                                                                 <option selected="selected" value="Select Course">Select Course</option>
                                                                 <option> Training in Process Plant System Modelling Using E3D</option>
                                                                 <option>Advance Pipe Stress Analysis </option>
@@ -298,10 +345,11 @@ const LectureTaken = () => {
                                                                 <option>The Art of Developing a Balanced Personality</option>
                                                                 <option>Water &amp; Waste Water Engg.</option>
                                                             </select>
+                                                            
                                                         </div>
 
                                                         <div className="form-group col-lg-2 ">
-                                                            <label for="exampleInputUsername1">Batch</label>
+                                                            <label for="exampleFormControlSelect1">Batch</label>
                                                             <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batch} name='batch' onChange={onhandleChange} >
                                                                 <option></option>
                                                             </select>
@@ -309,14 +357,15 @@ const LectureTaken = () => {
 
 
                                                         <div className="form-group col-lg-2 ">
-                                                            <label for="exampleInputUsername1">Lecture</label>
+                                                            <label for="exampleexampleFormControlSelect1InputUsername1">Lecture</label>
                                                             <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.lecture} name='lecture' onChange={onhandleChange} >
                                                                 <option></option>
                                                             </select>
                                                         </div>
+
                                                         <div className="form-group col-lg-2 ">
-                                                            <label for="exampleInputUsername1">Class Room</label>
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.classroom} name='class' onChange={onhandleChange} >
+                                                            <label for="exampleFormControlSelect1">Class Room</label>
+                                                            <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.classroom} name='classroom' onChange={onhandleChange} >
                                                                 <option>1</option>
                                                                 <option>2</option>
                                                                 <option>3</option>
@@ -326,7 +375,59 @@ const LectureTaken = () => {
                                                         <div className='form-group col-2'>
                                                             <label for="exampleInputUsername1">Lecture Date</label>
                                                             <input type="date" className="form-control" id="exampleInputUsername1" value={value.lecturedate} placeholder="Date" name='lecturedate' onChange={onhandleChange} />
+                                                            
                                                         </div>
+
+                                                        <div class="form-group col-lg-2">
+                                                            <label for="exampleFormControlSelect1">From - Time</label>
+                                                            <select class="form-control" id="exampleFormControlSelect1" value={value.time}
+                                                                name='time' onChange={onhandleChange}>
+                                                                <option>--Select Time--</option>
+                                                                <option>5:00 AM</option>
+                                                                <option>5:15 AM</option>
+                                                                <option>5:30 AM</option>
+                                                                <option>5:45 AM</option>
+                                                            </select>
+
+                                                        </div>
+
+                                                        <div class="form-group col-lg-2">
+                                                            <label for="exampleFormControlSelect1">To</label>
+                                                            <select class="form-control" id="exampleFormControlSelect1" value={value.to}
+                                                                name='to' onChange={onhandleChange}>
+                                                                <option>--Select Time--</option>
+                                                                <option>5:00 AM</option>
+                                                                <option>5:15 AM</option>
+                                                                <option>5:30 AM</option>
+                                                                <option>5:45 AM</option>
+                                                            </select>
+
+                                                        </div>
+
+                                                        <div class="form-group col-lg-2">
+                                                            <lable for="exampleFormControlSelect1">Faculty</lable>
+                                                            <select class="form-control" id="exampleFormControlSelect1" value={value.faculty}
+                                                                name='faculty' onChange={onhandleChange}>
+                                                                <option>--Select Faculty--</option>
+                                                                <option>Aadhar Classes</option>
+                                                                <option>Abhay Gaikar</option>
+                                                                <option>Abrar</option>
+                                                                <option>Aditi Surana</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="form-group col-lg-2">
+                                                            <lable for="exampleInputUsername1">Faculty - Time</lable>
+                                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.facultytime}
+                                                                name='facultytime' onChange={onhandleChange} />
+                                                        </div>
+
+                                                        <div class="form-group col-lg-2">
+                                                            <lable for="exampleInputUsername1">Time - To</lable>
+                                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.timeto}
+                                                                name='timeto' onChange={onhandleChange} />
+                                                        </div>
+
 
                                                         <div className="form-group col-lg-2 ">
                                                             <label for="exampleInputUsername1">Assignment/Test Start Date<span className='text-danger'>*</span></label>
@@ -341,14 +442,14 @@ const LectureTaken = () => {
                                                         </div>
 
                                                         <div className="form-group col-lg-2 ">
-                                                            <label for="exampleInputUsername1">Material Issued</label>
+                                                            <label for="exampleFormControlSelect1">Material Issued</label>
                                                             <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.materialissued} name='materialissued' onChange={onhandleChange} >
                                                                 <option>No</option>
                                                                 <option>Yes</option>
                                                             </select>
                                                         </div>
                                                         <div className="form-group col-lg-2 ">
-                                                            <label for="exampleInputUsername1">Material</label>
+                                                            <label for="exampleFormControlSelect1">Material</label>
                                                             <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.material} name='material' onChange={onhandleChange} >
                                                                 <option>Documents</option>
                                                                 <option>LCD</option>
@@ -359,8 +460,8 @@ const LectureTaken = () => {
                                                         </div>
 
                                                         <div className="form-group col-lg-2 ">
-                                                            <label for="exampleInputUsername1">Assignment Given</label>
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.assignmentgive} name='assignmentgiven' onChange={onhandleChange} >
+                                                            <label for="exampleFormControlSelect1">Assignment Given</label>
+                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.assignmentgiven} name='assignmentgiven' onChange={onhandleChange} >
                                                                 <option>No</option>
                                                                 <option>Yes</option>
                                                             </select>
@@ -368,33 +469,33 @@ const LectureTaken = () => {
 
 
                                                         <div className="form-group col-lg-2 ">
-                                                            <label for="exampleInputUsername1">Assignment</label>
+                                                            <label for="exampleFormControlSelect1">Assignment</label>
                                                             <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.assignment} name='assignment' onChange={onhandleChange} >
                                                                 <option></option>
                                                             </select>
                                                         </div>
 
                                                         <div className="form-group col-lg-2 ">
-                                                            <label for="exampleInputUsername1">Test Given</label>
+                                                            <label for="exampleFormControlSelect1">Test Given</label>
                                                             <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.testgiven} name='testgiven' onChange={onhandleChange} >
                                                                 <option>No</option>
                                                                 <option>Yes</option>
                                                             </select>
                                                         </div>
                                                         <div className="form-group col-lg-2 ">
-                                                            <label for="exampleInputUsername1">Test</label>
+                                                            <label for="exampleFormControlSelect1">Test</label>
                                                             <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.test} name='test' onChange={onhandleChange} >
                                                                 <option>No</option>
                                                                 <option>Yes</option>
                                                             </select>
                                                         </div>
 
-                                                        <div class="form-group col-lg-6">
+                                                        <div class="form-group col-lg-4">
                                                             <label for="exampleTextarea1">Topic Descuss</label>
                                                             <textarea class="form-control" id="exampleTextarea1" name='topicdescuss' value={value.topicdescuss} placeholder="Topic Descuss*" onChange={onhandleChange}></textarea>
                                                             {error.topicdescuss && <div className="text-danger">{error.topicdescuss}</div>}
                                                         </div>
-                                                        <div class="form-group col-lg-6">
+                                                        <div class="form-group col-lg-4">
                                                             <label for="exampleTextarea1">Next Planning</label>
                                                             <textarea class="form-control" id="exampleTextarea1" name='nextplanning' value={value.nextplanning} placeholder="Next Panning*" onChange={onhandleChange}></textarea>
                                                             {error.nextplanning && <div className="text-danger">{error.nextplanning}</div>}

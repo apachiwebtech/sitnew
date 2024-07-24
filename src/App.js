@@ -108,6 +108,7 @@ import AdminUser from './AdminComponent/AdminUser.js'
 import InquiryDiscussuion from './AdminComponent/InquiryDiscussuion.js';
 import AnnualBatchListing from './AdminComponent/AnnualBatchListing.jsx';
 import CourseListing from './AdminComponent/CourseListing.jsx';
+import AssignmentsTakenListing from './AdminComponent/AssignmentsTakenListing.js';
 
 
 
@@ -301,8 +302,12 @@ const Router = createBrowserRouter([
         element: <LectureTaken/>
       },
       {
-        path: '/assignmentstaken',
+        path: '/assignmentstaken/:assignmentstakenid',
         element: <AssignmentsTaken/>
+      },
+      {
+        path: '/assignmentstaken',
+        element: <AssignmentsTakenListing/>
       },
       {
         path: '/unittesttaken',

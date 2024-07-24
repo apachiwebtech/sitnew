@@ -1173,10 +1173,9 @@ app.post('/postqualification', (req, res, next) => {
 })
 
 // ==============================Lecture takene
-
 app.post('/add_lecturetaken', (req, res) => {
 
-  let { course, batch, lecture, classroom, lecturedate, assignmentdate, enddate, materialissued, material, assignmentgive, assignment, testgiven, test, topicdescuss, nextplanning, uid } = req.body
+  let { course, batch, lecture, classroom, lecturedate, time, to, faculty, facultytime, timeto, assignmentdate, enddate, materialissued, material, assignmentgive, assignment, testgiven, test, topicdescuss, nextplanning, uid } = req.body
 
   let sql
   let param;
@@ -1184,14 +1183,14 @@ app.post('/add_lecturetaken', (req, res) => {
   console.log(uid)
 
   if (uid == undefined) {
-    sql = "insert into awt_lecturetaken(`course`,`batch`,`lecture`,`classroom`,`lecturedate`,`assignmentdate`,`enddate`,`materialissued`,`material`,`assignmentgive`,`assignment`,`testgiven`,`test`,`topicdescuss`,`nextplanning`) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+    sql = "insert into awt_lecturetaken(`course`,`batch`,`lecture`,`classroom`,`lecturedate`, `time`,`to`,`faculty`,`facultytime`,`timeto`,`assignmentdate`,`enddate`,`materialissued`,`material`,`assignmentgive`,`assignment`,`testgiven`,`test`,`topicdescuss`,`nextplanning`) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
 
-    param = [course, batch, lecture, classroom, lecturedate, assignmentdate, enddate, materialissued, material, assignmentgive, assignment, testgiven, test, topicdescuss, nextplanning]
+    param = [course, batch, lecture, classroom, lecturedate, time, to, faculty, facultytime, timeto, assignmentdate, enddate, materialissued, material, assignmentgive, assignment, testgiven, test, topicdescuss, nextplanning]
 
   } else {
-    sql = "update `awt_lecturetaken` set `course` =? , `batch` =? , `lecture` =? , `classroom` =? , `lecturedate` =? , `assignmentdate` =? , `enddate` =? , `materialissued` =? , `material` =? , `assignmentgiven` =? , `assignment` =? , `testgiven` =? , `test` =? , `topicdescuss` =? , `nextplanning` =?   where id =?"
+    sql = "update `awt_lecturetaken` set `course` =? , `batch` =? , `lecture` =? , `classroom` =? , `lecturedate` =? , `time` =? , `to` =? , `faculty` =? , `facultytime` =? , `timeto` =? , `assignmentdate` =? , `enddate` =? , `materialissued` =? , `material` =? , `assignmentgiven` =? , `assignment` =? , `testgiven` =? , `test` =? , `topicdescuss` =? , `nextplanning` =?   where id =?"
 
-    param = [course, batch, lecture, classroom, lecturedate, assignmentdate, enddate, materialissued, material, assignmentgive, assignment, testgiven, test, topicdescuss, nextplanning, uid]
+    param = [course, batch, lecture, classroom, lecturedate, time, to, faculty, facultytime, timeto, assignmentdate, enddate, materialissued, material, assignmentgive, assignment, testgiven, test, topicdescuss, nextplanning, uid]
 
   }
 
@@ -1207,18 +1206,18 @@ app.post('/add_lecturetaken', (req, res) => {
 })
 
 
-app.get(`/getlecturetakendata`, (req, res) => {
+// app.get(`/getlecturetakendata`, (req, res) => {
 
-  const sql = "select * from awt_lecturetaken where deleted = 0"
+//   const sql = "select * from awt_lecturetaken where deleted = 0"
 
-  con.query(sql, (err, data) => {
-    if (err) {
-      return res.json(err)
-    } else {
-      return res.json(data)
-    }
-  })
-})
+//   con.query(sql, (err, data) => {
+//     if (err) {
+//       return res.json(err)
+//     } else {
+//       return res.json(data)
+//     }
+//   })
+// })
 
 app.post('/add_assignmenttaken', (req, res) => {
 
