@@ -1219,7 +1219,7 @@ app.post('/add_lecturetaken', (req, res) => {
 //   })
 // })
 
-app.post('/add_assignmenttaken', (req, res) => {
+app.post('/add_assignmentstaken', (req, res) => {
 
 
   let { coursename, batchcode, assignmentname, assignmentdate, returndate, uid } = req.body

@@ -107,7 +107,7 @@ const handleUpdate = (id) => {
 const handleDelete = (id) => {
     const data = {
         cat_id: id,
-        tablename: "Student_Inquiry"
+        tablename: "awt_lecturetaken"
     }
 
     axios.post(`${BASE_URL}/delete_lecturetaken_data`, data)

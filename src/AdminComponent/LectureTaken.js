@@ -48,7 +48,7 @@ const LectureTaken = () => {
         enddate: ' ',
         materialissued: ' ',
         material: ' ',
-        assignmentgive:' ',
+        assignmentgive: ' ',
         assignment: ' ',
         testgiven: ' ',
         test: ' ',
@@ -62,9 +62,64 @@ const LectureTaken = () => {
         const newErrors = {}
 
 
-        if (!value.facultyname) {
+        if (!value.course) {
             isValid = false;
-            newErrors.name = "Name is require"
+            newErrors.course = "Name is Require"
+        }
+
+        if (!value.batch) {
+            isValid = false;
+            newErrors.batch = "Batch is Require"
+        }
+
+        if (!value.lecturedate) {
+            isValid = false;
+            newErrors.lecturedate = "Lecture Date is Require"
+        }
+
+        if (!value.faculty) {
+            isValid = false;
+            newErrors.faculty = "Faculty is Require"
+        }
+
+        if (!value.assignmentdate) {
+            isValid = false;
+            newErrors.assignmentdate = "AssignmentDate is Require"
+        }
+
+        if (!value.material) {
+            isValid = false;
+            newErrors.material = "Matrerial is Require"
+        }
+
+        if (!value.assignmentgiven) {
+            isValid = false;
+            newErrors.assignmentgiven = "AssignmentGiven is Require"
+        }
+
+        if (!value.assignment) {
+            isValid = false;
+            newErrors.assignment = "Assignment is Require"
+        }
+
+        if (!value.testgiven) {
+            isValid = false;
+            newErrors.testgiven = "TestGiven is Require"
+        }
+
+        if (!value.test) {
+            isValid = false;
+            newErrors.test = "Test is Require"
+        }
+
+        if (!value.topicdescuss) {
+            isValid = false;
+            newErrors.topicdescuss = "TopicDescuss is Require"
+        }
+
+        if (!value.nextplanning) {
+            isValid = false;
+            newErrors.nextplanning = "NextPlanning is Require"
         }
 
         setError(newErrors)
@@ -72,68 +127,11 @@ const LectureTaken = () => {
     }
 
 
-    const getInquiryData = async () => {
-        const response = await fetch(`${BASE_URL}/getadmissionactivity`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
 
-        setInquiryData(data);
-    }
 
-    const getDiscipline = async () => {
-        const response = await fetch(`${BASE_URL}/getDiscipline`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setDescipline(data);
-    }
-    const getCourse = async () => {
-        const response = await fetch(`${BASE_URL}/getCourses`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setCourse(data);
-    }
-    const getEducation = async () => {
-        const response = await fetch(`${BASE_URL}/getEducation`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setEducation(data);
-    }
-    const getBatch = async () => {
-        const response = await fetch(`${BASE_URL}/getBtach`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setBatch(data);
-    }
-    const getBtachCategory = async () => {
-        const response = await fetch(`${BASE_URL}/getBtachCategory`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setbatchCategory(data);
-    }
+
+
+
 
     async function getStudentDetail() {
         const response = await fetch(`${BASE_URL}/studentDetail`, {
@@ -148,7 +146,7 @@ const LectureTaken = () => {
 
         const data = await response.json();
 
-        console.log(data, "DATA A GAYA!");
+
 
         setValue(prevState => ({
             ...prevState,
@@ -178,12 +176,7 @@ const LectureTaken = () => {
         if (lecturetakenid !== ":lecturetakenid") {
             getStudentDetail()
         }
-        getInquiryData()
-        getDiscipline();
-        getEducation();
-        getCourse();
-        getBatch();
-        getBtachCategory();
+
         value.title = ""
         setError({})
         setUid([])
@@ -198,82 +191,82 @@ const LectureTaken = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         let response
-        // if(validateForm()){
-        if (lecturetakenid == ":lecturetakenid") {
-            response = await fetch(`${BASE_URL}/add_lecturetaken`, {
-                method: 'POST',
-                body: JSON.stringify({
-                    course: value.course,
-                    batch: value.batch,
-                    lecture: value.lecture,
-                    classroom: value.classroom,
-                    lecturedate: value.lecturedate,
-                    time: value.time,
-                    to: value.to,
-                    faculty: value.faculty,
-                    facultytime: value.facultytime,
-                    timeto: value.timeto,
-                    assignmentadate: value.assignmentadate,
-                    enddate: value.enddate,
-                    materialissued: value.materialissued,
-                    material: value.material,
-                    assignmentgive: value.assignmentgive,
-                    assignment: value.assignment,
-                    testgiven: value.testgiven,
-                    test: value.test,
-                    topicdescuss: value.topicdiscuss,
-                    nextplanning: value.nextplanning,
-                }),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-        } else {
+        if (validateForm()) {
+            if (lecturetakenid == ":lecturetakenid") {
+                response = await fetch(`${BASE_URL}/add_lecturetaken`, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        course: value.course,
+                        batch: value.batch,
+                        lecture: value.lecture,
+                        classroom: value.classroom,
+                        lecturedate: value.lecturedate,
+                        time: value.time,
+                        to: value.to,
+                        faculty: value.faculty,
+                        facultytime: value.facultytime,
+                        timeto: value.timeto,
+                        assignmentadate: value.assignmentadate,
+                        enddate: value.enddate,
+                        materialissued: value.materialissued,
+                        material: value.material,
+                        assignmentgive: value.assignmentgive,
+                        assignment: value.assignment,
+                        testgiven: value.testgiven,
+                        test: value.test,
+                        topicdescuss: value.topicdiscuss,
+                        nextplanning: value.nextplanning,
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+            } else {
 
-            response = await fetch(`${BASE_URL}/updatelecturetaken`, {
-                method: 'POST',
-                body: JSON.stringify({
+                response = await fetch(`${BASE_URL}/updatelecturetaken`, {
+                    method: 'POST',
+                    body: JSON.stringify({
 
-                    course: value.course,
-                    batch: value.batch,
-                    lecture: value.lecture,
-                    classroom: value.classroom,
-                    lecturedate: value.lecturedate,
-                    time: value.time,
-                    to: value.to,
-                    faculty: value.faculty,
-                    facultytime: value.facultytime,
-                    timeto: value.timeto,
-                    assignmentadate: value.assignmentadate,
-                    enddate: value.enddate,
-                    materialissued: value.materialissued,
-                    material: value.material,
-                    assignmentgive: value.assignmentgive,
-                    assignment: value.assignment,
-                    testgiven: value.testgiven,
-                    test: value.test,
-                    topicdescuss: value.topicdiscuss,
-                    nextplanning: value.nextplanning,
+                        course: value.course,
+                        batch: value.batch,
+                        lecture: value.lecture,
+                        classroom: value.classroom,
+                        lecturedate: value.lecturedate,
+                        time: value.time,
+                        to: value.to,
+                        faculty: value.faculty,
+                        facultytime: value.facultytime,
+                        timeto: value.timeto,
+                        assignmentadate: value.assignmentadate,
+                        enddate: value.enddate,
+                        materialissued: value.materialissued,
+                        material: value.material,
+                        assignmentgive: value.assignmentgive,
+                        assignment: value.assignment,
+                        testgiven: value.testgiven,
+                        test: value.test,
+                        topicdescuss: value.topicdiscuss,
+                        nextplanning: value.nextplanning,
 
 
-                }),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+            }
+
+
+
+
+
+            const data = await response.json();
+
+            alert(data.message)
+            //   window.location.pathname = '/inquirylisting'
+
+
         }
-
-
-
-
-
-        const data = await response.json();
-
-        alert(data.message)
-        //   window.location.pathname = '/inquirylisting'
-
-
-        // }        
     }
 
 
@@ -305,9 +298,9 @@ const LectureTaken = () => {
                                                     </div>
                                                     <div className='row'>
                                                         <div className="form-group col-lg-6 ">
-                                                            <label for="exampleFormControlSelect1">Course</label>
+                                                            <label for="exampleFormControlSelect1">Course<span className="text-danger">*</span></label>
                                                             <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course} name='course' onChange={onhandleChange} >
-                                                            
+
                                                                 <option selected="selected" value="Select Course">Select Course</option>
                                                                 <option> Training in Process Plant System Modelling Using E3D</option>
                                                                 <option>Advance Pipe Stress Analysis </option>
@@ -345,14 +338,15 @@ const LectureTaken = () => {
                                                                 <option>The Art of Developing a Balanced Personality</option>
                                                                 <option>Water &amp; Waste Water Engg.</option>
                                                             </select>
-                                                            
+                                                            {<span className='text-danger'>{error.course}</span>}
                                                         </div>
 
                                                         <div className="form-group col-lg-2 ">
-                                                            <label for="exampleFormControlSelect1">Batch</label>
+                                                            <label for="exampleFormControlSelect1">Batch<span className="text-danger">*</span></label>
                                                             <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batch} name='batch' onChange={onhandleChange} >
                                                                 <option></option>
                                                             </select>
+                                                            {<span className="text-danger">{error.batch}</span>}
                                                         </div>
 
 
@@ -364,18 +358,19 @@ const LectureTaken = () => {
                                                         </div>
 
                                                         <div className="form-group col-lg-2 ">
-                                                            <label for="exampleFormControlSelect1">Class Room</label>
+                                                            <label for="exampleFormControlSelect1">Class Room<span className="text-danger">*</span></label>
                                                             <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.classroom} name='classroom' onChange={onhandleChange} >
                                                                 <option>1</option>
                                                                 <option>2</option>
                                                                 <option>3</option>
                                                                 <option>4</option>
                                                             </select>
+                                                            {<span className="text-danger"> {error.classroom} </span>}
                                                         </div>
                                                         <div className='form-group col-2'>
-                                                            <label for="exampleInputUsername1">Lecture Date</label>
+                                                            <label for="exampleInputUsername1">Lecture Date<span className="text-danger">*</span></label>
                                                             <input type="date" className="form-control" id="exampleInputUsername1" value={value.lecturedate} placeholder="Date" name='lecturedate' onChange={onhandleChange} />
-                                                            
+                                                            {<span className="text-danger"> {error.lecturedate} </span>}
                                                         </div>
 
                                                         <div class="form-group col-lg-2">
@@ -405,7 +400,7 @@ const LectureTaken = () => {
                                                         </div>
 
                                                         <div class="form-group col-lg-2">
-                                                            <lable for="exampleFormControlSelect1">Faculty</lable>
+                                                            <lable for="exampleFormControlSelect1">Faculty<span className="text-danger">*</span></lable>
                                                             <select class="form-control" id="exampleFormControlSelect1" value={value.faculty}
                                                                 name='faculty' onChange={onhandleChange}>
                                                                 <option>--Select Faculty--</option>
@@ -414,6 +409,7 @@ const LectureTaken = () => {
                                                                 <option>Abrar</option>
                                                                 <option>Aditi Surana</option>
                                                             </select>
+                                                            {<span className="text-danger"> {error.faculty} </span>}
                                                         </div>
 
                                                         <div class="form-group col-lg-2">
@@ -432,7 +428,7 @@ const LectureTaken = () => {
                                                         <div className="form-group col-lg-2 ">
                                                             <label for="exampleInputUsername1">Assignment/Test Start Date<span className='text-danger'>*</span></label>
                                                             <input type="date" class="form-control" id="exampleInputUsername1" value={value.assignmentdate} placeholder="Assignment*" name='assignmentadate' onChange={onhandleChange} />
-                                                            {error.assignmentdate && <span className='text-danger'>{error.assignmentdate}</span>}
+                                                            {<span className='text-danger'>{error.assignmentdate}</span>}
                                                         </div>
 
                                                         <div className="form-group col-lg-2 ">
@@ -449,7 +445,7 @@ const LectureTaken = () => {
                                                             </select>
                                                         </div>
                                                         <div className="form-group col-lg-2 ">
-                                                            <label for="exampleFormControlSelect1">Material</label>
+                                                            <label for="exampleFormControlSelect1">Material<span className="text-danger">*</span></label>
                                                             <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.material} name='material' onChange={onhandleChange} >
                                                                 <option>Documents</option>
                                                                 <option>LCD</option>
@@ -457,48 +453,53 @@ const LectureTaken = () => {
                                                                 <option>Course Material</option>
                                                                 <option>Xerox</option>
                                                             </select>
+                                                            {<span className="text-danger"> {error.material} </span>}
                                                         </div>
 
                                                         <div className="form-group col-lg-2 ">
-                                                            <label for="exampleFormControlSelect1">Assignment Given</label>
+                                                            <label for="exampleFormControlSelect1">Assignment Given<span className="text-danger">*</span></label>
                                                             <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.assignmentgiven} name='assignmentgiven' onChange={onhandleChange} >
                                                                 <option>No</option>
                                                                 <option>Yes</option>
                                                             </select>
+                                                            {<span className="text-danger"> {error.assignmentgiven} </span>}
                                                         </div>
 
 
                                                         <div className="form-group col-lg-2 ">
-                                                            <label for="exampleFormControlSelect1">Assignment</label>
+                                                            <label for="exampleFormControlSelect1">Assignment<span className='text-danger'>*</span></label>
                                                             <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.assignment} name='assignment' onChange={onhandleChange} >
                                                                 <option></option>
                                                             </select>
+                                                            {<span className='text-danger'> {error.assignment} </span>}
                                                         </div>
 
                                                         <div className="form-group col-lg-2 ">
-                                                            <label for="exampleFormControlSelect1">Test Given</label>
+                                                            <label for="exampleFormControlSelect1">Test Given<span className='text-danger'>*</span></label>
                                                             <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.testgiven} name='testgiven' onChange={onhandleChange} >
                                                                 <option>No</option>
                                                                 <option>Yes</option>
                                                             </select>
+                                                            {<span className='text-danger'> {error.testgiven} </span>}
                                                         </div>
                                                         <div className="form-group col-lg-2 ">
-                                                            <label for="exampleFormControlSelect1">Test</label>
+                                                            <label for="exampleFormControlSelect1">Test<span className='text-danger'>*</span></label>
                                                             <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.test} name='test' onChange={onhandleChange} >
                                                                 <option>No</option>
                                                                 <option>Yes</option>
                                                             </select>
+                                                            {<span className='text-danger'> {error.test} </span>}
                                                         </div>
 
                                                         <div class="form-group col-lg-4">
-                                                            <label for="exampleTextarea1">Topic Descuss</label>
+                                                            <label for="exampleTextarea1">Topic Descuss<span className='text-danger'>*</span></label>
                                                             <textarea class="form-control" id="exampleTextarea1" name='topicdescuss' value={value.topicdescuss} placeholder="Topic Descuss*" onChange={onhandleChange}></textarea>
-                                                            {error.topicdescuss && <div className="text-danger">{error.topicdescuss}</div>}
+                                                            {<span className='text-danger'> {error.topicdescuss} </span>}
                                                         </div>
                                                         <div class="form-group col-lg-4">
-                                                            <label for="exampleTextarea1">Next Planning</label>
+                                                            <label for="exampleTextarea1">Next Planning<span className='text-danger'>*</span></label>
                                                             <textarea class="form-control" id="exampleTextarea1" name='nextplanning' value={value.nextplanning} placeholder="Next Panning*" onChange={onhandleChange}></textarea>
-                                                            {error.nextplanning && <div className="text-danger">{error.nextplanning}</div>}
+                                                            {<span className='text-danger'> {error.nextplanning} </span>}
                                                         </div>
 
                                                     </div>
