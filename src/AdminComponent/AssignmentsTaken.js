@@ -25,7 +25,7 @@ const AssignmentsTaken = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
 
-    const { lecturetakenid } = useParams();
+    const { assignmentstakenid } = useParams();
     const [inquiryData, setInquiryData] = useState([]);
     const [Discipline, setDescipline] = useState([]);
     const [Course, setCourse] = useState([]);
@@ -34,26 +34,12 @@ const AssignmentsTaken = () => {
     const [batchCategoty, setbatchCategory] = useState([]);
     const [value, setValue] = useState({
 
-        course: ' ',
-        batch: ' ',
-        lecture: ' ',
-        classroom: ' ',
-        lecturedate: ' ',
-        time: ' ',
-        to: ' ',
-        faculty: ' ',
-        facultytime: ' ',
-        timeto: ' ',
-        assignmentadate: ' ',
-        enddate: ' ',
-        materialissued: ' ',
-        material: ' ',
-        assignmentgive: ' ',
-        assignment: ' ',
-        testgiven: ' ',
-        test: ' ',
-        topicdescuss: ' ',
-        nextplanning: ' ',
+        coursename: ' ',
+        batchcode: ' ',
+        assignmentname: ' ',
+        maxmarks: ' ',
+        assignmentdate: ' ',
+        returndate: ' ',
     })
 
 
@@ -62,84 +48,43 @@ const AssignmentsTaken = () => {
         const newErrors = {}
 
 
-        if (!value.facultyname) {
+        if (!value.coursename) {
             isValid = false;
-            newErrors.name = "Name is require"
+            newErrors.coursename = "CourseName is Required"
         }
+
+        if (!value.batchcode) {
+            isValid = false;
+            newErrors.batchcode = "Batch Code is Required"
+        }
+
+        if (!value.assignmentname) {
+            isValid = false;
+            newErrors.assignmentname = "Assignment is Required"
+        }
+
+        if (!value.assignmentdate) {
+            isValid = false;
+            newErrors.assignmentdate = "AssignmentaDate is Required"
+        }
+
+        if (!value.returndate) {
+            isValid = false;
+            newErrors.returndate = "ReturnDate is Required"
+        }
+
+
 
         setError(newErrors)
         return isValid
     }
 
 
-    const getInquiryData = async () => {
-        const response = await fetch(`${BASE_URL}/getadmissionactivity`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-
-        setInquiryData(data);
-    }
-
-    const getDiscipline = async () => {
-        const response = await fetch(`${BASE_URL}/getDiscipline`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setDescipline(data);
-    }
-    const getCourse = async () => {
-        const response = await fetch(`${BASE_URL}/getCourses`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setCourse(data);
-    }
-    const getEducation = async () => {
-        const response = await fetch(`${BASE_URL}/getEducation`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setEducation(data);
-    }
-    const getBatch = async () => {
-        const response = await fetch(`${BASE_URL}/getBtach`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setBatch(data);
-    }
-    const getBtachCategory = async () => {
-        const response = await fetch(`${BASE_URL}/getBtachCategory`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setbatchCategory(data);
-    }
-
     async function getStudentDetail() {
         const response = await fetch(`${BASE_URL}/studentDetail`, {
             method: 'POST',
             body: JSON.stringify({
-                id: lecturetakenid,
+                id: assignmentstakenid,
             }),
             headers: {
                 'Content-Type': 'application/json',
@@ -148,7 +93,6 @@ const AssignmentsTaken = () => {
 
         const data = await response.json();
 
-        console.log(data, "DATA A GAYA!");
 
         setValue(prevState => ({
             ...prevState,
@@ -163,12 +107,7 @@ const AssignmentsTaken = () => {
         if (':assignmentstakenid' !== ":assignmentstakenid") {
             getStudentDetail()
         }
-        getInquiryData()
-        getDiscipline();
-        getEducation();
-        getCourse();
-        getBatch();
-        getBtachCategory();
+
         value.title = ""
         setError({})
         setUid([])
@@ -183,56 +122,56 @@ const AssignmentsTaken = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         let response
-        // if(validateForm()){
-        if (lecturetakenid == ":lecturetakenid") {
-            response = await fetch(`${BASE_URL}/add_assignmenttaken`, {
-                method: 'POST',
-                body: JSON.stringify({
-                    coursename: value.coursename,
-                    batchcode: value.batchcode,
-                    assignmentname: value.assignmentname,
-                    maxmarks: value.maxmarks,
-                    assignmentdate: value.assignmentadate,
-                    returndate: value.returndate,
+        if (validateForm()) {
+            if (assignmentstakenid == ":assignmentstakenid") {
+                response = await fetch(`${BASE_URL}/add_assignmentstaken`, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        coursename: value.coursename,
+                        batchcode: value.batchcode,
+                        assignmentname: value.assignmentname,
+                        maxmarks: value.maxmarks,
+                        assignmentdate: value.assignmentadate,
+                        returndate: value.returndate,
 
-                }),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-        } else {
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+            } else {
 
-            response = await fetch(`${BASE_URL}/updatelecturetaken`, {
-                method: 'POST',
-                body: JSON.stringify({
+                response = await fetch(`${BASE_URL}/updateassignmentstaken`, {
+                    method: 'POST',
+                    body: JSON.stringify({
 
-                    coursename: value.coursename,
-                    batchcode: value.batchcode,
-                    assignmentname: value.assignmentname,
-                    maxmarks: value.maxmarks,
-                    assignmentdate: value.assignmentadate,
-                    returndate: value.returndate,
+                        coursename: value.coursename,
+                        batchcode: value.batchcode,
+                        assignmentname: value.assignmentname,
+                        maxmarks: value.maxmarks,
+                        assignmentdate: value.assignmentadate,
+                        returndate: value.returndate,
 
 
 
-                }),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+            }
+
+
+
+
+
+            const data = await response.json();
+
+            alert(data.message)
+            //   window.location.pathname = '/inquirylisting'
+
+
         }
-
-
-
-
-
-        const data = await response.json();
-
-        alert(data.message)
-        //   window.location.pathname = '/inquirylisting'
-
-
-        // }        
     }
 
 
@@ -272,6 +211,7 @@ const AssignmentsTaken = () => {
                                                     <option>Corporate Training</option>
                                                     <option>Test User</option>
                                                 </select>
+                                                {<span className='text-danger'> {error.coursename} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-3">
@@ -286,6 +226,7 @@ const AssignmentsTaken = () => {
                                                     <option>010027</option>
 
                                                 </select>
+                                                {<span className='text-danger'> {error.batchcode} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-3">
@@ -304,6 +245,7 @@ const AssignmentsTaken = () => {
                                                     <option>H.V.A.C-10</option>
 
                                                 </select>
+                                                {<span className='text-danger'> {error.assignmentname} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-3">
@@ -314,7 +256,9 @@ const AssignmentsTaken = () => {
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Assignment Date<span className='text-danger'>*</span> </label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.assignmentdate} name='assignmentdate' onChange={onhandleChange} />                                                    <option></option>
+                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.assignmentdate} name='assignmentdate' onChange={onhandleChange} />
+                                                <option></option>
+                                                {<span className='text-danger'> {error.assignmentdate} </span>}
 
 
                                             </div>
@@ -322,7 +266,7 @@ const AssignmentsTaken = () => {
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">Return Date</label>
                                                 <input type="date" class="form-control" id="exampleInputUsername1" value={value.returndate} name='returndate' onChange={onhandleChange} />
-
+                                                {<span className='text-danger'> {error.returndate} </span>}
                                             </div>
 
 

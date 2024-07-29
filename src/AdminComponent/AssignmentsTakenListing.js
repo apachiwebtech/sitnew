@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import LectureTaken from "./LectureTaken";
+import AssignmentsTaken from "./AssignmentsTaken";
 
 const AssignmentsTakenListing = () => {
 
@@ -19,6 +20,7 @@ const AssignmentsTakenListing = () => {
     const label = { inputProps: { 'aria-label': 'Color switch demo' } };
 
     const [lecturetakendata, setlecturetakendata] = useState([]);
+    const [assignmentstakendata, setassignmentstakendata] = useState ([]);
     const [Discipline, setDescipline] = useState([]);
     const [Course, setCourse] = useState([]);
     const [Education, setEducation] = useState([]);
@@ -46,7 +48,7 @@ const AssignmentsTakenListing = () => {
         });
         const data = await response.json();
 
-        setlecturetakendata(data);
+        setassignmentstakendata(data);
     }
 
 
@@ -94,7 +96,7 @@ const AssignmentsTakenListing = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename: "Student_Inquiry"
+            tablename: "assignmentstaken"
         }
 
         axios.post(`${BASE_URL}/delete_assignmentstaken_data`, data)
@@ -140,7 +142,7 @@ const AssignmentsTakenListing = () => {
         },
         { field: 'coursename', headerName: 'Course Name', flex: 2 },
         { field: 'batchcode', headerName: 'Batch Code', flex: 2 },
-        { field: 'assignmentname', headerName: 'Assignmentname', flex: 2 },
+        { field: 'assignmentname', headerName: 'Assignment Name', flex: 2 },
         { field: 'assignmentdate', headerName: 'Assignment Date', flex: 2 },
 
         {
@@ -161,7 +163,7 @@ const AssignmentsTakenListing = () => {
 
 
 
-    const rowsWithIds = lecturetakendata.map((row, index) => ({ index: index + 1, ...row }));
+    const rowsWithIds = assignmentstakendata.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
 
@@ -178,7 +180,7 @@ const AssignmentsTakenListing = () => {
                                 <div className="card-body">
                                     <div className='d-flex justify-content-between gap-3' style={{ width: "100%", padding: "10px 0" }}>
                                         <div >
-                                            <h4 class="card-title">Add Lecture Details</h4>
+                                            <h4 class="card-title">Add Assignmentstaken Details</h4>
                                         </div>
                                         <Link to='/assignmentstaken/:assignmentstakenid'> <button className='btn btn-success'>Add +</button></Link>
 

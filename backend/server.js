@@ -743,6 +743,23 @@ app.post('/studentDetail', (req, res, next) => {
     return res.json(data);
   })
 })
+     
+
+app.get('/getassignmentstakendata', (req, res, next) => {
+
+
+  const sql = 'SELECT * from assignmentstaken;'
+
+  con.query(sql, (error, data) => {
+    if (error) {
+     return res.status(500).json(error);
+      
+    }else{
+      return res.json(data)
+    }
+  })
+})
+
 app.get('/getEducation', (req, res, next) => {
   const sql = 'SELECT * FROM MST_Education';
 
