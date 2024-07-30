@@ -35,6 +35,9 @@ const CourseListing = () => {
                 console.log(err)
             })
     }
+    
+
+
 
     useEffect(() => {
         getCourseData()

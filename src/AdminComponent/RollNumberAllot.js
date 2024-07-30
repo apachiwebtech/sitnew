@@ -1,230 +1,84 @@
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
-import decryptedUserId from '../Utils/UserID';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { LibraryBooks } from '@mui/icons-material';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
 //import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
 
 const RollNumberAllot = () => {
 
-
-    // const [date, setDate] = useState('');
-
-    // useEffect(() => {
-    //     const currentDate = new Date();
-    //     const year = currentDate.getFullYear();
-    //     let month = currentDate.getMonth() + 1;
-    //     month = month < 10 ? '0' + month : month;
-    //     let day = currentDate.getDate();
-    //     day = day < 10 ? '0' + day : day;
-    //     const formattedDate = `${year}-${month}-${day}`;
-    //     setDate(formattedDate);
-    // }, []);
-
-
-    const [brand, setBrand] = useState([])
-    const [vendordata, setVendorData] = useState([])
+    const [course, SetCourse] = useState([])
+    const [batch, setAnnulBatch] = useState([])
+    const [vendordata, setStudent] = useState([])
     const [uid, setUid] = useState([])
-    const [cid, setCid] = useState("")
-    const [error, setError] = useState({})
-    const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
+    const [hide, setHide] = useState(false)
 
-    const handleChange1 = (event) => {
-        setChecked([event.target.checked, event.target.checked]);
+
+    const getbatch = async (id) => {
+
+        const data = {
+            courseid: id
+        }
+
+        try {
+            const res = await axios.post(`${BASE_URL}/getcoursewisebatch`, data);
+            setAnnulBatch(res.data);
+
+        } catch (err) {
+            console.error("Error fetching data:", err);
+        }
     };
 
-    const handleChange2 = (event) => {
-        setChecked([event.target.checked, checked[1]]);
-    };
 
-    const handleChange3 = (event) => {
-        setChecked([checked[0], event.target.checked]);
-    };
 
-    // const children = (
-    //     <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-    //       <FormControlLabel
-    //         label="Child 1"
-    //         control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
-    //       />
-    //       <FormControlLabel
-    //         label="Child 2"
-    //         control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
-    //       />
-    //     </Box>
-    //   );
+    async function getCourseData() {
+
+        axios.get(`${BASE_URL}/getCourse`)
+            .then((res) => {
+                console.log(res.data)
+                SetCourse(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+
+    useEffect(() => {
+        getCourseData()
+
+        setUid([])
+    }, [])
+
 
     const [value, setValue] = useState({
-        training: "" || uid.training,
-        attendee: "" || uid.attendee,
-        instructor: "" || uid.instructor,
-        description: "" || uid.description,
-        feedback: "" || uid.feedback,
-
-
 
 
     })
 
     useEffect(() => {
         setValue({
-            training: uid.training,
-            attendee: uid.attendee,
-            instructor: uid.instructor,
-            description: uid.description,
-            feedback: uid.feedback,
 
         })
     }, [uid])
 
 
-    // const validateForm = () => {
-    //     let isValid = true
-    //     const newErrors = {}
 
-
-    //    if (!value.college) {
-    //     isValid = false;
-    //     newErrors.name = "Name is require"
-    //    }
-    //     if (!value.email) {
-    //         isValid = false;
-    //         newErrors.email = "Email is require"
-    //     }
-    //     setError(newErrors)
-    //     return isValid
-    // }
-
-
-    async function getEmployeeData() {
-
-        axios.post(`${BASE_URL}/vendor_details`)
-            .then((res) => {
-                console.log(res.data)
-                setBrand(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
-
-
-
-    async function getEmployeeData() {
+    const getstudentlisitng = (id) => {
+        setHide(true)
         const data = {
-            tablename: "awt_employeerecord"
-        }
-        axios.post(`${BASE_URL}/get_data`, data)
-            .then((res) => {
-                console.log(res.data)
-                setVendorData(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
-
-    useEffect(() => {
-        getEmployeeData()
-        value.title = ""
-        setError({})
-        setUid([])
-    }, [])
-
-    const handleClick = (id) => {
-        setCid(id)
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: true,
-        }));
-    };
-
-    const handleCancel = (id) => {
-        // Hide the confirmation dialog without performing the delete action
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
-    };
-
-    const handleUpdate = (id) => {
-        const data = {
-            u_id: id,
-            tablename: "awt_employeerecord"
-        }
-        axios.post(`${BASE_URL}/update_data`, data)
-            .then((res) => {
-                setUid(res.data[0])
-
-                console.log(res.data, "update")
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
-
-    const handleDelete = (id) => {
-        const data = {
-            cat_id: id,
-            tablename: "awt_employeerecord"
+            batch_code: id
         }
 
-        axios.post(`${BASE_URL}/delete_data`, data)
+        axios.post(`${BASE_URL}/getbatchwisestudent`, data)
             .then((res) => {
-                getEmployeeData()
-
+                setStudent(res.data)
             })
-            .catch((err) => {
-                console.log(err)
-            })
-
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
     }
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
-
-        // if(validateForm()){
-        const data = {
-
-            training: value.training,
-            attendee: value.attendee,
-            instructor: value.instructor,
-            description: value.description,
-            feedback: value.feedback,
-            uid: uid.id
-        }
 
 
-        axios.post(`${BASE_URL}/add_employeerecord`, data)
-            .then((res) => {
-                console.log(res)
-                getEmployeeData()
-
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-        // }
-
-
-    }
 
 
     const onhandleChange = (e) => {
@@ -247,10 +101,10 @@ const RollNumberAllot = () => {
             filterable: false,
 
         },
-        { field: 'attendee', headerName: 'Attendee', flex: 2 },
-        { field: 'instructor', headerName: 'Instructor', flex: 2 },
-        { field: 'description', headerName: 'Description', flex: 2 },
-        { field: 'feedback', headerName: 'FeedBack', flex: 2 },
+        { field: 'attendee', headerName: 'Student Code', flex: 2 },
+        { field: 'instructor', headerName: 'Student Name', flex: 2 },
+        { field: 'description', headerName: 'Admission Date', flex: 2 },
+        { field: 'feedback', headerName: 'Phase', flex: 2 },
 
         {
             field: 'actions',
@@ -260,8 +114,8 @@ const RollNumberAllot = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
+                        <EditIcon style={{ cursor: "pointer" }} onClick={() => (params.row.id)} />
+                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => (params.row.id)} />
                     </>
                 )
             }
@@ -283,55 +137,41 @@ const RollNumberAllot = () => {
                                 <div class="card-body">
                                     <h4 class="card-title">View Roll No. Allocated Batches</h4>
                                     <hr></hr>
-                                    <form class="forms-sample py-3" onSubmit={handleSubmit}>
+                                    <form class="forms-sample py-3" >
                                         <div class='row'>
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Select Course</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.selectcourse} name='selectcourse' onChange={onhandleChange}>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.selectcourse} name='selectcourse' onChange={(e) => getbatch(e.target.value)}>
                                                     <option>Select Course</option>
-                                                    <option>Training in Process Plant System Modelling Using E3D</option>
-                                                    <option>Advance Pipe Stress Analysis </option>
-                                                    <option>Air Conditioning System Design (HVAC)</option>
-                                                    <option>Autocad - Piping</option>
-                                                    <option>Basics AutoCAD – 2D</option>
-                                                    <option>Civil/Structural Design &amp; Drafting </option>
-                                                    <option>Electrical &amp; Instrumentation Design and Drafting </option>
-                                                    <option>Electrical System Design</option>
-                                                    <option>Engineering Design &amp; Drafting </option>
-                                                    <option>Fire Alarm and Protection System </option>
+
+                                                    {course.map((item) => {
+                                                        return (
+                                                            <option value={item.Course_Id}>{item.Course_Name}</option>
+                                                        )
+                                                    })}
+
                                                 </select>
 
                                             </div>
 
                                             <div class="form-group col-lg-3">
-                                            <label for="exampleFormControlSelect1"></label>
-                                            <select class="form-control form-control-lg" id="exampleFromControlSelect1" value={value.rollnumberallot} name='rollnumberallot' onChange={onhandleChange}>
-                                                <option></option>
-                                            </select>
+                                                <label for="exampleFormControlSelect1"></label>
+                                                <select class="form-control form-control-lg" id="exampleFromControlSelect1" value={value.rollnumberallot} name='rollnumberallot' onChange={(e) => getstudentlisitng(e.target.value)}>
+
+                                                    <option>Select Batch</option>
+
+                                                    {batch.map((item) => {
+                                                        return (
+                                                            <option value={item.Batch_code}>{item.Batch_code}</option>
+                                                        )
+                                                    })}
+                                                </select>
                                             </div>
-
-                                            {/* <div className="form-group col-lg-3">
-                                                <label htmlFor="exampleInputUsername1">Date</label>
-                                                <input
-                                                    type="date"
-                                                    className="form-control"
-                                                    id="exampleInputUsername1"
-                                                    value={date}
-                                                    name="date"
-                                                    onChange={(e) => { }}
-                                                    disabled
-                                                />
-                                            </div> */}
-
 
                                         </div>
 
-                                        <button type="submit" class="btn btn-primary mr-2">Allot Roll Number</button>
 
-                                        <button type='button' onClick={() => {
-                                            window.location.reload()
-                                        }} class="btn btn-light">Save</button>
 
                                     </form>
 
@@ -347,18 +187,31 @@ const RollNumberAllot = () => {
                                         </div>
 
                                     </div>
+                                    {hide && <div>
 
-                                    <div>
-                                       
+                                        <DataGrid
+                                            rows={rowsWithIds}
+                                            columns={columns}
+                                            disableColumnFilter
+                                            disableColumnSelector
+                                            disableDensitySelector
+                                            rowHeight={35}
+                                            getRowId={(row) => row.Batch_Id}
+                                            initialState={{
+                                                pagination: {
+                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                },
+                                            }}
 
-                                        {confirmationVisibleMap[cid] && (
-                                            <div className='confirm-delete'>
-                                                <p>Are you sure you want to delete?</p>
-                                                <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
-                                                <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
-                                            </div>
-                                        )}
-                                    </div>
+
+                                        />
+
+                                    </div>}
+                                    <button type="submit" class="btn btn-primary mr-2">Allot Roll Number</button>
+
+                                    <button type='button' onClick={() => {
+                                        window.location.reload()
+                                    }} class="btn btn-light">Save</button>
 
                                 </div>
                             </div>

@@ -2208,3 +2208,15 @@ app.post('/noodapp/add_mlwfmaster', (req, res) => {
 
 })
 
+app.get('/nodeapp/getfaculty' , (req,res)=>{
+  const sql = 'select Faculty_Id, Faculty_Name from `faculty_master` where IsDelete = 0 '
+  
+  con.query(sql, (err,data) =>{
+      if(err){
+          return res.json(err)
+      }else{
+          return res.json(data)
+      }
+  })
+
+})

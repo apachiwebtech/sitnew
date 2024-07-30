@@ -19,11 +19,7 @@ const LectureTakenListing = () => {
     const label = { inputProps: { 'aria-label': 'Color switch demo' } };
 
     const [lecturetakendata, setlecturetakendata] = useState([]);
-    const [Discipline, setDescipline] = useState([]);
-    const [Course, setCourse] = useState([]);
-    const [Education, setEducation] = useState([]);
-    const [batch, setBatch] = useState([]);
-    const [batchCategoty, setbatchCategory] = useState([]);
+
     const [value, setValue] = useState({
         course: ' ',
         batch: ' ',
@@ -164,8 +160,8 @@ const columns = [
         renderCell: (params) => {
             return (
                 <>
-                    <Link to={`/lecturetaken/${params.row.id}`} ><EditIcon style={{ cursor: "pointer" }} /></Link>
-                    <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
+                    <Link to={`/lecturetaken/${params.row.Take_Id}`} ><EditIcon style={{ cursor: "pointer" }} /></Link>
+                    <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.Take_Id)} />
                     <Switch {...label} onChange={() => handleswitchchange(params.row.isActive, params.row.id)} defaultChecked={params.row.isActive == 0 ? false : true} color="secondary" />
                 </>
             )

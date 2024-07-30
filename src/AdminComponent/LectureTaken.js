@@ -1,59 +1,41 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
-import decryptedUserId from '../Utils/UserID';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { Button, Card, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import IconButton from '@mui/material/IconButton';
-import AddBoxIcon from '@mui/icons-material/AddBox';
 
 
 const LectureTaken = () => {
 
-    const [brand, setBrand] = useState([])
-    const [vendordata, setVendorData] = useState([])
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
-    const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
-
     const { lecturetakenid } = useParams();
-    const [inquiryData, setInquiryData] = useState([]);
-    const [Discipline, setDescipline] = useState([]);
-    const [Course, setCourse] = useState([]);
-    const [Education, setEducation] = useState([]);
-    const [batch, setBatch] = useState([]);
-    const [batchCategoty, setbatchCategory] = useState([]);
+    const [course, SetCourse] = useState([])
+    const [lecture, SetLecture] = useState([])
+    const [faculty, setFacilty] = useState([])
+    const [batch, setAnnulBatch] = useState([])
     const [value, setValue] = useState({
-
-        course: ' ',
-        batch: ' ',
-        lecture: ' ',
-        classroom: ' ',
-        lecturedate: ' ',
-        time: ' ',
-        to: ' ',
-        faculty: ' ',
-        facultytime: ' ',
-        timeto: ' ',
-        assignmentadate: ' ',
-        enddate: ' ',
-        materialissued: ' ',
-        material: ' ',
-        assignmentgive: ' ',
-        assignment: ' ',
-        testgiven: ' ',
-        test: ' ',
-        topicdescuss: ' ',
-        nextplanning: ' ',
+        course: '',
+        batch: '',
+        lecture: '',
+        classroom: '',
+        lecturedate: '',
+        time: '',
+        to: '',
+        faculty: '',
+        facultytime: '',
+        timeto: '',
+        assignmentadate: '',
+        enddate: '',
+        materialissued: '',
+        material: '',
+        assignmentgive: '',
+        assignment: '',
+        testgiven: '',
+        test: '',
+        topicdescuss: '',
+        nextplanning: '',
     })
 
 
@@ -127,17 +109,75 @@ const LectureTaken = () => {
     }
 
 
+    async function getCourseData() {
+
+        axios.get(`${BASE_URL}/getCourse`)
+            .then((res) => {
+                console.log(res.data)
+                SetCourse(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+    async function getfaculty() {
+
+        axios.get(`${BASE_URL}/getfaculty`)
+            .then((res) => {
+
+                setFacilty(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+
+    useEffect(() => {
+        getCourseData()
+        getfaculty()
+        setUid([])
+    }, [])
 
 
+    const getbatch = async (id) => {
+
+        const data = {
+            courseid: id
+        }
+
+        try {
+            const res = await axios.post(`${BASE_URL}/getcoursewisebatch`, data);
+            setAnnulBatch(res.data);
+
+        } catch (err) {
+            console.error("Error fetching data:", err);
+        }
+    };
+    const getlecture = async (id) => {
+
+        const data = {
+            batch_id: id
+        }
+
+        try {
+            const res = await axios.post(`${BASE_URL}/getbatchwiselecture`, data);
+            SetLecture(res.data);
+
+        } catch (err) {
+            console.error("Error fetching data:", err);
+        }
+    };
 
 
 
 
     async function getStudentDetail() {
-        const response = await fetch(`${BASE_URL}/studentDetail`, {
+        const response = await fetch(`${BASE_URL}/new_update_data`, {
             method: 'POST',
             body: JSON.stringify({
-                id: lecturetakenid,
+                u_id: lecturetakenid,
+                uidname: "Take_Id",
+                tablename: "lecture_taken_master"
             }),
             headers: {
                 'Content-Type': 'application/json',
@@ -150,10 +190,10 @@ const LectureTaken = () => {
 
         setValue(prevState => ({
             ...prevState,
-            course: data[0].course,
-            batch: data[0].batch,
-            lecture: data[0].lecture,
-            classroom: data[0].classroom,
+            course: data[0].Course_Id,
+            batch: data[0].Batch_Id,
+            lecture: data[0].Lecture_Id,
+            classroom: data[0].ClassRoom,
             lecturedate: data[0].lecturedate,
             time: data[0].time,
             to: data[0].to,
@@ -190,80 +230,40 @@ const LectureTaken = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        let response
+
         if (validateForm()) {
-            if (lecturetakenid == ":lecturetakenid") {
-                response = await fetch(`${BASE_URL}/add_lecturetaken`, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        course: value.course,
-                        batch: value.batch,
-                        lecture: value.lecture,
-                        classroom: value.classroom,
-                        lecturedate: value.lecturedate,
-                        time: value.time,
-                        to: value.to,
-                        faculty: value.faculty,
-                        facultytime: value.facultytime,
-                        timeto: value.timeto,
-                        assignmentadate: value.assignmentadate,
-                        enddate: value.enddate,
-                        materialissued: value.materialissued,
-                        material: value.material,
-                        assignmentgive: value.assignmentgive,
-                        assignment: value.assignment,
-                        testgiven: value.testgiven,
-                        test: value.test,
-                        topicdescuss: value.topicdiscuss,
-                        nextplanning: value.nextplanning,
-                    }),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-            } else {
 
-                response = await fetch(`${BASE_URL}/updatelecturetaken`, {
-                    method: 'POST',
-                    body: JSON.stringify({
-
-                        course: value.course,
-                        batch: value.batch,
-                        lecture: value.lecture,
-                        classroom: value.classroom,
-                        lecturedate: value.lecturedate,
-                        time: value.time,
-                        to: value.to,
-                        faculty: value.faculty,
-                        facultytime: value.facultytime,
-                        timeto: value.timeto,
-                        assignmentadate: value.assignmentadate,
-                        enddate: value.enddate,
-                        materialissued: value.materialissued,
-                        material: value.material,
-                        assignmentgive: value.assignmentgive,
-                        assignment: value.assignment,
-                        testgiven: value.testgiven,
-                        test: value.test,
-                        topicdescuss: value.topicdiscuss,
-                        nextplanning: value.nextplanning,
-
-
-                    }),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
+            const data = {
+                course: value.course,
+                batch: value.batch,
+                lecture: value.lecture,
+                classroom: value.classroom,
+                lecturedate: value.lecturedate,
+                time: value.time,
+                to: value.to,
+                faculty: value.faculty,
+                facultytime: value.facultytime,
+                timeto: value.timeto,
+                assignmentadate: value.assignmentadate,
+                enddate: value.enddate,
+                materialissued: value.materialissued,
+                material: value.material,
+                assignmentgive: value.assignmentgive,
+                assignment: value.assignment,
+                testgiven: value.testgiven,
+                test: value.test,
+                topicdescuss: value.topicdescuss,
+                nextplanning: value.nextplanning,
+                uid: uid.Take_Id
             }
 
 
+            axios.post(`${BASE_URL}/add_lecturetaken`, data)
+                .then((res) => {
+                    console.log(res.data)
+                })
 
 
-
-            const data = await response.json();
-
-            alert(data.message)
-            //   window.location.pathname = '/inquirylisting'
 
 
         }
@@ -295,56 +295,35 @@ const LectureTaken = () => {
                                                 <div className='p-3' style={{ width: "100%" }}>
                                                     <div>
                                                         <h4 className="card-title titleback">Lecture Taken</h4>
+
                                                     </div>
                                                     <div className='row'>
                                                         <div className="form-group col-lg-6 ">
                                                             <label for="exampleFormControlSelect1">Course<span className="text-danger">*</span></label>
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course} name='course' onChange={onhandleChange} >
+                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course} name='course' onChange={(e) => getbatch(e.target.value)} >
 
-                                                                <option selected="selected" value="Select Course">Select Course</option>
-                                                                <option> Training in Process Plant System Modelling Using E3D</option>
-                                                                <option>Advance Pipe Stress Analysis </option>
-                                                                <option>Air Conditioning System Design (HVAC)</option>
-                                                                <option>Autocad - Piping</option>
-                                                                <option>Basics AutoCAD – 2D</option>
-                                                                <option>Civil/Structural Design &amp; Drafting </option>
-                                                                <option>Electrical &amp; Instrumentation Design and Drafting </option>
-                                                                <option>Electrical System Design</option>
-                                                                <option>Engineering Design &amp; Drafting </option>
-                                                                <option>Fire Alarm and Protection System </option>
-                                                                <option>Fundamentals of Offshore</option>
-                                                                <option>Health, Safety &amp; Environment in Construction</option>
-                                                                <option>HVAC Design and Drafting</option>
-                                                                <option>Masonry/Carpentry</option>
-                                                                <option>Mechanical Design of Process Equipment</option>
-                                                                <option>MEP Engineering (Mechanical, Electrical &amp; Plumbing)</option>
-                                                                <option>Offshore Engineering</option>
-                                                                <option>Others</option>
-                                                                <option>Pipeline Engineering</option>
-                                                                <option>Piping Design &amp; Drafting </option>
-                                                                <option>Piping Engineering </option>
-                                                                <option>Piping Materials</option>
-                                                                <option>Plant Design Management System (PDMS)</option>
-                                                                <option>PLANT LAYOUT DESIGN</option>
-                                                                <option>Priventive </option>
-                                                                <option>Process Engineering</option>
-                                                                <option>Process Equipment Fabrication Engineering</option>
-                                                                <option>Process Instrumentation &amp; Control</option>
-                                                                <option>PV Elite </option>
-                                                                <option>Rotating Equipment</option>
-                                                                <option>Smart Plant P&amp;ID</option>
-                                                                <option>Solar PV Power System with renewable Energy  </option>
-                                                                <option>Structural Engineering </option>
-                                                                <option>The Art of Developing a Balanced Personality</option>
-                                                                <option>Water &amp; Waste Water Engg.</option>
+                                                                <option value="Select Course">Select Course</option>
+                                                                {course.map((item) => {
+                                                                    return (
+
+                                                                        <option value={item.Course_Id}>{item.Course_Name}</option>
+                                                                    )
+                                                                })}
+
                                                             </select>
                                                             {<span className='text-danger'>{error.course}</span>}
                                                         </div>
 
                                                         <div className="form-group col-lg-2 ">
                                                             <label for="exampleFormControlSelect1">Batch<span className="text-danger">*</span></label>
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batch} name='batch' onChange={onhandleChange} >
-                                                                <option></option>
+                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batch} name='batch' onChange={(e) =>getlecture(e.target.value)} >
+
+                                                                <option>Select Batch</option>
+                                                                {batch.map((item) => {
+                                                                    return (
+                                                                        <option value={item.Batch_Id}>{item.Batch_code}</option>
+                                                                    )
+                                                                })}
                                                             </select>
                                                             {<span className="text-danger">{error.batch}</span>}
                                                         </div>
@@ -353,7 +332,16 @@ const LectureTaken = () => {
                                                         <div className="form-group col-lg-2 ">
                                                             <label for="exampleexampleFormControlSelect1InputUsername1">Lecture</label>
                                                             <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.lecture} name='lecture' onChange={onhandleChange} >
-                                                                <option></option>
+
+                                                                <option>Select Lecture</option>
+                                                                 {lecture.map((item)=>{
+                                                                     return(
+                                                                        <option value={item.id}>{item.subject_topic}</option>
+
+                                                                    )
+                                                                 })}
+
+
                                                             </select>
                                                         </div>
 
@@ -404,10 +392,11 @@ const LectureTaken = () => {
                                                             <select class="form-control" id="exampleFormControlSelect1" value={value.faculty}
                                                                 name='faculty' onChange={onhandleChange}>
                                                                 <option>--Select Faculty--</option>
-                                                                <option>Aadhar Classes</option>
-                                                                <option>Abhay Gaikar</option>
-                                                                <option>Abrar</option>
-                                                                <option>Aditi Surana</option>
+                                                                {faculty.map((item)=>{
+                                                                    return(
+                                                                        <option value={item.Faculty_Id}>{item.Faculty_Name}</option>
+                                                                    )
+                                                                })}
                                                             </select>
                                                             {<span className="text-danger"> {error.faculty} </span>}
                                                         </div>
