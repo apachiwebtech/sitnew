@@ -1,24 +1,12 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
-import decryptedUserId from '../Utils/UserID';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { LibraryBooks } from '@mui/icons-material';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
 //import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
 
 const UnitTestTaken = () => {
 
+    const { unittesttakenid } = useParams();
     const [brand, setBrand] = useState([])
     const [vendordata, setVendorData] = useState([])
     const [uid, setUid] = useState([])
@@ -39,220 +27,138 @@ const UnitTestTaken = () => {
         setChecked([checked[0], event.target.checked]);
     };
 
-    // const children = (
-    //     <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-    //       <FormControlLabel
-    //         label="Child 1"
-    //         control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
-    //       />
-    //       <FormControlLabel
-    //         label="Child 2"
-    //         control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
-    //       />
-    //     </Box>
-    //   );
 
     const [value, setValue] = useState({
-        coursename: "" || uid.coursename,
-        batchcode: "" || uid.batchcode,
-        utname: "" || uid.utname,
-        utdate: "" || uid.utdate,
+        coursename: '',
+        batchcode: '',
+        utname: '',
+        marks: '',
+        utdate: '',
 
 
 
     })
 
-    useEffect(() => {
-        setValue({
-            coursename: uid.coursename,
-            batchcode: uid.batchcode,
-            utname: uid.utname,
-            utdate: uid.utname,
-        })
-    }, [uid])
 
 
-    // const validateForm = () => {
-    //     let isValid = true
-    //     const newErrors = {}
+    const validateForm = () => {
+        let isValid = true
+        const newErrors = {}
 
-
-    //    if (!value.college) {
-    //     isValid = false;
-    //     newErrors.name = "Name is require"
-    //    }
-    //     if (!value.email) {
-    //         isValid = false;
-    //         newErrors.email = "Email is require"
-    //     }
-    //     setError(newErrors)
-    //     return isValid
-    // }
-
-
-    async function getEmployeeData() {
-
-        axios.post(`${BASE_URL}/vendor_details`)
-            .then((res) => {
-                console.log(res.data)
-                setBrand(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
-
-
-
-    async function getEmployeeData() {
-        const data = {
-            tablename: "awt_unittesttaken"
+        if (!value.coursename) {
+            isValid = false;
+            newErrors.coursename = "Course Name is Required"
         }
-        axios.post(`${BASE_URL}/get_data`, data)
-            .then((res) => {
-                console.log(res.data)
-                setVendorData(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
+
+        if (!value.batchcode) {
+            isValid = false;
+            newErrors.batchcode = "Batch Code is Required"
+        }
+
+        if (!value.utname) {
+            isValid = false;
+            newErrors.utname = "Unit Test is Required"
+        }
+
+        if (!value.utdate) {
+            isValid = false;
+            newErrors.utdate = "Unit Date is Required"
+        }
+
+
+        setError(newErrors)
+        return isValid
     }
 
+
+    async function getStudentDetail() {
+        const response = await fetch(`${BASE_URL}/studentDetail`, {
+            method: 'POST',
+            body: JSON.stringify({
+                id: unittesttakenid,
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        const data = await response.json();
+
+
+        setValue(prevState => ({
+            ...prevState,
+            coursename: data[0].coursename,
+            batchcode: data[0].batchcode,
+            utname: data[0].utname,
+            marks: data[0].marks,
+            utdate: data[0].utdate,
+            
+        }))
+    }
     useEffect(() => {
-        getEmployeeData()
+        if (':unittesttakenid' !== ":unittesttakenid") {
+            getStudentDetail()
+        }
+
         value.title = ""
         setError({})
         setUid([])
     }, [])
 
-    const handleClick = (id) => {
-        setCid(id)
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: true,
-        }));
-    };
 
-    const handleCancel = (id) => {
-        // Hide the confirmation dialog without performing the delete action
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
-    };
 
-    const handleUpdate = (id) => {
-        const data = {
-            u_id: id,
-            tablename: "awt_unittesttaken"
-        }
-        axios.post(`${BASE_URL}/update_data`, data)
-            .then((res) => {
-                setUid(res.data[0])
 
-                console.log(res.data, "update")
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
 
-    const handleDelete = (id) => {
-        const data = {
-            cat_id: id,
-            tablename: "awt_unittesttaken"
-        }
 
-        axios.post(`${BASE_URL}/delete_data`, data)
-            .then((res) => {
-                getEmployeeData()
 
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
-    }
-
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
+        let response
+        if (validateForm()) {
+            if (unittesttakenid == ":unittesttakenid") {
+                response = await fetch(`${BASE_URL}/add_unittesttaken`, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        coursename: value.coursename,
+                        batchcode: value.batchcode,
+                        utname: value.utname,
+                        marks: value.marks,
+                        utdate: value.utdate,
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+            } else {
 
-        // if(validateForm()){
-        const data = {
+                response = await fetch(`${BASE_URL}/updateunittesttaken'`, {
+                    method: 'POST',
+                    body: JSON.stringify({
 
-            coursename: value.coursename,
-            batchcode: value.batchcode,
-            utname: value.utname,
-            utdate: value.utdate,
-            uid: uid.id
+                        coursename: value.coursename,
+                        batchcode: value.batchcode,
+                        utname: value.utname,
+                        marks: value.marks,
+                        utdate: value.utdate,
+
+
+
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+            }
+
+
+
         }
-
-
-        axios.post(`${BASE_URL}/add_unittesttaken`, data)
-            .then((res) => {
-                console.log(res)
-                getEmployeeData()
-
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-        // }
-
-
-
-
-
     }
 
 
     const onhandleChange = (e) => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
-
-
-
-
-
-
-    const columns = [
-        {
-            field: 'index',
-            headerName: 'Id',
-            type: 'number',
-            align: 'center',
-            headerAlign: 'center',
-            flex: 1,
-            filterable: false,
-
-        },
-        { field: 'coursename', headerName: 'Course Name', flex: 2 },
-        { field: 'batchcode', headerName: 'Batch Code', flex: 2 },
-        { field: 'utname', headerName: 'Unit Test Name', flex: 2 },
-        { field: 'utdate', headerName: 'Unit Test Date', flex: 2 },
-
-        {
-            field: 'actions',
-            type: 'actions',
-            headerName: 'Action',
-            flex: 1,
-            renderCell: (params) => {
-                return (
-                    <>
-                        <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
-                    </>
-                )
-            }
-        },
-    ];
-
-
-    const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
 
@@ -291,6 +197,7 @@ const UnitTestTaken = () => {
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Batch Code<span className='text-danger'>*</span> </label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batchcode} onChange={onhandleChange} name='batchcode'>
+                                                    <option>Select Batch Code</option>
                                                     <option>010021</option>
                                                     <option>010022</option>
                                                     <option>010023</option>
@@ -307,6 +214,7 @@ const UnitTestTaken = () => {
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Unit Test Name<span className='text-danger'>*</span> </label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.utname} onChange={onhandleChange} name='utname'>
+                                                    <option>Select Unit test Name</option>
                                                     <option>Piping-1</option>
                                                     <option>Piping-2</option>
                                                     <option>Piping-3</option>
@@ -320,10 +228,14 @@ const UnitTestTaken = () => {
 
                                                 </select>
                                             </div>
-
+                                            <div class="form-group col-lg-3">
+                                                <lable for="exampleInputUsername">Max Marks</lable>
+                                                <input type="text" class="form-control" id="exampleInputusername" value={value.marks} placeholder="Max Marks" name='marks' onChange={onhandleChange} disabled />
+                                            </div>
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Unit Test Date<span className='text-danger'>*</span> </label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.utdate} name='utdate' onChange={onhandleChange} />                                                    <option></option>
+                                                <input type="date" class="form-control" id="exampleFormControlSelect1" value={value.utdate} name='utdate' onChange={onhandleChange} />
+                                                <option></option>
 
 
                                             </div>
@@ -338,59 +250,6 @@ const UnitTestTaken = () => {
                                         }} class="btn btn-light">Cancel</button>
 
                                     </form>
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div className='d-flex justify-content-between'>
-                                        <div>
-                                            <h4 class="card-title">Unit Test Details</h4>
-                                        </div>
-
-                                    </div>
-
-                                    <div>
-                                        <DataGrid
-                                            rows={rowsWithIds}
-                                            columns={columns}
-                                            disableColumnFilter
-                                            disableColumnSelector
-                                            disableDensitySelector
-                                            rowHeight={35}
-                                            getRowId={(row) => row.id}
-                                            initialState={{
-                                                pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
-                                                },
-                                            }}
-                                            slots={{ toolbar: GridToolbar }}
-                                            slotProps={{
-                                                toolbar: {
-                                                    showQuickFilter: true,
-                                                },
-                                            }}
-                                        />
-
-                                        {confirmationVisibleMap[cid] && (
-                                            <div className='confirm-delete'>
-                                                <p>Are you sure you want to delete?</p>
-                                                <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
-                                                <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
-                                            </div>
-                                        )}
-                                    </div>
-
-
-                                    {/* <div>
-                                      <button type='button' onClick={() => {
-                                            window.location.reload()
-                                        }} class="btn btn-primary mr-2">Excel</button>
-                                      </div> */}
-
-
 
                                 </div>
                             </div>

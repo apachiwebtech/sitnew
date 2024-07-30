@@ -1,16 +1,15 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import Switch from '@mui/material/Switch';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
-import LectureTaken from "./LectureTaken";
-import AssignmentsTaken from "./AssignmentsTaken";
+//import AssignmentsTaken from "./AssignmentsTaken";
+import VivaMOCTaken from "./VivaMOCTaken";
 
-const AssignmentsTakenListing = () => {
+const VivaMOCTakenListing = () => {
 
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
@@ -18,21 +17,20 @@ const AssignmentsTakenListing = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
     const label = { inputProps: { 'aria-label': 'Color switch demo' } };
-
     const [lecturetakendata, setlecturetakendata] = useState([]);
-    const [assignmentstakendata, setassignmentstakendata] = useState ([]);
     const [Discipline, setDescipline] = useState([]);
     const [Course, setCourse] = useState([]);
     const [Education, setEducation] = useState([]);
     const [batch, setBatch] = useState([]);
     const [batchCategoty, setbatchCategory] = useState([]);
+    const [unittesttakendata, setunittakendata] = useState([]);
+    const [vivamoctakendata, setvivamoctakendata] = useState([]);
     const [value, setValue] = useState({
         coursename: ' ',
         batchcode: ' ',
-        assignmentname: ' ',
+        vivamocname: ' ',
         maxmarks: ' ',
-        assignmentdate: ' ',
-        returndate: ' ',
+        date: ' ',
 
     })
 
@@ -40,7 +38,7 @@ const AssignmentsTakenListing = () => {
 
 
     const getInquiryData = async () => {
-        const response = await fetch(`${BASE_URL}/getassignmentstakendata`, {
+        const response = await fetch(`${BASE_URL}/getvivamoctakendata`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -48,7 +46,7 @@ const AssignmentsTakenListing = () => {
         });
         const data = await response.json();
 
-        setassignmentstakendata(data);
+        setvivamoctakendata(data);
     }
 
 
@@ -79,7 +77,7 @@ const AssignmentsTakenListing = () => {
     const handleUpdate = (id) => {
         const data = {
             u_id: id,
-            tablename: "assignmentstaken"
+            tablename: "awt_vivamoctaken"
 
         }
         axios.post(`${BASE_URL}/update_data`, data)
@@ -96,10 +94,10 @@ const AssignmentsTakenListing = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename: "assignmentstaken"
+            tablename: "awt_vivamoctaken"
         }
 
-        axios.post(`${BASE_URL}/delete_assignmentstaken_data`, data)
+        axios.post(`${BASE_URL}/delete_vivamoctaken_data`, data)
             .then((res) => {
                 getInquiryData()
             })
@@ -117,7 +115,7 @@ const AssignmentsTakenListing = () => {
     const handleswitchchange = (value, Inquiry_Id) => {
         const newval = value == 0 ? 1 : 0
 
-        axios.post(`${BASE_URL}/data_status`, { status: newval, Inquiry_Id: Inquiry_Id, table_name: "assignmentstaken" })
+        axios.post(`${BASE_URL}/data_status`, { status: newval, Inquiry_Id: Inquiry_Id, table_name: "awt_vivamoctaken" })
             .then((res) => {
                 console.log(res)
                 getInquiryData()
@@ -140,10 +138,10 @@ const AssignmentsTakenListing = () => {
             filterable: false,
 
         },
-        { field: 'coursename', headerName: 'Course Name', flex: 2 },
         { field: 'batchcode', headerName: 'Batch Code', flex: 2 },
-        { field: 'assignmentname', headerName: 'Assignment Name', flex: 2 },
-        { field: 'assignmentdate', headerName: 'Assignment Date', flex: 2 },
+        { field: 'coursename', headerName: 'Course Name', flex: 2 },
+        { field: 'vivamocname', headerName: 'Viva/Moc Name', flex: 2 },
+        { field: 'date', headerName: 'Date', flex: 2 },
 
         {
             field: 'actions',
@@ -163,7 +161,7 @@ const AssignmentsTakenListing = () => {
 
 
 
-    const rowsWithIds = assignmentstakendata.map((row, index) => ({ index: index + 1, ...row }));
+    const rowsWithIds = vivamoctakendata.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
 
@@ -180,9 +178,9 @@ const AssignmentsTakenListing = () => {
                                 <div className="card-body">
                                     <div className='d-flex justify-content-between gap-3' style={{ width: "100%", padding: "10px 0" }}>
                                         <div >
-                                            <h4 class="card-title">Add Assignmentstaken Details</h4>
+                                            <h4 class="card-title">Viva / MOC Taken</h4>
                                         </div>
-                                        <Link to='/assignmentstaken/:assignmentstakenid'> <button className='btn btn-success'>Add +</button></Link>
+                                        <Link to='/vivamoctaken/:vivamoctakenid'> <button className='btn btn-success'>Add +</button></Link>
 
 
                                     </div>
@@ -231,4 +229,4 @@ const AssignmentsTakenListing = () => {
     )
 }
 
-export default AssignmentsTakenListing
+export default VivaMOCTakenListing

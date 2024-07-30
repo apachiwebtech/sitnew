@@ -131,7 +131,7 @@ const AssignmentsTaken = () => {
                         batchcode: value.batchcode,
                         assignmentname: value.assignmentname,
                         maxmarks: value.maxmarks,
-                        assignmentdate: value.assignmentadate,
+                        assignmentdate: value.assignmentdate,
                         returndate: value.returndate,
 
                     }),
@@ -165,11 +165,7 @@ const AssignmentsTaken = () => {
 
 
 
-            const data = await response.json();
-
-            alert(data.message)
-            //   window.location.pathname = '/inquirylisting'
-
+            
 
         }
     }
@@ -264,7 +260,7 @@ const AssignmentsTaken = () => {
                                             </div>
 
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">Return Date</label>
+                                                <label for="exampleInputUsername1">Return Date<span className='text-danger'>*</span></label>
                                                 <input type="date" class="form-control" id="exampleInputUsername1" value={value.returndate} name='returndate' onChange={onhandleChange} />
                                                 {<span className='text-danger'> {error.returndate} </span>}
                                             </div>

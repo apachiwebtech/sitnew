@@ -110,6 +110,7 @@ import AnnualBatchListing from './AdminComponent/AnnualBatchListing.jsx';
 import CourseListing from './AdminComponent/CourseListing.jsx';
 import Status from './AdminComponent/Status.jsx';
 import AssignmentsTakenListing from './AdminComponent/AssignmentsTakenListing.js';
+<<<<<<< Updated upstream
 import Batch from './AdminComponent/Batch.jsx';
 import BatchEdit from './AdminComponent/BatchEdit.jsx';
 import BatchDetails from './AdminComponent/BatchDetails.jsx';
@@ -124,6 +125,10 @@ import LecturePlan from './AdminComponent/LecturePlan.jsx';
 import ResultStructure from './AdminComponent/ResultStructure.jsx';
 import SiteVise from './AdminComponent/SiteVise.jsx';
 import Discipline from './AdminComponent/Discipline.jsx';
+=======
+import UnitTestTakenListing from './AdminComponent/UnitTestTakenListing.js';
+import VivaMOCTakenListing from './AdminComponent/VivaMOCTakenListing.js';
+>>>>>>> Stashed changes
 
 
 
@@ -411,10 +416,18 @@ const Router = createBrowserRouter([
       },
       {
         path: '/unittesttaken',
+        element: <UnitTestTakenListing/>
+      },
+      {
+        path: '/unittesttaken/:unittesttakenid',
         element: <UnitTestTaken/>
       },
       {
         path: '/vivamoctaken',
+        element: <VivaMOCTakenListing/>
+      },
+      {
+        path: '/vivamoctaken/:vivamoctakenid',
         element: <VivaMOCTaken/>
       },
       {

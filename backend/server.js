@@ -759,6 +759,35 @@ app.get('/getassignmentstakendata', (req, res, next) => {
     }
   })
 })
+// =================Unit Test Taken===========
+
+app.get('/getunittesttakendata', (req, res, next) => {
+
+  const sql = 'SELECT * from awt_unittesttaken;'
+
+  con.query(sql, (error, data) => {
+    if (error) {
+      return res.status(500).json(error);
+    }else{
+      return res.json(data)
+    }
+  })
+})
+
+//=====================Viva MOC Taken===========
+
+app.get('/getvivamoctakendata', (req, res, next) =>{
+
+  const sql = 'SELECT * from awt_vivamoctaken;'
+  
+  con.query(sql, (error, data) => {
+    if (error) {
+      return res.status(500).json(error);
+    }else{
+      return res.json(data)
+    }
+  })
+})
 
 app.get('/getEducation', (req, res, next) => {
   const sql = 'SELECT * FROM MST_Education';
