@@ -11,9 +11,9 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 
-const Discipline = () => {
+const Hoilday = () => {
 
-    const [Discipline, setDisciplinedata] = useState([])
+    const [hoilday, setHoildaydata] = useState([])
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
@@ -22,13 +22,15 @@ const Discipline = () => {
  
 
     const [value, setValue] = useState({
-        discipline: "" || uid.Discipline,
+        hoilday: "" || uid.Hoilday,
+        date: "" || uid.Date_of_Holiday,
 
     })
 
     useEffect(() => {
         setValue({
-            discipline: uid.Discipline,
+            hoilday: uid.Hoilday,
+            date: uid.Date_of_Holiday,
         })
 
     }, [uid])
@@ -37,13 +39,17 @@ const Discipline = () => {
     const validateForm = () => {
         let isValid = true
         const newErrors = {}
-
-
-        if (!value.discipline) {
+        
+        if (!value.hoilday) {
             isValid = false;
-            newErrors.discipline = "Name is require"
+            newErrors.hoilday = "Name is require"
+        }
+        if (!value.date) {
+            isValid = false;
+            newErrors.date = "date is require"
         }
 
+        
         setError(newErrors)
         return isValid
     }
@@ -51,12 +57,12 @@ const Discipline = () => {
 
 
 
-    async function getDiscipline() {
+    async function getHoilday() {
 
-        axios.get(`${BASE_URL}/get_dicipline`)
+        axios.get(`${BASE_URL}/get_hoilday`)
             .then((res) => {
                 console.log(res.data)
-                setDisciplinedata(res.data)
+                setHoildaydata(res.data)
             })
             .catch((err) => {
                 console.log(err)
@@ -64,7 +70,7 @@ const Discipline = () => {
     }
 
     useEffect(() => {
-        getDiscipline()
+        getHoilday()
         value.title = ""
         setError({})
         setUid([])
@@ -88,18 +94,19 @@ const Discipline = () => {
 
     const handleUpdate = (id) => {
         setValue({
-            discipline :"",
+            hoilday :"",
         })
         const data = {
             u_id: id,
             uidname: "Id",
-            tablename: "MST_Deciplin"
+            tablename: "Holiday_master"
         }
         axios.post(`${BASE_URL}/new_update_data`, data)
             .then((res) => {
                 setUid(res.data[0])
                 setValue({
-                    discipline :res.data[0].Deciplin,
+                    hoilday :res.data[0].Perticular,
+                    date :res.data[0].Perticular,
                 })
                 console.log(res.data, "update")
             })
@@ -111,13 +118,13 @@ const Discipline = () => {
     const handleDelete = (id) => {
         const data = {
             delete_id: id,
-            tablename: "MST_Deciplin",
+            tablename: "Holiday_master",
             column_name: 'Id'
         }
 
         axios.post(`${BASE_URL}/new_delete_data`, data)
             .then((res) => {
-                getDiscipline()
+                getHoilday()
 
             })
             .catch((err) => {
@@ -135,19 +142,20 @@ const Discipline = () => {
 
         if (validateForm()) {
             const data = {
-                Discipline:  value.discipline,
+                Hoilday:  value.hoilday,
+                date:  value.date,
                 u_id : uid.Id
             }
 
 
-            axios.post(`${BASE_URL}/add_dicipline`, data)
+            axios.post(`${BASE_URL}/add_hoilday`, data)
                 .then((res) => {
                     console.log(res)
-                    getDiscipline()
+                    getHoilday()
                     alert("Data Submitted Successfully")
                     setUid([])
                     setValue({
-                        discipline :""
+                        hoilday :""
                      })
                 })
                 .catch((err) => {
@@ -181,7 +189,8 @@ const Discipline = () => {
             flex: 1,
             filterable: false,
         },
-        { field: 'Deciplin', headerName: 'Discipline', flex: 2 },
+        { field: 'Holiday', headerName: 'Hoilday', flex: 2 },
+        { field: 'Date_of_Holiday', headerName: 'Date', flex: 2 },
         {
             field: 'actions',
             type: 'actions',
@@ -199,7 +208,7 @@ const Discipline = () => {
     ];
 
 
-    const rowsWithIds = Discipline.map((row, index) => ({ index: index + 1, ...row }));
+    const rowsWithIds = hoilday.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
 
@@ -211,14 +220,19 @@ const Discipline = () => {
                         <div class="col-lg-5 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Discipline</h4>
+                                    <h4 class="card-title">Hoilday</h4>
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
                                             <div class="form-group col-lg-12">
-                                                <label for="exampleInputUsername1">Disciplain<span className='text-danger'>*</span></label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.discipline} placeholder="Disciplain" name='discipline' onChange={onhandleChange} />
-                                                {error.discipline && <span className='text-danger'>{error.discipline}</span>}
+                                                <label for="exampleInputUsername1">Hoilday<span className='text-danger'>*</span></label>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.hoilday} placeholder="Fees Note" name='hoilday' onChange={onhandleChange} />
+                                                {error.hoilday && <span className='text-danger'>{error.hoilday}</span>}
+                                            </div>
+                                            <div class="form-group col-lg-12">
+                                                <label for="exampleInputUsername2">Date<span className='text-danger'>*</span></label>
+                                                <input type="Date" class="form-control" id="exampleInputUsername2" value={value.date} placeholder="Fees Note" name='date' onChange={onhandleChange} />
+                                                {error.date && <span className='text-danger'>{error.date}</span>}
                                             </div>
                                         </div>
 
@@ -237,7 +251,7 @@ const Discipline = () => {
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
                                         <div>
-                                            <h4 class="card-title">List of Discipline</h4>
+                                            <h4 class="card-title">List of Hoilday</h4>
                                             
                                         </div>
 
@@ -287,4 +301,4 @@ const Discipline = () => {
     )
 }
 
-export default Discipline
+export default Hoilday

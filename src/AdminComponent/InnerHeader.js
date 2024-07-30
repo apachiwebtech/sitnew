@@ -62,6 +62,18 @@ const InnerHeader = () => {
                 return 'Corporate Inquiry';
             case '/Student':
                 return 'Student';
+            case '/bank':
+                return 'Bank';
+            case '/discipline':
+                return 'Discipline';
+            case '/Qualification':
+                return 'Qualification';
+            case '/feesnotes':
+                return 'Fees note';
+            case '/hoilday':
+                return 'Hoilday';
+            case '/location':
+                return 'Location';
             case location.pathname.match(/^\/addcorporateinquiry\/\d+$/) ? location.pathname : '':
                 return 'Corporate Inquiry';
             case location.pathname.match(/^\/admission\/\d+$/) ? location.pathname : '':

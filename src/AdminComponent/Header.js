@@ -73,25 +73,25 @@ const Header = ({click}) => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to={`/onefieldform/${"sit_qualification"}/${"Qualification"}`}>
+              <Link className="nav-link" to='/Qualification'>
                 <Icon path={mdiCircleMedium} size={1} className='mx-3' />
                 <span className="menu-title">Qualification</span>
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to={`/onefieldform/${"sit_bank"}/${"Bank"}`}>
+              <Link className="nav-link" to='/bank'>
                 <Icon path={mdiCircleMedium} size={1} className='mx-3' />
                 <span className="menu-title">Bank</span>
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to={`/onefieldform/${"sit_feesnotes"}/${"Fees Notes"}`}>
+              <Link className="nav-link" to='/feesnotes'>
                 <Icon path={mdiCircleMedium} size={1} className='mx-3' />
                 <span className="menu-title">Fees Notes</span>
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to={`/twofieldform/${"awt_holiday"}/${"Holiday"}/${"Holiday_date"}/${"date"}/${"Holiday"}`}>
+              <Link className="nav-link" to='/hoilday'>
                 {/* <Icon path={mdiMagnifyPlusOutline} size={1}  /> */}
                 <Icon path={mdiCircleMedium} size={1} className='mx-3' />
                 <span className="menu-title">Holiday</span>
@@ -105,7 +105,7 @@ const Header = ({click}) => {
               </Link>
             </li> */}
             <li className="nav-item">
-              <Link className="nav-link" to={`/onefieldform/${"awt_location"}/${"Location"}`}>
+              <Link className="nav-link" to='/location'>
                 <Icon path={mdiCircleMedium} size={1} className='mx-3' />
                 <span className="menu-title">Location</span>
               </Link>

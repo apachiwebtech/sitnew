@@ -11,9 +11,9 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 
-const Discipline = () => {
+const Location = () => {
 
-    const [Discipline, setDisciplinedata] = useState([])
+    const [location, setLocationdata] = useState([])
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
@@ -22,13 +22,13 @@ const Discipline = () => {
  
 
     const [value, setValue] = useState({
-        discipline: "" || uid.Discipline,
+        location: "" || uid.Location,
 
     })
 
     useEffect(() => {
         setValue({
-            discipline: uid.Discipline,
+            location: uid.Locationk,
         })
 
     }, [uid])
@@ -39,9 +39,9 @@ const Discipline = () => {
         const newErrors = {}
 
 
-        if (!value.discipline) {
+        if (!value.location) {
             isValid = false;
-            newErrors.discipline = "Name is require"
+            newErrors.location = "Name is require"
         }
 
         setError(newErrors)
@@ -51,12 +51,12 @@ const Discipline = () => {
 
 
 
-    async function getDiscipline() {
+    async function getLocation() {
 
-        axios.get(`${BASE_URL}/get_dicipline`)
+        axios.get(`${BASE_URL}/get_location`)
             .then((res) => {
                 console.log(res.data)
-                setDisciplinedata(res.data)
+                setLocationdata(res.data)
             })
             .catch((err) => {
                 console.log(err)
@@ -64,7 +64,7 @@ const Discipline = () => {
     }
 
     useEffect(() => {
-        getDiscipline()
+        getLocation()
         value.title = ""
         setError({})
         setUid([])
@@ -88,18 +88,18 @@ const Discipline = () => {
 
     const handleUpdate = (id) => {
         setValue({
-            discipline :"",
+            location :"",
         })
         const data = {
             u_id: id,
-            uidname: "Id",
-            tablename: "MST_Deciplin"
+            uidname: "id",
+            tablename: "Location_master"
         }
         axios.post(`${BASE_URL}/new_update_data`, data)
             .then((res) => {
                 setUid(res.data[0])
                 setValue({
-                    discipline :res.data[0].Deciplin,
+                    location :res.data[0].LocationMaster,
                 })
                 console.log(res.data, "update")
             })
@@ -111,13 +111,13 @@ const Discipline = () => {
     const handleDelete = (id) => {
         const data = {
             delete_id: id,
-            tablename: "MST_Deciplin",
-            column_name: 'Id'
+            tablename: "Location_master",
+            column_name: 'id'
         }
 
         axios.post(`${BASE_URL}/new_delete_data`, data)
             .then((res) => {
-                getDiscipline()
+                getLocation()
 
             })
             .catch((err) => {
@@ -135,19 +135,19 @@ const Discipline = () => {
 
         if (validateForm()) {
             const data = {
-                Discipline:  value.discipline,
-                u_id : uid.Id
+                Location:  value.location,
+                u_id : uid.id
             }
 
 
-            axios.post(`${BASE_URL}/add_dicipline`, data)
+            axios.post(`${BASE_URL}/add_location`, data)
                 .then((res) => {
                     console.log(res)
-                    getDiscipline()
+                    getLocation()
                     alert("Data Submitted Successfully")
                     setUid([])
                     setValue({
-                        discipline :""
+                        location :""
                      })
                 })
                 .catch((err) => {
@@ -174,14 +174,14 @@ const Discipline = () => {
     const columns = [
         {
             field: 'index',
-            headerName: 'Id',
+            headerName: 'id',
             type: 'number',
             align: 'center',
             headerAlign: 'center',
             flex: 1,
             filterable: false,
         },
-        { field: 'Deciplin', headerName: 'Discipline', flex: 2 },
+        { field: 'LocationMaster', headerName: 'Location', flex: 2 },
         {
             field: 'actions',
             type: 'actions',
@@ -190,8 +190,8 @@ const Discipline = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.Id)} />
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.Id)} />
+                        <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />
+                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
                     </>
                 )
             }
@@ -199,7 +199,7 @@ const Discipline = () => {
     ];
 
 
-    const rowsWithIds = Discipline.map((row, index) => ({ index: index + 1, ...row }));
+    const rowsWithIds = location.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
 
@@ -211,14 +211,14 @@ const Discipline = () => {
                         <div class="col-lg-5 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Discipline</h4>
+                                    <h4 class="card-title">location</h4>
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
                                             <div class="form-group col-lg-12">
-                                                <label for="exampleInputUsername1">Disciplain<span className='text-danger'>*</span></label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.discipline} placeholder="Disciplain" name='discipline' onChange={onhandleChange} />
-                                                {error.discipline && <span className='text-danger'>{error.discipline}</span>}
+                                                <label for="exampleInputUsername1">location<span className='text-danger'>*</span></label>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.location} placeholder="location" name='location' onChange={onhandleChange} />
+                                                {error.location && <span className='text-danger'>{error.location}</span>}
                                             </div>
                                         </div>
 
@@ -237,7 +237,7 @@ const Discipline = () => {
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
                                         <div>
-                                            <h4 class="card-title">List of Discipline</h4>
+                                            <h4 class="card-title">List of location</h4>
                                             
                                         </div>
 
@@ -251,10 +251,10 @@ const Discipline = () => {
                                             disableColumnSelector
                                             disableDensitySelector
                                             rowHeight={35}
-                                            getRowId={(row) => row.Id}
+                                            getRowId={(row) => row.id}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 10, page: 160 },
                                                 },
                                             }}
                                             // slots={{ toolbar: GridToolbar }}
@@ -287,4 +287,4 @@ const Discipline = () => {
     )
 }
 
-export default Discipline
+export default Location

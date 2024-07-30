@@ -11,9 +11,9 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 
-const Discipline = () => {
+const Qualification = () => {
 
-    const [Discipline, setDisciplinedata] = useState([])
+    const [qualification, setQualificationdata] = useState([])
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
@@ -22,13 +22,13 @@ const Discipline = () => {
  
 
     const [value, setValue] = useState({
-        discipline: "" || uid.Discipline,
+        qualification: "" || uid.Qualification,
 
     })
 
     useEffect(() => {
         setValue({
-            discipline: uid.Discipline,
+            qualification: uid.Qualification,
         })
 
     }, [uid])
@@ -39,9 +39,9 @@ const Discipline = () => {
         const newErrors = {}
 
 
-        if (!value.discipline) {
+        if (!value.qualification) {
             isValid = false;
-            newErrors.discipline = "Name is require"
+            newErrors.qualification = "Name is require"
         }
 
         setError(newErrors)
@@ -51,12 +51,12 @@ const Discipline = () => {
 
 
 
-    async function getDiscipline() {
+    async function getQualification() {
 
-        axios.get(`${BASE_URL}/get_dicipline`)
+        axios.get(`${BASE_URL}/get_qualification`)
             .then((res) => {
                 console.log(res.data)
-                setDisciplinedata(res.data)
+                setQualificationdata(res.data)
             })
             .catch((err) => {
                 console.log(err)
@@ -64,7 +64,7 @@ const Discipline = () => {
     }
 
     useEffect(() => {
-        getDiscipline()
+        getQualification()
         value.title = ""
         setError({})
         setUid([])
@@ -88,18 +88,18 @@ const Discipline = () => {
 
     const handleUpdate = (id) => {
         setValue({
-            discipline :"",
+            qualification :"",
         })
         const data = {
             u_id: id,
             uidname: "Id",
-            tablename: "MST_Deciplin"
+            tablename: "MST_Education"
         }
         axios.post(`${BASE_URL}/new_update_data`, data)
             .then((res) => {
                 setUid(res.data[0])
                 setValue({
-                    discipline :res.data[0].Deciplin,
+                    qualification :res.data[0].Education,
                 })
                 console.log(res.data, "update")
             })
@@ -111,13 +111,13 @@ const Discipline = () => {
     const handleDelete = (id) => {
         const data = {
             delete_id: id,
-            tablename: "MST_Deciplin",
+            tablename: "MST_Education",
             column_name: 'Id'
         }
 
         axios.post(`${BASE_URL}/new_delete_data`, data)
             .then((res) => {
-                getDiscipline()
+                getQualification()
 
             })
             .catch((err) => {
@@ -135,19 +135,19 @@ const Discipline = () => {
 
         if (validateForm()) {
             const data = {
-                Discipline:  value.discipline,
+                Qualification:  value.qualification,
                 u_id : uid.Id
             }
 
 
-            axios.post(`${BASE_URL}/add_dicipline`, data)
+            axios.post(`${BASE_URL}/add_qualification`, data)
                 .then((res) => {
                     console.log(res)
-                    getDiscipline()
+                    getQualification()
                     alert("Data Submitted Successfully")
                     setUid([])
                     setValue({
-                        discipline :""
+                        qualification :""
                      })
                 })
                 .catch((err) => {
@@ -181,7 +181,7 @@ const Discipline = () => {
             flex: 1,
             filterable: false,
         },
-        { field: 'Deciplin', headerName: 'Discipline', flex: 2 },
+        { field: 'Education', headerName: 'Qualification', flex: 2 },
         {
             field: 'actions',
             type: 'actions',
@@ -199,7 +199,7 @@ const Discipline = () => {
     ];
 
 
-    const rowsWithIds = Discipline.map((row, index) => ({ index: index + 1, ...row }));
+    const rowsWithIds = qualification.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
 
@@ -211,14 +211,14 @@ const Discipline = () => {
                         <div class="col-lg-5 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Discipline</h4>
+                                    <h4 class="card-title">qualification</h4>
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
                                             <div class="form-group col-lg-12">
-                                                <label for="exampleInputUsername1">Disciplain<span className='text-danger'>*</span></label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.discipline} placeholder="Disciplain" name='discipline' onChange={onhandleChange} />
-                                                {error.discipline && <span className='text-danger'>{error.discipline}</span>}
+                                                <label for="exampleInputUsername1">Qualification<span className='text-danger'>*</span></label>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.qualification} placeholder="Qualification" name='qualification' onChange={onhandleChange} />
+                                                {error.qualification && <span className='text-danger'>{error.qualification}</span>}
                                             </div>
                                         </div>
 
@@ -237,7 +237,7 @@ const Discipline = () => {
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
                                         <div>
-                                            <h4 class="card-title">List of Discipline</h4>
+                                            <h4 class="card-title">List of qualification</h4>
                                             
                                         </div>
 
@@ -287,4 +287,4 @@ const Discipline = () => {
     )
 }
 
-export default Discipline
+export default Qualification
