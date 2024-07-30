@@ -67,7 +67,7 @@ const Header = ({click}) => {
           <ul className='inner-item'>
 
             <li className="nav-item">
-              <Link className="nav-link" to={`/onefieldform/${"sit_descipline"}/${"Descipline"}`}>
+              <Link className="nav-link" to='/discipline'>
                 <Icon path={mdiCircleMedium} size={1} className='mx-3' />
                 <span className="menu-title">Discipline</span>
               </Link>

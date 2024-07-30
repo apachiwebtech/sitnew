@@ -224,9 +224,6 @@ const RollNumberAllot = () => {
         // }
 
 
-
-
-
     }
 
 

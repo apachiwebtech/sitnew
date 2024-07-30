@@ -123,6 +123,7 @@ import StandardLecturePlan from './AdminComponent/StanderdLecturePlan.jsx';
 import LecturePlan from './AdminComponent/LecturePlan.jsx';
 import ResultStructure from './AdminComponent/ResultStructure.jsx';
 import SiteVise from './AdminComponent/SiteVise.jsx';
+import Discipline from './AdminComponent/Discipline.jsx';
 
 
 
@@ -182,6 +183,10 @@ const Router = createBrowserRouter([
       {
         path: '/status',
         element: <Status />
+      },
+      {
+        path: '/discipline',
+        element: <Discipline />
       },
       {
         path: '/courselisting',
