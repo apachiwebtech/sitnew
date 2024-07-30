@@ -65,7 +65,7 @@ import QSMDoes from './AdminComponent/QSMDoes';
 // import ConsultancyMaster from './AdminComponent/ConsultancyMaster';
 import CVShortListed from './AdminComponent/CVShortListed.js';
 import CVUpdated from './AdminComponent/CVUpdated.js';
-import Convocation from './AdminComponent/Convocation.js';
+import Convocation from './AdminComponent/Convocation.jsx';
 import ViewStudentCV from './AdminComponent/ViewStudentCV.js';
 // import CompanyRequirment from './AdminComponent/CompanyRequirment.js';
 import Students from './AdminComponent/Students.jsx';
@@ -110,6 +110,19 @@ import AnnualBatchListing from './AdminComponent/AnnualBatchListing.jsx';
 import CourseListing from './AdminComponent/CourseListing.jsx';
 import Status from './AdminComponent/Status.jsx';
 import AssignmentsTakenListing from './AdminComponent/AssignmentsTakenListing.js';
+import Batch from './AdminComponent/Batch.jsx';
+import BatchEdit from './AdminComponent/BatchEdit.jsx';
+import BatchDetails from './AdminComponent/BatchDetails.jsx';
+import FeesStructure from './AdminComponent/FeesStructure.jsx';
+import Assignmentdetails from './AdminComponent/Assignmentdetails.jsx';
+import UnitTest from './AdminComponent/UnitTest.jsx';
+import Desciline from './AdminComponent/Descipline.jsx';
+import Descipline from './AdminComponent/Descipline.jsx';
+import FeedbackDetails from './AdminComponent/FeedbackDetails.jsx';
+import StandardLecturePlan from './AdminComponent/StanderdLecturePlan.jsx';
+import LecturePlan from './AdminComponent/LecturePlan.jsx';
+import ResultStructure from './AdminComponent/ResultStructure.jsx';
+import SiteVise from './AdminComponent/SiteVise.jsx';
 
 
 
@@ -118,6 +131,27 @@ const Router = createBrowserRouter([
   {
     path: '/weblog',
     element: <WebLogin />
+  },
+  {
+    path: '/onlineadmissionform/personalinfo/:admissionid',
+    element: <PerssonalInfo/>
+  },
+  {
+    path: '/onlineadmissionform/academicqualification/:admissionid',
+    element: <AcademicQualification/>
+  },
+  {
+    path: '/onlineadmissionform/companyinfo/:admissionid',
+    element: <CompanyInfo/>
+  },
+
+  {
+    path: '/onlineadmissionform/discussion/:admissionid',
+    element: <Discussion/>
+  },
+  {
+    path: '/onlineadmissionform/documents/:admissionid',
+    element: <Documents/>
   },
 
   {
@@ -166,6 +200,62 @@ const Router = createBrowserRouter([
         path: '/batchcategory',
         element: <BatchCategory/>
       },
+      {
+        path: '/batchlisting',
+        element: <Batch/>
+      },
+
+      // batch details 
+      {
+        path: '/batchedit',
+        element: <BatchEdit/>
+      },
+      {
+        path: '/batchedit/batchdetails/:batchid',
+        element: <BatchDetails/>
+      },
+      {
+        path: '/batchedit/feesstructure/:batchid',
+        element: <FeesStructure/>
+      },
+      {
+        path: '/batchedit/assignmentdetails/:batchid',
+        element: <Assignmentdetails/>
+      },
+      {
+        path: '/batchedit/unittest/:batchid',
+        element: <UnitTest/>
+      },
+      {
+        path: '/batchedit/descipline/:batchid',
+        element: <Descipline/>
+      },
+      {
+        path: '/batchedit/feedbackdetails/:batchid',
+        element: <FeedbackDetails/>
+      },
+      {
+        path: '/batchedit/standardlecture/:batchid',
+        element: <StandardLecturePlan/>
+      },
+      {
+        path: '/batchedit/lectureplan/:batchid',
+        element: <LecturePlan/>
+      },
+      {
+        path: '/batchedit/convocation/:batchid',
+        element: <Convocation/>
+      },
+      {
+        path: '/batchedit/result/:batchid',
+        element: <ResultStructure/>
+      },
+      {
+        path: '/batchedit/sitevisit/:batchid',
+        element: <SiteVise/>
+      },
+
+      // batch details 
       {
         path: '/librarybook',
         element: <LibraryBook/>
@@ -413,27 +503,7 @@ const Router = createBrowserRouter([
         path: '/inquirylisting',
         element: <InquiryListing/>
       },
-      {
-        path: '/onlineadmissionform/personalinfo/:admissionid',
-        element: <PerssonalInfo/>
-      },
-      {
-        path: '/onlineadmissionform/academicqualification/:admissionid',
-        element: <AcademicQualification/>
-      },
-      {
-        path: '/onlineadmissionform/companyinfo/:admissionid',
-        element: <CompanyInfo/>
-      },
-   
-      {
-        path: '/onlineadmissionform/discussion/:admissionid',
-        element: <Discussion/>
-      },
-      {
-        path: '/onlineadmissionform/documents/:admissionid',
-        element: <Documents/>
-      },
+
       // ======================Inquiry form
       
       {

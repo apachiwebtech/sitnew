@@ -146,8 +146,8 @@ const AcademicQualification = () => {
       kt: uid.KT,
       remark: uid.remark,
     })
-  },[uid])
-
+  },[uid]) 
+   
   const handleChange = (e) => {
     const { name, value } = e.target;
     setValue(prevState => ({
@@ -234,7 +234,7 @@ const rowsWithIds = onlineAdmissions.map((row, index) => ({
 }));
 
 return (
-  <div className="container-fluid page-body-wrapper col-lg-10">
+  <div className="container-fluid page-body-wrapper col-lg-12">
     <InnerHeader />
     <div className="main-pannel">
       <div className="content-wrapper ">

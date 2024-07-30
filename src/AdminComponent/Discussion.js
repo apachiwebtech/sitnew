@@ -205,7 +205,7 @@ const Discussion = () => {
   }));
 
   return (
-    <div className="container-fluid page-body-wrapper col-lg-10">
+    <div className="container-fluid page-body-wrapper col-lg-12">
       <InnerHeader />
       <div className="main-pannel">
         <div className="content-wrapper ">

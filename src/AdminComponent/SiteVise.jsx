@@ -1,21 +1,21 @@
-import React, { useEffect, useState } from "react";
-import { BASE_URL } from "./BaseUrl";
-import EditIcon from "@mui/icons-material/Edit";
+
+
+
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { Link, useParams } from "react-router-dom";
-import OnlineAdmissionForm from "./OnlineAdmissionForm";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { BASE_URL } from "./BaseUrl";
 import InnerHeader from "./InnerHeader";
 
-import Button from "@mui/material/Button";
-import { styled } from "@mui/material/styles";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import DialogActions from "@mui/material/DialogActions";
-import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import Typography from "@mui/material/Typography";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import IconButton from "@mui/material/IconButton";
+import { styled } from "@mui/material/styles";
 import axios from "axios";
+import BatchEdit from "./BatchEdit";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -26,8 +26,10 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-const CompanyInfo = () => {
+const SiteVise = () => {
+
   const [open, setOpen] = React.useState(false);
+  const{batchid}  = useParams();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -37,6 +39,7 @@ const CompanyInfo = () => {
   };
 
   const [onlineAdmissions, setOnlineAdmissions] = useState([]);
+
   async function getOnlineAdmissions() {
 
     const data = {
@@ -64,16 +67,8 @@ const CompanyInfo = () => {
     setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
   }
 
-  const{admissionid}  = useParams();
-
-  useEffect(()=>{
-      localStorage.setItem("Admissionid", admissionid);
-  },[admissionid])
 
 
-  const handleUpdate = () => {
-    console.log("hehehe");
-  };
   const columns = [
     {
       field: "index",
@@ -81,13 +76,13 @@ const CompanyInfo = () => {
       type: "number",
       align: "center",
       headerAlign: "center",
-      flex: 1,
+      flex: 1,  
       filterable: false,
     },
-    { field: "Company", headerName: "Company", flex: 2 },
-    { field: "BussinessNature", headerName: "Business Nature", flex: 2 },
-    { field: "Designation", headerName: "Designation", flex: 2 },
-    { field: "Duration", headerName: "Duration", flex: 2 },
+    { field: "Company", headerName: "Assignment Name", flex: 2 },
+    { field: "BussinessNature", headerName: "Subject", flex: 2 },
+    { field: "Designation", headerName: "Marks", flex: 2 },
+    { field: "Duration", headerName: "Date", flex: 2 },
   ];
 
   const rowsWithIds = onlineAdmissions.map((row, index) => ({
@@ -116,11 +111,11 @@ const CompanyInfo = () => {
   }
 
   return (
-    <div className="container-fluid page-body-wrapper col-lg-12">
+    <div className="container-fluid page-body-wrapper col-lg-10">
       <InnerHeader />
       <div className="main-pannel">
         <div className="content-wrapper ">
-          <OnlineAdmissionForm admissionid={admissionid} />
+             <BatchEdit batchid={batchid} />
           <div className="row">
             <div className="col-lg-12">
               <div className="card">
@@ -196,14 +191,14 @@ const CompanyInfo = () => {
                 <div className="row">
                   <div className="form-group col-lg-4 ">
                     <label for="exampleInputUsername1">
-                      Company<span className="text-danger">*</span>
+                    Assignment Name
                     </label>
                     <input
                       type="text"
                       class="form-control"
                       id="exampleInputUsername1"
 
-                      placeholder="Company"
+                      placeholder="Enter.."
                       name="Company"
                       onChange={handleChange}
                     />
@@ -211,14 +206,14 @@ const CompanyInfo = () => {
 
                   <div className="form-group col-lg-4">
                     <label for="exampleInputUsername1">
-                      Business Nature<span className="text-danger">*</span>
+                      Subject
                     </label>
                     <input
                       type="text"
                       class="form-control"
                       id="exampleInputUsername1"
 
-                      placeholder=" Business Nature"
+                      placeholder="Enter.."
                       name="BussinessNature"
                       onChange={handleChange}
                     />
@@ -226,28 +221,27 @@ const CompanyInfo = () => {
 
                   <div className="form-group col-lg-4 ">
                     <label for="exampleInputUsername1">
-                      Designation<span className="text-danger">*</span>
+                     Marks
                     </label>
                     <input
-                      type="text"
+                      type="number"
                       class="form-control"
                       id="exampleInputUsername1"
 
-                      placeholder="Designation"
+                      placeholder="Enter.."
                       name="Designation"
                       onChange={handleChange}
                     />
                   </div>
                   <div className="form-group col-lg-4 ">
                     <label for="exampleInputUsername1">
-                      Duration<span className="text-danger">*</span>
+                      Date
                     </label>
                     <input
-                      type="text"
+                      type="date"
                       class="form-control"
                       id="exampleInputUsername1"
-
-                      placeholder="Duration"
+                      placeholder="Enter.."
                       name="Duration"
                       onChange={handleChange}
                     />
@@ -274,4 +268,4 @@ const CompanyInfo = () => {
   );
 };
 
-export default CompanyInfo;
+export default SiteVise;

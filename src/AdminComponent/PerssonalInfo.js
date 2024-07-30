@@ -4,6 +4,8 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import OnlineAdmissionForm from './OnlineAdmissionForm';
+import img from '../assets/pass.jpg';
+
 
 const PerssonalInfo = () => {
     const [course, setCourse] = useState([])
@@ -30,7 +32,7 @@ const PerssonalInfo = () => {
         admission_dt: '',
         prestatus: '',
         changestatus: '',
-        prestatusdate : '',
+        prestatusdate: '',
         date: '',
         permanentAdress: '',
         permanentPincode: '',
@@ -39,6 +41,9 @@ const PerssonalInfo = () => {
         permanentCountry: '',
         permanentmobile: '',
         perWatsapp: '',
+        sdate: '',
+        edate: ''
+
     })
     const { admissionid } = useParams();
 
@@ -89,8 +94,8 @@ const PerssonalInfo = () => {
         });
 
         const data = await response.json();
-   
-         console.log(data[0].Permanent_Country)
+
+        console.log(data[0].Permanent_Country)
         setPersonalInfo(prevState => ({
             ...prevState,
             Batch_Code: data[0].Batch_Code,
@@ -114,7 +119,7 @@ const PerssonalInfo = () => {
             prestatus: data[0].Status_id,
             changestatus: data[0].OnlineState,
             date: data[0].Status_date,
-            prestatusdate : data[0].StateChangeDt,
+            prestatusdate: data[0].StateChangeDt,
             permanentAdress: data[0].Permanent_Address,
             permanentPincode: data[0].Permanent_Pin,
             permanentCity: data[0].Permanent_City,
@@ -122,6 +127,8 @@ const PerssonalInfo = () => {
             permanentCountry: data[0].Permanent_Country,
             permanentmobile: data[0].Permanent_Tel,
             perWatsapp: '',
+            sdate: data[0].SDate,
+            edate: data[0].Edate
         }));
     }
 
@@ -163,7 +170,7 @@ const PerssonalInfo = () => {
                 prestatus: personalInfo.prestatus,
                 changestatus: personalInfo.changestatus,
                 date: personalInfo.date,
-                prestatusdate : personalInfo.prestatusdate,
+                prestatusdate: personalInfo.prestatusdate,
                 permanentAdress: personalInfo.permanentAdress,
                 permanentPincode: personalInfo.permanentPincode,
                 permanentCity: personalInfo.permanentCity,
@@ -179,7 +186,7 @@ const PerssonalInfo = () => {
 
         const data = await response.json();
 
-       alert("Updated Successfully")
+        alert("Updated Successfully")
 
         // }        
     }
@@ -189,16 +196,16 @@ const PerssonalInfo = () => {
 
     const navigate = useNavigate()
 
-    const handleadmission = (id) =>{
+    const handleadmission = (id) => {
         let confirm = window.confirm("Are you sure want to proceed ")
 
-        if(confirm){
+        if (confirm) {
             navigate(`/admission/${id}`)
         }
 
-        
+
     }
-    
+
     return (
 
 
@@ -219,7 +226,7 @@ const PerssonalInfo = () => {
 
                                 <div className='container-fluid'>
                                     <form onSubmit={handleSubmit} className='row d-flex justify-content-between'>
-                                        <div className='col-md-6 col-lg-6'>
+                                        <div className='col-md-5 col-lg-5'>
                                             <div className='row justify-content-center' >
                                                 <div className='p-3' style={{ width: "100%" }}>
                                                     <div>
@@ -325,13 +332,13 @@ const PerssonalInfo = () => {
                                             <div className='row p-2 gap-2'>
                                                 <button type='button' className='mr-2 btn btn-success'>Accept</button>
                                                 <button type='button' className='mr-2 btn btn-danger'>Denied</button>
-                                                <button type='button' className='mr-2 btn btn-secondary' onClick={() =>handleadmission(admissionid)}>Admission</button>
+                                                <button type='button' className='mr-2 btn btn-secondary' onClick={() => handleadmission(admissionid)}>Admission</button>
                                                 <button type="submit" className='mr-2 btn btn-primary'>Save</button>
-                                                 <Link to="/onlineadmission" className='mr-2 btn btn-secondary'>close</Link>
+                                                <Link to="/onlineadmission" className='mr-2 btn btn-secondary'>close</Link>
                                             </div>
 
                                         </div>
-                                        <div className='col-md-6 col-lg-6'>
+                                        <div className='col-md-4 col-lg-4'>
                                             <div className='row justify-content-center' >
                                                 <div className='p-3' style={{ width: "100%" }}>
                                                     <div>
@@ -461,6 +468,40 @@ const PerssonalInfo = () => {
                                                             <label for="exampleInputUsername1">Whatsapp Number</label>
                                                             <input type="number" className="form-control" id="exampleInputUsername1" value={personalInfo.perWatsapp} placeholder="Number" name='perWatsapp' onChange={handleChange} />
                                                         </div> */}
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div className='col-md-3 col-lg-3'>
+                                            <div className='p-3'>
+                                                <div>
+                                                    <h4 className="card-title titleback">Student Info</h4>
+                                                </div>
+
+                                                <div className='student-img text-center'>
+                                                    <img style={{ width: "150px" }} src={img} alt='' />
+                                                </div>
+
+                                                <div className='p-2'>
+                                                    <h4>Balance Fees : 00</h4>
+                                                    <hr />
+                                                    <h4>Assignment Avg : 00</h4>
+                                                    <hr />
+                                                    <h4>Unit Test Avg : 00</h4>
+                                                    <hr />
+                                                    <h4>Final Exam Marks : 30.6</h4>
+                                                    <hr />
+                                                    <h4>Attendance(%) : 30.6</h4>
+                                                    <hr />
+                                                    <h4>Final Total : 30.6</h4>
+                                                    <hr />
+
+                                                    <h4>Batch Details :</h4>
+                                                    <div>
+                                                        <p><b>Batch Start:</b>{personalInfo.sdate}</p>
+                                                        <p><b>Batch End:</b>{personalInfo.edate}</p>
                                                     </div>
 
                                                 </div>

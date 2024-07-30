@@ -1,21 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { BASE_URL } from "./BaseUrl";
-import EditIcon from "@mui/icons-material/Edit";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import OnlineAdmissionForm from "./OnlineAdmissionForm";
+import { BASE_URL } from "./BaseUrl";
 import InnerHeader from "./InnerHeader";
-
-import Button from "@mui/material/Button";
-import { styled } from "@mui/material/styles";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import DialogActions from "@mui/material/DialogActions";
-import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import Typography from "@mui/material/Typography";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import IconButton from "@mui/material/IconButton";
+import { styled } from "@mui/material/styles";
 import axios from "axios";
+import BatchEdit from "./BatchEdit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -26,54 +24,124 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-const CompanyInfo = () => {
+const Assignmentdetails = () => {
+
   const [open, setOpen] = React.useState(false);
+  const { batchid } = useParams();
+  const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
+  const [cid, setCid] = useState("")
+  const [uid, setUid] = useState([])
+
 
   const handleClickOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
+    setValue(
+      {
+        assingmentname: "",
+        subject: "",
+        marks: "",
+        date: ""
+      }
+    )
+    setUid([])
   };
 
   const [onlineAdmissions, setOnlineAdmissions] = useState([]);
-  async function getOnlineAdmissions() {
 
-    const data = {
-      student_id: localStorage.getItem(`Admissionid`)
-    }
-    axios.post(`${BASE_URL}/getcompanyinfo`, data)
+  async function getAssignment() {
+    axios.get(`${BASE_URL}/assignment_taken`)
       .then((res) => {
-        console.log(res)
         setOnlineAdmissions(res.data)
       })
   }
 
   useEffect(() => {
-    getOnlineAdmissions();
+    getAssignment();
   }, []);
 
   const [value, setValue] = useState({
-    Company: "",
-    BussinessNature: "",
-    Designation: "",
-    Duration: ""
+    assingmentname: "" || uid.assignmentname,
+    subject: "" || uid.subjects,
+    marks: "" || uid.marks,
+    date: "" || uid.assignmentdate
   })
+
+  useEffect(() => {
+    setValue({
+      assingmentname: uid.assignmentname,
+      subject: uid.subjects,
+      marks: uid.marks,
+      date: uid.assignmentdate
+    })
+  }, [uid])
 
   const handleChange = (e) => {
     setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
   }
 
-  const{admissionid}  = useParams();
 
-  useEffect(()=>{
-      localStorage.setItem("Admissionid", admissionid);
-  },[admissionid])
-
-
-  const handleUpdate = () => {
-    console.log("hehehe");
+  const handleClick = (id) => {
+    setCid(id)
+    setConfirmationVisibleMap((prevMap) => ({
+      ...prevMap,
+      [id]: true,
+    }));
   };
+
+  const handleCancel = (id) => {
+    // Hide the confirmation dialog without performing the delete action
+    setConfirmationVisibleMap((prevMap) => ({
+      ...prevMap,
+      [id]: false,
+    }));
+  };
+
+  const getupdatedata = (id) => {
+
+    setOpen(true)
+
+    const data = {
+      u_id: id,
+      uidname: "id",
+      tablename: "assignmentstaken"
+    }
+    axios.post(`${BASE_URL}/new_update_data`, data)
+      .then((res) => {
+        setUid(res.data[0])
+
+  
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
+
+  const handleDelete = (id) => {
+    const data = {
+
+      cat_id: id,
+      tablename: "assignmentstaken",
+
+    }
+
+    axios.post(`${BASE_URL}/delete_data`, data)
+      .then((res) => {
+        getAssignment()
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+
+    setConfirmationVisibleMap((prevMap) => ({
+      ...prevMap,
+      [id]: false,
+    }));
+  }
+
   const columns = [
     {
       field: "index",
@@ -84,10 +152,24 @@ const CompanyInfo = () => {
       flex: 1,
       filterable: false,
     },
-    { field: "Company", headerName: "Company", flex: 2 },
-    { field: "BussinessNature", headerName: "Business Nature", flex: 2 },
-    { field: "Designation", headerName: "Designation", flex: 2 },
-    { field: "Duration", headerName: "Duration", flex: 2 },
+    { field: "assignmentname", headerName: "Assignment Name", flex: 2 },
+    { field: "subjects", headerName: "Subject", flex: 2 },
+    { field: "marks", headerName: "Marks", flex: 2 },
+    { field: "assignmentdate", headerName: "Date", flex: 2 },
+    {
+      field: 'actions',
+      type: 'actions',
+      headerName: 'Action',
+      flex: 1,
+      renderCell: (params) => {
+        return (
+          <>
+            <EditIcon style={{ cursor: "pointer" }} onClick={() => getupdatedata(params.row.id)} />
+            <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
+          </>
+        )
+      }
+    },
   ];
 
   const rowsWithIds = onlineAdmissions.map((row, index) => ({
@@ -99,28 +181,38 @@ const CompanyInfo = () => {
     e.preventDefault()
 
     const data = {
-      Company: value.Company,
-      BussinessNature: value.BussinessNature,
-      Designation: value.Designation,
-      Duration: value.Duration,
-      student_id :localStorage.getItem(`Admissionid`)
+      assingmentname: value.assingmentname,
+      subject: value.subject,
+      marks: value.marks,
+      date: value.date,
+      uid: uid.id,
+      batchid :batchid
     }
 
-    axios.post(`${BASE_URL}/add_companyinfo`, data)
+    axios.post(`${BASE_URL}/add_assignmentdetails`, data)
       .then((res) => {
         console.log(res)
         setOpen(false)
-        getOnlineAdmissions()
+        getAssignment()
+        setUid([])
+        setValue(
+          {
+            assingmentname: "",
+            subject: "",
+            marks: "",
+            date: ""
+          }
+        )
       })
 
   }
 
   return (
-    <div className="container-fluid page-body-wrapper col-lg-12">
+    <div className="container-fluid page-body-wrapper col-lg-10">
       <InnerHeader />
       <div className="main-pannel">
         <div className="content-wrapper ">
-          <OnlineAdmissionForm admissionid={admissionid} />
+          <BatchEdit batchid={batchid} />
           <div className="row">
             <div className="col-lg-12">
               <div className="card">
@@ -161,8 +253,15 @@ const CompanyInfo = () => {
                         },
                       }}
                     />
+                    {confirmationVisibleMap[cid] && (
+                      <div className='confirm-delete'>
+                        <p>Are you sure you want to delete?</p>
+                        <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
+                        <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
+                      </div>
+                    )}
                   </div>
-   
+
                 </div>
               </div>
             </div>
@@ -196,59 +295,59 @@ const CompanyInfo = () => {
                 <div className="row">
                   <div className="form-group col-lg-4 ">
                     <label for="exampleInputUsername1">
-                      Company<span className="text-danger">*</span>
+                      Assignment Name
                     </label>
                     <input
                       type="text"
                       class="form-control"
                       id="exampleInputUsername1"
-
-                      placeholder="Company"
-                      name="Company"
+                      value={value.assingmentname}
+                      placeholder="Enter.."
+                      name="assingmentname"
                       onChange={handleChange}
                     />
                   </div>
 
                   <div className="form-group col-lg-4">
                     <label for="exampleInputUsername1">
-                      Business Nature<span className="text-danger">*</span>
+                      Subject
                     </label>
                     <input
                       type="text"
                       class="form-control"
                       id="exampleInputUsername1"
-
-                      placeholder=" Business Nature"
-                      name="BussinessNature"
+                      value={value.subject}
+                      placeholder="Enter.."
+                      name="subject"
                       onChange={handleChange}
                     />
                   </div>
 
                   <div className="form-group col-lg-4 ">
                     <label for="exampleInputUsername1">
-                      Designation<span className="text-danger">*</span>
+                      Marks
                     </label>
                     <input
-                      type="text"
+                      type="number"
                       class="form-control"
                       id="exampleInputUsername1"
-
-                      placeholder="Designation"
-                      name="Designation"
+                      value={value.marks}
+                      placeholder="Enter.."
+                      name="marks"
                       onChange={handleChange}
                     />
                   </div>
                   <div className="form-group col-lg-4 ">
                     <label for="exampleInputUsername1">
-                      Duration<span className="text-danger">*</span>
+                      Date
                     </label>
                     <input
-                      type="text"
+                      type="date"
                       class="form-control"
                       id="exampleInputUsername1"
-
-                      placeholder="Duration"
-                      name="Duration"
+                      placeholder="Enter.."
+                      name="date"
+                      value={value.date}
                       onChange={handleChange}
                     />
                   </div>
@@ -274,4 +373,4 @@ const CompanyInfo = () => {
   );
 };
 
-export default CompanyInfo;
+export default Assignmentdetails;

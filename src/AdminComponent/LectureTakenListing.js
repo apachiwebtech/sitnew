@@ -151,10 +151,11 @@ const columns = [
         filterable: false,
 
     },
-    { field: 'lecture', headerName: 'Lecture', flex: 2 },
-    { field: 'date', headerName: 'Date', flex: 2 },
-    { field: 'batch', headerName: 'Batch Code', flex: 2 },
-    { field: 'topicdescuss', headerName: 'Topic', flex: 2 },
+    { field: 'Lecture_Name', headerName: 'Lecture', flex: 2 },
+    { field: 'Take_Dt', headerName: 'Date', flex: 2 },
+    { field: 'Batch_Id', headerName: 'Batch Code', flex: 2 },
+    { field: 'Topic', headerName: 'Topic', flex: 2 },
+    { field: 'Faculty_id', headerName: 'Faculty Name', flex: 2 },
     {
         field: 'actions',
         type: 'actions',
@@ -205,7 +206,7 @@ return (
                                         disableColumnSelector
                                         disableDensitySelector
                                         rowHeight={37}
-                                        getRowId={(row) => row.id}
+                                        getRowId={(row) => row.Take_Id}
                                         initialState={{
                                             pagination: {
                                                 paginationModel: { pageSize: 10, page: 0 },
