@@ -1,21 +1,11 @@
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
-import decryptedUserId from '../Utils/UserID';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { LibraryBooks } from '@mui/icons-material';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
 //import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
 
 const GenerateResult = () => {
 
@@ -53,223 +43,134 @@ const GenerateResult = () => {
     //   );
 
     const [value, setValue] = useState({
-        course: "" || uid.course,
-        batch: "" || uid.batch,
-        returndate: "" || uid.returndate,
-        printdate: "" || uid.printdate,
-        prepared: "" || uid.prepared,
-        checked: uid.checked,
-        approved: uid.approved,
-
-
-
+        coursename: '',
+        batchcode: '',
+        vivamocname: '',
+        maxmarks: '',
+        date: '',
 
     })
 
-    useEffect(() => {
-        setValue({
-            course: uid.course,
-            batch: uid.batch,
-            returndate: uid.returndate,
-            printdate: uid.printdate,
-            prepared: uid.prepared,
-            checked: uid.checked,
-            approved: uid.approved,
-
-        })
-    }, [uid])
 
 
-    // const validateForm = () => {
-    //     let isValid = true
-    //     const newErrors = {}
+    const validateForm = () => {
+        let isValid = true
+        const newErrors = {}
 
 
-    //    if (!value.college) {
-    //     isValid = false;
-    //     newErrors.name = "Name is require"
-    //    }
-    //     if (!value.email) {
-    //         isValid = false;
-    //         newErrors.email = "Email is require"
-    //     }
-    //     setError(newErrors)
-    //     return isValid
-    // }
+       if (!value.coursename){
+        isValid = false;
+        newErrors.coursename = "Course Name is Required"
+       }
+
+       if(!value.batchcode){
+        isValid = false;
+        newErrors.batchcode = "Batch Code is Required"
+       }
+
+       if(!value.vivamocname){
+        isValid = false;
+        newErrors.vivamocname = "Viva MOC is Required"
+       }
+
+       if(!value.date){
+        isValid = false;
+        newErrors.date = "Date is Required"
+       }
 
 
-    async function getEmployeeData() {
-
-        axios.post(`${BASE_URL}/vendor_details`)
-            .then((res) => {
-                console.log(res.data)
-                setBrand(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
+        setError(newErrors)
+        return isValid
     }
 
 
+    async function getStudentDetail() {
+        const response = await fetch(`${BASE_URL}/studentDetail`, {
+            method: 'POST',
+            body: JSON.stringify({
+                id: vivamoctakenid,
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
 
-    async function getEmployeeData() {
-        const data = {
-            tablename: "awt_generateresult"
+        const data = await response.json();
+
+
+        setValue(prevState => ({
+            ...prevState,
+            coursename: data[0].coursename,
+            batchcode: data[0].batchcode,
+            vivamocname: data[0].vivamocname,
+            maxmarks: data[0].maxmarks,
+            date: data[0].date,
+        }))
+    }
+    useEffect(() => {
+        if (':vivamoctakenid' !== ":vivamoctakenid") {
+            getStudentDetail()
         }
-        axios.post(`${BASE_URL}/get_data`, data)
-            .then((res) => {
-                console.log(res.data)
-                setVendorData(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
 
-    useEffect(() => {
-        getEmployeeData()
         value.title = ""
         setError({})
         setUid([])
     }, [])
 
-    const handleClick = (id) => {
-        setCid(id)
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: true,
-        }));
-    };
 
-    const handleCancel = (id) => {
-        // Hide the confirmation dialog without performing the delete action
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
-    };
 
-    const handleUpdate = (id) => {
-        const data = {
-            u_id: id,
-            tablename: "awt_generateresult"
-        }
-        axios.post(`${BASE_URL}/update_data`, data)
-            .then((res) => {
-                setUid(res.data[0])
 
-                console.log(res.data, "update")
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
 
-    const handleDelete = (id) => {
-        const data = {
-            cat_id: id,
-            tablename: "awt_generateresult"
-        }
 
-        axios.post(`${BASE_URL}/delete_data`, data)
-            .then((res) => {
-                getEmployeeData()
 
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
-    }
-
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
+        let response
+        if (validateForm()) {
+            if (vivamoctakenid == ":vivamoctakenid") {
+                response = await fetch(`${BASE_URL}/add_vivamoctaken`, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        coursename: value.coursename,
+                        batchcode: value.batchcode,
+                        vivamocname: value.vivamocname,
+                        maxmarks: value.maxmarks,
+                        date: value.date,
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+            } else {
 
-        // if(validateForm()){
-        const data = {
+                response = await fetch(`${BASE_URL}/updatevivamoctaken'`, {
+                    method: 'POST',
+                    body: JSON.stringify({
 
-            course: value.course,
-            batch: value.batch,
-            returndate: value.returndate,
-            printdate: value.printdate,
-            prepared: value.prepared,
-            checked: value.checked,
-            approved: value.approved,
-            uid: uid.id
+                        coursename: value.coursename,
+                        batchcode: value.batchcode,
+                        vivamocname: value.vivamocname,
+                        maxmarks: value.maxmarks,
+                        date: value.date,
+
+
+
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+            }
+
+
+
         }
-
-
-        axios.post(`${BASE_URL}/add_generateresult`, data)
-            .then((res) => {
-                console.log(res)
-                getEmployeeData()
-
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-        // }
-
-
-
-
-
     }
 
 
     const onhandleChange = (e) => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
-
-
-
-
-
-
-    const columns = [
-        {
-            field: 'index',
-            headerName: 'Id',
-            type: 'number',
-            align: 'center',
-            headerAlign: 'center',
-            flex: 1,
-            filterable: false,
-
-        },
-
-
-        { field: 'course', headerName: 'Course', flex: 2 },
-        { field: 'batch', headerName: 'Batch', flex: 2 },
-        { field: 'returndate', headerName: 'Return Date', flex: 2 },
-        { field: 'printdate', headerName: 'Print Date', flex: 2 },
-        { field: 'prepared', headerName: 'Prepared', flex: 2 },
-        { field: 'checked', headerName: 'Checked', flex: 2 },
-        { field: 'approved', headerName: 'Approved', flex: 2 },
-
-
-        {
-            field: 'actions',
-            type: 'actions',
-            headerName: 'Action',
-            flex: 1,
-            renderCell: (params) => {
-                return (
-                    <>
-                        <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
-                    </>
-                )
-            }
-        },
-    ];
-
-
-    const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
 
@@ -392,6 +293,19 @@ const GenerateResult = () => {
 
                                                 </select>
                                             </div>
+
+                                            <div class="form-group col-lg-3">
+                                                <label for="exampleInputUsername1">Period (Start Date)</label>
+                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.startdate}
+                                                    name="startdate" onChange={onhandleChange} />
+                                            </div>
+
+                                            <div class="form-group col-lg-3">
+                                                <lable for="exampleInputUsername">End Date</lable>
+                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.enddate}
+                                                    name="enddate" onChange={onhandleChange} />
+                                            </div>
+
 
 
 
