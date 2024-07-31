@@ -100,8 +100,6 @@ import EmployeeTrainingPlan from './AdminComponent/EmployeeTrainingPlan.js';
 import AddFeedbackNewQuestion from './AdminComponent/AddFeedbackNewQuestion.js';
 import RollNumberAllot from './AdminComponent/RollNumberAllot.js';
 import PurchaseMaterial from './AdminComponent/PurchaseMaterial.js';
-
-
 import AddRole from './AdminComponent/AddRole.js'
 import RoleAssignment from './AdminComponent/RoleAssignment.js';
 import AdminUser from './AdminComponent/AdminUser.js'
@@ -124,13 +122,9 @@ import LecturePlan from './AdminComponent/LecturePlan.jsx';
 import ResultStructure from './AdminComponent/ResultStructure.jsx';
 import SiteVise from './AdminComponent/SiteVise.jsx';
 import Discipline from './AdminComponent/Discipline.jsx';
-import Qualification from './AdminComponent/Qualification.jsx';
-import Bank from './AdminComponent/Bank.jsx';
-import Feesnotes from './AdminComponent/Feesnotes.jsx';
-import Hoilday from './AdminComponent/Hoilday.jsx';
-import Location from './AdminComponent/Location.jsx';
 import UnitTestTakenListing from './AdminComponent/UnitTestTakenListing.js';
 import VivaMOCTakenListing from './AdminComponent/VivaMOCTakenListing.js';
+import GenerateResultListing from './AdminComponent/GenerateResultListing.js';
 
 
 
@@ -194,26 +188,6 @@ const Router = createBrowserRouter([
       {
         path: '/discipline',
         element: <Discipline />
-      },
-      {
-        path: '/bank',
-        element: <Bank />
-      },
-      {
-        path: '/feesnotes',
-        element: <Feesnotes />
-      },
-      {
-        path: '/qualification',
-        element: <Qualification />
-      },
-      {
-        path: '/hoilday',
-        element: <Hoilday />
-      },
-      {
-        path: '/location',
-        element: <Location />
       },
       {
         path: '/courselisting',
@@ -452,12 +426,17 @@ const Router = createBrowserRouter([
         path: '/vivamoctaken/:vivamoctakenid',
         element: <VivaMOCTaken/>
       },
+
       {
         path: '/finalexamtaken',
         element: <FinalExamTaken/>
       },
       {
         path: '/generateresult',
+        element: <GenerateResultListing/>
+      },
+      {
+        path: '/generateresult/:generateresultid',
         element: <GenerateResult/>
       },
       {

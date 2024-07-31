@@ -6,6 +6,7 @@ const path = require('path');
 const multer = require('multer');
 var session = require('express-session')
 var cookieParser = require('cookie-parser');
+const { data } = require('jquery');
 
 // Use CORS middleware before defining routes
 app.use(
@@ -329,6 +330,8 @@ app.get('/nodeapp/vendor_details', (req, res) => {
   })
 
 })
+
+
 
 
 app.post('/nodeapp/add_vendor', (req, res) => {
@@ -733,6 +736,18 @@ app.get('/nodeapp/getDiscipline', (req, res, next) => {
       return res.json(error);
     } else {
       return res.json(data);
+    }
+  })
+})
+
+app.get('/nodeapp/getGenerateResult', (req, res, next) => {
+  const sql = 'SELECT * FROM awt_generateresult';
+
+  con.query(sql, (error, data) => {
+    if (error) {
+      return res.json(error);
+    }else{
+      return res.json(data);  
     }
   })
 })
