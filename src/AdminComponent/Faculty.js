@@ -120,6 +120,8 @@ const Faculty = () => {
 
 
     
+    //this is command the return
+    //this is command
     async function getFacultyData() {
         const data = {
             tablename : "awt_faculty"
