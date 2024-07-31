@@ -16,6 +16,13 @@ const FinalExamTaken = () => {
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
+    const [course, SetCourse] = React.useState([]);
+    const [AnnulBatch, setAnnulBatch] = React.useState([]);
+    const [AnnulBatchid, setAnnulBatchid] = React.useState("");
+    const [TestName, setTestName] = useState([])
+    const [TestNameid, setTestNameid] = useState("")
+    const [courseid, setCourseid] = useState("")
+
 
     const handleChange1 = (event) => {
         setChecked([event.target.checked, event.target.checked]);
@@ -34,10 +41,6 @@ const FinalExamTaken = () => {
         batchcode: "" || uid.batchcode,
         examtestname: "" || uid.examtestname,
         data: "" || uid.date,
-
-
-
-
     })
 
     useEffect(() => {
@@ -61,17 +64,17 @@ const FinalExamTaken = () => {
             newErrors.coursename = "Name is require"
         }
 
-        if(!value.batchcode){
+        if (!value.batchcode) {
             isValid = false;
             newErrors.batchcode = "Batch Code is Required"
         }
 
-        if(!value.examtestname){
+        if (!value.examtestname) {
             isValid = false;
             newErrors.examtestname = "Exam is Required"
         }
 
-        if(!value.date){
+        if (!value.date) {
             isValid = false;
             newErrors.date = "Date is Required"
         }
@@ -110,6 +113,9 @@ const FinalExamTaken = () => {
     }
 
     useEffect(() => {
+        getCourseData()
+        getUnitTest()
+        getbatch()
         getEmployeeData()
         value.title = ""
         setError({})
@@ -140,6 +146,9 @@ const FinalExamTaken = () => {
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
                 setUid(res.data[0])
+                setCourseid(res.data[0].coursename)
+                setAnnulBatchid(res.data[0].batchcode)
+                setTestNameid(res.data[0].examtestname)
 
                 console.log(res.data, "update")
             })
@@ -174,7 +183,6 @@ const FinalExamTaken = () => {
 
         if (validateForm()) {
             const data = {
-
                 coursename: value.coursename,
                 batchcode: value.batchcode,
                 examtestname: value.examtestname,
@@ -187,6 +195,12 @@ const FinalExamTaken = () => {
                 .then((res) => {
                     console.log(res)
                     getEmployeeData()
+                    setUid([])
+                    setValue({
+                        setTestNameid : '',
+                        setAnnulBatchid : '',
+                        setCourseid : '',
+                    })
 
                 })
                 .catch((err) => {
@@ -201,12 +215,97 @@ const FinalExamTaken = () => {
     }
 
 
-    const onhandleChange = (e) => {
-        setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+
+
+
+
+    async function getCourseData() {
+
+        axios.get(`${BASE_URL}/getCourse`)
+            .then((res) => {
+                console.log(res.data)
+                SetCourse(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
     }
 
 
+    const getbatch = async (id) => {
 
+        if (id != undefined) {
+            setCourseid(id)
+
+            const data = {
+                courseid: id
+            }
+
+            try {
+                const res = await axios.post(`${BASE_URL}/getcoursewisebatch`, data);
+                setAnnulBatch(res.data);
+
+            } catch (err) {
+                console.error("Error fetching data:", err);
+            }
+        } else {
+            const data = {
+                tablename: "Batch_Mst"
+            }
+            axios.post(`${BASE_URL}/get_batch`, data)
+                .then((res) => {
+                    console.log(res.data)
+                    setAnnulBatch(res.data)
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        }
+
+    };
+    const getUnitTest = async (id) => {
+
+        if (id != undefined) {
+            setAnnulBatchid(id)
+
+            const data = {
+                AnnulBatch: id
+            }
+
+            try {
+                const res = await axios.post(`${BASE_URL}/getbatchwiseunittest`, data);
+                setTestName(res.data);
+
+            } catch (err) {
+                console.error("Error fetching data:", err);
+            }
+        } else {
+            const data = {
+                tablename: "awt_unittesttaken"
+            }
+            axios.post(`${BASE_URL}/get_data`, data)
+                .then((res) => {
+                    console.log(res.data)
+                    setTestName(res.data)
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+
+        }
+
+    };
+
+
+    const onhandleChange = (e) => {
+        setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+        if ([e.target.name] == 'coursename') {
+            getbatch([e.target.value]);
+        }
+        if ([e.target.name] == 'batchcode') {
+            getUnitTest([e.target.value]);
+        }
+    }
 
 
 
@@ -262,55 +361,46 @@ const FinalExamTaken = () => {
 
                                             <div class="form-group col-lg-6">
                                                 <label for="exampleFormControlSelect1">Course Name<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.coursename} onChange={onhandleChange} name='coursename'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={courseid} onChange={onhandleChange} name='coursename'>
                                                     <option>-Select-</option>
-                                                    <option>Administration</option>
-                                                    <option>Business Development</option>
-                                                    <option>Training &amp; Development</option>
-                                                    <option>Account</option>
-                                                    <option>Placement</option>
-                                                    <option>Purchase</option>
-                                                    <option>Leadership / DD</option>
-                                                    <option>Quality Assurance</option>
-                                                    <option>Human Resources</option>
-                                                    <option>Corporate Training</option>
-                                                    <option>Test User</option>
+
+                                                    {course.map((item) => {
+                                                        return (
+
+                                                            <option value={item.Course_Id}>{item.Course_Name}</option>
+                                                        )
+                                                    })}
+
                                                 </select>
                                                 {<span className="text-danger"> {error.coursename} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-6">
                                                 <label for="exampleFormControlSelect1">Batch Code<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batchcode} onChange={onhandleChange} name='batchcode'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={AnnulBatchid} onChange={onhandleChange} name='batchcode'>
                                                     <option>-Select-</option>
-                                                    <option>01201</option>
-                                                    <option>01202</option>
-                                                    <option>01203</option>
-                                                    <option>01204</option>
-                                                    <option>01205</option>
-                                                    <option>01206</option>
-                                                    <option>01207</option>
-                                                    <option>01208</option>
-                                                    <option>01209</option>
-                                                    <option>01210</option>
+                                                    {AnnulBatch.map((item) => {
+                                                        return (
+
+                                                            <option value={item.Batch_Id}>{item.Batch_code}</option>
+                                                        )
+                                                    })}
                                                 </select>
                                                 {<span className="text-danger"> {error.batchcode} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-6">
                                                 <label for="exampleFormControlSelect1">Exam Test Name<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.examtestname} onChange={onhandleChange} name='examtestname'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={TestNameid} onChange={onhandleChange} name='examtestname'>
                                                     <option>-Select-</option>
-                                                    <option>H.V.A.C</option>
-                                                    <option>LayOut</option>
-                                                    <option>Final Exam - 0201 - 1</option>
-                                                    <option>Final Exam - 0201 - 2</option>
-                                                    <option>Final Exam - 0201 - 3</option>
-                                                    <option>Final Exam - 0201 - 4</option>
-                                                    <option>Final Exam - 0201 - 5</option>
-                                                    <option>Auto Cad</option>
-                                                    <option>Final</option>
-                                                    <option>Theory</option>
+
+                                                    {TestName.map((item) => {
+                                                        return (
+
+                                                            <option value={item.id}>{item.utname}</option>
+                                                        )
+                                                    })}
+
                                                 </select>
                                                 {<span className="text-danger"> {error.examtestname} </span>}
                                             </div>
