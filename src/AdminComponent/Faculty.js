@@ -123,6 +123,8 @@ const Faculty = () => {
     //this is command the return
     //this is command
     //this is command the End 
+    //this is command the Jeetu
+
     
     async function getFacultyData() {
         const data = {
