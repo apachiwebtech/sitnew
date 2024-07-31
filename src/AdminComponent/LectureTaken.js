@@ -123,6 +123,7 @@ const LectureTaken = () => {
 
     //this is new
     // dndhdjh
+    // ddbhsdbhj
     async function getfaculty() {
 
         axios.get(`${BASE_URL}/getfaculty`)
