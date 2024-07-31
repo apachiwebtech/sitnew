@@ -120,6 +120,8 @@ const LectureTaken = () => {
                 console.log(err)
             })
     }
+
+    //this is new
     async function getfaculty() {
 
         axios.get(`${BASE_URL}/getfaculty`)
