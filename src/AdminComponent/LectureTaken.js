@@ -122,6 +122,7 @@ const LectureTaken = () => {
     }
 
     //this is new
+    // dndhdjh
     async function getfaculty() {
 
         axios.get(`${BASE_URL}/getfaculty`)
