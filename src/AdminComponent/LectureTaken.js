@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
+import { idID } from '@mui/material/locale';
 
 
 const LectureTaken = () => {
@@ -15,14 +16,19 @@ const LectureTaken = () => {
     const [lecture, SetLecture] = useState([])
     const [faculty, setFacilty] = useState([])
     const [batch, setAnnulBatch] = useState([])
-    const [value, setValue] = useState({
+    const [assign, Setassign] = useState([])
+    const [courseid, SetCoursid] = useState([])
+    const [batchid, setBatchid] = useState([])
+
+    const [value, setValue] = useState(
+        {
         course: '',
         batch: '',
         lecture: '',
         classroom: '',
         lecturedate: '',
-        time: '',
-        to: '',
+        lecturefrom: '',
+        lectureto: '',
         faculty: '',
         facultytime: '',
         timeto: '',
@@ -38,23 +44,26 @@ const LectureTaken = () => {
         nextplanning: '',
     })
 
+ 
+
+
 
     const validateForm = () => {
         let isValid = true
         const newErrors = {}
 
 
-        if (!value.course) {
+        if (!courseid) {
             isValid = false;
             newErrors.course = "Name is Require"
         }
 
-        if (!value.batch) {
+        if (!batchid) {
             isValid = false;
             newErrors.batch = "Batch is Require"
         }
 
-        if (!value.lecturedate) {
+        if (!value.lecturedate){
             isValid = false;
             newErrors.lecturedate = "Lecture Date is Require"
         }
@@ -64,7 +73,7 @@ const LectureTaken = () => {
             newErrors.faculty = "Faculty is Require"
         }
 
-        if (!value.assignmentdate) {
+        if (!value.assignmentadate) {
             isValid = false;
             newErrors.assignmentdate = "AssignmentDate is Require"
         }
@@ -74,7 +83,7 @@ const LectureTaken = () => {
             newErrors.material = "Matrerial is Require"
         }
 
-        if (!value.assignmentgiven) {
+        if (!value.assignmentgive){
             isValid = false;
             newErrors.assignmentgiven = "AssignmentGiven is Require"
         }
@@ -140,7 +149,7 @@ const LectureTaken = () => {
 
 
     const getbatch = async (id) => {
-
+        SetCoursid(id)
         const data = {
             courseid: id
         }
@@ -152,9 +161,12 @@ const LectureTaken = () => {
         } catch (err) {
             console.error("Error fetching data:", err);
         }
+
+
+
     };
     const getlecture = async (id) => {
-
+        setBatchid(id)
         const data = {
             batch_id: id
         }
@@ -166,8 +178,17 @@ const LectureTaken = () => {
         } catch (err) {
             console.error("Error fetching data:", err);
         }
-    };
 
+        try {
+            const res = await axios.post(`${BASE_URL}/getbatchwiseassignment`, data);
+            Setassign(res.data);
+
+        } catch (err) {
+            console.error("Error fetching data:", err);
+        }
+
+
+    };
 
 
 
@@ -187,29 +208,30 @@ const LectureTaken = () => {
         const data = await response.json();
 
 
-
+       SetCoursid(data[0].Course_Id)
+       setBatchid(data[0].Batch_Id)
         setValue(prevState => ({
             ...prevState,
             course: data[0].Course_Id,
             batch: data[0].Batch_Id,
             lecture: data[0].Lecture_Id,
             classroom: data[0].ClassRoom,
-            lecturedate: data[0].lecturedate,
-            time: data[0].time,
-            to: data[0].to,
-            faculty: data[0].faculty,
-            facultytime: data[0].facultytime,
-            timeto: data[0].timeto,
-            assignmentadate: data[0].assignmentadate,
-            enddate: data[0].enddate,
-            materialissued: data[0].materialissued,
-            material: data[0].material,
-            assignmentgive: data[0].assignmentgive,
-            assignment: data[0].assignment,
-            testgiven: data[0].testgiven,
-            test: data[0].test,
-            topicdescuss: data[0].topicdiscuss,
-            nextplanning: data[0].nextplanning,
+            lecturedate: data[0].Take_Dt,
+            lecturefrom: data[0].Lecture_Start,
+            lectureto: data[0].Lecture_End,
+            faculty: data[0].Faculty_Id,
+            facultytime: data[0].Faculty_Start,
+            timeto: data[0].Faculty_End,
+            assignmentadate: data[0].Assign_Start,
+            enddate: data[0].Assign_End,
+            materialissued: data[0].Material,
+            // material: data[0].material,
+            assignmentgive: data[0].Assign_Given,
+            assignment: data[0].Assignment_Id,
+            testgiven: data[0].Test_Given,
+            test: data[0].Test_Id,
+            topicdescuss: data[0].Topic,
+            nextplanning: data[0].Next_Planning,
         }))
     }
     useEffect(() => {
@@ -217,8 +239,6 @@ const LectureTaken = () => {
             getStudentDetail()
         }
 
-        value.title = ""
-        setError({})
         setUid([])
     }, [])
 
@@ -234,13 +254,13 @@ const LectureTaken = () => {
         if (validateForm()) {
 
             const data = {
-                course: value.course,
-                batch: value.batch,
+                course: courseid,
+                batch: batchid,
                 lecture: value.lecture,
                 classroom: value.classroom,
                 lecturedate: value.lecturedate,
-                time: value.time,
-                to: value.to,
+                lecturefrom: value.lecturefrom,
+                lectureto: value.lectureto,
                 faculty: value.faculty,
                 facultytime: value.facultytime,
                 timeto: value.timeto,
@@ -261,6 +281,7 @@ const LectureTaken = () => {
             axios.post(`${BASE_URL}/add_lecturetaken`, data)
                 .then((res) => {
                     console.log(res.data)
+                    alert("Data submitted successfully")
                 })
 
 
@@ -300,9 +321,10 @@ const LectureTaken = () => {
                                                     <div className='row'>
                                                         <div className="form-group col-lg-6 ">
                                                             <label for="exampleFormControlSelect1">Course<span className="text-danger">*</span></label>
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course} name='course' onChange={(e) => getbatch(e.target.value)} >
+                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1"  name='course' value={courseid} onChange={(e) => getbatch(e.target.value)} >
 
-                                                                <option value="Select Course">Select Course</option>
+                                                                <option >Select Course</option>
+
                                                                 {course.map((item) => {
                                                                     return (
 
@@ -316,7 +338,7 @@ const LectureTaken = () => {
 
                                                         <div className="form-group col-lg-2 ">
                                                             <label for="exampleFormControlSelect1">Batch<span className="text-danger">*</span></label>
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batch} name='batch' onChange={(e) =>getlecture(e.target.value)} >
+                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1"  name='batch' value={batchid} onChange={(e) => getlecture(e.target.value)} >
 
                                                                 <option>Select Batch</option>
                                                                 {batch.map((item) => {
@@ -331,15 +353,15 @@ const LectureTaken = () => {
 
                                                         <div className="form-group col-lg-2 ">
                                                             <label for="exampleexampleFormControlSelect1InputUsername1">Lecture</label>
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.lecture} name='lecture' onChange={onhandleChange} >
+                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1"  name='lecture' onChange={onhandleChange} >
 
                                                                 <option>Select Lecture</option>
-                                                                 {lecture.map((item)=>{
-                                                                     return(
+                                                                {lecture.map((item) => {
+                                                                    return (
                                                                         <option value={item.id}>{item.subject_topic}</option>
 
                                                                     )
-                                                                 })}
+                                                                })}
 
 
                                                             </select>
@@ -348,10 +370,10 @@ const LectureTaken = () => {
                                                         <div className="form-group col-lg-2 ">
                                                             <label for="exampleFormControlSelect1">Class Room<span className="text-danger">*</span></label>
                                                             <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.classroom} name='classroom' onChange={onhandleChange} >
-                                                                <option>1</option>
-                                                                <option>2</option>
-                                                                <option>3</option>
-                                                                <option>4</option>
+                                                                <option value="1">1</option>
+                                                                <option value="2">2</option>
+                                                                <option value="3">3</option>
+                                                                <option value="4">4</option>
                                                             </select>
                                                             {<span className="text-danger"> {error.classroom} </span>}
                                                         </div>
@@ -363,27 +385,15 @@ const LectureTaken = () => {
 
                                                         <div class="form-group col-lg-2">
                                                             <label for="exampleFormControlSelect1">From - Time</label>
-                                                            <select class="form-control" id="exampleFormControlSelect1" value={value.time}
-                                                                name='time' onChange={onhandleChange}>
-                                                                <option>--Select Time--</option>
-                                                                <option>5:00 AM</option>
-                                                                <option>5:15 AM</option>
-                                                                <option>5:30 AM</option>
-                                                                <option>5:45 AM</option>
-                                                            </select>
+                                                            <input type="time" class="form-control" id="exampleInputUsername1" value={value.lecturefrom}
+                                                                name='lecturefrom' onChange={onhandleChange} />
 
                                                         </div>
 
                                                         <div class="form-group col-lg-2">
                                                             <label for="exampleFormControlSelect1">To</label>
-                                                            <select class="form-control" id="exampleFormControlSelect1" value={value.to}
-                                                                name='to' onChange={onhandleChange}>
-                                                                <option>--Select Time--</option>
-                                                                <option>5:00 AM</option>
-                                                                <option>5:15 AM</option>
-                                                                <option>5:30 AM</option>
-                                                                <option>5:45 AM</option>
-                                                            </select>
+                                                            <input type="time" class="form-control" id="exampleInputUsername1" value={value.lectureto}
+                                                                name='lectureto' onChange={onhandleChange} />
 
                                                         </div>
 
@@ -392,8 +402,8 @@ const LectureTaken = () => {
                                                             <select class="form-control" id="exampleFormControlSelect1" value={value.faculty}
                                                                 name='faculty' onChange={onhandleChange}>
                                                                 <option>--Select Faculty--</option>
-                                                                {faculty.map((item)=>{
-                                                                    return(
+                                                                {faculty.map((item) => {
+                                                                    return (
                                                                         <option value={item.Faculty_Id}>{item.Faculty_Name}</option>
                                                                     )
                                                                 })}
@@ -403,20 +413,20 @@ const LectureTaken = () => {
 
                                                         <div class="form-group col-lg-2">
                                                             <lable for="exampleInputUsername1">Faculty - Time</lable>
-                                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.facultytime}
+                                                            <input type="time" class="form-control" id="exampleInputUsername1" value={value.facultytime}
                                                                 name='facultytime' onChange={onhandleChange} />
                                                         </div>
 
                                                         <div class="form-group col-lg-2">
                                                             <lable for="exampleInputUsername1">Time - To</lable>
-                                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.timeto}
+                                                            <input type="time" class="form-control" id="exampleInputUsername1" value={value.timeto}
                                                                 name='timeto' onChange={onhandleChange} />
                                                         </div>
 
 
                                                         <div className="form-group col-lg-2 ">
                                                             <label for="exampleInputUsername1">Assignment/Test Start Date<span className='text-danger'>*</span></label>
-                                                            <input type="date" class="form-control" id="exampleInputUsername1" value={value.assignmentdate} placeholder="Assignment*" name='assignmentadate' onChange={onhandleChange} />
+                                                            <input type="date" class="form-control" id="exampleInputUsername1" value={value.assignmentadate} placeholder="Assignment*" name='assignmentadate' onChange={onhandleChange} />
                                                             {<span className='text-danger'>{error.assignmentdate}</span>}
                                                         </div>
 
@@ -429,8 +439,8 @@ const LectureTaken = () => {
                                                         <div className="form-group col-lg-2 ">
                                                             <label for="exampleFormControlSelect1">Material Issued</label>
                                                             <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.materialissued} name='materialissued' onChange={onhandleChange} >
-                                                                <option>No</option>
-                                                                <option>Yes</option>
+                                                                <option value="No">No</option>
+                                                                <option value="Yes">Yes</option>
                                                             </select>
                                                         </div>
                                                         <div className="form-group col-lg-2 ">
@@ -447,9 +457,9 @@ const LectureTaken = () => {
 
                                                         <div className="form-group col-lg-2 ">
                                                             <label for="exampleFormControlSelect1">Assignment Given<span className="text-danger">*</span></label>
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.assignmentgiven} name='assignmentgiven' onChange={onhandleChange} >
-                                                                <option>No</option>
-                                                                <option>Yes</option>
+                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.assignmentgive} name='assignmentgive' onChange={onhandleChange} >
+                                                                <option value="No">No</option>
+                                                                <option value="Yes">Yes</option>
                                                             </select>
                                                             {<span className="text-danger"> {error.assignmentgiven} </span>}
                                                         </div>
@@ -458,7 +468,13 @@ const LectureTaken = () => {
                                                         <div className="form-group col-lg-2 ">
                                                             <label for="exampleFormControlSelect1">Assignment<span className='text-danger'>*</span></label>
                                                             <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.assignment} name='assignment' onChange={onhandleChange} >
-                                                                <option></option>
+                                                                <option>select assignment</option>
+                                                                {assign.map((item) => {
+                                                                    return (
+                                                                        <option value={item.id}>{item.assignmentname}</option>
+                                                                    )
+                                                                })}
+
                                                             </select>
                                                             {<span className='text-danger'> {error.assignment} </span>}
                                                         </div>
@@ -466,16 +482,16 @@ const LectureTaken = () => {
                                                         <div className="form-group col-lg-2 ">
                                                             <label for="exampleFormControlSelect1">Test Given<span className='text-danger'>*</span></label>
                                                             <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.testgiven} name='testgiven' onChange={onhandleChange} >
-                                                                <option>No</option>
-                                                                <option>Yes</option>
+                                                                <option value="No">No</option>
+                                                                <option value="Yes">Yes</option>
                                                             </select>
                                                             {<span className='text-danger'> {error.testgiven} </span>}
                                                         </div>
                                                         <div className="form-group col-lg-2 ">
                                                             <label for="exampleFormControlSelect1">Test<span className='text-danger'>*</span></label>
                                                             <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.test} name='test' onChange={onhandleChange} >
-                                                                <option>No</option>
-                                                                <option>Yes</option>
+                                                                <option value="No">No</option>
+                                                                <option value="Yes">Yes</option>
                                                             </select>
                                                             {<span className='text-danger'> {error.test} </span>}
                                                         </div>
