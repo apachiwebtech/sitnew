@@ -1,45 +1,33 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
-import decryptedUserId from '../Utils/UserID';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { Button, Card, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import IconButton from '@mui/material/IconButton';
-import AddBoxIcon from '@mui/icons-material/AddBox';
+import axios from 'axios';
 
 
 const AssignmentsTaken = () => {
 
     const [brand, setBrand] = useState([])
-    const [vendordata, setVendorData] = useState([])
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
-    const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
+    const [course, SetCourse] = useState([])
+    const [courseid, SetCoursid] = useState('')
+    const [assignid, SetAssignid] = useState('')
+    const [assign, Setassign] = useState([])
+    const [batch, setAnnulBatch] = useState([])
+    const [batchid, setBatchid] = useState('')
 
     const { assignmentstakenid } = useParams();
-    const [inquiryData, setInquiryData] = useState([]);
-    const [Discipline, setDescipline] = useState([]);
-    const [Course, setCourse] = useState([]);
-    const [Education, setEducation] = useState([]);
-    const [batch, setBatch] = useState([]);
-    const [batchCategoty, setbatchCategory] = useState([]);
+
     const [value, setValue] = useState({
 
-        coursename: ' ',
-        batchcode: ' ',
-        assignmentname: ' ',
-        maxmarks: ' ',
-        assignmentdate: ' ',
-        returndate: ' ',
+        coursename: '',
+        batchcode: '',
+        assignmentname: '',
+        maxmarks: '',
+        assignmentdate: '',
+        returndate: '',
     })
 
 
@@ -48,17 +36,17 @@ const AssignmentsTaken = () => {
         const newErrors = {}
 
 
-        if (!value.coursename) {
+        if (!courseid) {
             isValid = false;
             newErrors.coursename = "CourseName is Required"
         }
 
-        if (!value.batchcode) {
+        if (!batchid) {
             isValid = false;
             newErrors.batchcode = "Batch Code is Required"
         }
 
-        if (!value.assignmentname) {
+        if (!assignid) {
             isValid = false;
             newErrors.assignmentname = "Assignment is Required"
         }
@@ -79,12 +67,65 @@ const AssignmentsTaken = () => {
         return isValid
     }
 
+    async function getCourseData() {
 
-    async function getStudentDetail() {
-        const response = await fetch(`${BASE_URL}/studentDetail`, {
+        axios.get(`${BASE_URL}/getCourse`)
+            .then((res) => {
+                console.log(res.data)
+                SetCourse(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+
+
+
+    const getbatch = async (id) => {
+
+        SetCoursid(id)
+
+        const data = {
+            courseid: id
+        }
+
+        try {
+            const res = await axios.post(`${BASE_URL}/getcoursewisebatch`, data);
+            setAnnulBatch(res.data);
+
+        } catch (err) {
+            console.error("Error fetching data:", err);
+        }
+
+    };
+
+    const getassign = async (id) => {
+
+        setBatchid(id)
+
+        const data = {
+            batch_id: id,
+            AnnulBatch: id
+        }
+
+        try {
+            const res = await axios.post(`${BASE_URL}/getbatchwiseassignment`, data);
+            Setassign(res.data);
+
+        } catch (err) {
+            console.error("Error fetching data:", err);
+        }
+
+    }
+
+
+    async function getUpdate() {
+        const response = await fetch(`${BASE_URL}/new_update_data`, {
             method: 'POST',
             body: JSON.stringify({
-                id: assignmentstakenid,
+                u_id: assignmentstakenid,
+                uidname: "Given_Id",
+                tablename: "Assignment_taken"
             }),
             headers: {
                 'Content-Type': 'application/json',
@@ -93,22 +134,27 @@ const AssignmentsTaken = () => {
 
         const data = await response.json();
 
+        SetCoursid(data[0].Course_Id)
+        setBatchid(data[0].Batch_Id)
+        SetAssignid(data[0].Assignment_Id)
+
+        setUid(data[0])
 
         setValue(prevState => ({
             ...prevState,
-            coursename: data[0].coursename,
-            batchcode: data[0].batchcode,
-            assignmentname: data[0].assignmentname,
-            maxmarks: data[0].assignmentadate,
-            returndate: data[0].returndate,
+            coursename: data[0].Course_Id,
+            assignmentdate: data[0].Assign_Dt,
+            returndate: data[0].Return_Dt
         }))
     }
+
+
     useEffect(() => {
-        if (':assignmentstakenid' !== ":assignmentstakenid") {
-            getStudentDetail()
+        if ( assignmentstakenid !== ":assignmentstakenid") {
+            getUpdate()
         }
 
-        value.title = ""
+        getCourseData()
         setError({})
         setUid([])
     }, [])
@@ -121,51 +167,27 @@ const AssignmentsTaken = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        let response
+
         if (validateForm()) {
-            if (assignmentstakenid == ":assignmentstakenid") {
-                response = await fetch(`${BASE_URL}/add_assignmentstaken`, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        coursename: value.coursename,
-                        batchcode: value.batchcode,
-                        assignmentname: value.assignmentname,
-                        maxmarks: value.maxmarks,
-                        assignmentdate: value.assignmentdate,
-                        returndate: value.returndate,
 
-                    }),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-            } else {
-
-                response = await fetch(`${BASE_URL}/updateassignmentstaken`, {
-                    method: 'POST',
-                    body: JSON.stringify({
-
-                        coursename: value.coursename,
-                        batchcode: value.batchcode,
-                        assignmentname: value.assignmentname,
-                        maxmarks: value.maxmarks,
-                        assignmentdate: value.assignmentadate,
-                        returndate: value.returndate,
-
-
-
-                    }),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
+            const data = {
+                coursename: courseid,
+                batchcode: batchid,
+                assignmentname: assignid,
+                assignmentdate: value.assignmentdate,
+                returndate: value.returndate,
+                uid:uid.Given_Id
             }
 
 
+            axios.post(`${BASE_URL}/add_assignmentstaken`, data)
+
+                .then((res) => {
+                    console.log(res)
+                    alert("Data added successfully")
+                })
 
 
-
-            
 
         }
     }
@@ -193,33 +215,28 @@ const AssignmentsTaken = () => {
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Course Name<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.coursename} onChange={onhandleChange} name='coursename'>
-                                                    <option>--Select--</option>
-                                                    <option>Administration</option>
-                                                    <option>Business Development</option>
-                                                    <option>Training &amp; Development</option>
-                                                    <option>Account</option>
-                                                    <option>Placement</option>
-                                                    <option>Purchase</option>
-                                                    <option>Leadership / DD</option>
-                                                    <option>Quality Assurance</option>
-                                                    <option>Human Resources</option>
-                                                    <option>Corporate Training</option>
-                                                    <option>Test User</option>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={courseid} onChange={(e) => getbatch(e.target.value)} name='coursename'>
+                                                    <option >Select Course</option>
+
+                                                    {course.map((item) => {
+                                                        return (
+
+                                                            <option value={item.Course_Id}>{item.Course_Name}</option>
+                                                        )
+                                                    })}
                                                 </select>
                                                 {<span className='text-danger'> {error.coursename} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Batch Code<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batchcode} onChange={onhandleChange} name='batchcode'>
-                                                    <option>--Batch Code--</option>
-                                                    <option>010021</option>
-                                                    <option>010023</option>
-                                                    <option>010024</option>
-                                                    <option>010025</option>
-                                                    <option>010026</option>
-                                                    <option>010027</option>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={batchid} onChange={(e) => getassign(e.target.value)} name='batchcode'>
+                                                    <option>Select Batch</option>
+                                                    {batch.map((item) => {
+                                                        return (
+                                                            <option value={item.Batch_Id}>{item.Batch_code}</option>
+                                                        )
+                                                    })}
 
                                                 </select>
                                                 {<span className='text-danger'> {error.batchcode} </span>}
@@ -227,18 +244,13 @@ const AssignmentsTaken = () => {
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Assignment Name<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.assignmentname} onChange={onhandleChange} name='assignmentname'>
-                                                    <option>--Assignment Name--</option>
-                                                    <option>H.V.A.C-1</option>
-                                                    <option>H.V.A.C-2</option>
-                                                    <option>H.V.A.C-3</option>
-                                                    <option>H.V.A.C-4</option>
-                                                    <option>H.V.A.C-5</option>
-                                                    <option>H.V.A.C-6</option>
-                                                    <option>H.V.A.C-7</option>
-                                                    <option>H.V.A.C-8</option>
-                                                    <option>H.V.A.C-9</option>
-                                                    <option>H.V.A.C-10</option>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={assignid} onChange={(e) => SetAssignid(e.target.value)} name='assignmentname'>
+                                                    <option>Select Batch</option>
+                                                    {assign.map((item) => {
+                                                        return (
+                                                            <option value={item.id}>{item.assignmentname}</option>
+                                                        )
+                                                    })}
 
                                                 </select>
                                                 {<span className='text-danger'> {error.assignmentname} </span>}

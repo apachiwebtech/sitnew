@@ -15,15 +15,8 @@ const VivaMOCTakenListing = () => {
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
     const label = { inputProps: { 'aria-label': 'Color switch demo' } };
-    const [lecturetakendata, setlecturetakendata] = useState([]);
-    const [Discipline, setDescipline] = useState([]);
-    const [Course, setCourse] = useState([]);
-    const [Education, setEducation] = useState([]);
-    const [batch, setBatch] = useState([]);
-    const [batchCategoty, setbatchCategory] = useState([]);
-    const [unittesttakendata, setunittakendata] = useState([]);
+
     const [vivamoctakendata, setvivamoctakendata] = useState([]);
     const [value, setValue] = useState({
         coursename: ' ',
@@ -151,8 +144,8 @@ const VivaMOCTakenListing = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <EditIcon style={{ cursor: "pointer" }} Link={() => handleUpdate(params.row.id)} />
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} Link={() => handleClick(params.row.id)} />
+                        <Link to={`/vivamoctaken/${params.row.id}`}><EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} /></Link>
+                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
                     </>
                 )
             }

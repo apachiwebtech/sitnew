@@ -126,6 +126,11 @@ import UnitTestTakenListing from './AdminComponent/UnitTestTakenListing.js';
 import VivaMOCTakenListing from './AdminComponent/VivaMOCTakenListing.js';
 import GenerateResultListing from './AdminComponent/GenerateResultListing.js';
 import Qualification from './AdminComponent/Qualification.jsx';
+import Bank from './AdminComponent/Bank.jsx';
+import Feesnotes from './AdminComponent/Feesnotes.jsx';
+import Hoilday from './AdminComponent/Hoilday.jsx';
+import Holiday from './AdminComponent/Hoilday.jsx';
+import Location from './AdminComponent/Location.jsx';
 
 
 
@@ -189,6 +194,26 @@ const Router = createBrowserRouter([
       {
         path: '/discipline',
         element: <Discipline />
+      },
+      {
+        path: '/qualification',
+        element: <Qualification />
+      },
+      {
+        path: '/bank',
+        element: <Bank />
+      },
+      {
+        path: '/feesnotes',
+        element: <Feesnotes />
+      },
+      {
+        path: '/holiday',
+        element: <Holiday />
+      },
+      {
+        path: '/location',
+        element: <Location />
       },
       {
         path: '/courselisting',

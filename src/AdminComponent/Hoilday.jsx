@@ -11,7 +11,7 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 
-const Hoilday = () => {
+const Holiday = () => {
 
     const [hoilday, setHoildaydata] = useState([])
     const [uid, setUid] = useState([])
@@ -301,4 +301,4 @@ const Hoilday = () => {
     )
 }
 
-export default Hoilday
+export default Holiday

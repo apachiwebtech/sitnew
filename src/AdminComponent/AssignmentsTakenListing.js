@@ -16,13 +16,8 @@ const AssignmentsTakenListing = () => {
     const [checked, setChecked] = React.useState([true, false]);
     const label = { inputProps: { 'aria-label': 'Color switch demo' } };
 
-    const [lecturetakendata, setlecturetakendata] = useState([]);
     const [assignmentstakendata, setassignmentstakendata] = useState ([]);
-    const [Discipline, setDescipline] = useState([]);
-    const [Course, setCourse] = useState([]);
-    const [Education, setEducation] = useState([]);
-    const [batch, setBatch] = useState([]);
-    const [batchCategoty, setbatchCategory] = useState([]);
+
     const [value, setValue] = useState({
         coursename: ' ',
         batchcode: ' ',
@@ -51,7 +46,6 @@ const AssignmentsTakenListing = () => {
 
     useEffect(() => {
         getInquiryData()
-
         value.title = ""
         setError({})
         setUid([])
@@ -73,22 +67,6 @@ const AssignmentsTakenListing = () => {
         }));
     };
 
-    const handleUpdate = (id) => {
-        const data = {
-            u_id: id,
-            tablename: "assignmentstaken"
-
-        }
-        axios.post(`${BASE_URL}/update_data`, data)
-            .then((res) => {
-                setUid(res.data[0])
-
-                console.log(res.data, "update")
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
 
     const handleDelete = (id) => {
         const data = {
@@ -111,18 +89,15 @@ const AssignmentsTakenListing = () => {
     }
 
 
-    const handleswitchchange = (value, Inquiry_Id) => {
-        const newval = value == 0 ? 1 : 0
+    // const handleswitchchange = (value, Inquiry_Id) => {
+    //     const newval = value == 0 ? 1 : 0
 
-        axios.post(`${BASE_URL}/data_status`, { status: newval, Inquiry_Id: Inquiry_Id, table_name: "assignmentstaken" })
-            .then((res) => {
-                console.log(res)
-                getInquiryData()
-            })
-    }
-
-
-
+    //     axios.post(`${BASE_URL}/data_status`, { status: newval, Inquiry_Id: Inquiry_Id, table_name: "assignmentstaken" })
+    //         .then((res) => {
+    //             console.log(res)
+    //             getInquiryData()
+    //         })
+    // }
 
 
 
@@ -137,10 +112,10 @@ const AssignmentsTakenListing = () => {
             filterable: false,
 
         },
-        { field: 'coursename', headerName: 'Course Name', flex: 2 },
-        { field: 'batchcode', headerName: 'Batch Code', flex: 2 },
-        { field: 'assignmentname', headerName: 'Assignment Name', flex: 2 },
-        { field: 'assignmentdate', headerName: 'Assignment Date', flex: 2 },
+        { field: 'Course_Name', headerName: 'Course Name', flex: 2 },
+        { field: 'Batch_code', headerName: 'Batch Code', flex: 2 },
+        { field: 'Assign_Dt', headerName: 'Assignment Name', flex: 2 },
+        { field: 'Return_Dt', headerName: 'Assignment Date', flex: 2 },
 
         {
             field: 'actions',
@@ -150,8 +125,8 @@ const AssignmentsTakenListing = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <EditIcon style={{ cursor: "pointer" }} Link={() => handleUpdate(params.row.id)} />
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} Link={() => handleClick(params.row.id)} />
+                        <Link to={`/assignmentstaken/${params.row.Given_Id}`} ><EditIcon style={{ cursor: "pointer" }}  /></Link>
+                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} Link={() => handleClick(params.row.Given_Id)} />
                     </>
                 )
             }
@@ -192,7 +167,7 @@ const AssignmentsTakenListing = () => {
                                             disableColumnSelector
                                             disableDensitySelector
                                             rowHeight={35}
-                                            getRowId={(row) => row.id}
+                                            getRowId={(row) => row.Given_Id}
                                             initialState={{
                                                 pagination: {
                                                     paginationModel: { pageSize: 10, page: 0 },

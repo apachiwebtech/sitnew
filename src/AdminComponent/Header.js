@@ -91,7 +91,7 @@ const Header = ({click}) => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to='/hoilday'>
+              <Link className="nav-link" to='/holiday'>
                 {/* <Icon path={mdiMagnifyPlusOutline} size={1}  /> */}
                 <Icon path={mdiCircleMedium} size={1} className='mx-3' />
                 <span className="menu-title">Holiday</span>

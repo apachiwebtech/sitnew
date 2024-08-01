@@ -24,17 +24,6 @@ const FinalExamTaken = () => {
     const [courseid, setCourseid] = useState("")
 
 
-    const handleChange1 = (event) => {
-        setChecked([event.target.checked, event.target.checked]);
-    };
-
-    const handleChange2 = (event) => {
-        setChecked([event.target.checked, checked[1]]);
-    };
-
-    const handleChange3 = (event) => {
-        setChecked([checked[0], event.target.checked]);
-    };
 
     const [value, setValue] = useState({
         coursename: "" || uid.coursename,
@@ -84,25 +73,10 @@ const FinalExamTaken = () => {
     }
 
 
-    async function getEmployeeData() {
 
-        axios.post(`${BASE_URL}/vendor_details`)
-            .then((res) => {
-                console.log(res.data)
-                setBrand(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
-
-
-
-    async function getEmployeeData() {
-        const data = {
-            tablename: "awt_finalexamtaken"
-        }
-        axios.post(`${BASE_URL}/getfinalexam`, data)
+    async function getFinalexam() {
+     
+        axios.get(`${BASE_URL}/getfinalexam` )
             .then((res) => {
                 console.log(res.data)
                 setVendorData(res.data)
@@ -113,10 +87,11 @@ const FinalExamTaken = () => {
     }
 
     useEffect(() => {
-        getCourseData()
+        // getCourseData()
+        getFinalexam()
         getUnitTest()
-        getbatch()
-        getEmployeeData()
+        // getbatch()
+
         value.title = ""
         setError({})
         setUid([])
@@ -165,7 +140,7 @@ const FinalExamTaken = () => {
 
         axios.post(`${BASE_URL}/delete_data`, data)
             .then((res) => {
-                getEmployeeData()
+                getFinalexam()
 
             })
             .catch((err) => {
@@ -194,7 +169,7 @@ const FinalExamTaken = () => {
             axios.post(`${BASE_URL}/add_finalexamtaken`, data)
                 .then((res) => {
                     console.log(res)
-                    getEmployeeData()
+                    getFinalexam()  
                     setUid([])
                     setValue({
                         setTestNameid : '',
@@ -219,7 +194,7 @@ const FinalExamTaken = () => {
 
 
 
-  1
+  
     const getUnitTest = async (id) => {
 
         if (id != undefined) {
@@ -257,7 +232,7 @@ const FinalExamTaken = () => {
     const onhandleChange = (e) => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }));
         if ([e.target.name] == 'coursename') {
-            getbatch([e.target.value]);
+            // getbatch([e.target.value]);
         }
         if ([e.target.name] == 'batchcode') {
             getUnitTest([e.target.value]);

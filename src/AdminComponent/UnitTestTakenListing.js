@@ -16,12 +16,7 @@ const UnitTestTakenListing = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
     const label = { inputProps: { 'aria-label': 'Color switch demo' } };
-    const [lecturetakendata, setlecturetakendata] = useState([]);
-    const [Discipline, setDescipline] = useState([]);
-    const [Course, setCourse] = useState([]);
-    const [Education, setEducation] = useState([]);
-    const [batch, setBatch] = useState([]);
-    const [batchCategoty, setbatchCategory] = useState([]);
+
     const [unittesttakendata, setunittakendata] = useState([]);
     const [value, setValue] = useState({
         batchcode: ' ',
@@ -137,10 +132,10 @@ const UnitTestTakenListing = () => {
             filterable: false,
 
         },
-        { field: 'batchcode', headerName: 'Batch Code', flex: 2 },
-        { field: 'coursename', headerName: 'Course Name', flex: 2 },
+        { field: 'Batch_code', headerName: 'Batch Code', flex: 2 },
+        { field: 'Course_Name', headerName: 'Course Name', flex: 2 },
         { field: 'utname', headerName: 'Test Name', flex: 2 },
-        { field: 'utdate', headerName: 'Date', flex: 2 },
+        { field: 'Test_Dt', headerName: 'Date', flex: 2 },
 
         {
             field: 'actions',
@@ -150,8 +145,8 @@ const UnitTestTakenListing = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <EditIcon style={{ cursor: "pointer" }} Link={() => handleUpdate(params.row.id)} />
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} Link={() => handleClick(params.row.id)} />
+                       <Link to={`/unittesttaken/${params.row.Take_Id}`}> <EditIcon style={{ cursor: "pointer" }} /></Link>
+                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.Take_Id)} />
                     </>
                 )
             }
@@ -192,7 +187,7 @@ const UnitTestTakenListing = () => {
                                             disableColumnSelector
                                             disableDensitySelector
                                             rowHeight={35}
-                                            getRowId={(row) => row.id}
+                                            getRowId={(row) => row.Take_Id}
                                             initialState={{
                                                 pagination: {
                                                     paginationModel: { pageSize: 10, page: 0 },

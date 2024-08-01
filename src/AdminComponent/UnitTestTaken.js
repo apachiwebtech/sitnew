@@ -2,30 +2,24 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
+import axios from 'axios';
 //import FormControlLabel from '@mui/material/FormControlLabel';
 
 const UnitTestTaken = () => {
 
     const { unittesttakenid } = useParams();
-    const [brand, setBrand] = useState([])
-    const [vendordata, setVendorData] = useState([])
+
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
-    const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
+    const [course, SetCourse] = useState([])
+    const [courseid, SetCoursid] = useState('')
+    const [batch, setAnnulBatch] = useState([])
+    const [batchid, setBatchid] = useState('')
+    const [unit, SetUnit] = useState([])
+    const [unitid, SetUnitid] = useState('')
 
-    const handleChange1 = (event) => {
-        setChecked([event.target.checked, event.target.checked]);
-    };
-
-    const handleChange2 = (event) => {
-        setChecked([event.target.checked, checked[1]]);
-    };
-
-    const handleChange3 = (event) => {
-        setChecked([checked[0], event.target.checked]);
-    };
 
 
     const [value, setValue] = useState({
@@ -34,9 +28,6 @@ const UnitTestTaken = () => {
         utname: '',
         marks: '',
         utdate: '',
-
-
-
     })
 
 
@@ -45,17 +36,17 @@ const UnitTestTaken = () => {
         let isValid = true
         const newErrors = {}
 
-        if (!value.coursename) {
+        if (!courseid) {
             isValid = false;
             newErrors.coursename = "Course Name is Required"
         }
 
-        if (!value.batchcode) {
+        if (!batchid) {
             isValid = false;
             newErrors.batchcode = "Batch Code is Required"
         }
 
-        if (!value.utname) {
+        if (!unitid) {
             isValid = false;
             newErrors.utname = "Unit Test is Required"
         }
@@ -71,11 +62,68 @@ const UnitTestTaken = () => {
     }
 
 
+    async function getCourseData() {
+
+        axios.get(`${BASE_URL}/getCourse`)
+            .then((res) => {
+                console.log(res.data)
+                SetCourse(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+
+    const getbatch = async (id) => {
+
+        SetCoursid(id)
+
+        const data = {
+            courseid: id
+        }
+
+        try {
+            const res = await axios.post(`${BASE_URL}/getcoursewisebatch`, data);
+            setAnnulBatch(res.data);
+
+        } catch (err) {
+            console.error("Error fetching data:", err);
+        }
+
+    };
+
+    const gettest = async (id) => {
+
+        setBatchid(id)
+
+        const data = {
+            batch_id: id,
+            AnnulBatch: id
+        }
+
+        try {
+            const res = await axios.post(`${BASE_URL}/getbatchwiseunittest`, data);
+
+            // if (res.data[0].id) {
+
+            // }
+            SetUnit(res.data);
+            
+        } catch (err) {
+            console.error("Error fetching data:", err);
+        }
+
+
+    };
+
+
     async function getStudentDetail() {
-        const response = await fetch(`${BASE_URL}/studentDetail`, {
+        const response = await fetch(`${BASE_URL}/new_update_data`, {
             method: 'POST',
             body: JSON.stringify({
-                id: unittesttakenid,
+                u_id: unittesttakenid,
+                uidname: "Take_Id",
+                tablename: "Test_taken_master"
             }),
             headers: {
                 'Content-Type': 'application/json',
@@ -83,24 +131,29 @@ const UnitTestTaken = () => {
         });
 
         const data = await response.json();
+        
+        SetCoursid(data[0].Course_Id)
+        setBatchid(data[0].Batch_Id)
+        SetUnitid(data[0].Test_Id)
 
+        setUid(data[0])
 
         setValue(prevState => ({
             ...prevState,
-            coursename: data[0].coursename,
-            batchcode: data[0].batchcode,
-            utname: data[0].utname,
-            marks: data[0].marks,
-            utdate: data[0].utdate,
-            
+
+            utdate: data[0].Test_Dt,
+
         }))
     }
+
+
     useEffect(() => {
-        if (':unittesttakenid' !== ":unittesttakenid") {
+        if (unittesttakenid !== ":unittesttakenid") {
             getStudentDetail()
         }
 
-        value.title = ""
+        getCourseData()
+
         setError({})
         setUid([])
     }, [])
@@ -113,46 +166,31 @@ const UnitTestTaken = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        let response
+
+
         if (validateForm()) {
-            if (unittesttakenid == ":unittesttakenid") {
-                response = await fetch(`${BASE_URL}/add_unittesttaken`, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        coursename: value.coursename,
-                        batchcode: value.batchcode,
-                        utname: value.utname,
-                        marks: value.marks,
-                        utdate: value.utdate,
-                    }),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-            } else {
 
-                response = await fetch(`${BASE_URL}/updateunittesttaken'`, {
-                    method: 'POST',
-                    body: JSON.stringify({
-
-                        coursename: value.coursename,
-                        batchcode: value.batchcode,
-                        utname: value.utname,
-                        marks: value.marks,
-                        utdate: value.utdate,
-
-
-
-                    }),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
+            const data = {
+                coursename: courseid,
+                batchcode: batchid,
+                utname: unitid,
+                utdate: value.utdate,
+                uid: uid.Take_Id
             }
+
+
+            axios.post(`${BASE_URL}/add_unittesttaken`, data)
+
+                .then((res) => {
+                    console.log(res)
+                    alert("Data added successfully")
+                })
 
 
 
         }
+
+
     }
 
 
@@ -178,53 +216,41 @@ const UnitTestTaken = () => {
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Course Name<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.coursename} onChange={onhandleChange} name='coursename'>
-                                                    <option>Select</option>
-                                                    <option>Administration</option>
-                                                    <option>Business Development</option>
-                                                    <option>Training &amp; Development</option>
-                                                    <option>Account</option>
-                                                    <option>Placement</option>
-                                                    <option>Purchase</option>
-                                                    <option>Leadership / DD</option>
-                                                    <option>Quality Assurance</option>
-                                                    <option>Human Resources</option>
-                                                    <option>Corporate Training</option>
-                                                    <option>Test User</option>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={courseid} onChange={(e) => getbatch(e.target.value)} name='coursename'>
+                                                    <option >Select Course</option>
+
+                                                    {course.map((item) => {
+                                                        return (
+
+                                                            <option value={item.Course_Id}>{item.Course_Name}</option>
+                                                        )
+                                                    })}
                                                 </select>
                                             </div>
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Batch Code<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batchcode} onChange={onhandleChange} name='batchcode'>
-                                                    <option>Select Batch Code</option>
-                                                    <option>010021</option>
-                                                    <option>010022</option>
-                                                    <option>010023</option>
-                                                    <option>010024</option>
-                                                    <option>010025</option>
-                                                    <option>010026</option>
-                                                    <option>010027</option>
-                                                    <option>010028</option>
-                                                    <option>010029</option>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={unitid} onChange={(e) => gettest(e.target.value)} name='batchcode'>
+
+                                                    <option>Select Batch</option>
+                                                    {batch.map((item) => {
+                                                        return (
+                                                            <option value={item.Batch_Id}>{item.Batch_code}</option>
+                                                        )
+                                                    })}
 
                                                 </select>
                                             </div>
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Unit Test Name<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.utname} onChange={onhandleChange} name='utname'>
-                                                    <option>Select Unit test Name</option>
-                                                    <option>Piping-1</option>
-                                                    <option>Piping-2</option>
-                                                    <option>Piping-3</option>
-                                                    <option>Piping-4</option>
-                                                    <option>Piping-5</option>
-                                                    <option>Piping-6</option>
-                                                    <option>Piping-7</option>
-                                                    <option>Piping-8</option>
-                                                    <option>Piping-9</option>
-                                                    <option>Piping-10</option>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={unitid} onChange={(e) => SetUnitid(e.target.value)} name='utname'>
+                                                    <option>select test</option>
+                                                    {unit.map((item) => {
+                                                        return (
+                                                            <option value={item.id}>{item.utname}</option>
+                                                        )
+                                                    })}
 
                                                 </select>
                                             </div>

@@ -311,6 +311,7 @@ app.post('/nodeapp/get_Faculty', (req, res) => {
   })
 
 })
+
 app.post('/nodeapp/delete_Faculty', (req, res) => {
 
   let cat_id = req.body.cat_id;
@@ -3693,7 +3694,7 @@ app.post('/nodeapp/get_workingtime', (req, res) => {
   })
 
 })
-app.post('/nodeapp/getfinalexam', (req, res) => {
+app.get('/nodeapp/getfinalexam', (req, res) => {
 
   const sql = 'select fe.date ,fe.coursename , fe.batchcode , bm.Batch_code , cm.Course_Name , fe.id from awt_finalexamtaken as fe left join batch_mst as bm on fe.batchcode = bm.Batch_Id left join Course_Mst as cm on fe.coursename = cm.Course_Name where fe.deleted=0;'
 
@@ -3719,3 +3720,6 @@ app.post('/nodeapp/get_vistsite', (req, res) => {
   })
 
 })
+
+
+
