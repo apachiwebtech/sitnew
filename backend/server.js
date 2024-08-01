@@ -828,7 +828,7 @@ app.get('/nodeapp/getGenerateResult', (req, res, next) => {
     if (error) {
       return res.json(error);
     }else{
-      return res.json(data);  
+      return res.json(data);
     }
   })
 })
@@ -1833,9 +1833,9 @@ app.post('/nodeapp/add_facultyworking', (req, res) => {
 
 app.post('/nodeapp/add_visitsite', (req, res) => {
 
+// add regin input changes the db ~ bhavesh
 
-
-  let { course, batch, location, student, date, time, confirmdate, uid } = req.body
+  let { course, batch, location, student, date, time,region, confirmdate, uid } = req.body
 
   let sql
   let param;
@@ -1843,14 +1843,14 @@ app.post('/nodeapp/add_visitsite', (req, res) => {
   console.log(uid)
 
   if (uid == undefined) {
-    sql = "insert into awt_visitsite(`course`,`batch`,`location`,`student`,`date`,`time`,`confirmdate`) values(?,?,?,?,?,?,?)"
+    sql = "insert into Site_visit_master(`Course_Name`,`Batch_Code`,`Location`,`Total_Student`,`Visit_Date`,`Visit_Time`,`Region`,`ConfirmDAte`) values(?,?,?,?,?,?,?,?)"
 
-    param = [course, batch, location, student, date, time, confirmdate]
+    param = [course, batch, location, student, date, time,region, confirmdate]
 
   } else {
-    sql = "update `awt_visitsite` set `course` =? , `batch` =? , `location` =? , `student` =? , `date` =? , `time` =? , `confirmdate` =? where id = ?"
+    sql = "update `Site_visit_master` set `Course_Name` =? , `Batch_Code` =? , `Location` =? , `Total_Student` =? , `Visit_Date` =? , `Visit_Time` =? , `ConfirmDAte` =? `Region`=? where Visit_Id = ?"
 
-    param = [course, batch, location, student, date, time, confirmdate, uid]
+    param = [course, batch, location, student, date, time, confirmdate, region,uid]
 
   }
 
@@ -3597,9 +3597,9 @@ app.post('/nodeapp/getbatchwiselecture', (req, res) => {
 
 app.post('/nodeapp/getcoursewisebatch' , (req,res) =>{
     const {courseid} = req.body
-    
+
     const sql = "select Batch_Id,Batch_code from Batch_Mst where Course_Id = ?"
-    
+
     con.query(sql, [courseid] , (err,data)=>{
         if(err){
             return res.json(err)
@@ -3610,9 +3610,9 @@ app.post('/nodeapp/getcoursewisebatch' , (req,res) =>{
 })
 app.post('/nodeapp/getbatchwisestudent' , (req,res) =>{
     const {batch_code} = req.body
-    
+
     const sql = "select Student_Id ,FName ,Admission_Dt from Student_Master where batch_code = ?"
-    
+
     con.query(sql, [batch_code] , (err,data)=>{
         if(err){
             return res.json(err)
@@ -3622,13 +3622,13 @@ app.post('/nodeapp/getbatchwisestudent' , (req,res) =>{
     })
 })
 app.post('/nodeapp/getbatchwiselecture' , (req,res) =>{
-    
+
     const {batch_id} = req.body;
 
     console.log(batch_id)
-    
+
     const sql = "select id, batch_id ,subject_topic from Batch_Lecture_Master where batch_id = ?"
-    
+
     con.query(sql, [batch_id] , (err,data)=>{
         if(err){
             return res.json(err)
@@ -3639,11 +3639,11 @@ app.post('/nodeapp/getbatchwiselecture' , (req,res) =>{
 })
 
 app.post('/nodeapp/getbatchwiseassignment' , (req,res) =>{
-    
+
     const {batch_id} = req.body;
-    
+
     const sql = "select id, batch_id ,assignmentname from assignmentstaken where batch_id = ?"
-    
+
     con.query(sql, [batch_id] , (err,data)=>{
         if(err){
             return res.json(err)
@@ -3654,7 +3654,7 @@ app.post('/nodeapp/getbatchwiseassignment' , (req,res) =>{
 })
 
 app.get('/nodeapp/getfaculty' , (req,res)=>{
-    
+
   const sql = 'select Faculty_Id, Faculty_Name from `faculty_master` where IsDelete = 0 '
 
   con.query(sql, (err, data) => {
@@ -3669,6 +3669,46 @@ app.get('/nodeapp/getfaculty' , (req,res)=>{
 app.post('/nodeapp/get_batch', (req, res) => {
 
   const sql = 'select Batch_Id,Batch_code from `Batch_Mst` where IsDelete = 0 '
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+
+})
+
+app.post('/nodeapp/get_workingtime', (req, res) => {
+
+  const sql = 'SELECT fw.id , bm.Batch_code ,fw.batch, cm.Course_Name , fw.course ,date , fw.faculty ,fw.facultytime,fw.to,fw.work FROM `awt_facultyworking` as fw left join batch_mst as bm on fw.batch = bm.Batch_Id left join Course_Mst as cm on fw.course = cm.Course_Id where fw.deleted = 0;'
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+
+})
+app.post('/nodeapp/getfinalexam', (req, res) => {
+
+  const sql = 'select fe.date ,fe.coursename , fe.batchcode , bm.Batch_code , cm.Course_Name , fe.id from awt_finalexamtaken as fe left join batch_mst as bm on fe.batchcode = bm.Batch_Id left join Course_Mst as cm on fe.coursename = cm.Course_Name where fe.deleted=0;'
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+
+})
+app.post('/nodeapp/get_vistsite', (req, res) => {
+
+  const sql = 'select * from Site_visit_master where isDelete = 0;'
 
   con.query(sql, (err, data) => {
     if (err) {

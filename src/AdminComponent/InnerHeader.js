@@ -74,6 +74,10 @@ const InnerHeader = () => {
                 return 'Hoilday';
             case '/location':
                 return 'Location';
+            case '/facultyworking':
+                return 'Faculty Working Hour ';
+            case '/finalexamtaken':
+                return 'Final Exam Detail';
             case location.pathname.match(/^\/addcorporateinquiry\/\d+$/) ? location.pathname : '':
                 return 'Corporate Inquiry';
             case location.pathname.match(/^\/admission\/\d+$/) ? location.pathname : '':

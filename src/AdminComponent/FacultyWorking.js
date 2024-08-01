@@ -25,6 +25,11 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 const FacultyWorking = () => {
 
     const [brand, setBrand] = useState([])
+    const [Course, SetCourse] = useState([])
+    const [Courseid, SetCourseid] = useState("")
+    const [Batch, SetBatch] = useState([])
+    const [Batchid, SetBatchid] = useState([])
+    const [faculty,setfaculty] = useState([])
     const [vendordata, setVendorData] = useState([])
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
@@ -84,22 +89,42 @@ const FacultyWorking = () => {
     }, [uid])
 
 
-    // const validateForm = () => {
-    //     let isValid = true
-    //     const newErrors = {}
+    const validateForm = () => {
+        let isValid = true
+        const newErrors = {}
 
 
-    //    if (!value.college) {
-    //     isValid = false;
-    //     newErrors.name = "Name is require"
-    //    }
-    //     if (!value.email) {
-    //         isValid = false;
-    //         newErrors.email = "Email is require"
-    //     }
-    //     setError(newErrors)
-    //     return isValid
-    // }
+       if (!value.date) {
+        isValid = false;
+        newErrors.date = "Date is require"
+       }
+        if (!value.course) {
+            isValid = false;
+            newErrors.course = "course is require"
+        }
+        if (!value.batch) {
+            isValid = false;
+            newErrors.batch = "batch is require"
+        }
+        if (!value.faculty) {
+            isValid = false;
+            newErrors.faculty = "faculty is require"
+        }
+        if (!value.facultytime) {
+            isValid = false;
+            newErrors.facultytime = "faculty time from is require"
+        }
+        if (!value.to) {
+            isValid = false;
+            newErrors.to = "faculty Time to is require"
+        }
+        if (!value.work) {
+            isValid = false;
+            newErrors.work = "work is require"
+        }
+        setError(newErrors)
+        return isValid
+    }
 
 
     async function getEmployeeData() {
@@ -120,7 +145,7 @@ const FacultyWorking = () => {
         const data = {
             tablename: "awt_facultyworking"
         }
-        axios.post(`${BASE_URL}/get_data`, data)
+        axios.post(`${BASE_URL}/get_workingtime`, data)
             .then((res) => {
                 console.log(res.data)
                 setVendorData(res.data)
@@ -130,8 +155,12 @@ const FacultyWorking = () => {
             })
     }
 
+
     useEffect(() => {
         getEmployeeData()
+        getfaulty()
+        getCourseData()
+        getbatch()
         value.title = ""
         setError({})
         setUid([])
@@ -193,7 +222,7 @@ const FacultyWorking = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        // if(validateForm()){
+        if(validateForm()){
         const data = {
 
             date: value.date,
@@ -216,17 +245,70 @@ const FacultyWorking = () => {
             .catch((err) => {
                 console.log(err)
             })
-        // }
-
-
-
-
-
+        }
     }
 
+    async function getCourseData() {
 
+        axios.get(`${BASE_URL}/getCourse`)
+            .then((res) => {
+                console.log(res.data)
+                SetCourse(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+    const getbatch = async (id) => {
+
+        if (id != undefined) {
+            SetCourseid(id)
+
+            const data = {
+                courseid: id
+            }
+
+            try {
+                const res = await axios.post(`${BASE_URL}/getcoursewisebatch`, data);
+                SetBatch(res.data);
+
+            } catch (err) {
+                console.error("Error fetching data:", err);
+            }
+        } else {
+            const data = {
+                tablename: "Batch_Mst"
+            }
+            axios.post(`${BASE_URL}/get_batch`, data)
+                .then((res) => {
+                    console.log(res.data)
+                    SetBatch(res.data)
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        }
+
+    };
+
+    async function getfaulty() {
+        const data = {
+            tablename: "faculty_master"
+        }
+        axios.get(`${BASE_URL}/getfaculty`, data)
+            .then((res) => {
+                console.log(res.data)
+                setfaculty(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
     const onhandleChange = (e) => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+        if ([e.target.name] == 'course') {
+            getbatch([e.target.value]);
+        }
     }
 
 
@@ -246,8 +328,8 @@ const FacultyWorking = () => {
 
         },
         { field: 'date', headerName: 'Date', flex: 2 },
-        { field: 'course', headerName: 'Course', flex: 2 },
-        { field: 'batch', headerName: 'Batch', flex: 2 },
+        { field: 'Course_Name', headerName: 'Course', flex: 2 },
+        { field: 'Batch_code', headerName: 'Batch', flex: 2 },
         { field: 'faculty', headerName: 'Faculty', flex: 2 },
         { field: 'facultytime', headerName: 'Facultytime', flex: 2 },
         { field: 'to', headerName: 'To', flex: 2 },
@@ -291,7 +373,7 @@ const FacultyWorking = () => {
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">Date</label>
                                                 <input type="date" class="form-control" id="exampleInputUsername1" value={value.date} name='date' onChange={onhandleChange} />
-
+                                                {error.date && <span className='text-danger'>{error.date}</span>}
                                             </div>
 
 
@@ -300,236 +382,62 @@ const FacultyWorking = () => {
                                                 <label for="exampleFormControlSelect1">Course<span className='text-danger'>*</span> </label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course} onChange={onhandleChange} name='course'>
                                                     <option>Select</option>
-                                                    <option>Administration</option>
-                                                    <option>Business Development</option>
-                                                    <option>Training &amp; Development</option>
-                                                    <option>Account</option>
-                                                    <option>Placement</option>
-                                                    <option>Purchase</option>
-                                                    <option>Leadership / DD</option>
-                                                    <option>Quality Assurance</option>
-                                                    <option>Human Resources</option>
-                                                    <option>Corporate Training</option>
-                                                    <option>Test User</option>
+                                                    {Course.map((item) => {
+                                                        return (
+
+                                                            <option value={item.Course_Id}>{item.Course_Name}</option>
+                                                        )
+                                                    })}
                                                 </select>
+                                                {error.course && <span className='text-danger'>{error.course}</span>}
                                             </div>
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Batch</label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batch} onChange={onhandleChange} name='batch'>
-                                                    <option></option>
-                                                    <option></option>
-                                                    <option></option>
-                                                    <option></option>
+                                                    <option>Select</option>
+                                                    {Batch.map((item)=>{
+                                                        return(
+                                                            <option value={item.Batch_Id}>{item.Batch_code}</option>
+                                                        )
+                                                    })}
 
 
                                                 </select>
+                                                {error.batch && <span className='text-danger'>{error.batch}</span>}
                                             </div>
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Faculty</label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.faculty} onChange={onhandleChange} name='faculty'>
-                                                    <option>A. G. Belwalkar</option>
-                                                    <option>Aadhar Classes</option>
-                                                    <option>Aashay Dedhia</option>
-                                                    <option>Abhay Gaikar</option>
-                                                    <option>Abhijit A Kulkarni.</option>
-                                                    <option>Abhijit Tapare</option>
-                                                    <option>Abhilash Srinivasan</option>
-                                                    <option>Abhishek Pednekar</option>
-                                                    <option>Abhishek Rakesh Gupta</option>
-                                                    <option>Abhishek Vyas</option>
-                                                    <option>ABIDHUSAIN RIZVI</option>
-                                                    <option>Abrar</option>
-                                                    <option>Aditi Surana.</option>
-                                                    <option>Aditya Hivalkar</option>
-                                                    <option>ADWAIT JOGALEKAR</option>
-                                                    <option>Ajay Gharpure</option>
-                                                    <option>Ajinkya Gawande</option>
-                                                    <option>Ajit Khedkar</option>
-                                                    <option>Ajith Mathews</option>
-                                                    <option>Akhil Jalani (Demo)</option>
-                                                    <option>Akhil Jhalani</option>
+                                                   <option value="select">Select</option>
+                                                   {faculty.map((item) => {
+                                                        return (
 
+                                                            <option value={item.Faculty_Id}>{item.Faculty_Name}</option>
+                                                        )
+                                                    })}
                                                 </select>
+                                                {error.faculty && <span className='text-danger'>{error.faculty}</span>}
                                             </div>
 
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Faculty Time</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.facultytime} onChange={onhandleChange} name='facultytime'>
-                                                    <option>Select</option>
-                                                    <option>5:00AM</option>
-                                                    <option>5:15AM</option>
-                                                    <option>5:30AM</option>
-                                                    <option>5:45AM</option>
-                                                    <option>6:00AM</option>
-                                                    <option>6:15AM</option>
-                                                    <option>6:30AM</option>
-                                                    <option>6:45AM</option>
-                                                    <option>7:00AM</option>
-                                                    <option>7:15AM</option>
-                                                    <option>7:30AM</option>
-                                                    <option>7:45AM</option>
-                                                    <option>8:00AM</option>
-                                                    <option>8:15AM</option>
-                                                    <option>8:30AM</option>
-                                                    <option>8:45AM</option>
-                                                    <option>9:00AM</option>
-                                                    <option>9:15AM</option>
-                                                    <option>9:30AM</option>
-                                                    <option>9:45AM</option>
-                                                    <option>10:00AM</option>
-                                                    <option>10:15AM</option>
-                                                    <option>10:30AM</option>
-                                                    <option>10:45AM</option>
-                                                    <option>11:00AM</option>
-                                                    <option>11:15AM</option>
-                                                    <option>11:30AM</option>
-                                                    <option>11:45AM</option>
-                                                    <option>12:00PM</option>
-                                                    <option>12:15PM</option>
-                                                    <option>12:30PM</option>
-                                                    <option>12:45PM</option>
-                                                    <option>1:00PM</option>
-                                                    <option>1:15PM</option>
-                                                    <option>1:30PM</option>
-                                                    <option>1:45PM</option>
-                                                    <option>2:00PM</option>
-                                                    <option>2:15PM</option>
-                                                    <option>2:30PM</option>
-                                                    <option>3:00PM</option>
-                                                    <option>3:15PM</option>
-                                                    <option>3:30PM</option>
-                                                    <option>3:45PM</option>
-                                                    <option>4:00PM</option>
-                                                    <option>4:15PM</option>
-                                                    <option>4:30PM</option>
-                                                    <option>4:45PM</option>
-                                                    <option>5:00PM</option>
-                                                    <option>5:15PM</option>
-                                                    <option>5:30PM</option>
-                                                    <option>5:45PM</option>
-                                                    <option>6:00PM</option>
-                                                    <option>6:15PM</option>
-                                                    <option>6:30PM</option>
-                                                    <option>6:45PM</option>
-                                                    <option>7:00PM</option>
-                                                    <option>7:15PM</option>
-                                                    <option>7:30PM</option>
-                                                    <option>7:45PM</option>
-                                                    <option>8:00PM</option>
-                                                    <option>8:15PM</option>
-                                                    <option>8:30PM</option>
-                                                    <option>8:45PM</option>
-                                                    <option>9:00PM</option>
-                                                    <option>9:15PM</option>
-                                                    <option>9:30PM</option>
-                                                    <option>9:45PM</option>
-                                                    <option>10:00PM</option>
-                                                    <option>10:15PM</option>
-                                                    <option>10:30PM</option>
-                                                    <option>10:45PM</option>
-                                                    <option>11:00PM</option>
-                                                    <option>11:15PM</option>
-                                                    <option>11:30PM</option>
-                                                    <option>11:45PM</option>
-                                                    <option>12:00PM</option>
-                                                    <option>00:00AM</option>
-                                                    <option>12:00AM</option>
-                                                </select>
+                                                <label for="exampleFormControlSelect1">Faculty Time From</label>
+                                                <input type="time" class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.facultytime} onChange={onhandleChange} name='facultytime' />
+                                                {error.facultytime && <span className='text-danger'>{error.facultytime}</span>}
                                             </div>
 
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">To</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.to} onChange={onhandleChange} name='to'>
-                                                    <option>Select</option>
-                                                    <option>5:00AM</option>
-                                                    <option>5:15AM</option>
-                                                    <option>5:30AM</option>
-                                                    <option>5:45AM</option>
-                                                    <option>6:00AM</option>
-                                                    <option>6:15AM</option>
-                                                    <option>6:30AM</option>
-                                                    <option>6:45AM</option>
-                                                    <option>7:00AM</option>
-                                                    <option>7:15AM</option>
-                                                    <option>7:30AM</option>
-                                                    <option>7:45AM</option>
-                                                    <option>8:00AM</option>
-                                                    <option>8:15AM</option>
-                                                    <option>8:30AM</option>
-                                                    <option>8:45AM</option>
-                                                    <option>9:00AM</option>
-                                                    <option>9:15AM</option>
-                                                    <option>9:30AM</option>
-                                                    <option>9:45AM</option>
-                                                    <option>10:00AM</option>
-                                                    <option>10:15AM</option>
-                                                    <option>10:30AM</option>
-                                                    <option>10:45AM</option>
-                                                    <option>11:00AM</option>
-                                                    <option>11:15AM</option>
-                                                    <option>11:30AM</option>
-                                                    <option>11:45AM</option>
-                                                    <option>12:00PM</option>
-                                                    <option>12:15PM</option>
-                                                    <option>12:30PM</option>
-                                                    <option>12:45PM</option>
-                                                    <option>1:00PM</option>
-                                                    <option>1:15PM</option>
-                                                    <option>1:30PM</option>
-                                                    <option>1:45PM</option>
-                                                    <option>2:00PM</option>
-                                                    <option>2:15PM</option>
-                                                    <option>2:30PM</option>
-                                                    <option>3:00PM</option>
-                                                    <option>3:15PM</option>
-                                                    <option>3:30PM</option>
-                                                    <option>3:45PM</option>
-                                                    <option>4:00PM</option>
-                                                    <option>4:15PM</option>
-                                                    <option>4:30PM</option>
-                                                    <option>4:45PM</option>
-                                                    <option>5:00PM</option>
-                                                    <option>5:15PM</option>
-                                                    <option>5:30PM</option>
-                                                    <option>5:45PM</option>
-                                                    <option>6:00PM</option>
-                                                    <option>6:15PM</option>
-                                                    <option>6:30PM</option>
-                                                    <option>6:45PM</option>
-                                                    <option>7:00PM</option>
-                                                    <option>7:15PM</option>
-                                                    <option>7:30PM</option>
-                                                    <option>7:45PM</option>
-                                                    <option>8:00PM</option>
-                                                    <option>8:15PM</option>
-                                                    <option>8:30PM</option>
-                                                    <option>8:45PM</option>
-                                                    <option>9:00PM</option>
-                                                    <option>9:15PM</option>
-                                                    <option>9:30PM</option>
-                                                    <option>9:45PM</option>
-                                                    <option>10:00PM</option>
-                                                    <option>10:15PM</option>
-                                                    <option>10:30PM</option>
-                                                    <option>10:45PM</option>
-                                                    <option>11:00PM</option>
-                                                    <option>11:15PM</option>
-                                                    <option>11:30PM</option>
-                                                    <option>11:45PM</option>
-                                                    <option>12:00PM</option>
-                                                    <option>00:00AM</option>
-                                                    <option>12:00AM</option>
-                                                </select>
+                                                <label for="exampleFormControlSelect1">Faculty Time To</label>
+                                              <input type="time" class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.to} onChange={onhandleChange} name='to' />
+                                              {error.to && <span className='text-danger'>{error.to}</span>}
                                             </div>
-
 
 
                                             <div class="form-group col-lg-4">
                                                 <label for="exampleTextarea1">Work</label>
                                                 <textarea class="form-control" id="exampleTextarea1" value={value.work} placeholder="Work" name='work' onChange={onhandleChange}></textarea>
-
+                                                {error.work && <span className='text-danger'>{error.work}</span>}
                                             </div>
 
 

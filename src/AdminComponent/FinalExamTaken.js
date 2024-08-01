@@ -102,7 +102,7 @@ const FinalExamTaken = () => {
         const data = {
             tablename: "awt_finalexamtaken"
         }
-        axios.post(`${BASE_URL}/get_data`, data)
+        axios.post(`${BASE_URL}/getfinalexam`, data)
             .then((res) => {
                 console.log(res.data)
                 setVendorData(res.data)
@@ -219,50 +219,7 @@ const FinalExamTaken = () => {
 
 
 
-    async function getCourseData() {
-
-        axios.get(`${BASE_URL}/getCourse`)
-            .then((res) => {
-                console.log(res.data)
-                SetCourse(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
-
-
-    const getbatch = async (id) => {
-
-        if (id != undefined) {
-            setCourseid(id)
-
-            const data = {
-                courseid: id
-            }
-
-            try {
-                const res = await axios.post(`${BASE_URL}/getcoursewisebatch`, data);
-                setAnnulBatch(res.data);
-
-            } catch (err) {
-                console.error("Error fetching data:", err);
-            }
-        } else {
-            const data = {
-                tablename: "Batch_Mst"
-            }
-            axios.post(`${BASE_URL}/get_batch`, data)
-                .then((res) => {
-                    console.log(res.data)
-                    setAnnulBatch(res.data)
-                })
-                .catch((err) => {
-                    console.log(err)
-                })
-        }
-
-    };
+  1
     const getUnitTest = async (id) => {
 
         if (id != undefined) {
@@ -273,7 +230,7 @@ const FinalExamTaken = () => {
             }
 
             try {
-                const res = await axios.post(`${BASE_URL}/getbatchwiseunittest`, data);
+                const res = await axios.post(`${BASE_URL}/  `, data);
                 setTestName(res.data);
 
             } catch (err) {
@@ -320,8 +277,8 @@ const FinalExamTaken = () => {
             filterable: false,
 
         },
-        { field: 'coursename', headerName: 'Course Name', flex: 2 },
-        { field: 'batchcode', headerName: 'Batch Code', flex: 2 },
+        { field: 'Course_Name', headerName: 'Course Name', flex: 2 },
+        { field: 'Batch_code', headerName: 'Batch Code', flex: 2 },
         { field: 'date', headerName: 'Exam Date', flex: 2 },
 
         {

@@ -125,6 +125,7 @@ import Discipline from './AdminComponent/Discipline.jsx';
 import UnitTestTakenListing from './AdminComponent/UnitTestTakenListing.js';
 import VivaMOCTakenListing from './AdminComponent/VivaMOCTakenListing.js';
 import GenerateResultListing from './AdminComponent/GenerateResultListing.js';
+import Qualification from './AdminComponent/Qualification.jsx';
 
 
 
@@ -201,6 +202,14 @@ const Router = createBrowserRouter([
         path: '/college',
         element: <College />
       },
+      {
+        path: '/college',
+        element: <College />
+      },
+      {
+        path: '/Qualification',
+        element: <Qualification />
+      },
 
       {
         path: '/batchcategory',
@@ -211,7 +220,7 @@ const Router = createBrowserRouter([
         element: <Batch/>
       },
 
-      // batch details 
+      // batch details
       {
         path: '/batchedit',
         element: <BatchEdit/>
@@ -261,7 +270,7 @@ const Router = createBrowserRouter([
         element: <SiteVise/>
       },
 
-      // batch details 
+      // batch details
       {
         path: '/librarybook',
         element: <LibraryBook/>
@@ -270,7 +279,7 @@ const Router = createBrowserRouter([
         path: '/addfeedbacknewquestion',
         element: <AddFeedbackNewQuestion/>
       },
-      
+
       {
         path: '/faculty',
         element: <Faculty/>
@@ -524,7 +533,7 @@ const Router = createBrowserRouter([
       },
 
       // ======================Inquiry form
-      
+
       {
         path: '/onlineinquiry/inquiryform/:inquiryid',
         element: <Inquiry/>
@@ -535,7 +544,7 @@ const Router = createBrowserRouter([
       },
 
 
-       
+
 
     // ======================Account Master
 
@@ -588,12 +597,12 @@ const Router = createBrowserRouter([
         path: '/purchasematerial',
         element: <PurchaseMaterial/>
       },
-      
+
 
 
     // ====================Role Rights
 
-      
+
     {
       path: '/addrole',
       element: <AddRole/>
@@ -607,10 +616,10 @@ const Router = createBrowserRouter([
       element: <RoleAssignment/>
     }
 
-      
-   
 
-    
+
+
+
 
 
 
@@ -633,7 +642,7 @@ function checkLocalStorageAndRedirect(navigate) {
 
 function WebApp() {
 
-  const [click ,setClick] = useState(false) 
+  const [click ,setClick] = useState(false)
 
 
   async function accessSession() {
