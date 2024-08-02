@@ -30,24 +30,13 @@ const FacultyWorking = () => {
     const [Batch, SetBatch] = useState([])
     const [Batchid, SetBatchid] = useState([])
     const [faculty,setfaculty] = useState([])
-    const [vendordata, setVendorData] = useState([])
+    const [working , setWorking] = useState([])
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
 
-    const handleChange1 = (event) => {
-        setChecked([event.target.checked, event.target.checked]);
-    };
-
-    const handleChange2 = (event) => {
-        setChecked([event.target.checked, checked[1]]);
-    };
-
-    const handleChange3 = (event) => {
-        setChecked([checked[0], event.target.checked]);
-    };
 
     // const children = (
     //     <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
@@ -127,12 +116,12 @@ const FacultyWorking = () => {
     }
 
 
-    async function getEmployeeData() {
+    async function getWorkingData() {
 
-        axios.post(`${BASE_URL}/vendor_details`)
+        axios.get(`${BASE_URL}/get_workingtime`)
             .then((res) => {
                 console.log(res.data)
-                setBrand(res.data)
+                setWorking(res.data)
             })
             .catch((err) => {
                 console.log(err)
@@ -141,27 +130,13 @@ const FacultyWorking = () => {
 
 
 
-    async function getEmployeeData() {
-        const data = {
-            tablename: "awt_facultyworking"
-        }
-        axios.post(`${BASE_URL}/get_workingtime`, data)
-            .then((res) => {
-                console.log(res.data)
-                setVendorData(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
-
+  
 
     useEffect(() => {
-        getEmployeeData()
+        getWorkingData()
         getfaulty()
         getCourseData()
         getbatch()
-        value.title = ""
         setError({})
         setUid([])
     }, [])
@@ -206,7 +181,7 @@ const FacultyWorking = () => {
 
         axios.post(`${BASE_URL}/delete_data`, data)
             .then((res) => {
-                getEmployeeData()
+                getWorkingData()
 
             })
             .catch((err) => {
@@ -239,7 +214,7 @@ const FacultyWorking = () => {
         axios.post(`${BASE_URL}/add_facultyworking`, data)
             .then((res) => {
                 console.log(res)
-                getEmployeeData()
+                getWorkingData()
 
             })
             .catch((err) => {
@@ -277,11 +252,12 @@ const FacultyWorking = () => {
             }
         } else {
             const data = {
-                tablename: "Batch_Mst"
+                tablename: "Batch_Mst",
+                columnname: "Batch_Id,Batch_code"
             }
-            axios.post(`${BASE_URL}/get_batch`, data)
+            axios.post(`${BASE_URL}/get_new_data`, data)
                 .then((res) => {
-                    console.log(res.data)
+                   
                     SetBatch(res.data)
                 })
                 .catch((err) => {
@@ -290,6 +266,7 @@ const FacultyWorking = () => {
         }
 
     };
+
 
     async function getfaulty() {
         const data = {
@@ -353,7 +330,7 @@ const FacultyWorking = () => {
     ];
 
 
-    const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
+    const rowsWithIds = working.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
 

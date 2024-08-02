@@ -30,7 +30,7 @@ const VivaMOCTakenListing = () => {
 
 
 
-    const getInquiryData = async () => {
+    const getmocData = async () => {
         const response = await fetch(`${BASE_URL}/getvivamoctakendata`, {
             method: 'GET',
             headers: {
@@ -44,9 +44,7 @@ const VivaMOCTakenListing = () => {
 
 
     useEffect(() => {
-        getInquiryData()
-
-        value.title = ""
+        getmocData()
         setError({})
         setUid([])
     }, [])
@@ -67,32 +65,17 @@ const VivaMOCTakenListing = () => {
         }));
     };
 
-    const handleUpdate = (id) => {
-        const data = {
-            u_id: id,
-            tablename: "awt_vivamoctaken"
-
-        }
-        axios.post(`${BASE_URL}/update_data`, data)
-            .then((res) => {
-                setUid(res.data[0])
-
-                console.log(res.data, "update")
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
 
     const handleDelete = (id) => {
         const data = {
-            cat_id: id,
-            tablename: "awt_vivamoctaken"
+            delete_id: id,
+            tablename: "viva_taken",
+            column_name: 'Take_Id'
         }
 
-        axios.post(`${BASE_URL}/delete_vivamoctaken_data`, data)
+        axios.post(`${BASE_URL}/new_delete_data`, data)
             .then((res) => {
-                getInquiryData()
+                getmocData()
             })
             .catch((err) => {
                 console.log(err)
@@ -105,15 +88,15 @@ const VivaMOCTakenListing = () => {
     }
 
 
-    const handleswitchchange = (value, Inquiry_Id) => {
-        const newval = value == 0 ? 1 : 0
+    // const handleswitchchange = (value, Inquiry_Id) => {
+    //     const newval = value == 0 ? 1 : 0
 
-        axios.post(`${BASE_URL}/data_status`, { status: newval, Inquiry_Id: Inquiry_Id, table_name: "awt_vivamoctaken" })
-            .then((res) => {
-                console.log(res)
-                getInquiryData()
-            })
-    }
+    //     axios.post(`${BASE_URL}/data_status`, { status: newval, Inquiry_Id: Inquiry_Id, table_name: "awt_vivamoctaken" })
+    //         .then((res) => {
+    //             console.log(res)
+    //             getInquiryData()
+    //         })
+    // }
 
 
 
@@ -131,10 +114,10 @@ const VivaMOCTakenListing = () => {
             filterable: false,
 
         },
-        { field: 'batchcode', headerName: 'Batch Code', flex: 2 },
-        { field: 'coursename', headerName: 'Course Name', flex: 2 },
+        { field: 'Batch_code', headerName: 'Batch Code', flex: 2 },
+        { field: 'Course_Name', headerName: 'Course Name', flex: 2 },
         { field: 'vivamocname', headerName: 'Viva/Moc Name', flex: 2 },
-        { field: 'date', headerName: 'Date', flex: 2 },
+        { field: 'Take_Dt', headerName: 'Date', flex: 2 },
 
         {
             field: 'actions',
@@ -144,8 +127,8 @@ const VivaMOCTakenListing = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <Link to={`/vivamoctaken/${params.row.id}`}><EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} /></Link>
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
+                        <Link to={`/vivamoctaken/${params.row.Take_Id}`}><EditIcon style={{ cursor: "pointer" }}  /></Link>
+                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.Take_Id)} />
                     </>
                 )
             }
@@ -186,7 +169,7 @@ const VivaMOCTakenListing = () => {
                                             disableColumnSelector
                                             disableDensitySelector
                                             rowHeight={35}
-                                            getRowId={(row) => row.id}
+                                            getRowId={(row) => row.Take_Id}
                                             initialState={{
                                                 pagination: {
                                                     paginationModel: { pageSize: 10, page: 0 },

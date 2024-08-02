@@ -188,7 +188,6 @@ const Convocation = () => {
     },
   ];
 
-  console.log(memoizedAdmissions)
 
   const rowsWithIds = memoizedAdmissions.map((row, index) => ({
     index: index + 1,

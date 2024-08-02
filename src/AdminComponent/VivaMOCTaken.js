@@ -1,35 +1,22 @@
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { useParams } from "react-router-dom";
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
-import { useParams } from "react-router-dom";
 //import FormControlLabel from '@mui/material/FormControlLabel';
 
 const VivaMOCTaken = () => {
 
     const { vivamoctakenid } = useParams();
-    const [brand, setBrand] = useState([])
-    const [vendordata, setVendorData] = useState([])
     const [uid, setUid] = useState([])
-    const [cid, setCid] = useState("")
     const [error, setError] = useState({})
-    const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
+    const [course, SetCourse] = useState([])
+    const [courseid, SetCoursid] = useState('')
+    const [batch, setAnnulBatch] = useState([])
+    const [batchid, setBatchid] = useState('')
+    const [moc, SetMoc] = useState([])
+    const [mocid, SetMocid] = useState('')
 
-    const handleChange1 = (event) => {
-      setChecked([event.target.checked, event.target.checked]);
-    };
-  
-    const handleChange2 = (event) => {
-      setChecked([event.target.checked, checked[1]]);
-    };
-  
-    const handleChange3 = (event) => {
-      setChecked([checked[0], event.target.checked]);
-    };
 
 
     const [value, setValue] = useState({
@@ -48,25 +35,25 @@ const VivaMOCTaken = () => {
         const newErrors = {}
 
 
-       if (!value.coursename){
-        isValid = false;
-        newErrors.coursename = "Course Name is Required"
-       }
+        if (!courseid) {
+            isValid = false;
+            newErrors.coursename = "Course Name is Required"
+        }
 
-       if(!value.batchcode){
-        isValid = false;
-        newErrors.batchcode = "Batch Code is Required"
-       }
+        if (!batchid) {
+            isValid = false;
+            newErrors.batchcode = "Batch Code is Required"
+        }
 
-       if(!value.vivamocname){
-        isValid = false;
-        newErrors.vivamocname = "Viva MOC is Required"
-       }
+        if (!mocid) {
+            isValid = false;
+            newErrors.vivamocname = "Viva MOC is Required"
+        }
 
-       if(!value.date){
-        isValid = false;
-        newErrors.date = "Date is Required"
-       }
+        if (!value.date) {
+            isValid = false;
+            newErrors.date = "Date is Required"
+        }
 
 
         setError(newErrors)
@@ -74,11 +61,13 @@ const VivaMOCTaken = () => {
     }
 
 
-    async function getStudentDetail() {
-        const response = await fetch(`${BASE_URL}/studentDetail`, {
+    async function getMocDetail() {
+        const response = await fetch(`${BASE_URL}/new_update_data`, {
             method: 'POST',
             body: JSON.stringify({
-                id: vivamoctakenid,
+                u_id: vivamoctakenid,
+                uidname: "Take_Id",
+                tablename: "viva_taken"
             }),
             headers: {
                 'Content-Type': 'application/json',
@@ -87,7 +76,12 @@ const VivaMOCTaken = () => {
 
         const data = await response.json();
 
+        setUid(data[0])
+        SetCoursid(data[0].Course_Id)
+        setBatchid(data[0].Batch_Id)
 
+        
+        
         setValue(prevState => ({
             ...prevState,
             coursename: data[0].coursename,
@@ -97,12 +91,65 @@ const VivaMOCTaken = () => {
             date: data[0].date,
         }))
     }
-    useEffect(() => {
-        if (':vivamoctakenid' !== ":vivamoctakenid") {
-            getStudentDetail()
+
+
+
+    async function getCourseData() {
+
+        axios.get(`${BASE_URL}/getCourse`)
+            .then((res) => {
+  
+                SetCourse(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+
+    const getbatch = async (id) => {
+
+        SetCoursid(id)
+
+        const data = {
+            courseid: id
         }
 
-        value.title = ""
+        try {
+            const res = await axios.post(`${BASE_URL}/getcoursewisebatch`, data);
+            setAnnulBatch(res.data);
+
+        } catch (err) {
+            console.error("Error fetching data:", err);
+        }
+
+    };
+
+    const getmoc = async (id) => {
+        setBatchid(id)
+
+        const data = {
+            batch_id: id,
+        }
+
+        try {
+            const res = await axios.post(`${BASE_URL}/getbatchwisemoc`, data);
+
+            SetMoc(res.data);
+            
+        } catch (err) {
+            console.error("Error fetching data:", err);
+        }
+
+
+    };
+
+
+    useEffect(() => {
+        if (vivamoctakenid !== ":vivamoctakenid") {
+            getMocDetail()
+        }
+
+        getCourseData()
         setError({})
         setUid([])
     }, [])
@@ -115,46 +162,30 @@ const VivaMOCTaken = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        let response
+
+
         if (validateForm()) {
-            if (vivamoctakenid == ":vivamoctakenid") {
-                response = await fetch(`${BASE_URL}/add_vivamoctaken`, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        coursename: value.coursename,
-                        batchcode: value.batchcode,
-                        vivamocname: value.vivamocname,
-                        maxmarks: value.maxmarks,
-                        date: value.date,
-                    }),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-            } else {
 
-                response = await fetch(`${BASE_URL}/updatevivamoctaken'`, {
-                    method: 'POST',
-                    body: JSON.stringify({
-
-                        coursename: value.coursename,
-                        batchcode: value.batchcode,
-                        vivamocname: value.vivamocname,
-                        maxmarks: value.maxmarks,
-                        date: value.date,
-
-
-
-                    }),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
+            const data = {
+                coursename: courseid,
+                batchcode: batchid,
+                vivamocname: mocid,
+                date: value.date,
+                uid: uid.Take_Id
             }
 
 
+            axios.post(`${BASE_URL}/add_vivamoctaken`, data)
+
+                .then((res) => {
+                    console.log(res)
+                    alert("Data added successfully")
+                })
 
         }
+
+
+
     }
 
 
@@ -177,66 +208,51 @@ const VivaMOCTaken = () => {
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
 
-                                            
+
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Course Name <span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.coursename} onChange={onhandleChange} name='coursename'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={courseid} onChange={(e) => getbatch(e.target.value)} name='coursename'>
                                                     <option>Select</option>
-                                                    <option>Administration</option>
-                                                    <option>Business Development</option>
-                                                    <option>Training &amp; Development</option>
-                                                    <option>Account</option>
-                                                    <option>Placement</option>
-                                                    <option>Purchase</option>
-                                                    <option>Leadership / DD</option>
-                                                    <option>Quality Assurance</option>
-                                                    <option>Human Resources</option>
-                                                    <option>Corporate Training</option>
-                                                    <option>Test User</option>
+                                                    {course.map((item) => {
+                                                        return (
+
+                                                            <option value={item.Course_Id}>{item.Course_Name}</option>
+                                                        )
+                                                    })}
                                                 </select>
                                                 {<span className="text-danger"> {error.coursename} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Batch Code<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batchcode} onChange={onhandleChange} name='batchcode'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={batchid} onChange={(e) => getmoc(e.target.value)}  name='batchcode'>
                                                     <option>-Select Batch Code-</option>
-                                                    <option>124354</option>
-                                                    <option>547895</option>
-                                                    <option>965847</option>
-                                                    <option>965847</option>
-                                                    <option>965847</option>
-                                                    <option>965847</option>
-                                                    <option>965847</option>
-                                                    <option>965847</option>
-                                                    <option>965847</option>
+                                                    {batch.map((item) => {
+                                                        return (
+                                                            <option value={item.Batch_Id}>{item.Batch_code}</option>
+                                                        )
+                                                    })}
                                                 </select>
                                                 {<span className="text-danger"> {error.batchcode} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Viva/Moc Name:<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.vivamocname} onChange={onhandleChange} name='vivamocname'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={mocid} onChange={(e) => SetMocid(e.target.value)} name='vivamocname'>
                                                     <option>--Select--</option>
-                                                    <option>Discipline</option>
-                                                    <option>Discipline</option>
-                                                    <option>Discipline</option>
-                                                    <option>Discipline</option>
-                                                    <option>MOC</option>
-                                                    <option>MOC</option>
-                                                    <option>MOC</option>
-                                                    <option>Piping</option>
-                                                    <option>Piping</option>
-                                                    <option>Piping</option>
-                                                    <option>Piping</option>
+                                                    {moc.map((item) => {
+                                                        return (
+                                                            <option value={item.id}>{item.subject}</option>
+                                                        )
+                                                    })}
                                                 </select>
                                                 {<span className="text-danger"> {error.vivamocname} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-3">
                                                 <lable for="exampleInputUsername1">Max Marks</lable>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.maxmarks} placeholder="Max Marks" 
-                                                name='maxmarks' onChange={onhandleChange} disabled />
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.maxmarks} placeholder="Max Marks"
+                                                    name='maxmarks' onChange={onhandleChange} disabled />
                                             </div>
 
 
@@ -246,7 +262,7 @@ const VivaMOCTaken = () => {
                                                 {<span className="text-danger"> {error.date} </span>}
                                             </div>
 
-                                            
+
 
                                         </div>
 
@@ -255,7 +271,7 @@ const VivaMOCTaken = () => {
                                         <button type='button' onClick={() => {
                                             window.location.reload()
                                         }} class="btn btn-light">Cancel</button>
-                                       
+
                                     </form>
 
                                 </div>

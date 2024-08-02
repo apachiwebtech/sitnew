@@ -9,13 +9,11 @@ import InnerHeader from './InnerHeader';
 
 const FinalExamTaken = () => {
 
-    const [brand, setBrand] = useState([])
     const [vendordata, setVendorData] = useState([])
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
     const [course, SetCourse] = React.useState([]);
     const [AnnulBatch, setAnnulBatch] = React.useState([]);
     const [AnnulBatchid, setAnnulBatchid] = React.useState("");
@@ -24,6 +22,7 @@ const FinalExamTaken = () => {
     const [courseid, setCourseid] = useState("")
 
 
+ 
 
     const [value, setValue] = useState({
         coursename: "" || uid.coursename,
@@ -74,9 +73,12 @@ const FinalExamTaken = () => {
 
 
 
-    async function getFinalexam() {
+
+
+
+    async function getEmployeeData() {
      
-        axios.get(`${BASE_URL}/getfinalexam` )
+        axios.get(`${BASE_URL}/getfinalexam`)
             .then((res) => {
                 console.log(res.data)
                 setVendorData(res.data)
@@ -87,11 +89,10 @@ const FinalExamTaken = () => {
     }
 
     useEffect(() => {
-        // getCourseData()
-        getFinalexam()
-        getUnitTest()
-        // getbatch()
-
+        getCourseData()
+        getfinalexam()
+        getbatch()
+        getEmployeeData()
         value.title = ""
         setError({})
         setUid([])
@@ -140,7 +141,7 @@ const FinalExamTaken = () => {
 
         axios.post(`${BASE_URL}/delete_data`, data)
             .then((res) => {
-                getFinalexam()
+                getEmployeeData()
 
             })
             .catch((err) => {
@@ -169,7 +170,7 @@ const FinalExamTaken = () => {
             axios.post(`${BASE_URL}/add_finalexamtaken`, data)
                 .then((res) => {
                     console.log(res)
-                    getFinalexam()  
+                    getEmployeeData()
                     setUid([])
                     setValue({
                         setTestNameid : '',
@@ -189,13 +190,55 @@ const FinalExamTaken = () => {
 
     }
 
+    async function getCourseData() {
+
+        axios.get(`${BASE_URL}/getCourse`)
+            .then((res) => {
+                console.log(res.data)
+                SetCourse(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+
+
+    const getbatch = async (id) => {
+
+        if (id != undefined) {
+            setCourseid(id)
+
+            const data = {
+                courseid: id
+            }
+
+            try {
+                const res = await axios.post(`${BASE_URL}/getcoursewisebatch`, data);
+                setAnnulBatch(res.data);
+
+            } catch (err) {
+                console.error("Error fetching data:", err);
+            }
+        } else {
+            const data = {
+                tablename: "Batch_Mst",
+                columnname: "Batch_Id,Batch_code"
+            }
+            axios.post(`${BASE_URL}/get_new_data`, data)
+                .then((res) => {
+                   
+                    setAnnulBatch(res.data)
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        }
+
+    };
 
 
 
-
-
-  
-    const getUnitTest = async (id) => {
+    const getfinalexam = async (id) => {
 
         if (id != undefined) {
             setAnnulBatchid(id)
@@ -232,10 +275,10 @@ const FinalExamTaken = () => {
     const onhandleChange = (e) => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }));
         if ([e.target.name] == 'coursename') {
-            // getbatch([e.target.value]);
+            getbatch([e.target.value]);
         }
         if ([e.target.name] == 'batchcode') {
-            getUnitTest([e.target.value]);
+            getfinalexam([e.target.value]);
         }
     }
 
@@ -252,8 +295,8 @@ const FinalExamTaken = () => {
             filterable: false,
 
         },
-        { field: 'Course_Name', headerName: 'Course Name', flex: 2 },
-        { field: 'Batch_code', headerName: 'Batch Code', flex: 2 },
+        { field: 'coursename', headerName: 'Course Name', flex: 2 },
+        { field: 'batchcode', headerName: 'Batch Code', flex: 2 },
         { field: 'date', headerName: 'Exam Date', flex: 2 },
 
         {

@@ -1,21 +1,20 @@
-
-
-
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { BASE_URL } from "./BaseUrl";
-import InnerHeader from "./InnerHeader";
-
 import CloseIcon from "@mui/icons-material/Close";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { BASE_URL } from "./BaseUrl";
 import BatchEdit from "./BatchEdit";
+import InnerHeader from "./InnerHeader";
+
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -29,43 +28,125 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 const SiteVise = () => {
 
   const [open, setOpen] = React.useState(false);
-  const{batchid}  = useParams();
+  const { batchid } = useParams();
+  const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
+  const [cid, setCid] = useState("")
+  const [uid, setUid] = useState([])
+
 
   const handleClickOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
+    setValue(
+      {
+        assingmentname: "",
+        subject: "",
+        marks: "",
+        date: ""
+      }
+    )
+    setUid([])
   };
 
   const [onlineAdmissions, setOnlineAdmissions] = useState([]);
 
-  async function getOnlineAdmissions() {
+  async function getUnitTest() {
 
-    const data = {
-      student_id: localStorage.getItem(`Admissionid`)
-    }
-    axios.post(`${BASE_URL}/getcompanyinfo`, data)
+    axios.get(`${BASE_URL}/site_vise`)
+
       .then((res) => {
-        console.log(res)
         setOnlineAdmissions(res.data)
       })
+
   }
 
   useEffect(() => {
-    getOnlineAdmissions();
+    getUnitTest();
   }, []);
 
   const [value, setValue] = useState({
-    Company: "",
-    BussinessNature: "",
-    Designation: "",
-    Duration: ""
+    subject: "" || uid.subject,
+    examdate: "" || uid.date,
+    duration: "" || uid.duration,
+    maxmarks: "" || uid.maxmarks
   })
+
+  useEffect(()=>{
+   setValue({
+    subject: uid.subject,
+    examdate: uid.date,
+    duration: uid.duration,
+    maxmarks: uid.maxmarks
+   })
+  },[uid])
 
   const handleChange = (e) => {
     setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
   }
+
+
+  
+  const handleClick = (id) => {
+    setCid(id)
+    setConfirmationVisibleMap((prevMap) => ({
+      ...prevMap,
+      [id]: true,
+    }));
+  };
+
+  const handleCancel = (id) => {
+    // Hide the confirmation dialog without performing the delete action
+    setConfirmationVisibleMap((prevMap) => ({
+      ...prevMap,
+      [id]: false,
+    }));
+  };
+
+  const getupdatedata = (id) => {
+
+    setOpen(true)
+
+    const data = {
+      u_id: id,
+      uidname: "id",
+      tablename: "awt_unittesttaken"
+    }
+    axios.post(`${BASE_URL}/new_update_data`, data)
+      .then((res) => {
+        setUid(res.data[0])
+
+  
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
+
+  const handleDelete = (id) => {
+    const data = {
+      cat_id: id,
+      tablename: "awt_unittesttaken",
+
+    }
+
+    axios.post(`${BASE_URL}/delete_data`, data)
+      .then((res) => {
+        getUnitTest()
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+
+    setConfirmationVisibleMap((prevMap) => ({
+      ...prevMap,
+      [id]: false,
+    }));
+  }
+
+
 
 
 
@@ -76,13 +157,27 @@ const SiteVise = () => {
       type: "number",
       align: "center",
       headerAlign: "center",
-      flex: 1,  
+      flex: 1,
       filterable: false,
     },
-    { field: "Company", headerName: "Assignment Name", flex: 2 },
-    { field: "BussinessNature", headerName: "Subject", flex: 2 },
-    { field: "Designation", headerName: "Marks", flex: 2 },
-    { field: "Duration", headerName: "Date", flex: 2 },
+    { field: "subject", headerName: "Subject", flex: 2 },
+    { field: "utdate", headerName: "TestDate", flex: 2 },
+    { field: "duration", headerName: "Duration", flex: 2 },
+    { field: "marks", headerName: "Marks", flex: 2 },
+    {
+      field: 'actions',
+      type: 'actions',
+      headerName: 'Action',
+      flex: 1,
+      renderCell: (params) => {
+        return (
+          <>
+            <EditIcon style={{ cursor: "pointer" }} onClick={() => getupdatedata(params.row.id)} />
+            <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
+          </>
+        )
+      }
+    },
   ];
 
   const rowsWithIds = onlineAdmissions.map((row, index) => ({
@@ -94,18 +189,19 @@ const SiteVise = () => {
     e.preventDefault()
 
     const data = {
-      Company: value.Company,
-      BussinessNature: value.BussinessNature,
-      Designation: value.Designation,
-      Duration: value.Duration,
-      student_id :localStorage.getItem(`Admissionid`)
+      subject: value.subject,
+      examdate: value.examdate,
+      duration: value.duration,
+      maxmarks: value.maxmarks,
+      uid :uid.id,
+      batch_id : batchid
     }
 
-    axios.post(`${BASE_URL}/add_companyinfo`, data)
+    axios.post(`${BASE_URL}/add_finalexam`, data)
       .then((res) => {
         console.log(res)
         setOpen(false)
-        getOnlineAdmissions()
+        getUnitTest()
       })
 
   }
@@ -115,7 +211,7 @@ const SiteVise = () => {
       <InnerHeader />
       <div className="main-pannel">
         <div className="content-wrapper ">
-             <BatchEdit batchid={batchid} />
+          <BatchEdit batchid={batchid} />
           <div className="row">
             <div className="col-lg-12">
               <div className="card">
@@ -125,7 +221,7 @@ const SiteVise = () => {
                     style={{ width: "100%", padding: "10px 0" }}
                   >
                     <div>
-                      <h4 class="card-title">Add Company Information</h4>
+                      <h4 class="card-title">Add Unit Test</h4>
                     </div>
                     <button
                       className="btn btn-success"
@@ -156,8 +252,15 @@ const SiteVise = () => {
                         },
                       }}
                     />
+                         {confirmationVisibleMap[cid] && (
+                      <div className='confirm-delete'>
+                        <p>Are you sure you want to delete?</p>
+                        <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
+                        <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
+                      </div>
+                    )}
                   </div>
-   
+
                 </div>
               </div>
             </div>
@@ -191,58 +294,59 @@ const SiteVise = () => {
                 <div className="row">
                   <div className="form-group col-lg-4 ">
                     <label for="exampleInputUsername1">
-                    Assignment Name
-                    </label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="exampleInputUsername1"
-
-                      placeholder="Enter.."
-                      name="Company"
-                      onChange={handleChange}
-                    />
-                  </div>
-
-                  <div className="form-group col-lg-4">
-                    <label for="exampleInputUsername1">
                       Subject
                     </label>
                     <input
                       type="text"
                       class="form-control"
                       id="exampleInputUsername1"
-
+                       value={value.subject}
                       placeholder="Enter.."
-                      name="BussinessNature"
+                      name="subject"
                       onChange={handleChange}
                     />
                   </div>
 
-                  <div className="form-group col-lg-4 ">
+                  <div className="form-group col-lg-4">
                     <label for="exampleInputUsername1">
-                     Marks
-                    </label>
-                    <input
-                      type="number"
-                      class="form-control"
-                      id="exampleInputUsername1"
-
-                      placeholder="Enter.."
-                      name="Designation"
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div className="form-group col-lg-4 ">
-                    <label for="exampleInputUsername1">
-                      Date
+                      TestDate
                     </label>
                     <input
                       type="date"
                       class="form-control"
                       id="exampleInputUsername1"
+                      value={value.date}
                       placeholder="Enter.."
-                      name="Duration"
+                      name="date"
+                      onChange={handleChange}
+                    />
+                  </div>
+
+                  <div className="form-group col-lg-4 ">
+                    <label for="exampleInputUsername1">
+                      Duration
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="exampleInputUsername1"
+                      value={value.duration}
+                      placeholder="Enter.."
+                      name="duration"
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div className="form-group col-lg-4 ">
+                    <label for="exampleInputUsername1">
+                      Marks
+                    </label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="exampleInputUsername1"
+                      placeholder="Enter.."
+                      value={value.maxmarks}
+                      name="maxmarks"
                       onChange={handleChange}
                     />
                   </div>

@@ -1,21 +1,11 @@
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
-import decryptedUserId from '../Utils/UserID';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { LibraryBooks } from '@mui/icons-material';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
 //import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
 
 const VisitSite = () => {
 
@@ -30,30 +20,8 @@ const VisitSite = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
 
-    const handleChange1 = (event) => {
-        setChecked([event.target.checked, event.target.checked]);
-    };
 
-    const handleChange2 = (event) => {
-        setChecked([event.target.checked, checked[1]]);
-    };
-
-    const handleChange3 = (event) => {
-        setChecked([checked[0], event.target.checked]);
-    };
-
-    // const children = (
-    //     <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-    //       <FormControlLabel
-    //         label="Child 1"
-    //         control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
-    //       />
-    //       <FormControlLabel
-    //         label="Child 2"
-    //         control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
-    //       />
-    //     </Box>
-    //   );
+ 
 
     const [value, setValue] = useState({
         course: "" || uid.course,
@@ -64,10 +32,6 @@ const VisitSite = () => {
         date: "" || uid.date,
         time: "" || uid.time,
         confirmdate: "" || uid.confirmdate,
-
-
-
-
 
     })
 
@@ -130,17 +94,17 @@ const VisitSite = () => {
     }
 
 
-    async function getEmployeeData() {
+    // async function getEmployeeData() {
 
-        axios.post(`${BASE_URL}/vendor_details`)
-            .then((res) => {
-                console.log(res.data)
-                setBrand(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
+    //     axios.post(`${BASE_URL}/vendor_details`)
+    //         .then((res) => {
+    //             console.log(res.data)
+    //             setBrand(res.data)
+    //         })
+    //         .catch((err) => {
+    //             console.log(err)
+    //         })
+    // }
 
 
 
@@ -161,7 +125,7 @@ const VisitSite = () => {
     useEffect(() => {
         getEmployeeData()
         getCourseData()
-
+        getbatch()
         value.title = ""
         setError({})
         setUid([])
@@ -184,10 +148,12 @@ const VisitSite = () => {
     };
 
     const handleUpdate = (Visit_Id) => {
+
         const data = {
             u_id: Visit_Id,
             tablename: "awt_visitsite"
         }
+
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
                 setUid(res.data[0])
@@ -286,11 +252,12 @@ const VisitSite = () => {
             }
         } else {
             const data = {
-                tablename: "Batch_Mst"
+                tablename: "Batch_Mst",
+                columnname: "Batch_Id,Batch_code"
             }
-            axios.post(`${BASE_URL}/get_batch`, data)
+            axios.post(`${BASE_URL}/get_new_data`, data)
                 .then((res) => {
-                    console.log(res.data)
+                   
                     setAnnulBatch(res.data)
                 })
                 .catch((err) => {
