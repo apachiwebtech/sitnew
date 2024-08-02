@@ -131,6 +131,10 @@ import Feesnotes from './AdminComponent/Feesnotes.jsx';
 import Hoilday from './AdminComponent/Hoilday.jsx';
 import Holiday from './AdminComponent/Hoilday.jsx';
 import Location from './AdminComponent/Location.jsx';
+import EmployeeRecordListing from './AdminComponent/EmployeeRecordListing.js';
+import EmployeeTrainingListing from './AdminComponent/EmployeeTrainingPlanListing.js';
+import EmployeeTrainingPlanListing from './AdminComponent/EmployeeTrainingPlanListing.js';
+import R_Inquiry from './AdminComponent/R_Inquiry.js';
 
 
 
@@ -325,14 +329,26 @@ const Router = createBrowserRouter([
         path: '/returnbook',
         element: <ReturnBook/>
       },
-
       {
         path: '/employeetrainingplan',
+        element: <EmployeeTrainingPlanListing/>
+      },
+      {
+        path: '/employeetrainingplan/:employeetrainingplanid',
         element: <EmployeeTrainingPlan/>
       },
       {
         path: '/employeerecord',
+        element: <EmployeeRecordListing/>
+      },
+      {
+        path: '/employeerecord/:employeerecordid',
         element: <EmployeeRecord/>
+      },
+
+      {
+        path: '/r_inquiry',
+        element: <R_Inquiry/>
       },
 
       {

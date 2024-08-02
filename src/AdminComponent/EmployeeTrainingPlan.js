@@ -1,21 +1,12 @@
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
-import decryptedUserId from '../Utils/UserID';
-import { DataGrid ,GridToolbar } from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { LibraryBooks } from '@mui/icons-material';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
+import { useParams } from "react-router-dom";
 //import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
 
 const EmployeeTrainingPlan = () => {
 
@@ -33,193 +24,113 @@ const EmployeeTrainingPlan = () => {
         setDate(formattedDate);
     }, []);
 
-
-    const [brand, setBrand] = useState([])
-    const [vendordata, setVendorData] = useState([])
+    const { employeetrainingplanid } = useParams();
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
-    const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
 
-    const handleChange1 = (event) => {
-      setChecked([event.target.checked, event.target.checked]);
-    };
-  
-    const handleChange2 = (event) => {
-      setChecked([event.target.checked, checked[1]]);
-    };
-  
-    const handleChange3 = (event) => {
-      setChecked([checked[0], event.target.checked]);
-    };
+ 
 
-    // const children = (
-    //     <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-    //       <FormControlLabel
-    //         label="Child 1"
-    //         control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
-    //       />
-    //       <FormControlLabel
-    //         label="Child 2"
-    //         control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
-    //       />
-    //     </Box>
-    //   );
 
     const [value, setValue] = useState({
-        subject : ""|| uid.subject,
-        internal : ""|| uid.internal,
-        identified : ""|| uid.identified,
-
-        
-
+        subject: '',
+        internal: '',
+        identified: '',
+        date: '',
 
     })
 
-    useEffect(() => {
-        setValue({
-            subject : uid.subject,
-            internal : uid.internal,
-            identified : uid.identified,
-
-        })
-    }, [uid])
 
 
-    // const validateForm = () => {
-    //     let isValid = true
-    //     const newErrors = {}
+    const validateForm = () => {
+        let isValid = true
+        const newErrors = {}
 
 
-    //    if (!value.college) {
-    //     isValid = false;
-    //     newErrors.name = "Name is require"
-    //    }
-    //     if (!value.email) {
-    //         isValid = false;
-    //         newErrors.email = "Email is require"
-    //     }
-    //     setError(newErrors)
-    //     return isValid
-    // }
-
-
-    async function getEmployeeData() {
-
-        axios.post(`${BASE_URL}/vendor_details`)
-            .then((res) => {
-                console.log(res.data)
-                setBrand(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
-
-
-    
-    async function getEmployeeData() {
-        const data = {
-            tablename : "awt_employeetrainingplan"
+        if (!value.subject) {
+            isValid = false;
+            newErrors.subject = "Subject is Required"
         }
-        axios.post(`${BASE_URL}/get_data`,data)
-            .then((res) => {
-                console.log(res.data)
-                setVendorData(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
+
+        if(!value.internal) {
+            isValid = false;
+            newErrors.internal = "Internal/External is Required"
+        }
+
+        if(!value.identified){
+            isValid = false;
+            newErrors.identified = "Identified is Required"
+        }
+
+        setError(newErrors)
+        return isValid
     }
 
+
+    async function getStudentDetail() {
+
+        const response = await fetch(`${BASE_URL}/update_data`, {
+            method: 'POST',
+            body: JSON.stringify({
+                u_id: employeetrainingplanid,
+                tablename :"awt_employeeplan"
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        const data = await response.json();
+         
+        setUid(data[0])
+
+        setValue(prevState => ({
+            ...prevState,
+            subject: data[0].subject,
+            internal: data[0].internal,
+            identified: data[0].identified,
+            date: data[0].date,
+        }))
+    }
     useEffect(() => {
-        getEmployeeData()
+        if (employeetrainingplanid !== ":employeetrainingplanid") {
+            getStudentDetail()
+        }
+
         value.title = ""
         setError({})
         setUid([])
     }, [])
 
-    const handleClick = (id) => {
-        setCid(id)
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: true,
-        }));
-    };
 
-    const handleCancel = (id) => {
-        // Hide the confirmation dialog without performing the delete action
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
-    };
 
-    const handleUpdate = (id) => {
-        const data = {
-            u_id : id,
-            tablename : "awt_employeetrainingplan"
-        }
-        axios.post(`${BASE_URL}/update_data`, data)
-            .then((res) => {
-                setUid(res.data[0])
 
-                console.log(res.data , "update")
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
 
-    const handleDelete = (id) => {
-        const data = {
-            cat_id: id,
-            tablename : "awt_employeetrainingplan"
-        }
 
-        axios.post(`${BASE_URL}/delete_data`, data)
-            .then((res) => {
-                getEmployeeData()
 
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
-    }
-
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
+        let response
 
-    // if(validateForm()){
-        const data = {
-            
-        subject : value.subject,
-        internal : value.internal,
-        identified : value.identified,
+
+        if (validateForm()) {
+            response = await fetch(`${BASE_URL}/add_employeetrainingplan`, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        subject: value.subject,
+                        internal: value.internal,
+                        identified: value.identified,
+                        date: value.date,
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+      
+
+
         }
-
-
-        axios.post(`${BASE_URL}/awt_employeetrainingplan`, data)
-            .then((res) => {
-               console.log(res)
-               getEmployeeData()
-
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    // }
-
-   
-        
-
-
     }
 
 
@@ -227,44 +138,8 @@ const EmployeeTrainingPlan = () => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
 
- 
-    
 
 
-
-    const columns = [
-        {
-            field: 'index',
-            headerName: 'Id',
-            type: 'number',
-            align: 'center',
-            headerAlign: 'center',
-            flex: 1,
-            filterable: false,
-                                              
-        },
-        { field: 'subject', headerName: 'Subject', flex: 2},
-        { field: 'internal', headerName: 'Internal/External', flex: 2},
-        { field: 'identified', headerName: 'Identified', flex: 2},
-        
-        {
-            field: 'actions',
-            type: 'actions',
-            headerName: 'Action',
-            flex: 1,
-            renderCell: (params) => {
-                return (
-                    <>
-                        <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
-                    </>
-                )
-            }
-        },
-    ];
-
-
-    const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
 
@@ -280,25 +155,25 @@ const EmployeeTrainingPlan = () => {
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
-                                          
+
 
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">Subject</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.subject} placeholder="From Year" name='fromyear' onChange={onhandleChange} />
-                                                
+                                                <label for="exampleInputUsername1">Subject<span className="text-danger">*</span></label>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.subject} placeholder="Subject" name='subject' onChange={onhandleChange} />
+                                                {<span className="text-danger"> {error.subject} </span>}
                                             </div>
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">Internal/External By</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.internal} placeholder="From Year" name='fromyear' onChange={onhandleChange} />
-                                                
+                                                <label for="exampleInputUsername1">Internal/External By<span className="text-danger">*</span></label>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.internal} placeholder="Internal" name='internal' onChange={onhandleChange} />
+                                                {<span className="text-danger"> {error.internal} </span>}
                                             </div>
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">Identified By</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.identified} placeholder="From Year" name='fromyear' onChange={onhandleChange} />
-                                                
+                                                <label for="exampleInputUsername1">Identified By<span className="text-danger">*</span></label>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.identified} placeholder="Identified" name='identified' onChange={onhandleChange} />
+                                                {<span className="text-danger"> {error.identified} </span>}
                                             </div>
                                             <div className="form-group col-lg-3">
-                                                <label htmlFor="exampleInputUsername1">Date</label>
+                                                <label htmlFor="exampleInputUsername1">Date<span className="text-danger">*</span></label>
                                                 <input
                                                     type="date"
                                                     className="form-control"
@@ -308,73 +183,23 @@ const EmployeeTrainingPlan = () => {
                                                     onChange={(e) => { }}
                                                     disabled
                                                 />
+                                                
                                             </div>
-                                            
+
 
                                         </div>
 
-                                         <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                       
+                                        <button type="submit" class="btn btn-primary mr-2">Submit</button>
+
                                         <button type='button' onClick={() => {
                                             window.location.reload()
                                         }} class="btn btn-light">Back</button>
-                                            
 
 
 
-                                        
+
+
                                     </form>
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div className='d-flex justify-content-between'>
-                                        <div>
-                                            <h4 class="card-title">Employee Training Plan</h4>
-                                        </div>
-
-                                    </div>
-
-                                    <div>
-                                        <DataGrid
-                                            rows={rowsWithIds}
-                                            columns={columns}
-                                            disableColumnFilter
-                                            disableColumnSelector
-                                            disableDensitySelector
-                                            rowHeight={35}
-                                            getRowId={(row) => row.id}
-                                            initialState={{
-                                                pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
-                                                },
-                                            }}
-                                            slots={{ toolbar: GridToolbar }}
-                                            slotProps={{
-                                                toolbar: {
-                                                    showQuickFilter: true,
-                                                },
-                                            }}
-                                        />
-
-                                        {confirmationVisibleMap[cid] && (
-                                            <div className='confirm-delete'>
-                                                <p>Are you sure you want to delete?</p>
-                                                <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
-                                                <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    {/* <button type="submit" class="btn btn-primary mr-2">Excel</button>
-                                    <button type="submit" class="btn btn-primary mr-2">Print</button>
-                                        <button type='button' onClick={() => {
-                                            window.location.reload()
-                                        }} class="btn btn-primary mr-2">Back</button> */}
-
 
                                 </div>
                             </div>

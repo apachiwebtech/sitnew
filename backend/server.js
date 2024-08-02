@@ -7,6 +7,7 @@ const multer = require('multer');
 var session = require('express-session')
 var cookieParser = require('cookie-parser');
 const { data } = require('jquery');
+const { error } = require('console');
 
 // Use CORS middleware before defining routes
 app.use(
@@ -707,7 +708,37 @@ app.post('/nodeapp/add_bookissue', (req, res) => {
   })
 })
 
+app.post('/nodeapp/add_employeetrainingplan', (req, res) => {
 
+
+  let { subject, internal, identified, date, uid } = req.body
+
+  let sql
+  let param;
+
+  console.log(uid)
+
+  if (uid == undefined) {
+    sql = "insert into awt_employeeplan(`subject`,`internal`,`identified`,`date`) values(?,?,?,?)"
+
+    param = [subject, internal, identified, date]
+
+  } else {
+    sql = "update `awt_employeeplan` set `subject` =? , `internal` =? , `identified` =? ,`date` =?  where id = ?"
+
+    param = [subject, internal, identified, date, uid]
+
+  }
+
+  con.query(sql, param, (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+})
 
 app.post('/nodeapp/add_employeerecord', (req, res) => {
 
@@ -834,6 +865,7 @@ app.get('/nodeapp/getGenerateResult', (req, res, next) => {
   })
 })
 
+//==========================Course=====================
 app.get('/nodeapp/getCourses', (req, res, next) => {
   const sql = 'SELECT Course_Id, Course_Name FROM Course_Mst';
 
@@ -845,6 +877,37 @@ app.get('/nodeapp/getCourses', (req, res, next) => {
     }
   })
 })
+
+//============================EmployeeRecord===================
+
+app.get('/nodeapp/getemployeerecorddata', (req, res, next) => {
+
+  const sql = 'SELECT * FROM awt_employerecord';
+
+  con.query(sql, (error, data) => {
+    if (error) {
+      return res.json(error);
+    }else{
+      return res.json(data);
+    }
+  })
+})
+
+//=====================EmployeeTrainingPlanListing===================
+
+app.get('/nodeapp/getemployeetrainingplandata', (req, res, next) => {
+
+  const sql = 'SELECT * FROM awt_employeeplan';
+
+  con.query(sql, (error, data) => {
+    if (error) {
+      return res.json(error);
+    }else{
+      return res.json(data);
+    }
+  })
+})
+
 app.get('/nodeapp/getCollege', (req, res, next) => {
   const sql = 'SELECT * FROM awt_college where deleted = 0';
 
@@ -1982,7 +2045,7 @@ app.post('/nodeapp/add_employerecord', (req, res) => {
   console.log(uid)
 
   if (uid == undefined) {
-    sql = "insert into awt_employerecord(`training`,`attendee`,`instructopr`,`description`,`feedback`) values(?,?,?,?,?)"
+    sql = "insert into awt_employerecord(`training`,`attendee`,`instructor`,`description`,`feedback`) values(?,?,?,?,?)"
 
     param = [training, attendee, instructor, description, feedback,]
 

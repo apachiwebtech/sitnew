@@ -581,7 +581,7 @@ const Header = ({click}) => {
           <ul className='inner-item'>
 
             <li className="nav-item">
-              <Link className="nav-link" to="/inquiry">
+              <Link className="nav-link" to="/r_inquiry">
                 {/* <Icon path={mdiCircleMedium } size={1} className='mx-3' /> */}
                 <Icon path={mdiCircleMedium} size={1} className='mx-3' />
                 <span className="menu-title">Inquiry</span>
