@@ -27,7 +27,7 @@ const AdmissionListing = () => {
 
 
     const getInquiryData = async () => {
-        const response = await fetch(`${BASE_URL}/getadmissiondata`, {
+        const response = await fetch(`${BASE_URL}/admissiondata`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -112,12 +112,16 @@ const AdmissionListing = () => {
         },
         { field: 'Student_Name', headerName: 'Student Name', flex: 3 },
         { field: 'Course_Name', headerName: 'Course Name', flex: 3 },
-        { field: 'Admission_Dt', headerName: 'Admission Date', flex: 2 },
-        { field: 'Inquiry_Dt', headerName: 'Inquiry Date', flex: 2 },
-        { field: 'Batch_Code', headerName: 'Batch Code', flex: 2 },
-        { field: 'Payment Type', headerName: 'Payment Type', flex: 2 },
-        { field: 'Total Fees', headerName: 'Total Fees', flex: 2 },
-        { field: 'Status', headerName: 'Status', flex: 2 },
+        { field: 'Admission_Date', headerName: 'Admission Date', flex: 2 },
+        // { field: 'Inquiry_Dt', headerName: 'Inquiry Date', flex: 2 },
+        { field: 'Batch_code', headerName: 'Batch Code', flex: 2 },
+        { field: 'Payment_Type', headerName: 'Payment Type', flex: 2 },
+        { field: 'Amount', headerName: 'Total Fees', flex: 2 },
+        { field: 'Status', headerName: 'Status', flex: 2  , renderCell : (param) =>{
+            return(
+                <p>Active</p>
+            )
+        }},
         // { field: 'isActive', headerName: 'Options', fslex: 2},
         {
             field: 'actions',
@@ -175,7 +179,7 @@ const AdmissionListing = () => {
                                                 columns={columns}
                                                 disableColumnSelector
                                                 rowHeight={37}
-                                                getRowId={(row) => row.Student_Id}
+                                                getRowId={(row) => row.Admission_Id}
                                                 initialState={{
                                                     pagination: {
                                                         paginationModel: { pageSize: 10, page: 0 },

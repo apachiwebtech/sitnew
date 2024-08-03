@@ -53,8 +53,6 @@ const Header = ({click}) => {
         </li>
 
 
-
-
         <li className="nav-item" onClick={() => handleToggle('product')}>
           <div className="nav-link" >
             <Icon path={mdiFormatListBulletedSquare} size={1} className='mx-3' />

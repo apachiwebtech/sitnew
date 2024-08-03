@@ -269,7 +269,7 @@ const AnnualBatch = () => {
                                         
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleInputUsername1">Description</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.description} placeholder="Description" name='description' onChange={onhandleChange} />
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.description} placeholder="Description" name='description' onChange={onhandleChange} disabled />
                                                
                                             </div>
                                             <div class="form-group col-lg-2">
@@ -300,7 +300,7 @@ const AnnualBatch = () => {
                                             </div>
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleInputUsername1">Service Tax(INR)</label>
-                                                <input type="number" class="form-control" id="exampleInputUsername1" value={value.servicetaxI} placeholder="Timings" name='servicetaxI' onChange={onhandleChange} />
+                                                <input type="number" class="form-control" id="exampleInputUsername1" value={value.servicetaxI} placeholder="Timings" name='servicetaxI' onChange={onhandleChange} disabled/>
                                                 
                                             </div>
 
@@ -317,7 +317,7 @@ const AnnualBatch = () => {
 
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleInputUsername1">Batch Code</label>
-                                                <input type="number" class="form-control" id="exampleInputUsername1" value={value.batchcode} placeholder="Batch Code" name='batchcode' onChange={onhandleChange} />
+                                                <input type="number" class="form-control" id="exampleInputUsername1" value={value.batchcode} placeholder="Batch Code" name='batchcode' onChange={onhandleChange} disabled/>
                                                 
                                             </div>
 
@@ -350,12 +350,12 @@ const AnnualBatch = () => {
                                             </div>
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleInputUsername1">Total(INR)</label>
-                                                <input type="number" class="form-control" id="exampleInputUsername1" value={value.totalinr} placeholder="Total(INR)" name='totalinr' onChange={onhandleChange} />
+                                                <input type="number" class="form-control" id="exampleInputUsername1" value={value.totalinr} placeholder="Total(INR)" name='totalinr' onChange={onhandleChange} disabled/>
                                                 
                                             </div>
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleInputUsername1">Service Tax($)</label>
-                                                <input type="number" class="form-control" id="exampleInputUsername1" value={value.servicetax} placeholder="Total(INR)" name='servicetax' onChange={onhandleChange} />
+                                                <input type="number" class="form-control" id="exampleInputUsername1" value={value.servicetax} placeholder="Total(INR)" name='servicetax' onChange={onhandleChange} disabled/>
                                                 
                                             </div>
                                             <div class="form-group col-lg-2">

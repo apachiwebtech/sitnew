@@ -110,6 +110,8 @@ const AnnualBatchListing = () => {
 
 
     const rowsWithIds = annulbatch.map((row, index) => ({ index: index + 1, ...row }));
+
+    
     return (
         <div className="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />

@@ -105,7 +105,7 @@ const InnerHeader = () => {
             <header class="main-header">
                 <div class="container-fluid">
                     <div class="main-header-inner">
-                    <ArrowCircleLeftSharpIcon onClick={() => navigate(-1)} class="arrow" />
+                    { location.pathname !== "/" &&   <ArrowCircleLeftSharpIcon onClick={() => navigate(-1)} class="arrow" /> }
                         <div class="page-title px-2">
                             <h1>{getPageName()}</h1>
                         </div>

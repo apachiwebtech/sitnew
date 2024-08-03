@@ -5,17 +5,19 @@ import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import OnlineAdmissionForm from './OnlineAdmissionForm';
 import img from '../assets/pass.jpg';
+import Admissionform from './Admissionform';
+import InnerHeaderForm from './InnerHeaderForm';
 
 
-const PerssonalInfo = () => {
+
+const StudentPersonalInfo = () => {
     const [course, setCourse] = useState([])
     const [batchCategoty, setbatchCategory] = useState([]);
     const [status, setStatus] = useState([])
-    const [batch, setBatch] = useState([])
     const location = useLocation();
     const [personalInfo, setPersonalInfo] = useState({
         studentName: '',
-        Student_Id: '',
+        Batch_Code: '',
         gender: '',
         nationality: '',
         dob: '',
@@ -30,7 +32,7 @@ const PerssonalInfo = () => {
         whatsapp: '',
         course: '',
         category: '',
-        // Referby: '',
+        Referby: '',
         admission_dt: '',
         prestatus: '',
         changestatus: '',
@@ -69,16 +71,6 @@ const PerssonalInfo = () => {
         const data = await response.json();
         setbatchCategory(data);
     }
-    const getBtach = async () => {
-        const response = await fetch(`${BASE_URL}/getBtach`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setBatch(data);
-    }
 
     async function getStatus() {
         axios.get(`${BASE_URL}/getstatus`)
@@ -91,11 +83,8 @@ const PerssonalInfo = () => {
         getStatus()
         getCourse()
         getBtachCategory()
-        getBtach()
         localStorage.setItem("Admissionid", admissionid);
     }, [admissionid])
-
-    
 
     const getPersonalData = async () => {
         const response = await fetch(`${BASE_URL}/getPersonal`, {
@@ -119,18 +108,17 @@ const PerssonalInfo = () => {
             nationality: data[0].Nationality,
             dob: data[0].DOB,
             // password: data[0].,
-            Student_Id: data[0].Student_Id,
+            reference: data[0].Refered_By,
             presentaddress: data[0].Present_Address,
             presentPincode: data[0].Present_Pin,
             presentCity: data[0].Present_City,
             state: data[0].Present_State,
             presentCountry: data[0].Present_Country,
             mobile: data[0].Present_Mobile,
-            reference: data[0].reference,
             whatsapp: '',
             course: data[0].Course_Id,
             category: data[0].Batch_Category_id,
-            // Referby: data[0].Refered_By,
+            Referby: data[0].Refered_By,
             admission_dt: data[0].Admission_Dt,
             prestatus: data[0].Status_id,
             changestatus: data[0].OnlineState,
@@ -181,7 +169,7 @@ const PerssonalInfo = () => {
                 whatsapp: personalInfo.whatsapp,
                 course: personalInfo.course,
                 category: personalInfo.category,
-                // Referby: personalInfo.Referby,
+                Referby: personalInfo.Referby,
                 admission_dt: personalInfo.admission_dt,
                 prestatus: personalInfo.prestatus,
                 changestatus: personalInfo.changestatus,
@@ -216,23 +204,7 @@ const PerssonalInfo = () => {
         let confirm = window.confirm("Are you sure want to proceed ")
 
         if (confirm) {
-
-            const data = {
-                Student_Id: id,
-                Course_Id: personalInfo.course,
-                Batch_Id: personalInfo.Batch_Code,
-                Admission_Dt : Date()
-
-            }
-
-            axios.post(`${BASE_URL}/process_admission` , data)
-                .then((res) => {
-
-                })
-
             navigate(`/admission/${id}`)
-
-
         }
 
 
@@ -242,14 +214,14 @@ const PerssonalInfo = () => {
 
 
         <div className="container-fluid page-body-wrapper">
-            <InnerHeader />
+            <InnerHeaderForm />
 
 
             <div className="main-panel">
 
                 <div className="content-wrapper">
 
-                    <OnlineAdmissionForm admissionid={admissionid} />
+                    <Admissionform admissionid={admissionid} />
 
                     <div className="row">
                         <div className="col-lg-12 grid-margin">
@@ -266,7 +238,7 @@ const PerssonalInfo = () => {
                                                     <div className='row'>
                                                         <div className="form-group col-lg-4 ">
                                                             <label for="exampleInputUsername1">B.M. ID<span className='text-danger'>*</span></label>
-                                                            <input type="text" class="form-control" id="exampleInputUsername1" value={personalInfo.Student_Id} placeholder="Name*" name='Student_Id' onChange={handleChange} />
+                                                            <input type="text" class="form-control" id="exampleInputUsername1" value={personalInfo.Batch_Code} placeholder="Name*" name='Batch_Code' onChange={handleChange} />
                                                         </div>
 
                                                         <div className="form-group col-lg-8">
@@ -361,9 +333,6 @@ const PerssonalInfo = () => {
 
 
                                             <div className='row p-2 gap-2'>
-                                                {location.pathname.match(/^\/onlineadmissionform\/personalinfo\/\d+$/) && <button type='button' className='mr-2 btn btn-success'>Accept</button>}
-                                                {location.pathname.match(/^\/onlineadmissionform\/personalinfo\/\d+$/) && <button type='button' className='mr-2 btn btn-danger'>Denied</button>}
-                                                <button type='button' className='mr-2 btn btn-secondary' onClick={() => handleadmission(admissionid)}>Admission</button>
                                                 <button type="submit" className='mr-2 btn btn-primary'>Save</button>
                                                 <Link to="/onlineadmission" className='mr-2 btn btn-secondary'>close</Link>
                                             </div>
@@ -400,18 +369,11 @@ const PerssonalInfo = () => {
 
 
                                                         <div className="form-group col-lg-5 ">
-                                                            <label for="exampleInputUsername1">Batch Code</label>
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={personalInfo.Batch_Code} name='Batch_Code' onChange={handleChange} >
-
-                                                                <option value="">Select batch</option>
-                                                                {batch.map((item) => {
-                                                                    return (
-
-                                                                        <option value={item.Batch_code}>{item.Batch_code}</option>
-                                                                )
-                                                                })}
-                                                          
-
+                                                            <label for="exampleInputUsername1">Refer</label>
+                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={personalInfo.Referby} name='Referby' onChange={handleChange} >
+                                                                <option value="advertise">Advertisement</option>
+                                                                <option value="facebook">facebook</option>
+                                                                <option value="google">Google</option>
                                                             </select>
                                                         </div>
 
@@ -560,4 +522,4 @@ const PerssonalInfo = () => {
     )
 }
 
-export default PerssonalInfo
+export default StudentPersonalInfo

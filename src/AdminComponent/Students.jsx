@@ -77,7 +77,7 @@ const Students = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <Link to={`/onlineadmissionform/personalinfo/${params.row.Student_Id}`}><EditIcon style={{ cursor: "pointer" }} /></Link>
+                        <Link to={`/admissionform/personalinfo/${params.row.Student_Id}`}><EditIcon style={{ cursor: "pointer" }} /></Link>
                         <Switch {...label} onChange={() => handleswitchchange(params.row.isActive,params.row.id )} defaultChecked={params.row.isActive == 0 ? false : true} color="secondary" />
                     </>
                 )

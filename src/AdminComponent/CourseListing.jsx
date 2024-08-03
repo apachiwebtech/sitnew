@@ -101,7 +101,6 @@ const CourseListing = () => {
         },
         { field: 'Course_Name', headerName: 'Course Name', flex: 2 },
         { field: 'Course_Code', headerName: 'Course Code', flex: 2 },
-        { field: 'Eligibility', headerName: 'Eligibility', flex: 2 },
         { field: 'Introduction', headerName: 'Introduction', flex: 2 },
         {
             field: 'actions',
