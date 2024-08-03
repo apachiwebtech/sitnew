@@ -135,6 +135,19 @@ import EmployeeRecordListing from './AdminComponent/EmployeeRecordListing.js';
 import EmployeeTrainingListing from './AdminComponent/EmployeeTrainingPlanListing.js';
 import EmployeeTrainingPlanListing from './AdminComponent/EmployeeTrainingPlanListing.js';
 import R_Inquiry from './AdminComponent/R_Inquiry.js';
+import CorporateInquiry from './AdminComponent/CorporateInquiry.js';
+import MassSMS from './AdminComponent/MassSMS.js';
+import MassEMail from './AdminComponent/MassEMail.js';
+import MassEMailContent from './AdminComponent/MassEMailContent.js';
+import MassWhatsApp from './AdminComponent/MassWhatsApp.js';
+import ContactExport from './AdminComponent/ContanctExport.js';
+import TaskManagement from './AdminComponent/TaskManagement.js';
+import AddTaskTemplate from './AdminComponent/AddTaskTemplate.js';
+import TaskAdd from './AdminComponent/AddTask.js';
+import AddChecklist from './AdminComponent/AddChecklist.js';
+import SearchEditTaskTemplate from './AdminComponent/SearchEditTaskTemplate.js';
+import SearchEditChecklist from './AdminComponent/SearchEditChecklist.js';
+//import SearchEditTask from './AdminComponent/SearchEditTask.js';
 
 
 
@@ -380,6 +393,10 @@ const Router = createBrowserRouter([
         element: <CorporateRecord/>
       },
       {
+        path: '/corporateinquiry',
+        element : <CorporateInquiry/>
+      },
+      {
         path: '/batchrecord',
         element: <BatchRecord/>
       },
@@ -514,12 +531,28 @@ const Router = createBrowserRouter([
         element: <NoticeBoard/>
       },
       {
+        path: '/masssms',
+        element: <MassSMS/>
+      },
+      {
+        path: '/massemail',
+        element: <MassEMail/>
+      },
+      {
+        path: '/massemailcontent',
+        element: <MassEMailContent/>
+      },
+      {
         path: '/uploadeventphoto',
         element: <UploadEventPhoto/>
       },
       {
         path: '/uploadbanner',
         element: <UploadBanner/>
+      },
+      {
+        path: '/exportcontacts',
+        element: <ContactExport/>
       },
       {
         path: '/uploadtestimonial',
@@ -532,6 +565,39 @@ const Router = createBrowserRouter([
       {
         path: '/qmsdoes',
         element: <QSMDoes/>
+      },
+      {
+        path: '/masswhatsapp',
+        element: <MassWhatsApp/>
+      },
+      {
+        path: '/taskmanagements',
+        element: <TaskManagement/>
+      },
+      {
+        path: '/addtasktemplate',
+        element: <AddTaskTemplate/>
+      },
+      {
+        path: '/taskadd',
+        element: <TaskAdd/>
+      },
+      {
+        path: '/AddChecklist',
+        element: <AddChecklist/>
+      },
+      {
+        path: '/searchedittasktemplate',
+        element: <SearchEditTaskTemplate/>
+      },
+      // {
+      //   path: '/searchedittask',
+      //   element: <SearchEditTask/>
+      // },
+
+      {
+        path: '/searcheditchecklist',
+        element: <SearchEditChecklist/>
       },
 
     //  ================Placements======================
