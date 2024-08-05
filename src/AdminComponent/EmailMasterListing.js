@@ -6,10 +6,8 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
-//import AssignmentsTaken from "./AssignmentsTaken";
-import EmployeeRecord from "./EmployeeRecord";
 
-const EmployeeRecordListing = () => {
+const EmailMasterListing = () => {
 
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
@@ -17,13 +15,16 @@ const EmployeeRecordListing = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
     const label = { inputProps: { 'aria-label': 'Color switch demo' } };
-    const [employeerecorddata, setemployeerecorddata] = useState([]);
+
+    const [assignmentstakendata, setassignmentstakendata] = useState ([]);
+
     const [value, setValue] = useState({
-        training: '',
-        attendee: '',
-        instructor: '',
-        description: '',
-        feedback: '',
+        emailpurpose: ' ',
+        department: ' ',
+        emailsubject: ' ',
+        cc: ' ',
+        bcc: ' ',
+        specification: ' ',
 
     })
 
@@ -31,7 +32,7 @@ const EmployeeRecordListing = () => {
 
 
     const getInquiryData = async () => {
-        const response = await fetch(`${BASE_URL}/getemployeerecorddata`, {
+        const response = await fetch(`${BASE_URL}/getassignmentstakendata`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -39,13 +40,12 @@ const EmployeeRecordListing = () => {
         });
         const data = await response.json();
 
-        setemployeerecorddata(data);
+        setassignmentstakendata(data);
     }
 
 
     useEffect(() => {
         getInquiryData()
-
         value.title = ""
         setError({})
         setUid([])
@@ -67,31 +67,14 @@ const EmployeeRecordListing = () => {
         }));
     };
 
-    const handleUpdate = (id) => {
-        const data = {
-            u_id: id,
-            tablename: "awt_employerecord"
-
-        }
-        axios.post(`${BASE_URL}/update_data`, data)
-            .then((res) => {
-                setUid(res.data[0])
-
-                console.log(res.data, "update")
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
 
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename: "awt_employerecord",
-            colom_name: 'id'
+            tablename: "assignmentstaken"
         }
 
-        axios.post(`${BASE_URL}/delete_employerecord_data`, data)
+        axios.post(`${BASE_URL}/delete_assignmentstaken_data`, data)
             .then((res) => {
                 getInquiryData()
             })
@@ -109,15 +92,12 @@ const EmployeeRecordListing = () => {
     const handleswitchchange = (value, Inquiry_Id) => {
         const newval = value == 0 ? 1 : 0
 
-        axios.post(`${BASE_URL}/data_status`, { status: newval, Inquiry_Id: Inquiry_Id, table_name: "awt_employerecord" })
+        axios.post(`${BASE_URL}/data_status`, { status: newval, Inquiry_Id: Inquiry_Id, table_name: "assignmentstaken" })
             .then((res) => {
                 console.log(res)
                 getInquiryData()
             })
     }
-
-
-
 
 
 
@@ -132,10 +112,10 @@ const EmployeeRecordListing = () => {
             filterable: false,
 
         },
-        { field: 'training', headerName: 'Training', flex: 2 },
-        { field: 'attendee', headerName: 'Attendee', flex: 2 },
-        { field: 'instructor', headerName: 'Instructor', flex: 2 },
-        { field: 'description', headerName: 'Description', flex: 2 },
+        { field: 'Course_Name', headerName: 'Course Name', flex: 2 },
+        { field: 'Batch_code', headerName: 'Batch Code', flex: 2 },
+        { field: 'Assign_Dt', headerName: 'Assignment Name', flex: 2 },
+        { field: 'Return_Dt', headerName: 'Assignment Date', flex: 2 },
 
         {
             field: 'actions',
@@ -145,9 +125,8 @@ const EmployeeRecordListing = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <Link to={`/employeerecord/${params.row.id}`}><EditIcon style={{cursor: "pointer"}} /></Link>
-                        {/* <EditIcon style={{ cursor: "pointer" }} Link={() => handleUpdate(params.row.id)} /> */}
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} Link={() => handleClick(params.row.id)} />
+                        <Link to={`/assignmentstaken/${params.row.Given_Id}`} ><EditIcon style={{ cursor: "pointer" }}  /></Link>
+                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} Link={() => handleClick(params.row.Given_Id)} />
                     </>
                 )
             }
@@ -156,7 +135,7 @@ const EmployeeRecordListing = () => {
 
 
 
-    const rowsWithIds = employeerecorddata.map((row, index) => ({ index: index + 1, ...row }));
+    const rowsWithIds = assignmentstakendata.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
 
@@ -173,9 +152,9 @@ const EmployeeRecordListing = () => {
                                 <div className="card-body">
                                     <div className='d-flex justify-content-between gap-3' style={{ width: "100%", padding: "10px 0" }}>
                                         <div >
-                                            <h4 class="card-title">Employee Training Record</h4>
+                                            <h4 class="card-title">Email Details</h4>
                                         </div>
-                                        <Link to='/employeerecord/:employeerecordid'> <button className='btn btn-success'>Add +</button></Link>
+                                        <Link to='/emailmaster/:emailmaster'> <button className='btn btn-success'>Add +</button></Link>
 
 
                                     </div>
@@ -188,7 +167,7 @@ const EmployeeRecordListing = () => {
                                             disableColumnSelector
                                             disableDensitySelector
                                             rowHeight={35}
-                                            getRowId={(row, index) => row.id}
+                                            getRowId={(row) => row.Given_Id}
                                             initialState={{
                                                 pagination: {
                                                     paginationModel: { pageSize: 10, page: 0 },
@@ -224,4 +203,4 @@ const EmployeeRecordListing = () => {
     )
 }
 
-export default EmployeeRecordListing
+export default EmailMasterListing

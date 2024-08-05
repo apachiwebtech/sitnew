@@ -1,23 +1,10 @@
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
-import decryptedUserId from '../Utils/UserID';
-import { DataGrid ,GridToolbar} from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { LibraryBooks } from '@mui/icons-material';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-//import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
-import { data } from 'jquery';
-// import ImageList from '@mui/material/ImageList';
 
 const QSMDoes = () => {
 
@@ -30,30 +17,7 @@ const QSMDoes = () => {
     const [checked, setChecked] = React.useState([true, false]);
     const [image , setImage] = useState()
 
-    // const [selectedFile, setSelectedFile] = useState(null);
-
-    // const handleFileChange = (event) => {
-    //   setSelectedFile(event.target.files[0]);
-
-
-    // const handleChange1 = (event) => {
-    //   setChecked([event.target.checked, event.target.checked]);
-    // };
-  
-   
-
-    // const children = (
-    //     <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-    //       <FormControlLabel
-    //         label="Child 1"
-    //         control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
-    //       />
-    //       <FormControlLabel
-    //         label="Child 2"
-    //         control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
-    //       />
-    //     </Box>
-    //   );
+    
 
     const [value, setValue] = useState({
         qmsname : ""|| uid.qmsname,
@@ -75,22 +39,24 @@ const QSMDoes = () => {
     }, [uid])
 
 
-    // const validateForm = () => {
-    //     let isValid = true
-    //     const newErrors = {}
+    const validateForm = () => {
+        let isValid = true
+        const newErrors = {}
 
 
-    //    if (!value.college) {
-    //     isValid = false;
-    //     newErrors.name = "Name is require"
-    //    }
-    //     if (!value.email) {
-    //         isValid = false;
-    //         newErrors.email = "Email is require"
-    //     }
-    //     setError(newErrors)
-    //     return isValid
-    // }
+       if (!value.qmsname) {
+        isValid = false;
+        newErrors.qmsname = "QMSName is Required"
+       }
+
+       if(!value.department){
+        isValid = false;
+        newErrors.department = "Department is Required"
+       }
+
+        setError(newErrors)
+        return isValid
+    }
 
 
     async function getEmployeeData() {
@@ -185,7 +151,7 @@ const QSMDoes = () => {
         e.preventDefault()
 
 
-    // if(validateForm()){
+    if(validateForm()){
 
     const formdata = new FormData()
 
@@ -203,7 +169,7 @@ const QSMDoes = () => {
             .catch((err) => {
                 console.log(err)
             })
-    // }
+    }
 
    
         
@@ -286,6 +252,7 @@ const QSMDoes = () => {
                                                     <option>Formats</option>
 
                                                 </select>
+                                                {<span className="text-danger"> {error.qmsname} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-3">
@@ -304,6 +271,7 @@ const QSMDoes = () => {
                                                     <option>Corporate Training</option>
                                                     <option>Test User</option>
                                                 </select>
+                                                {<span className="text-danger"> {error.department} </span>}
                                             </div>
 
 

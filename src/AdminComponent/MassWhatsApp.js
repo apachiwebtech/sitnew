@@ -1,21 +1,14 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { Form, Link, useParams } from 'react-router-dom';
-import { BASE_URL } from './BaseUrl';
-import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import InnerHeader from './InnerHeader';
-import decryptedUserId from '../Utils/UserID';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
+import EditIcon from "@mui/icons-material/Edit";
+import { FormControl } from '@mui/material';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { Button, Card, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import IconButton from '@mui/material/IconButton';
-import AddBoxIcon from '@mui/icons-material/AddBox';
-import { OndemandVideo } from '@mui/icons-material';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { BASE_URL } from './BaseUrl';
+import InnerHeader from './InnerHeader';
 
 
 const MassWhatsApp = () => {
@@ -26,14 +19,6 @@ const MassWhatsApp = () => {
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
-
-    const { projectmasterid } = useParams();
-    const [inquiryData, setInquiryData] = useState([]);
-    const [Discipline, setDescipline] = useState([]);
-    const [Course, setCourse] = useState([]);
-    const [Education, setEducation] = useState([]);
-    const [batch, setBatch] = useState([]);
-    const [batchCategoty, setbatchCategory] = useState([]);
     const [value, setValue] = useState({
         projectno: '',
         projectname: '',
@@ -54,22 +39,34 @@ const MassWhatsApp = () => {
     }, [uid])
 
 
-    // const validateForm = () => {
-    //     let isValid = true
-    //     const newErrors = {}
+    const validateForm = () => {
+        let isValid = true
+        const newErrors = {}
 
 
-    //    if (!value.college) {
-    //     isValid = false;
-    //     newErrors.name = "Name is require"
-    //    }
-    //     if (!value.email) {
-    //         isValid = false;
-    //         newErrors.email = "Email is require"
-    //     }
-    //     setError(newErrors)
-    //     return isValid
-    // }
+       if (!value.course) {
+        isValid = false;
+        newErrors.course = "Course is Required"
+       }
+
+       if(!value.batchtype){
+        isValid = false;
+        newErrors.batchtype = "Batch Type is Required"
+       }
+
+       if(!value.department){
+        isValid = false;
+        newErrors.department = "Department is Required"
+       }
+
+       if(!value.nationality){
+        isValid = false;
+        newErrors.nationality = "Nationality is Required"
+       }
+
+        setError(newErrors)
+        return isValid
+    }
 
 
     async function getEmployeeData() {
@@ -259,10 +256,10 @@ const MassWhatsApp = () => {
                                                             <div class="form-group col-lg-12">
                                                                 <FormControl>Student Type
                                                                     <RadioGroup
-
+                                                                       defaultValue="student"
                                                                         row aria-labelledby='demo-row-radio-button-group-lable'
                                                                         name='row-radio-button-group'>
-                                                                        <FormControlLabel value="student" control={<Radio />} label="Student" />
+                                                                        <FormControlLabel value="student" control={<Radio />} label="Student"  />
                                                                         <FormControlLabel value="inquiry" control={<Radio />} label="Inquiry" />
                                                                         <FormControlLabel value="college" control={<Radio />} label="College" />
                                                                         <FormControlLabel value="consultancy" control={<Radio />} label="Consultancy" />
@@ -281,7 +278,7 @@ const MassWhatsApp = () => {
                                                             </div>
 
                                                             <div class="form-group col-lg-3">
-                                                                <label for="exapmleFormControlSelect1">Course</label>
+                                                                <label for="exapmleFormControlSelect1">Course<span className="text-danger">*</span></label>
                                                                 <select class="form-control" id="exampleFormControlSelect1"
                                                                     value={value.course} name='course' onChange={onhandleChange}>
                                                                     <option>--Select Course--</option>
@@ -292,10 +289,11 @@ const MassWhatsApp = () => {
                                                                     <option>Offshore Engineering</option>
                                                                     <option>Other</option>
                                                                 </select>
+                                                                {<span className="text-danger"> {error.course} </span>}
                                                             </div>
 
                                                             <div class="form-group col-lg-3">
-                                                                <lable for="exampleFormControlSelect1">Batch Type</lable>
+                                                                <lable for="exampleFormControlSelect1">Batch Type<span className="text-danger">*</span></lable>
                                                                 <select class="form-control" id="exampleFormControlSelect1" value={value.batchtype}
                                                                     name='batchtype' onChange={onhandleChange}>
                                                                     <option>--Select Batch Type--</option>
@@ -303,6 +301,7 @@ const MassWhatsApp = () => {
                                                                     <option>Corporate</option>
                                                                     <option>Non-Corporate</option>
                                                                 </select>
+                                                                {<span className="text-danger"> {error.batchtype} </span>}
                                                             </div>
 
                                                             <div class="form-group col-lg-3">
@@ -318,7 +317,7 @@ const MassWhatsApp = () => {
                                                             </div>
                                                             
                                                             <div class="form-group col-lg-3">
-                                                                <lable for="exampleFormControlSelect1">Department</lable>
+                                                                <lable for="exampleFormControlSelect1">Department<span className="text-danger">*</span></lable>
                                                                 <select class="form-control" id="exampleFormCpntrolSelect1" value={value.department}
                                                                     name='department' onChange={onhandleChange}>
                                                                     <option>--Select Department--</option>
@@ -334,12 +333,12 @@ const MassWhatsApp = () => {
                                                                     <option>Human Resources</option>
                                                                     <option>Corporate Training</option>
                                                                     <option>Test User</option>
-
                                                                 </select>
+                                                                {<span className="text-danger"> {error.department} </span>}
                                                             </div>
 
                                                             <div class="form-group col-lg-3">
-                                                                <lable for="exampleFormControlSelect1">Nationality</lable>
+                                                                <lable for="exampleFormControlSelect1">Nationality<span className="text-danger">*</span></lable>
                                                                 <select class="form-control" id="exampleFormControlSelect1" value={value.nationality} 
                                                                 name='nationality' on onChange={onhandleChange}>
                                                                     <option>--Select Nationality--</option>
@@ -347,6 +346,7 @@ const MassWhatsApp = () => {
                                                                     <option>Indian</option>
                                                                     <option>Non-Indian</option>
                                                                 </select>
+                                                                {<span className="text-danger"> {error.nationality} </span>}
                                                             </div>
 
                                                             <div class="form-group col-lg-12">
@@ -361,13 +361,13 @@ const MassWhatsApp = () => {
 
                                                             <div class="form-group col-lg-6">
                                                                 <lable for="exampleTextarea1">Message</lable>
-                                                                <input type="text" class="form-control form-control-lg" id="exampleTextarea1" value={value.message}
+                                                                <textarea type="text" class="form-control form-control-lg" id="exampleTextarea1" value={value.message}
                                                                 placeholder='Message' name="message" onchange={onhandleChange}  />
                                                             </div>
 
                                                             <div class="form-group col-lg-6">
                                                                 <lable for="exampleTextarea1">Log</lable>
-                                                                <input type="text" class="form-control form-control-lg" id="exapmleTextarea1" value={value.log}
+                                                                <textarea type="text" class="form-control form-control-lg" id="exapmleTextarea1" value={value.log}
                                                                 placeholder='Log' name='log' onchange={onhandleChange} />
                                                             </div>
                                                         </div>

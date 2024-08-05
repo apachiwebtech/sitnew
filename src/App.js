@@ -152,6 +152,7 @@ import StudentAqualification from './AdminComponent/StudentAqualification.jsx';
 import StudentCompanyInfo from './AdminComponent/StudentCompanyInfo.jsx';
 import StudentDiscussion from './AdminComponent/StudentDiscussion.jsx';
 import StudentDocument from './AdminComponent/StudentDocument.jsx';
+import EmailMasterListing from './AdminComponent/EmailMasterListing.js';
 // import R_Inquiry from './AdminComponent/R_Inquiry.js';
 
 
@@ -585,10 +586,16 @@ const Router = createBrowserRouter([
         path: '/uploadtestimonial',
         element: <UploadTestimonial/>
       },
+      
       {
         path: '/emailmaster',
+        element: <EmailMasterListing/>
+      },
+      {
+        path: '/emailmaster/:emailmaster',
         element: <EmailMaster/>
       },
+
       {
         path: '/qmsdoes',
         element: <QSMDoes/>
@@ -626,6 +633,7 @@ const Router = createBrowserRouter([
         path: '/searcheditchecklist',
         element: <SearchEditChecklist/>
       },
+
 
     //  ================Placements======================
 

@@ -1,60 +1,23 @@
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
-import decryptedUserId from '../Utils/UserID';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { LibraryBooks } from '@mui/icons-material';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-//import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
-// import ImageList from '@mui/material/ImageList';
-// import { ImageSourcePropType } from 'react-native';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 const UploadTestimonial = () => {
 
     const [brand, setBrand] = useState([])
     const [vendordata, setVendorData] = useState([])
-    const [specification, setSpecification] = useState("")
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
-
-    const handleChange1 = (event) => {
-        setChecked([event.target.checked, event.target.checked]);
-    };
-
-    const handleChange2 = (event) => {
-        setChecked([event.target.checked, checked[1]]);
-    };
-
-    const handleChange3 = (event) => {
-        setChecked([checked[0], event.target.checked]);
-    };
-
-    // const children = (
-    //     <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-    //       <FormControlLabel
-    //         label="Child 1"
-    //         control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
-    //       />
-    //       <FormControlLabel
-    //         label="Child 2"
-    //         control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
-    //       />
-    //     </Box>
-    //   );
+    const [course, SetCourse] = useState([])
+    const [batch, setAnnulBatch] = useState([])
+    const [hide, setHide] = useState([])
+    const [vindordata, setStudent] = useState([])
 
     const [value, setValue] = useState({
         course: "" || uid.course,
@@ -64,6 +27,43 @@ const UploadTestimonial = () => {
 
 
     })
+
+    async function getCourseData() {
+
+        axios.get(`${BASE_URL}/getCourse`)
+            .then((res) => {
+                console.log(res.data)
+                SetCourse(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+
+    const getbatch = async (id) => {
+        const data = {
+            courseid: id
+        }
+
+        try{
+            const res = await axios.post(`${BASE_URL}/getcoursewisebatch`, data);
+            setAnnulBatch(res.data);
+        }catch (err) {
+            console.error("Error fetching data:", err);
+        }
+    };
+
+    const getstudentlisitng = (id) => {
+        setHide(true)
+        const data = {
+            batch_code: id
+        }
+
+        axios.post(`${BASE_URL}/getbatchwisestudent`, data)
+            .then((res) => {
+                setStudent(res.data)
+            })
+    }
 
     useEffect(() => {
         setValue({
@@ -122,6 +122,7 @@ const UploadTestimonial = () => {
 
     useEffect(() => {
         getEmployeeData()
+        getCourseData()
         value.title = ""
         setError({})
         setUid([])
@@ -269,51 +270,28 @@ const UploadTestimonial = () => {
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Course</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course} onChange={onhandleChange} name='course'>
-                                                    <option>Select</option>
-                                                    <option> Training in Process Plant System Modelling Using E3D</option>
-                                                    <option>Advance Pipe Stress Analysis </option>
-                                                    <option>Air Conditioning System Design (HVAC)</option>
-                                                    <option>Autocad - Piping</option>
-                                                    <option>Basics AutoCAD – 2D</option>
-                                                    <option>Civil/Structural Design &amp; Drafting </option>
-                                                    <option>Electrical &amp; Instrumentation Design and Drafting </option>
-                                                    <option>Electrical System Design</option>
-                                                    <option>Engineering Design &amp; Drafting </option>
-                                                    <option>Fire Alarm and Protection System </option>
-                                                    <option>Fundamentals of Offshore</option>
-                                                    <option>Health, Safety &amp; Environment in Construction</option>
-                                                    <option>HVAC Design and Drafting</option>
-                                                    <option>Masonry/Carpentry</option>
-                                                    <option>Mechanical Design of Process Equipment</option>
-                                                    <option>MEP Engineering (Mechanical, Electrical &amp; Plumbing)</option>
-                                                    <option>Offshore Engineering</option>
-                                                    <option>Others</option>
-                                                    <option>Pipeline Engineering</option>
-                                                    <option>Piping Design &amp; Drafting </option>
-                                                    <option>Piping Engineering </option>
-                                                    <option>Piping Materials</option>
-                                                    <option>Plant Design Management System (PDMS)</option>
-                                                    <option>PLANT LAYOUT DESIGN</option>
-                                                    <option>Priventive </option>
-                                                    <option>Process Engineering</option>
-                                                    <option>Process Equipment Fabrication Engineering</option>
-                                                    <option>Process Instrumentation &amp; Control</option>
-                                                    <option>PV Elite </option>
-                                                    <option>Rotating Equipment</option>
-                                                    <option>Smart Plant P&amp;ID</option>
-                                                    <option>Solar PV Power System with renewable Energy  </option>
-                                                    <option>Structural Engineering </option>
-                                                    <option>The Art of Developing a Balanced Personality</option>
-                                                    <option>Water &amp; Waste Water Engg.</option>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course} onChange={(e) => getbatch(e.target.value)} name='course'>
+                                                    <option>--Select Course--</option>
+
+                                                    {course.map((item) => {
+                                                        return(
+                                                            <option value={item.Course_Id}>{item.Course_Name}</option>
+                                                        )
+                                                    })}
 
                                                 </select>
                                             </div>
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Batch</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batch} onChange={onhandleChange} name='batch'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batch} onChange={(e) => getstudentlisitng(e.target.value)} name='batch'>
                                                     <option></option>
+
+                                                    {batch.map((item) => {
+                                                        return(
+                                                            <option value={item.Batch_code}>{item.Batch_code}</option>
+                                                        )
+                                                    })}
 
                                                 </select>
                                             </div>

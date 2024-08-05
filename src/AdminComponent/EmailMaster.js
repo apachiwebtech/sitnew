@@ -1,281 +1,166 @@
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
-import decryptedUserId from '../Utils/UserID';
-import { DataGrid ,GridToolbar} from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { LibraryBooks } from '@mui/icons-material';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-//import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
-// import ImageList from '@mui/material/ImageList';
-// import { ImageSourcePropType } from 'react-native';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import { useParams } from "react-router-dom";
 
 const EmailMaster = () => {
 
+    const { emailmasterid } = useParams();
+    const [specification, setSpecification] = useState([])
     const [brand, setBrand] = useState([])
     const [vendordata, setVendorData] = useState([])
-    const [specification, setSpecification] = useState("")
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
 
-    const handleChange1 = (event) => {
-      setChecked([event.target.checked, event.target.checked]);
-    };
-  
-    const handleChange2 = (event) => {
-      setChecked([event.target.checked, checked[1]]);
-    };
-  
-    const handleChange3 = (event) => {
-      setChecked([checked[0], event.target.checked]);
-    };
 
-    // const children = (
-    //     <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-    //       <FormControlLabel
-    //         label="Child 1"
-    //         control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
-    //       />
-    //       <FormControlLabel
-    //         label="Child 2"
-    //         control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
-    //       />
-    //     </Box>
-    //   );
 
     const [value, setValue] = useState({
-        emailpurpose : ""|| uid.emailpurpose,
-        department : ""|| uid.department,
-        emailsubject : ""|| uid.emailsubject,
-        cc : ""|| uid.cc,
-        bcc : ""|| uid.bcc,
-        specification: uid.specification,
-
-        
-
+        emailpurpose: '',
+        department: '',
+        emailsubject: '',
+        cc: '',
+        bcc: '',
+        specification: '',
 
     })
 
-    useEffect(() => {
-        setValue({
-            emailpurpose : uid.emailpurpose,
-            department : uid.department,
-            emailsubject : uid.emailsubject,
-            cc :uid.cc,
-            bcc: uid.bcc,
-            specification: uid.specification,
-
-        })
-    }, [uid])
 
 
-    // const validateForm = () => {
-    //     let isValid = true
-    //     const newErrors = {}
+    const validateForm = () => {
+        let isValid = true
+        const newErrors = {}
 
 
-    //    if (!value.college) {
-    //     isValid = false;
-    //     newErrors.name = "Name is require"
-    //    }
-    //     if (!value.email) {
-    //         isValid = false;
-    //         newErrors.email = "Email is require"
-    //     }
-    //     setError(newErrors)
-    //     return isValid
-    // }
+       if(!value.emailpurpose){
+        isValid = false;
+        newErrors.emailpurpose = "Email Purpose is Required"
+       }
 
+       if(!value.department){
+        isValid = false;
+        newErrors.department = "Department is Required"
+       }
 
-    async function getEmployeeData() {
+       if(!value.cc){
+        isValid = false;
+        newErrors.cc = "CC is Required"
+       }
 
-        axios.post(`${BASE_URL}/vendor_details`)
-            .then((res) => {
-                console.log(res.data)
-                setBrand(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
+       if(!value.bcc){
+        isValid = false;
+        newErrors.bcc = "BCC is Required"
+       }
+
+       if(!value.emailsubject){
+        isValid = false;
+        newErrors.emailsubject = "Email Subject is Required"
+       }
+
+        setError(newErrors)
+        return isValid
     }
 
 
-    
-    async function getEmployeeData() {
-        const data = {
-            tablename : "awt_emailmaster"
+    async function getStudentDetail() {
+        const response = await fetch(`${BASE_URL}/studentDetail`, {
+            method: 'POST',
+            body: JSON.stringify({
+                id: emailmasterid,
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        const data = await response.json();
+
+
+        setValue(prevState => ({
+            ...prevState,
+            emailpurpose: data[0].emailpurpose,
+            department: data[0].department,
+            emailsubject: data[0].emailsubject,
+            cc: data[0].cc,
+            bcc: data[0].bcc,
+            specification: data[0].specification,
+
+        }))
+    }
+    useEffect(() => {
+        if (':emailmasterid' !== ":emailmasterid") {
+            getStudentDetail()
         }
-        axios.post(`${BASE_URL}/get_data`,data)
-            .then((res) => {
-                console.log(res.data)
-                setVendorData(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
 
-    useEffect(() => {
-        getEmployeeData()
         value.title = ""
         setError({})
         setUid([])
     }, [])
 
-    const handleClick = (id) => {
-        setCid(id)
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: true,
-        }));
-    };
 
-    const handleCancel = (id) => {
-        // Hide the confirmation dialog without performing the delete action
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
-    };
 
-    const handleUpdate = (id) => {
-        const data = {
-            u_id : id,
-            tablename : "awt_emailmaster"
-        }
-        axios.post(`${BASE_URL}/update_data`, data)
-            .then((res) => {
-                setUid(res.data[0])
 
-                console.log(res.data , "update")
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
 
-    const handleDelete = (id) => {
-        const data = {
-            cat_id: id,
-            tablename : "awt_emailmaster"
-        }
 
-        axios.post(`${BASE_URL}/delete_data`, data)
-            .then((res) => {
-                getEmployeeData()
 
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
-    }
-
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
+        let response
+        if (validateForm()) {
+            if (emailmasterid == ":emailmasterid") {
+                response = await fetch(`${BASE_URL}/add_employerecord`, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        emailpurpose: value.emailpurpose,
+                        department: value.department,
+                        emailsubject: value.emailsubject,
+                        cc: value.cc,
+                        bcc: value.bcc,
+                        specification: value.specification,
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+            } else {
 
-    // if(validateForm()){
-        const data = {
-            
-        emailpurpose : value.emailpurpose,
-        department : value.department,
-        emailsubject : value.emailsubject,
-        cc :value.cc,
-        bcc: value.bcc,
-        specification: specification,
-        uid : uid.id
+                response = await fetch(`${BASE_URL}/updateemployeerecord'`, {
+                    method: 'POST',
+                    body: JSON.stringify({
+
+                        emailpurpose: value.emailpurpose,
+                        department: value.department,
+                        emailsubject: value.emailsubject,
+                        cc: value.cc,
+                        bcc: value.bcc,
+                        specification: value.specification,
+
+
+
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+            }
+
+
+
         }
-
-
-        axios.post(`${BASE_URL}/add_emailmaster`, data)
-            .then((res) => {
-               console.log(res)
-               getEmployeeData()
-
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    // }
-
-   
-        
-
-
     }
 
 
     const onhandleChange = (e) => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
-
- 
-    
-
-
-
-    const columns = [
-        {
-            field: 'index',
-            headerName: 'Id',
-            type: 'number',
-            align: 'center',
-            headerAlign: 'center',
-            flex: 1,
-            filterable: false,
-                                              
-        },
-        { field: 'emailpurpose', headerName: 'Email Purpose', flex: 2},
-        { field: 'department', headerName: 'Department', flex: 2},
-        { field: 'emailsubject', headerName: 'Email Subject', flex: 2},
-        { field: 'cc', headerName: 'CC', flex: 2},
-        { field: 'bcc', headerName: 'BCC', flex: 2},
-        { field: 'specification', headerName: 'Description', flex: 2, renderCell: (params) => {
-
-            return (
-                <>
-                    <div dangerouslySetInnerHTML={{__html:params.row.specification}}></div>
-                </>
-            )
-
-        }},
-        
-        {
-            field: 'actions',
-            type: 'actions',
-            headerName: 'Action',
-            flex: 1,
-            renderCell: (params) => {
-                return (
-                    <>
-                        <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
-                    </>
-                )
-            }
-        },
-    ];
-
-
-    const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
 
@@ -293,36 +178,37 @@ const EmailMaster = () => {
                                         <div class='row'>
 
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">Email Purpose</label>
+                                                <label for="exampleInputUsername1">Email Purpose<span className="text-danger">*</span></label>
                                                 <input type="text" class="form-control" id="exampleInputUsername1" value={value.emailpurpose} placeholder='Email Purpose' name='emailpurpose' onChange={onhandleChange} />
-                                                
+                                                {<span className="text-danger"> {error.emailpurpose} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">Department</label>
+                                                <label for="exampleInputUsername1">Department<span className="text-danger">*</span></label>
                                                 <input type="text" class="form-control" id="exampleInputUsername1" value={value.department} placeholder='Department' name='department' onChange={onhandleChange} />
-                                                
+                                                {<span className="text-danger"> {error.department} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">Email Subject</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.emailsubject} placeholder='Email Subject' name='emailsubject' onChange={onhandleChange} />
-                                                
-                                            </div>
-
-                                            <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">CC</label>
+                                                <label for="exampleInputUsername1">CC<span className="text-danger">*</span></label>
                                                 <input type="text" class="form-control" id="exampleInputUsername1" value={value.cc} placeholder='CC' name='cc' onChange={onhandleChange} />
-                                                
+                                                {<span className="text-danger"> {error.cc} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">BCC</label>
+                                                <label for="exampleInputUsername1">BCC<span className="text-danger">*</span></label>
                                                 <input type="text" class="form-control" id="exampleInputUsername1" value={value.bcc} placeholder='BCC' name='bcc' onChange={onhandleChange} />
-                                                
+                                                {<span className="text-danger"> {error.bcc} </span>}
                                             </div>
 
-                                            <div class="form-group col-lg-9">
+                                            <div class="form-group col-lg-6">
+                                                <label for="exampleTextarea1">Email Subject<span className="text-danger">*</span></label>
+                                                <textarea type="text" class="form-control form-control-lg" id="exampleTextarea1" 
+                                                value={value.emailsubject} placeholder="Email Subject" name="emailsubject" onChange={onhandleChange}></textarea>
+                                                {<span className="text-danger"> {error.emailsubject} </span>}
+                                            </div>
+
+                                            <div class="form-group col-lg-12">
                                                 <label for="exampleTextarea1">Event Description</label>
                                                     <CKEditor
                                                     editor={ClassicEditor}
@@ -357,59 +243,6 @@ const EmailMaster = () => {
                                         }} class="btn btn-light">Cancel</button>
                                        
                                     </form>
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div className='d-flex justify-content-between'>
-                                        <div>
-                                            <h4 class="card-title">Email Details</h4>
-                                        </div>
-
-                                    </div>
-
-                                    <div>
-                                        <DataGrid
-                                            rows={rowsWithIds}
-                                            columns={columns}
-                                            disableColumnFilter
-                                            disableColumnSelector
-                                            disableDensitySelector
-                                            rowHeight={35}
-                                            getRowId={(row) => row.id}
-                                            initialState={{
-                                                pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
-                                                },
-                                            }}
-                                            slots={{ toolbar: GridToolbar }}
-                                            slotProps={{
-                                                toolbar: {
-                                                    showQuickFilter: true,
-                                                },
-                                            }}
-                                        />
-
-                                        {confirmationVisibleMap[cid] && (
-                                            <div className='confirm-delete'>
-                                                <p>Are you sure you want to delete?</p>
-                                                <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
-                                                <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    
-                                      {/* <div>
-                                      <button type='button' onClick={() => {
-                                            window.location.reload()
-                                        }} class="btn btn-primary mr-2">Excel</button>
-                                      </div> */}
-
-
 
                                 </div>
                             </div>

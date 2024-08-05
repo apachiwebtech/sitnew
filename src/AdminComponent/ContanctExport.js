@@ -4,9 +4,6 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
-//import FormControlLabel from '@mui/material/FormControlLabel';
-// import ImageList from '@mui/material/ImageList';
-// import { ImageSourcePropType } from 'react-native';
 
 const ContactExport = () => {
 
@@ -18,40 +15,17 @@ const ContactExport = () => {
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
+    const [course, SetCourse] = useState([])
+    const [batch, setAnnulBatch] = useState([])
+    const [hide, setHide] = useState([])
+    const [vindordata, setStudent] = useState([])
 
     console.log(specification)
-
-    const handleChange1 = (event) => {
-        setChecked([event.target.checked, event.target.checked]);
-    };
-
-    const handleChange2 = (event) => {
-        setChecked([event.target.checked, checked[1]]);
-    };
-
-    const handleChange3 = (event) => {
-        setChecked([checked[0], event.target.checked]);
-    };
-
-    // const children = (
-    //     <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-    //       <FormControlLabel
-    //         label="Child 1"
-    //         control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
-    //       />
-    //       <FormControlLabel
-    //         label="Child 2"
-    //         control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
-    //       />
-    //     </Box>
-    //   );
 
     const [value, setValue] = useState({
         startdate: "" || uid.startdate,
         enddate: "" || uid.enddate,
         specification: "" || uid.specification,
-
-
 
 
     })
@@ -65,23 +39,65 @@ const ContactExport = () => {
         })
     }, [uid])
 
+    const getbatch = async (id) => {
+        const data = {
+            courseid: id
+        }
 
-    // const validateForm = () => {
-    //     let isValid = true
-    //     const newErrors = {}
+        try{
+            const res = await axios.post(`${BASE_URL}/getcoursewisebatch`, data);
+            setAnnulBatch(res.data)
+
+        }catch (err) {
+            console.error("Error fetching data:", err);
+        }
+
+    };
+
+    async function getCourseData() {
+
+        axios.get(`${BASE_URL}/getCourse`)
+            .then((res) => {
+                console.log(res.data)
+                SetCourse(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
 
 
-    //    if (!value.college) {
-    //     isValid = false;
-    //     newErrors.name = "Name is require"
-    //    }
-    //     if (!value.email) {
-    //         isValid = false;
-    //         newErrors.email = "Email is require"
-    //     }
-    //     setError(newErrors)
-    //     return isValid
-    // }
+    const getstudentlisitng = (id) => {
+        setHide(true)
+        const data = {
+            batch_code: id
+        }
+
+        axios.post(`${BASE_URL}/getbatchwisestudent`, data)
+            .then((res) => {
+                setStudent(res.data)
+            })
+    }
+
+
+    const validateForm = () => {
+        let isValid = true
+        const newErrors = {}
+
+        if (!value.selectcourse){
+            isValid = false;
+            newErrors.selectcourse = "Course is Required"
+        }
+
+        if (!value.selectbatch){
+            isValid = false;
+            newErrors.selectbatch = "Batch is Required"
+        }
+
+        
+        setError(newErrors)
+        return isValid
+    }
 
 
     async function getEmployeeData() {
@@ -114,6 +130,7 @@ const ContactExport = () => {
 
     useEffect(() => {
         getEmployeeData()
+        getCourseData()
         value.title = ""
         setError({})
         setUid([])
@@ -175,7 +192,7 @@ const ContactExport = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        // if(validateForm()){
+        if(validateForm()){
         const data = {
 
 
@@ -196,7 +213,7 @@ const ContactExport = () => {
             .catch((err) => {
                 console.log(err)
             })
-        // }
+        }
 
 
 
@@ -258,7 +275,7 @@ const ContactExport = () => {
             <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="row">
-                        <div class="col-lg-12 grid-margin stretch-card">
+                        <div class="col-lg-5 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
                                     <h4 class="card-title">Student Contact Details</h4>
@@ -266,24 +283,36 @@ const ContactExport = () => {
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
-                                            <div class="form-group col-lg-4">
-                                                <lable for="exampleFormControlSelect1">Select Course</lable>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.selectcourse} name='selectcourse' onChange={onhandleChange}>
+                                            <div class="form-group col-lg-12">
+                                                <lable for="exampleFormControlSelect1">Select Course <span className="text-danger">*</span></lable>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.selectcourse} name='selectcourse' onChange={(e) => getbatch(e.target.value)}>
                                                     <option>--Select Course--</option>
-                                                    <option>Advance Pipe Stress Analysis </option>
-                                                    <option>Air Conditioning System Design (HVAC)</option>
-                                                    <option>Autocad - Piping</option>
-                                                    <option>Basics AutoCAD – 2D</option>
-                                                    <option>Civil/Structural Design &amp; Drafting </option>
-                                                    <option>Electrical &amp; Instrumentation Design and Drafting </option>
-                                                    <option>Electrical System Design</option>
+
+                                                    {course.map((item) => {
+                                                        return (
+                                                            <option value={item.Course_Id}>{item.Course_name}</option>
+
+                                                        )
+                                                    })}
+
+
                                                 </select>
+                                                {<span className="text-danger">{error.selectcourse}</span>}
                                             </div>
-                                            <div class="form-group col-lg-4">
-                                                <lable for="exampleFormControlSelect1">Select Batch</lable>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.selectbatch} name='selectbatch' onChange={onhandleChange}>
+                                            <div class="form-group col-lg-12">
+                                                <lable for="exampleFormControlSelect1">Select Batch<span className="text-danger">*</span></lable>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.selectbatch} name='selectbatch' onChange={(e) => getstudentlisitng(e.target.value) }>
                                                     <option>--Select Batch--</option>
+
+                                                    {batch.map((item) => {
+                                                        return (
+                                                            <option value={item.Batch_code}> {item.Batch_code} </option>
+                                                        )
+                                                    })}
+
+
                                                 </select>
+                                                {<span className="text-danger"> {error.selectbatch} </span>}
                                             </div>
 
 
@@ -297,9 +326,7 @@ const ContactExport = () => {
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-lg-12 grid-margin">
+                        <div className="col-lg-7 grid-margin">
                             <div className="card">
 
                                 <div className='container-fluid'>
@@ -327,6 +354,9 @@ const ContactExport = () => {
 
                             </div>
                         </div>
+                    </div>
+                    <div className="#">
+                      
 
                     </div>
                 </div>
