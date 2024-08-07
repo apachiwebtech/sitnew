@@ -1,42 +1,29 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
-import decryptedUserId from '../Utils/UserID';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { Button, Card, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import IconButton from '@mui/material/IconButton';
-import AddBoxIcon from '@mui/icons-material/AddBox';
 
 
 const Admission = () => {
 
-    const [brand, setBrand] = useState([])
-    const [vendordata, setVendorData] = useState([])
+
     const [uid, setUid] = useState([])
-    const [cid, setCid] = useState("")
     const [error, setError] = useState({})
-    const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
     const [course, setCourse] = useState([])
     const { studentid } = useParams();
-    const [inquiryData, setInquiryData] = useState([]);
-    const [Discipline, setDescipline] = useState([]);
-    const [Education, setEducation] = useState([]);
+    const [student_id , setStudentId] = useState('')
     const [batch, setBatch] = useState([]);
-    const [batchCategoty, setbatchCategory] = useState([]);
+    const [admitid , setAdmitId] = useState('')
     const [value, setValue] = useState({
         date: '',
         batch: '',
         roll: '',
         studentname: "",
-        course: ""
+        course: "",
+        lumpsumamt :"",
+        installamt :"",
+        ptype :"",
+        feesamt :""
     })
 
 
@@ -45,9 +32,21 @@ const Admission = () => {
         const newErrors = {}
 
 
-        if (!value.facultyname) {
+        if (!value.course) {
             isValid = false;
-            newErrors.name = "Name is require"
+            newErrors.course = "Course is require"
+        }
+        if (!value.batch) {
+            isValid = false;
+            newErrors.batch = "Batch is require"
+        }
+        if (!value.date) {
+            isValid = false;
+            newErrors.date = "Date is require"
+        }
+        if (!value.studentname) {
+            isValid = false;
+            newErrors.studentname = "Studentname is require"
         }
 
         setError(newErrors)
@@ -79,7 +78,6 @@ const Admission = () => {
         setBatch(data);
     }
 
-
     async function getStudentDetail() {
         const response = await fetch(`${BASE_URL}/AdmitDetail`, {
             method: 'POST',
@@ -93,23 +91,29 @@ const Admission = () => {
 
         const data = await response.json();
 
-     
-
-        setValue(prevState => ({
-            ...prevState,
-            date : data[0].Admission_Dt,
-            course : data[0].Course_Id,
-            studentname : data[0].Student_Name,
-            batch :data[0].Batch_Code
-
-        }))
+         setAdmitId(data[0].Admission_Id)
+         setStudentId(data[0].Student_Id)
+        if(data[0]){
+            setValue(prevState => ({
+                ...prevState,
+                date : data[0].Admission_Date,
+                course : data[0].Course_Id,
+                studentname : data[0].Student_Name,
+                batch :data[0].Batch_Id,
+                lumpsumamt :data[0].Amount,
+                installamt :data[0].Amount,
+                ptype :data[0].Payment_Type,
+                feesamt :data[0].Amount,
+                roll : data[0].Student_Code
+            }))
+        }
+    
     }
 
     useEffect(() => {
         if (studentid !== ":studentid") {
             getStudentDetail()
         }
-        // getStudentDetail()
         getCourse()
         getBatch()
         value.title = ""
@@ -126,17 +130,19 @@ const Admission = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
 
-        // if(validateForm()){
+        if(validateForm()){
 
         const response = await fetch(`${BASE_URL}/updateAdmission`, {
             method: 'POST',
             body: JSON.stringify({
-                studentid: studentid,
+                Admitid: studentid,
                 date: value.date,
                 roll :value.roll,
                 course : value.course,
                 batch : value.batch,
-                studentname : value.studentname,
+                studentid : student_id,
+                ptype :value.ptype,
+                Amount :value.Amount,
             }),
             headers: {
                 'Content-Type': 'application/json'
@@ -156,7 +162,7 @@ const Admission = () => {
         //   window.location.pathname = '/inquirylisting'
 
 
-        // }        
+        }        
     }
 
 
@@ -188,7 +194,7 @@ const Admission = () => {
                                                     </div>
                                                     <div className='row'>
                                                         <div className="form-group col-lg-4 ">
-                                                            <label for="exampleInputUsername1">Course Name</label>
+                                                            <label for="exampleInputUsername1">Course Name<span className='text-danger'>*</span></label>
                                                             <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course} name='course' onChange={onhandleChange} >
                                                                 <option>Select Course</option>
                                                                 {course.map((item) => {
@@ -197,25 +203,27 @@ const Admission = () => {
                                                                     )
                                                                 })}
                                                             </select>
+                                                            {error.course && <span className='text-danger'>{error.course}</span>}
                                                         </div>
                                                         <div className="form-group col-lg-4 ">
-                                                            <label for="exampleInputUsername1">BatchNo</label>
+                                                            <label for="exampleInputUsername1">BatchNo<span className='text-danger'>*</span></label>
                                                             <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batch} name='batch' onChange={onhandleChange} >
 
                                                                 <option>Select Batch</option>
                                                                 {batch.map((item) => {
                                                                     return (
 
-                                                                        <option value={item.Batch_Id}>{item.Batch_code}</option>
+                                                                        <option value={item.Batch_code}>{item.Batch_code}</option>
                                                                     )
                                                                 })}
 
                                                             </select>
+                                                            {error.batch && <span className='text-danger'>{error.batch}</span>}
                                                         </div>
                                                         <div className="form-group col-lg-4 ">
-                                                            <label for="exampleInputUsername1">Admission Date</label>
-                                                            <input type="date" class="form-control" id="exampleInputUsername1" value={value.date} placeholder="Contact Person" name='date' onChange={onhandleChange} />
-
+                                                            <label for="exampleInputUsername1">Admission Date<span className='text-danger'>*</span></label>
+                                                            <input type="date" class="form-control" id="exampleInputUsername1" value={value.date}  name='date' onChange={onhandleChange} />
+                                                            {error.date && <span className='text-danger'>{error.date}</span>}
                                                         </div>
                                                         <div className="form-group col-lg-4 ">
                                                             <label for="exampleInputUsername1">Roll No.</label>
@@ -223,13 +231,10 @@ const Admission = () => {
 
                                                         </div>
                                                         <div className="form-group col-lg-4 ">
-                                                            <label for="exampleInputUsername1">Student Name</label>
+                                                            <label for="exampleInputUsername1">Student Name<span className='text-danger'>*</span></label>
                                                             <input type="text" class="form-control" id="exampleInputUsername1" value={value.studentname} placeholder="Student's Name" name='studentname' onChange={onhandleChange} />
-                                                            {error.facultyname && <span className='text-danger'>{error.studentname}</span>}
+                                                            {error.studentname && <span className='text-danger'>{error.studentname}</span>}
                                                         </div>
-
-
-
 
 
 
@@ -254,13 +259,13 @@ const Admission = () => {
                                                     <div className='row'>
                                                         <div className="form-group col-lg-6">
                                                             <label for="exampleInputUsername1">Lumpsum Amount</label>
-                                                            <input type="text" className="form-control" id="exampleInputUsername1" value={value.InquiryDate} placeholder="Lumpsum Amount" name='InquiryDate' onChange={onhandleChange} />
+                                                            <input type="text" className="form-control" id="exampleInputUsername1" value={value.lumpsumamt} placeholder="Lumpsum Amount" name='lumpsumamt' onChange={onhandleChange} />
 
                                                         </div>
 
                                                         <div className="form-group col-lg-6">
                                                             <label for="exampleInputUsername1">Installment Amount</label>
-                                                            <input type="text" className="form-control" id="exampleInputUsername1" value={value.InquiryDate} placeholder="Installment Amount" name='InquiryDate' onChange={onhandleChange} />
+                                                            <input type="text" className="form-control" id="exampleInputUsername1" value={value.installamt} placeholder="Installment Amount" name='installamt' onChange={onhandleChange} />
 
                                                         </div>
 
@@ -276,20 +281,19 @@ const Admission = () => {
                                                     <div className='row'>
                                                         <div className="form-group col-lg-6 ">
                                                             <label for="exampleInputUsername1">Payment Type</label>
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.gender} name='gender' onChange={onhandleChange} >
-                                                                <option>Lumpsum</option>
-                                                                <option>Installment</option>
+                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.ptype} name='ptype' onChange={onhandleChange} >
+                                                                <option value="Lumpsum">Lumpsum</option>
+                                                                <option value="Installment">Installment</option>
 
                                                             </select>
                                                         </div>
 
                                                         <div className="form-group col-lg-6">
                                                             <label for="exampleInputUsername1">Fees Amount</label>
-                                                            <input type="text" className="form-control" id="exampleInputUsername1" value={value.InquiryDate} placeholder="Fees Amount" name='InquiryDate' onChange={onhandleChange} />
+                                                            <input type="text" className="form-control" id="exampleInputUsername1" value={value.feesamt} placeholder="Fees Amount" name='feesamt' onChange={onhandleChange} />
 
                                                         </div>
                                                     </div>
-
 
 
                                                 </div>

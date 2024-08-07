@@ -8,15 +8,18 @@ import { Link } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import { Box } from '@mui/material';
+import PrintIcon from '@mui/icons-material/Print';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import MyDocument from "./MyDocument";
 
 function CustomToolbar() {
     return (
-      <GridToolbarContainer>
-        {/* <GridToolbarExport /> */}
-        <GridToolbarFilterButton />
-      </GridToolbarContainer>
+        <GridToolbarContainer>
+            {/* <GridToolbarExport /> */}
+            <GridToolbarFilterButton />
+        </GridToolbarContainer>
     );
-  }
+}
 
 const AdmissionListing = () => {
 
@@ -24,7 +27,6 @@ const AdmissionListing = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const label = { inputProps: { 'aria-label': 'Color switch demo' } };
     const [admission, setadmissionData] = useState([]);
-
 
     const getInquiryData = async () => {
         const response = await fetch(`${BASE_URL}/admissiondata`, {
@@ -39,9 +41,9 @@ const AdmissionListing = () => {
     }
 
 
-    useEffect(()=>{
+    useEffect(() => {
         getInquiryData()
-    },[])
+    }, [])
 
 
 
@@ -66,11 +68,12 @@ const AdmissionListing = () => {
 
     const handleDelete = (id) => {
         const data = {
-            cat_id: id,
-            tablename: "Student_Inquiry"
+            delete_id: id,
+            tablename: "Admission_master",
+            column_name: "Admission_Id"
         }
 
-        axios.post(`${BASE_URL}/delete_inquiry_data`, data)
+        axios.post(`${BASE_URL}/new_delete_data`, data)
             .then((res) => {
                 getInquiryData()
             })
@@ -88,7 +91,7 @@ const AdmissionListing = () => {
     const handleswitchchange = (value, Inquiry_Id) => {
         const newval = value == 0 ? 1 : 0
 
-        axios.post(`${BASE_URL}/data_status`, { status: newval, Inquiry_Id: Inquiry_Id, table_name: "Student_Inquiry" })
+        axios.post(`${BASE_URL}/data_status`, { status: newval, Inquiry_Id: Inquiry_Id, table_name: "Admission_master" })
             .then((res) => {
                 console.log(res)
                 getInquiryData()
@@ -117,11 +120,13 @@ const AdmissionListing = () => {
         { field: 'Batch_code', headerName: 'Batch Code', flex: 2 },
         { field: 'Payment_Type', headerName: 'Payment Type', flex: 2 },
         { field: 'Amount', headerName: 'Total Fees', flex: 2 },
-        { field: 'Status', headerName: 'Status', flex: 2  , renderCell : (param) =>{
-            return(
-                <p>Active</p>
-            )
-        }},
+        {
+            field: 'Status', headerName: 'Status', flex: 2, renderCell: (param) => {
+                return (
+                    <p>Active</p>
+                )
+            }
+        },
         // { field: 'isActive', headerName: 'Options', fslex: 2},
         {
             field: 'actions',
@@ -129,10 +134,19 @@ const AdmissionListing = () => {
             headerName: 'Action',
             flex: 2,
             renderCell: (params) => {
+
                 return (
                     <>
-                        <Link to={`/admission/${params.row.Student_Id}`}><EditIcon style={{ cursor: "pointer" }} /></Link>
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
+
+                        <PDFDownloadLink document={<MyDocument />} fileName="admission">
+                            {({ blob, url, loading, error }) =>
+                                loading ? 'Loading document...' : <PrintIcon />
+                            }
+                        </PDFDownloadLink>
+                     
+
+                        <Link to={`/admission/${params.row.Admission_Id}`}><EditIcon style={{ cursor: "pointer" }} /></Link>
+                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.Admission_Id)} />
                         <Switch {...label} onChange={() => handleswitchchange(params.row.isActive, params.row.id)} defaultChecked={params.row.isActive == 0 ? false : true} color="secondary" />
                     </>
                 )
@@ -168,7 +182,7 @@ const AdmissionListing = () => {
                                     <div className="table-resposnsive">
                                         <Box
                                             sx={{
-                                           
+
                                                 width: '100%',
                                                 display: 'flex',
                                                 flexDirection: 'column',
@@ -191,7 +205,7 @@ const AdmissionListing = () => {
                                                         showQuickFilter: true,
                                                     },
                                                 }}
-                                            
+
                                             />
                                         </Box>
 

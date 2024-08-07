@@ -12,6 +12,9 @@ const PerssonalInfo = () => {
     const [batchCategoty, setbatchCategory] = useState([]);
     const [status, setStatus] = useState([])
     const [batch, setBatch] = useState([])
+    const [amount, setAmount] = useState('')
+    const [batchid, setBatchId] = useState([])
+    const [batchcode, setbatchcode] = useState('')
     const location = useLocation();
     const [personalInfo, setPersonalInfo] = useState({
         studentName: '',
@@ -44,7 +47,8 @@ const PerssonalInfo = () => {
         permanentmobile: '',
         perWatsapp: '',
         sdate: '',
-        edate: ''
+        edate: '',
+        Amount: '',
 
     })
     const { admissionid } = useParams();
@@ -78,6 +82,25 @@ const PerssonalInfo = () => {
         });
         const data = await response.json();
         setBatch(data);
+
+    }
+
+    const getBatchwiseamount = async (batchcode) => {
+
+        setbatchcode(batchcode)
+
+        const param = {
+            Batch_Code: batchcode
+        }
+
+        axios.post(`${BASE_URL}/getBtachwiseamount`, param)
+            .then((res) => {
+                if(res.data[0]){
+                    setAmount(res.data[0].total_inr)
+
+                }
+            })
+
     }
 
     async function getStatus() {
@@ -95,7 +118,7 @@ const PerssonalInfo = () => {
         localStorage.setItem("Admissionid", admissionid);
     }, [admissionid])
 
-    
+
 
     const getPersonalData = async () => {
         const response = await fetch(`${BASE_URL}/getPersonal`, {
@@ -109,6 +132,10 @@ const PerssonalInfo = () => {
         });
 
         const data = await response.json();
+
+        setbatchcode(data[0].Batch_Code)
+        getBatchwiseamount(data[0].Batch_Code)
+        setBatchId(data[0].Batch_Id)
 
         console.log(data[0].Permanent_Country)
         setPersonalInfo(prevState => ({
@@ -166,7 +193,7 @@ const PerssonalInfo = () => {
             body: JSON.stringify({
                 Student_Id: localStorage.getItem(`Admissionid`),
                 studentName: personalInfo.studentName,
-                Batch_Code: personalInfo.Batch_Code,
+                Batch_Code: batchcode,
                 gender: personalInfo.gender,
                 nationality: personalInfo.nationality,
                 dob: personalInfo.dob,
@@ -210,7 +237,7 @@ const PerssonalInfo = () => {
         getPersonalData();
     }, [])
 
-    const navigate = useNavigate()
+
 
     const handleadmission = (id) => {
         let confirm = window.confirm("Are you sure want to proceed ")
@@ -221,16 +248,17 @@ const PerssonalInfo = () => {
                 Student_Id: id,
                 Course_Id: personalInfo.course,
                 Batch_Id: personalInfo.Batch_Code,
-                Admission_Dt : Date()
+                Admission_Dt: "05-08-2024",
+                Amount: amount
 
             }
 
-            axios.post(`${BASE_URL}/process_admission` , data)
+            axios.post(`${BASE_URL}/process_admission`, data)
                 .then((res) => {
-
+                    alert("Admission successfull")
                 })
 
-            navigate(`/admission/${id}`)
+            // navigate(`/admission/${id}`)
 
 
         }
@@ -401,16 +429,16 @@ const PerssonalInfo = () => {
 
                                                         <div className="form-group col-lg-5 ">
                                                             <label for="exampleInputUsername1">Batch Code</label>
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={personalInfo.Batch_Code} name='Batch_Code' onChange={handleChange} >
+                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={personalInfo.Batch_Code} name='Batch_Code' onChange={(e) => getBatchwiseamount(e.target.value)} >
 
                                                                 <option value="">Select batch</option>
                                                                 {batch.map((item) => {
                                                                     return (
 
                                                                         <option value={item.Batch_code}>{item.Batch_code}</option>
-                                                                )
+                                                                    )
                                                                 })}
-                                                          
+
 
                                                             </select>
                                                         </div>

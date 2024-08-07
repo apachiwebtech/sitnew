@@ -17,7 +17,7 @@ const AssignmentsTaken = () => {
     const [assign, Setassign] = useState([])
     const [batch, setAnnulBatch] = useState([])
     const [batchid, setBatchid] = useState('')
-
+    const [marks , setMarks] = useState('')
     const { assignmentstakenid } = useParams();
 
     const [value, setValue] = useState({
@@ -118,6 +118,25 @@ const AssignmentsTaken = () => {
 
     }
 
+    const getmarks =  (id) =>{
+        SetAssignid(id)
+
+        setMarks('')
+
+        const Marks = assign.filter((item) =>(item.id == id)).map((item) => item.marks)
+        const AssignmentDate = assign.filter((item) =>(item.id == id)).map((item) => item.assignmentdate)
+
+        setMarks(Marks[0])
+
+        setValue({
+            assignmentdate :AssignmentDate
+        })
+
+
+
+
+    }
+
 
     async function getUpdate() {
         const response = await fetch(`${BASE_URL}/new_update_data`, {
@@ -173,6 +192,7 @@ const AssignmentsTaken = () => {
             const data = {
                 coursename: courseid,
                 batchcode: batchid,
+                marks:marks,
                 assignmentname: assignid,
                 assignmentdate: value.assignmentdate,
                 returndate: value.returndate,
@@ -244,7 +264,7 @@ const AssignmentsTaken = () => {
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Assignment Name<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={assignid} onChange={(e) => SetAssignid(e.target.value)} name='assignmentname'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={assignid} onChange={(e) =>  getmarks(e.target.value) } name='assignmentname'>
                                                     <option>Select Batch</option>
                                                     {assign.map((item) => {
                                                         return (
@@ -258,8 +278,8 @@ const AssignmentsTaken = () => {
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">	Max Marks</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.maxmarks}
-                                                    placeholder="Max Marks" name='maxmarks' onChange={onhandleChange} disabled />
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={marks}
+                                                    placeholder="Max Marks" name='maxmarks'  disabled />
                                             </div>
 
                                             <div class="form-group col-lg-3">

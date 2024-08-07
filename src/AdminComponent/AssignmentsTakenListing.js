@@ -112,7 +112,7 @@ const AssignmentsTakenListing = () => {
             filterable: false,
 
         },
-        { field: 'Course_Name', headerName: 'Course Name', flex: 2 },
+        { field: 'Course_Name', headerName: 'Course Name', flex: 2  },
         { field: 'Batch_code', headerName: 'Batch Code', flex: 2 },
         { field: 'Assign_Dt', headerName: 'Assignment Name', flex: 2 },
         { field: 'Return_Dt', headerName: 'Assignment Date', flex: 2 },

@@ -146,13 +146,19 @@ import TaskAdd from './AdminComponent/AddTask.js';
 import AddChecklist from './AdminComponent/AddChecklist.js';
 import SearchEditTaskTemplate from './AdminComponent/SearchEditTaskTemplate.js';
 import SearchEditChecklist from './AdminComponent/SearchEditChecklist.js';
-//import SearchEditTask from './AdminComponent/SearchEditTask.js';
 import StudentPersonalInfo from './AdminComponent/StudentPersonalInfo.jsx';
 import StudentAqualification from './AdminComponent/StudentAqualification.jsx';
 import StudentCompanyInfo from './AdminComponent/StudentCompanyInfo.jsx';
 import StudentDiscussion from './AdminComponent/StudentDiscussion.jsx';
 import StudentDocument from './AdminComponent/StudentDocument.jsx';
+//import SearchEditTask from './AdminComponent/SearchEditTask.js';
+// import StudentPersonalInfo from './AdminComponent/StudentPersonalInfo.jsx';
+// import StudentAqualification from './AdminComponent/StudentAqualification.jsx';
+// import StudentCompanyInfo from './AdminComponent/StudentCompanyInfo.jsx';
+// import StudentDiscussion from './AdminComponent/StudentDiscussion.jsx';
+// import StudentDocument from './AdminComponent/StudentDocument.jsx';
 import EmailMasterListing from './AdminComponent/EmailMasterListing.js';
+import MyDocument from './AdminComponent/MyDocument.js';
 // import R_Inquiry from './AdminComponent/R_Inquiry.js';
 
 
@@ -163,6 +169,11 @@ const Router = createBrowserRouter([
     path: '/weblog',
     element: <WebLogin />
   },
+  
+    {
+      path: '/mydocument',
+      element: <MyDocument/>
+    },
   {
     path: '/onlineadmissionform/personalinfo/:admissionid',
     element: <PerssonalInfo/>

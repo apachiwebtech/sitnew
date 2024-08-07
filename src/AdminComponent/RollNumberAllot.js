@@ -78,18 +78,6 @@ const RollNumberAllot = () => {
     }
 
 
-
-
-
-    const onhandleChange = (e) => {
-        setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
-    }
-
-
-
-
-
-
     const columns = [
         {
             field: 'index',
@@ -101,25 +89,27 @@ const RollNumberAllot = () => {
             filterable: false,
 
         },
-        { field: 'attendee', headerName: 'Student Code', flex: 2 },
-        { field: 'instructor', headerName: 'Student Name', flex: 2 },
-        { field: 'description', headerName: 'Admission Date', flex: 2 },
-        { field: 'feedback', headerName: 'Phase', flex: 2 },
+        { field: 'Student_Code', headerName: 'Student Code', flex: 2 },
+        { field: 'Student_Name', headerName: 'Student Name', flex: 2 },
+        { field: 'Admission_Date', headerName: 'Admission Date', flex: 2 },
+        { field: 'Phase', headerName: 'Phase', flex: 2 ,renderCell: (param) =>{
+            return (
+                <div class="form-group ">
+                <label for="exampleFormControlSelect1"></label>
+                <select class="form-control form-control-lg" id="exampleFromControlSelect1" >
 
-        {
-            field: 'actions',
-            type: 'actions',
-            headerName: 'Action',
-            flex: 1,
-            renderCell: (params) => {
-                return (
-                    <>
-                        <EditIcon style={{ cursor: "pointer" }} onClick={() => (params.row.id)} />
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => (params.row.id)} />
-                    </>
-                )
-            }
-        },
+                    <option>Select Phase</option>
+
+                            <option value='part1'>Part 1</option>
+                            <option value='part2'>Part 2</option>
+              
+
+                </select>
+            </div>
+            )
+        }},
+
+     
     ];
 
 
@@ -196,7 +186,7 @@ const RollNumberAllot = () => {
                                             disableColumnSelector
                                             disableDensitySelector
                                             rowHeight={35}
-                                            getRowId={(row) => row.Batch_Id}
+                                            getRowId={(row) => row.Student_Id}
                                             initialState={{
                                                 pagination: {
                                                     paginationModel: { pageSize: 10, page: 0 },
