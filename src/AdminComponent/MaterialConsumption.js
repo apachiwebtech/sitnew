@@ -1,41 +1,18 @@
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
-import decryptedUserId from '../Utils/UserID';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { LibraryBooks } from '@mui/icons-material';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
 //import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
 // import ImageList from '@mui/material/ImageList';
 // import { ImageSourcePropType } from 'react-native';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 const MaterialConsumption = () => {
 
 
-    // const [date, setDate] = useState('');
-
-    // useEffect(() => {
-    //     const currentDate = new Date();
-    //     const year = currentDate.getFullYear();
-    //     let month = currentDate.getMonth() + 1;
-    //     month = month < 10 ? '0' + month : month;
-    //     let day = currentDate.getDate();
-    //     day = day < 10 ? '0' + day : day;
-    //     const formattedDate = `${year}-${month}-${day}`;
-    //     setDate(formattedDate);
-    // }, []);
+   
 
 
     const [brand, setBrand] = useState([])
@@ -330,21 +307,6 @@ const MaterialConsumption = () => {
                                                     <option>Akanksha Anil Tambe</option>
                                                     <option>Aniket Suryakant Parab</option>
                                                     <option>Anisha Ajay Haryan</option>
-                                                    <option>Ankit Jaideep Nijai</option>
-                                                    <option>Atharva Vijay Prabhu</option>
-                                                    <option>Balkrishna  Tirodkar</option>
-                                                    <option>Charudatta Kashinath Dabholkar</option>
-                                                    <option>Chetan Narayan Masurkar</option>
-                                                    <option>Harshada Harishchandra Vajantri</option>
-                                                    <option>Harshada Harishchandra Vajantri</option>
-                                                    <option>Jeena Peter Fernandes</option>
-                                                    <option>Kiran Chandrakant Panchal</option>
-                                                    <option>Lavanya Komaraiah Mandvaraj</option>
-                                                    <option>Manasi Mahesh Panchal</option>
-                                                    <option>Mansi Suresh Sakat</option>
-                                                    <option>Mayur Dattatraya Patil</option>
-                                                    <option>Parag Digambar Mestry</option>
-                                                    <option>Parag Vikas Nikam</option>
                                                 </select>
                                             </div>
 
@@ -362,10 +324,6 @@ const MaterialConsumption = () => {
                                                     <option>Advance Pipe Stress Analysis </option>
                                                     <option>Air Conditioning System Design (HVAC)</option>
                                                     <option>Autocad - Piping</option>
-                                                    <option>Basics AutoCAD – 2D</option>
-                                                    <option>Civil/Structural Design &amp; Drafting </option>
-                                                    <option>Electrical &amp; Instrumentation Design and Drafting </option>
-                                                    <option>Electrical System Design</option>
                                                 </select>
                                             </div>
 
@@ -398,17 +356,6 @@ const MaterialConsumption = () => {
                                                     <option>Asignment front Pages</option>
                                                     <option>A4 Papers</option>
                                                     <option>A3 Papers</option>
-                                                    <option>A2 Papers</option>
-                                                    <option>Blue Pen</option>
-                                                    <option>Bags for gifts</option>
-                                                    <option>CD Markers</option>
-                                                    <option>Dusters</option>
-                                                    <option>Erasers</option>
-                                                    <option>Full Size Papers</option>
-                                                    <option>Glue Sticks</option>
-                                                    <option>Gift Pens</option>
-                                                    <option>Highlighters</option>
-                                                    <option>Leads</option>
                                                 </select>
                                             </div>
 
@@ -459,7 +406,7 @@ const MaterialConsumption = () => {
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
                                         <div>
-                                            <h4 class="card-title">View Batch Transfer</h4>
+                                            <h4 class="card-title">View Material Consumption</h4>
                                         </div>
 
                                     </div>

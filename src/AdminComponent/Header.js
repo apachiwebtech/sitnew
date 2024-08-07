@@ -784,7 +784,7 @@ const Header = ({click}) => {
               <Link className="nav-link" to="/inquiryreport">
                 {/* <Icon path={mdiCircleMedium } size={1} className='mx-3' /> */}
                 <Icon path={mdiCircleMedium} size={1} className='mx-3' />
-                <span className="menu-title">Quality Report</span>
+                <span className="menu-title">Inquiry Report</span>
               </Link>
             </li>
 
@@ -919,9 +919,16 @@ const Header = ({click}) => {
             </li>
 
             <li className="nav-item">
+            <Link className="nav-link" to='employeesalary'>
+            <Icon path={mdiCircleMedium} size={1} className='mx-3' />
+            <span className='menu-title'>Employee Salary</span>
+            </Link>
+            </li>
+
+            <li className="nav-item">
               <Link className="nav-link" to='employeeattendance'>
                 <Icon path={mdiCircleMedium} size={1} className='mx-3' />
-                <span className='"menu-title'>Employee Salary</span>
+                <span className='menu-title'>Employee Attendance</span>
               </Link>
             </li>
 

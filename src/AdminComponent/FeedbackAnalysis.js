@@ -1,21 +1,15 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { BASE_URL } from './BaseUrl';
-import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import InnerHeader from './InnerHeader';
-import decryptedUserId from '../Utils/UserID';
-import { DataGrid ,GridToolbar} from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
+import EditIcon from "@mui/icons-material/Edit";
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { LibraryBooks } from '@mui/icons-material';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { BASE_URL } from './BaseUrl';
+import InnerHeader from './InnerHeader';
 //import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
 
 const FeedbackAnalysis = () => {
 
@@ -27,30 +21,7 @@ const FeedbackAnalysis = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
 
-    const handleChange1 = (event) => {
-      setChecked([event.target.checked, event.target.checked]);
-    };
-  
-    const handleChange2 = (event) => {
-      setChecked([event.target.checked, checked[1]]);
-    };
-  
-    const handleChange3 = (event) => {
-      setChecked([checked[0], event.target.checked]);
-    };
 
-    // const children = (
-    //     <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-    //       <FormControlLabel
-    //         label="Child 1"
-    //         control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
-    //       />
-    //       <FormControlLabel
-    //         label="Child 2"
-    //         control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
-    //       />
-    //     </Box>
-    //   );
 
     const [value, setValue] = useState({
         training : ""|| uid.training,
@@ -261,7 +232,7 @@ const FeedbackAnalysis = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper">
+        <div class="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">

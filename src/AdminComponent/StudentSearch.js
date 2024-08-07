@@ -1,21 +1,11 @@
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
-import decryptedUserId from '../Utils/UserID';
-import { DataGrid ,GridToolbar} from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { LibraryBooks } from '@mui/icons-material';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
 //import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
 
 const StudentSearch = () => {
 
@@ -261,7 +251,7 @@ const StudentSearch = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper">
+        <div class="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -282,14 +272,6 @@ const StudentSearch = () => {
                                                     <option>Administration</option>
                                                     <option>Business Development</option>
                                                     <option>Training &amp; Development</option>
-                                                    <option>Account</option>
-                                                    <option>Placement</option>
-                                                    <option>Purchase</option>
-                                                    <option>Leadership / DD</option>
-                                                    <option>Quality Assurance</option>
-                                                    <option>Human Resources</option>
-                                                    <option>Corporate Training</option>
-                                                    <option>Test User</option>
                                                 </select>
                                             </div>
 
@@ -302,25 +284,6 @@ const StudentSearch = () => {
                                                     <option>01010</option>
                                                     <option>01011</option>
                                                     <option>01012</option>
-                                                    <option>01013</option>
-                                                    <option>01014</option>
-                                                    <option>01015</option>
-                                                    <option>01016</option>
-                                                    <option>01017</option>
-                                                    <option>01018</option>
-                                                    <option>01019</option>
-                                                    <option>01020</option>
-                                                    <option>01021</option>
-                                                    <option>01022</option>
-                                                    <option>01023</option>
-                                                    <option>01024</option>
-                                                    <option>01025</option>
-                                                    <option>01026</option>
-                                                    <option>01027</option>
-                                                    <option>01028</option>
-                                                    <option>01029</option>
-                                                    <option>01030</option>
-                                                    <option>01031</option>
                                                 </select>
                                             </div>
 
@@ -333,25 +296,6 @@ const StudentSearch = () => {
                                                     <option>2003</option>
                                                     <option>2004</option>
                                                     <option>2005</option>
-                                                    <option>2006</option>
-                                                    <option>2007</option>
-                                                    <option>2008</option>
-                                                    <option>2009</option>
-                                                    <option>2010</option>
-                                                    <option>2011</option>
-                                                    <option>2012</option>
-                                                    <option>2013</option>
-                                                    <option>2014</option>
-                                                    <option>2015</option>
-                                                    <option>2016</option>
-                                                    <option>2017</option>
-                                                    <option>2018</option>
-                                                    <option>2019</option>
-                                                    <option>2020</option>
-                                                    <option>2021</option>
-                                                    <option>2022</option>
-                                                    <option>2023</option>
-                                                    <option>2024</option>
                                                 </select>
                                             </div>
 
@@ -364,20 +308,6 @@ const StudentSearch = () => {
                                                     <option>web application</option>
                                                     <option>Vocational Automobile</option>
                                                     <option>Undergraduate</option>
-                                                    <option>Tybsc.</option>
-                                                    <option>Tybcom.</option>
-                                                    <option>Tybcom Appeared</option>
-                                                    <option>Tybcom</option>
-                                                    <option>Tyba/iti</option>
-                                                    <option>Tyba</option>
-                                                    <option>Tyb Com.</option>
-                                                    <option>Tool &amp; Die Making</option>
-                                                    <option>Technician</option>
-                                                    <option>T.y.bsc Physics</option>
-                                                    <option>T.y.bcom</option>
-                                                    <option>T.Y.B.M.S</option>
-                                                    <option>T.y.b.com.</option>
-                                                    <option>T.y.b.com </option>
                                                 </select>
                                             </div>
 
@@ -389,24 +319,6 @@ const StudentSearch = () => {
                                                     <option>Instrumentation &amp; Electronic</option>
                                                     <option>Mechan Design</option>
                                                     <option>Industry</option>
-                                                    <option>Air Condition &amp; Refrigeration</option>
-                                                    <option>Industrial Safety</option>
-                                                    <option>Plastic &amp; Moulding</option>
-                                                    <option>D.b.m</option>
-                                                    <option>Plastics</option>
-                                                    <option>Electronic</option>
-                                                    <option>Oil &amp; Gas</option>
-                                                    <option>Eletrical &amp; Electronics</option>
-                                                    <option>Ergonomics</option>
-                                                    <option>Chemistry</option>
-                                                    <option>Architectural Draftsman</option>
-                                                    <option>Thermal</option>
-                                                    <option>Mechtronics</option>
-                                                    <option>Interior Designing</option>
-                                                    <option>Fabrication Tech &amp; Erection Engineering</option>
-                                                    <option>Autocad- Mechanical</option>
-                                                    <option>Mech Draftman</option>
-                                                    <option>Electrical And Electronics</option>
                                                 </select>
                                             </div>
 

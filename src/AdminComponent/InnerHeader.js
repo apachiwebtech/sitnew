@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { useNavigate, useLocation } from 'react-router-dom';
 import img1 from "../assets/images/prof.png";
 import ArrowCircleLeftSharpIcon from "@mui/icons-material/ArrowCircleLeftSharp";
+import { CastTwoTone } from '@mui/icons-material';
 const InnerHeader = () => {
 
     const location = useLocation();
@@ -46,8 +47,8 @@ const InnerHeader = () => {
                 return 'TDS';
             case '/onefieldform/awt_account_head/Account%20Head':
                 return 'Account Head';
-            case '/onefieldform/awt_asset_category/Asset%20Category':
-                return 'Account Head';
+            // case '/onefieldform/awt_asset_category/Asset%20Category':
+            //     return 'Account Head';
             case '/inquiry':
                 return 'Inquiry';
             case '/inquirylisting':
@@ -76,8 +77,193 @@ const InnerHeader = () => {
                 return 'Location';
             case '/facultyworking':
                 return 'Faculty Working Hour ';
+            case '/vendormaster':
+                return 'Vender Master';
+            case '/courselisting':
+                return 'Course';
+            case '/annualbatchlisting':
+                return 'Annul Batch';
             case '/finalexamtaken':
                 return 'Final Exam Detail';
+            case '/batchcategory':
+                return 'Batch Category'
+            case '/batchlisting':
+                return 'Batch';
+            case '/status':
+                return 'Status';
+            case '/college':
+                return 'College';
+            case '/librarybook':
+                return 'Library Book';
+            case '/faculty':
+                return 'Faculty';
+            case '/rollnumberallot':
+                return 'Allot Roll Number';
+            case '/lecturetaken':
+                return 'Lecture Taken';
+            case '/assignmentstaken':
+                return 'Assignments Taken';
+            case '/unittesttaken':
+                return 'Unit Test';
+            case '/vivamoctaken':
+                return 'Viva / MOC Taken';
+            case '/generateresult':
+                return 'Generate Final Result';
+            case '/feedback1':
+                return 'FeedBack 1';
+            case '/visitsite':
+                return 'Visit Site';
+            case '/bookissue':
+                return 'Book Issue';
+            case '/returnbook':
+                return 'Return Book';
+            case '/addrole':
+                return 'Add Role';
+            case '/adminuser':
+                return 'Admin User';
+            case '/roleassign':
+                return 'Role Assign';
+            case '/employeetrainingplan':
+                return 'Employee Training Plan';
+            case '/employeerecord':
+                return 'Employee Training Record';
+            case '/r_inquiry':
+                return 'Inquirys';
+            case '/onlinestudent':
+                return 'Online Student';
+            case '/studentbatch':
+                return 'Student Batch Wise';
+            case '/studentreport':
+                return 'Student Report';
+            case '/batchrecord':
+                return 'Batch Report';
+            case '/sitevisit':
+                return 'Site Visit';
+            case '/corporateinquiry':
+                return 'Corporate Inquiry';
+            case '/corporaterecord':
+                return 'Corporate Record';
+            case '/collegefollowup':
+                return 'College Follow';
+            case '/convocationguest':
+                return 'Convocation Guest';
+            case '/yearlymock':
+                return 'Yearly Mock';
+            case '/annualbatchplan':
+                return 'Annual Batch Plan';
+            case '/finalexam':
+                return 'Final Exam';
+            case '/feesreport':
+                return 'Fees Report';
+            case '/smsemailreport':
+                return 'SMS / Email Send';
+            case '/servicetax':
+                return 'Service Tax';
+            case '/lecturereport':
+                return 'Lecture Report';
+            case '/feedbackanalysis':
+                return 'Feedback Analysis';
+            case '/newfeedback':
+                return 'Student Search Feedback';
+            case '/studentsearch':
+                return 'Student Search Interview';
+            case '/bathanalysis':
+                return 'Batch Analysis'
+            case '/paymentcollection':
+                return 'Payment Collection';
+            case '/facultysalary':
+                return 'Faculty Salary Report';
+            case '/facultymonthly':
+                return 'Faculty Monthly Statement';
+            case '/inquiryreport':
+                return 'Inquiry Report';
+            case '/onefieldform/sit_account_head/Account%20Head':
+                return 'Add Account Head';
+            case '/assets':
+                return 'Add Assets';
+            case '/onefieldform/awt_asset_category/Asset%20Category':
+                return 'Add Asset Category';
+            case '/batchtransfer':
+                return 'Transfer Batch';
+            case '/batchcancellation':
+                return 'Batch Cancellation';
+            case '/purchasematerial':
+                return 'Purchase Material';
+            // case '/facultypayment':
+            //     return 'Faculty Payment';
+            case '/cashvoucher':
+                return 'Cash Voucher';
+            case '/stockview':
+                return 'Stock View';
+            case '/materialconsumption':
+                return 'Material Consumption';
+            case '/employeesalary':
+                return 'Employee Salary';
+            case '/employeeattendance':
+                return 'Employee Attendance';
+            case '/salarymaster':
+                return 'Salary Master';
+            case '/batchleft':
+                return 'Batch Left'
+            case '/batchmoving':
+                return 'Bath Moving';
+            case '/employeeloan':
+                return 'Employee Loan';
+            case '/projectmaster':
+                return 'Project Master'
+            case '/mlwfmaster':
+                return 'MLWF Master';
+            case '/qmsmaster':
+                return 'Qms Master';
+            case '/festivalphoto':
+                return 'Festival Photos';
+            case '/noticeboard':
+                return 'Notice Board';
+            case '/masssms':
+                return 'Mass SMS';
+            case '/massemail':
+                return 'Mass Email'
+            case '/uploadeventphoto':
+                return 'Upload Event Photo';
+            case '/uploadtestimonial':
+                return 'Upload Testmonial';
+            case '/uploadbanner':
+                return 'Upload Banner Image'
+            case '/exportcontacts':
+                return 'Export Contacts';
+            case '/qmsdoes':
+                return 'QMS Does';
+            case '/masswhatsapp':
+                return 'Mass WhatsApp';
+            case '/taskmanagements':
+                return 'Task Management';
+            case '/emailmaster':
+                return 'Email Master';
+            case '/consultancymaster':
+                return 'Consultancy Master';
+            case '/cvshortlisted':
+                return 'CV Short Listed';
+            case '/latestcvupdated':
+                return 'Latest CV Updated';
+            case '/convocation':
+                return 'Convocation Guest List';
+            case '/consultancyreport':
+                return 'Consultancy Report';
+            case '/studentplacement':
+                return 'Student Placement';
+            case '/viewstudent':
+                return 'View Student CV Folder';
+            case '/companyrequirment':
+                return 'Company Requirment';
+            case '/shortlisted':
+                return 'Short Listed By SIT';
+            
+
+
+            
+            
+
+
             case location.pathname.match(/^\/addcorporateinquiry\/\d+$/) ? location.pathname : '':
                 return 'Corporate Inquiry';
             case location.pathname.match(/^\/admission\/\d+$/) ? location.pathname : '':

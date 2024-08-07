@@ -1,41 +1,19 @@
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
-import decryptedUserId from '../Utils/UserID';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { LibraryBooks } from '@mui/icons-material';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
 //import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
 // import ImageList from '@mui/material/ImageList';
 // import { ImageSourcePropType } from 'react-native';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 const EmployeeLoan = () => {
 
 
     const [date, setDate] = useState('');
 
-    // useEffect(() => {
-    //     const currentDate = new Date();
-    //     const year = currentDate.getFullYear();
-    //     let month = currentDate.getMonth() + 1;
-    //     month = month < 10 ? '0' + month : month;
-    //     let day = currentDate.getDate();
-    //     day = day < 10 ? '0' + day : day;
-    //     const formattedDate = `${year}-${month}-${day}`;
-    //     setDate(formattedDate);
-    // }, []);
 
 
     const [brand, setBrand] = useState([])
@@ -295,7 +273,7 @@ const EmployeeLoan = () => {
                         <div class="col-lg-12 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Add EmployeeLoan</h4>
+                                    <h4 class="card-title">Add Employee Loan</h4>
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
@@ -309,25 +287,6 @@ const EmployeeLoan = () => {
                                                     <option> Vivek Vijay Meghade</option>
                                                     <option> Ziyauddin   Salahuddin Mohammad </option>
                                                     <option>Aakash Vaijnath Shirsat</option>
-                                                    <option>Abhijit  Shashikumar Mehra</option>
-                                                    <option>Abhijit Prabhakar Tapare</option>
-                                                    <option>Abhishek Rakesh Gupta</option>
-                                                    <option>Aditya Arvind Patil</option>
-                                                    <option>Aditya Ramchandra Auti</option>
-                                                    <option>admin</option>
-                                                    <option>Ajay Hari Patil</option>
-                                                    <option>Ajit Mahendra Mauraya</option>
-                                                    <option>Akanksha Anil Tambe</option>
-                                                    <option>Akash   Jose</option>
-                                                    <option>Akshay  Pravin Pednekar</option>
-                                                    <option>Akshay  Subhash Surve</option>
-                                                    <option>Akshay Kishor Patil</option>
-                                                    <option>Akshay Kishor Patil</option>
-                                                    <option>Akshay Pravin Pednekar</option>
-                                                    <option>Akshay Shridhar Rahate</option>
-                                                    <option>Amir  Khan</option>
-                                                    <option>Amit Shantaram Salvi</option>
-                                                    <option>Amit Vithoba Kolambkar</option>
                                                 </select>
                                             </div>
 
@@ -380,7 +339,7 @@ const EmployeeLoan = () => {
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
                                         <div>
-                                            <h4 class="card-title">View Batch Left Details</h4>
+                                            <h4 class="card-title">View Employee Loan Details</h4>
                                         </div>
 
                                     </div>

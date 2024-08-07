@@ -1,15 +1,13 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { BASE_URL } from './BaseUrl';
-import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import InnerHeader from './InnerHeader';
-import decryptedUserId from '../Utils/UserID';
-import { DataGrid ,GridToolbar } from '@mui/x-data-grid';
+import EditIcon from "@mui/icons-material/Edit";
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { BASE_URL } from './BaseUrl';
+import InnerHeader from './InnerHeader';
 
 
 const CVShortListed = () => {
@@ -297,7 +295,7 @@ const CVShortListed = () => {
                         <div class="col-lg-12 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">CV Shortlisted Details</h4>
+                                    <h4 class="card-title">CV Shortlisted </h4>
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
@@ -313,22 +311,6 @@ const CVShortListed = () => {
                                                         <option> Allied System &amp; Integrators Private Limited</option>
                                                         <option> Amocon Refrigeration &amp; Engineering Co.</option>
                                                         <option> Anand Systems Engineering Pvt. Ltd.</option>
-                                                        <option> Avenir International Engineers &amp; Consultants LLC, Abu Dhabi</option>
-                                                        <option> Bertrams India Pvt. Ltd.- (Formerly-Chemical &amp; Environmental Technologies- Thane)              </option>
-                                                        <option> Chloro Controls Equipment Co - Same as Capital Controls</option>
-                                                        <option> Chromline Equipment India Pvt Ltd</option>
-                                                        <option> Constellation Total Solution Private Limited</option>
-                                                        <option> Contento Engineering Pvt. Ltd</option>
-                                                        <option> CRISTAL INSTRUMENTS</option>
-                                                        <option> Echelon CAE Services Pvt. Ltd.</option>
-                                                        <option> Entech consultancy bureau (madras) pvt. ltd. </option>
-                                                        <option> Enventure Technology Services</option>
-                                                        <option> ENVIRO ANALYSTS &amp; ENGINEERS PVT. LTD</option>
-                                                        <option> Expert Global Solutions Pvt. Ltd.-Hyderabad</option>
-                                                        <option> Gemsons Precision Engineering (P) Ltd.- Don&#39;t contact this company</option>
-                                                        <option> Hitech Instrumentation (India) Pvt Ltd </option>
-                                                        <option> Indrox Global Pvt. Ltd.</option>
-                                                        <option> Indus Engineers Pvt Ltd</option>
                                                 </select>
                                             </div>
                                             <div class="form-group col-lg-3">
@@ -341,18 +323,6 @@ const CVShortListed = () => {
                                                         <option> Bertrams India Pvt. Ltd.- (Formerly-Chemical &amp; Environmental Technologies- Thane)              </option>
                                                         <option> Chloro Controls Equipment Co - Same as Capital Controls</option>
                                                         <option> Chromline Equipment India Pvt Ltd</option>
-                                                        <option> Constellation Total Solution Private Limited</option>
-                                                        <option> Contento Engineering Pvt. Ltd</option>
-                                                        <option> CRISTAL INSTRUMENTS</option>
-                                                        <option> Echelon CAE Services Pvt. Ltd.</option>
-                                                        <option> Entech consultancy bureau (madras) pvt. ltd. </option>
-                                                        <option> Enventure Technology Services</option>
-                                                        <option> ENVIRO ANALYSTS &amp; ENGINEERS PVT. LTD</option>
-                                                        <option> Expert Global Solutions Pvt. Ltd.-Hyderabad</option>
-                                                        <option> Gemsons Precision Engineering (P) Ltd.- Don&#39;t contact this company</option>
-                                                        <option> Hitech Instrumentation (India) Pvt Ltd </option>
-                                                        <option> Indrox Global Pvt. Ltd.</option>
-                                                        <option> Indus Engineers Pvt Ltd</option>
                                                 </select>
                                             </div>
                                             <div class="form-group col-lg-3">
@@ -361,13 +331,6 @@ const CVShortListed = () => {
                                                         <option>01254</option>
                                                         <option>95475</option>
                                                         <option>01212</option>
-                                                        <option>04245</option>
-                                                        <option>02548</option>
-                                                        <option>03568</option>
-                                                        <option>09865</option>
-                                                        <option>03214</option>
-                                                        <option>03521</option>
-                                                       
                                                 </select>
                                             </div>
 
@@ -411,7 +374,7 @@ const CVShortListed = () => {
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
                                         <div>
-                                            <h4 class="card-title">View College Information</h4>
+                                            <h4 class="card-title">View CV Shortlisted Details</h4>
                                         </div>
 
                                     </div>

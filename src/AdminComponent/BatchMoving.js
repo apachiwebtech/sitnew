@@ -1,25 +1,13 @@
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
-import decryptedUserId from '../Utils/UserID';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { LibraryBooks } from '@mui/icons-material';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
 //import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
 // import ImageList from '@mui/material/ImageList';
 // import { ImageSourcePropType } from 'react-native';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 const BatchMoving = () => {
 
@@ -291,7 +279,7 @@ const BatchMoving = () => {
                         <div class="col-lg-12 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Add details for Move Batch</h4>
+                                    <h4 class="card-title">Move Batch</h4>
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
@@ -304,37 +292,6 @@ const BatchMoving = () => {
                                                     <option>Advance Pipe Stress Analysis </option>
                                                     <option>Air Conditioning System Design (HVAC)</option>
                                                     <option>Autocad - Piping</option>
-                                                    <option>Basics AutoCAD – 2D</option>
-                                                    <option>Civil/Structural Design &amp; Drafting </option>
-                                                    <option>Electrical &amp; Instrumentation Design and Drafting </option>
-                                                    <option>Electrical System Design</option>
-                                                    <option>Engineering Design &amp; Drafting </option>
-                                                    <option>Fire Alarm and Protection System </option>
-                                                    <option>Fundamentals of Offshore</option>
-                                                    <option>Health, Safety &amp; Environment in Construction</option>
-                                                    <option>HVAC Design and Drafting</option>
-                                                    <option>Masonry/Carpentry</option>
-                                                    <option>Mechanical Design of Process Equipment</option>
-                                                    <option>MEP Engineering (Mechanical, Electrical &amp; Plumbing)</option>
-                                                    <option>Offshore Engineering</option>
-                                                    <option>Others</option>
-                                                    <option>Pipeline Engineering</option>
-                                                    <option>Piping Design &amp; Drafting </option>
-                                                    <option>Piping Engineering </option>
-                                                    <option>Piping Materials</option>
-                                                    <option>Plant Design Management System (PDMS)</option>
-                                                    <option>PLANT LAYOUT DESIGN</option>
-                                                    <option>Priventive </option>
-                                                    <option>Process Engineering</option>
-                                                    <option>Process Equipment Fabrication Engineering</option>
-                                                    <option>Process Instrumentation &amp; Control</option>
-                                                    <option>PV Elite </option>
-                                                    <option>Rotating Equipment</option>
-                                                    <option>Smart Plant P&amp;ID</option>
-                                                    <option>Solar PV Power System with renewable Energy  </option>
-                                                    <option>Structural Engineering </option>
-                                                    <option>The Art of Developing a Balanced Personality</option>
-                                                    <option>Water &amp; Waste Water Engg.</option>
                                                 </select>
                                             </div>
 
@@ -380,7 +337,7 @@ const BatchMoving = () => {
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
                                         <div>
-                                            <h4 class="card-title">View Batch Left Details</h4>
+                                            <h4 class="card-title">View Moving Batch Details</h4>
                                         </div>
 
                                     </div>
