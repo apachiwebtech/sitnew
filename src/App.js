@@ -133,7 +133,6 @@ import Location from './AdminComponent/Location.jsx';
 import EmployeeRecordListing from './AdminComponent/EmployeeRecordListing.js';
 import EmployeeTrainingListing from './AdminComponent/EmployeeTrainingPlanListing.js';
 import EmployeeTrainingPlanListing from './AdminComponent/EmployeeTrainingPlanListing.js';
-import R_Inquiry from './AdminComponent/R_Inquiry.js';
 import CorporateInquiry from './AdminComponent/CorporateInquiry.js';
 import MassSMS from './AdminComponent/MassSMS.js';
 import MassEMail from './AdminComponent/MassEMail.js';
@@ -159,7 +158,8 @@ import StudentDocument from './AdminComponent/StudentDocument.jsx';
 // import StudentDocument from './AdminComponent/StudentDocument.jsx';
 import EmailMasterListing from './AdminComponent/EmailMasterListing.js';
 import MyDocument from './AdminComponent/MyDocument.js';
-// import R_Inquiry from './AdminComponent/R_Inquiry.js';
+import RInquiry from './AdminComponent/RInquiry.js';
+import FeesReport from './AdminComponent/FeesReport.js';
 
 
 
@@ -397,12 +397,11 @@ const Router = createBrowserRouter([
         path: '/employeerecord/:employeerecordid',
         element: <EmployeeRecord/>
       },
-
-      // {
-      //   path: '/r_inquiry',
-      //   element: <R_Inquiry/>
-      // },
-
+      
+      {
+        path: '/rinquiry',
+        element: <RInquiry/>
+      },
       {
         path: '/onlinestudent',
         element: <OnlineStudent/>
@@ -433,7 +432,11 @@ const Router = createBrowserRouter([
       },
       {
         path: '/corporateinquiry',
-        element : <CorporateInquiry/>
+        element: <CorporateInquiry/>
+      },
+      {
+        path: '/feesreport',
+        element: <FeesReport/>
       },
       {
         path: '/batchrecord',
