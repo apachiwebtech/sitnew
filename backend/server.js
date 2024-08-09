@@ -106,19 +106,19 @@ const upload8 = multer({ storage: storage8 });
 
 
 // Create a connection pool with the required details
-const con = mysql.createPool({
-  host: 'localhost',   // Replace with your host name
-  user: 'zhnvcvmy_sit',        // Replace with your database username
-  password: 'ePO}os92-f&7', // Replace with your database password
-  database: 'zhnvcvmy_sit'  // Replace with your database name
-});
-
 // const con = mysql.createPool({
 //   host: 'localhost',   // Replace with your host name
-//   user: 'root',        // Replace with your database username
-//   password: '', // Replace with your database password
-//   database: 'sit'  // Replace with your database name
+//   user: 'zhnvcvmy_sit',        // Replace with your database username
+//   password: 'ePO}os92-f&7', // Replace with your database password
+//   database: 'zhnvcvmy_sit'  // Replace with your database name
 // });
+
+const con = mysql.createPool({
+  host: 'localhost',   // Replace with your host name
+  user: 'root',        // Replace with your database username
+  password: '', // Replace with your database password
+  database: 'sit'  // Replace with your database name
+});
 
 con.getConnection((err, connection) => {
   if (err) {

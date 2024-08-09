@@ -6,6 +6,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import InnerHeader from './InnerHeader';
 import { Link } from 'react-router-dom';
+import Loader from './Loader';
 
 const CACHE_KEY = 'annulbatch_data'; // Key for localStorage caching
 const CACHE_EXPIRY_MS = 1000 * 60 * 15; // Cache expiry time (15 minutes)
@@ -15,6 +16,7 @@ const Batch = () => {
     const [annulbatch, setAnnulBatch] = useState([])
     const [cid, setCid] = useState("")
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
+    const [loading , setLoading] = useState(true)
 
 
     const getAnnualData = async () => {
@@ -75,6 +77,7 @@ const Batch = () => {
         axios.post(`${BASE_URL}/new_delete_data`, data)
             .then((res) => {
                 getAnnualData()
+                setLoading(false)
             })
             .catch((err) => {
                 console.log(err)
@@ -127,9 +130,12 @@ const Batch = () => {
     return (
         <div className="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
+
+            {loading && <Loader />}
+
             <div className="main-panel">
 
-                <div className="content-wrapper">
+                <div className="content-wrapper" style={{display : loading ? "none" : "block"}}>
 
                     <div className="row">
                         <div class="col-lg-12">

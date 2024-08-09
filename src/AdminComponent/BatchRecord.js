@@ -26,6 +26,7 @@ const BatchRecord = () => {
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
+    const [loading, setLoading] = useState(true)
 
     const handleChange1 = (event) => {
       setChecked([event.target.checked, event.target.checked]);
@@ -100,6 +101,7 @@ const BatchRecord = () => {
             .then((res) => {
                 console.log(res.data)
                 setBrand(res.data)
+                setLoading(false)
             })
             .catch((err) => {
                 console.log(err)
@@ -263,7 +265,8 @@ const BatchRecord = () => {
 
         <div class="container-fluid page-body-wrapper">
             <InnerHeader />
-            <div class="main-panel">
+            {loading && <Loader />}
+            <div class="main-panel" style={{display : loading ? "none" : "block"}} >
                 <div class="content-wrapper">
                     <div class="row">
                         <div class="col-lg-12 grid-margin stretch-card">

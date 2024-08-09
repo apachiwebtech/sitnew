@@ -5,6 +5,8 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
+import Loader from "./Loader";
+import { block } from "@mui/icons-material";
 
 
 const Status = () => {
@@ -14,6 +16,7 @@ const Status = () => {
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
+    const [loading, setLoading] = useState(true)
 
  
 
@@ -55,6 +58,7 @@ const Status = () => {
             .then((res) => {
                 console.log(res.data)
                 setStatusdata(res.data)
+                setLoading(false)
             })
             .catch((err) => {
                 console.log(err)
@@ -204,7 +208,10 @@ const Status = () => {
 
         <div class="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
-            <div class="main-panel">
+
+            {loading && <Loader /> }
+
+            <div class="main-panel" style={{display : loading ? "none" : block}}>
                 <div class="content-wrapper">
                     <div class="row">
                         <div class="col-lg-5 grid-margin stretch-card">

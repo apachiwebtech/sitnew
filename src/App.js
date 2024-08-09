@@ -160,6 +160,8 @@ import EmailMasterListing from './AdminComponent/EmailMasterListing.js';
 import MyDocument from './AdminComponent/MyDocument.js';
 import RInquiry from './AdminComponent/RInquiry.js';
 import FeesReport from './AdminComponent/FeesReport.js';
+import FeesDetails from './AdminComponent/FeesDetails.js'; 
+// import FacultyPayment from './AdminComponent/FacultyPayment.js';
 
 
 
@@ -435,6 +437,14 @@ const Router = createBrowserRouter([
         path: '/feesreport',
         element: <FeesReport />
       },
+      {
+        path: '/feesdetails',
+        element: <FeesDetails/>
+      },
+      // {
+      //   path: '/facultypayment',
+      //   element: <FacultyPayment/>
+      // },
       {
         path: '/batchrecord',
         element: <BatchRecord />

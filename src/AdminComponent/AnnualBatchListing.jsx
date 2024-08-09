@@ -7,6 +7,7 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import InnerHeader from './InnerHeader';
 import { Link } from 'react-router-dom';
 import { param } from 'jquery';
+import Loader from './Loader';
 
 const AnnualBatchListing = () => {
 
@@ -14,6 +15,7 @@ const AnnualBatchListing = () => {
     const [cid, setCid] = useState("")
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [uid, setUid] = useState([])
+    const [loading, setLoading] = useState(true)
 
 
     async function getAnnualData() {
@@ -22,10 +24,12 @@ const AnnualBatchListing = () => {
             .then((res) => {
                 console.log(res.data)
                 setAnnulBatch(res.data)
+                setLoading(false)
             })
             .catch((err) => {
                 console.log(err)
             })
+
     }
 
     useEffect(() => {
@@ -128,7 +132,9 @@ const AnnualBatchListing = () => {
     return (
         <div className="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
-            <div className="main-panel">
+
+            {loading && <Loader />}
+            <div className="main-panel" style={{display : loading ? "non" : "black"}}>
 
                 <div className="content-wrapper">
 

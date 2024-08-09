@@ -155,6 +155,12 @@ const InnerHeader = () => {
                 return 'Final Exam';
             case '/feesreport':
                 return 'Fees Report';
+            case '/feesdetails':
+                return 'Fees Report';
+            case '/feesdetails':
+                return 'Fees Report';
+            case '/facultypayment':
+                return 'Fees Report';
             case '/smsemailreport':
                 return 'SMS / Email Send';
             case '/servicetax':
@@ -257,6 +263,7 @@ const InnerHeader = () => {
                 return 'Company Requirment';
             case '/shortlisted':
                 return 'Short Listed By SIT';
+            
             
 
 

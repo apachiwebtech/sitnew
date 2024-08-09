@@ -9,6 +9,7 @@ import decryptedUserId from '../Utils/UserID';
 import { DataGrid ,GridToolbar } from '@mui/x-data-grid';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import Loader from './Loader';
 
 
 const CourseListing = () => {
@@ -19,7 +20,7 @@ const CourseListing = () => {
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-
+    const [loading , setLoading] = useState(true)
  
 
 
@@ -30,6 +31,7 @@ const CourseListing = () => {
             .then((res) => {
                 console.log(res.data)
                 setCourseData(res.data)
+                setLoading(false)
             })
             .catch((err) => {
                 console.log(err)
@@ -125,7 +127,10 @@ const CourseListing = () => {
 
         <div class="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
-            <div class="main-panel">
+
+           {loading && <Loader /> } 
+
+            <div class="main-panel" style={{display : loading  ? "none" : "block"}}>
                 <div class="content-wrapper">
                     <div class="row">
                    

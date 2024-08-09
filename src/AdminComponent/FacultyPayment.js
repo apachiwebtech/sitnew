@@ -6,13 +6,14 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 
 
-const FeesReport = () => {
-    
+const FacultyPayment = () => {
+
+    const [course, SetCourse] = useState([])
     const [brand, setBrand] = useState([])
     const [vendordata, setVendorData] = useState([])
     const [uid, setUid] = useState([])
@@ -20,47 +21,46 @@ const FeesReport = () => {
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
-
-    const { projectmasterid } = useParams();
-    const [inquiryData, setInquiryData] = useState([]);
-    const [Discipline, setDescipline] = useState([]);
-    const [Course, setCourse] = useState([]);
-    const [Education, setEducation] = useState([]);
-    const [batch, setBatch] = useState([]);
-    const [batchCategoty, setbatchCategory] = useState([]);
     const [value, setValue] = useState({
-        projectno: '',
-        projectname: '',
-        invoicedate: '',
-        invoiceamount: '',
+        course: '',
+        selectbatch: '',
+        amounttype: '',
     })
 
 
     useEffect(() => {
         setValue({
-            training: uid.training,
-            attendee: uid.attendee,
-            instructor: uid.instructor,
-            description: uid.description,
-            feedback: uid.feedback,
+            course: uid.course,
+            selectbatch: uid.selectbatch,
+            amounttype: uid.amounttype,
 
         })
     }, [uid])
 
+//==============Validation
 
     const validateForm = () => {
         let isValid = true
         const newErrors = {}
 
-
-       if (!value.fromdate) {
-        isValid = false;
-        newErrors.fromdate = "Date is require"
-       }
-        if (!value.fromtodate) {
+        if(!value.fromdate){
             isValid = false;
-            newErrors.fromtodate = "Date is require"
+        newErrors.fromdate = "Date is Required"
+
         }
+
+        if(!value.todate){
+            isValid = false;
+            newErrors.todate = "Date is Required"
+        }
+
+        if(!value.facultyselect){
+            isValid = false;
+            newErrors.facultyselect = "Data is Required"
+        }
+
+
+
         setError(newErrors)
         return isValid
     }
@@ -158,27 +158,26 @@ const FeesReport = () => {
         e.preventDefault()
 
         if(validateForm()){
-        const data = {
+            const data = {
 
-            training: value.training,
-            attendee: value.attendee,
-            instructor: value.instructor,
-            description: value.description,
-            feedback: value.feedback,
-            uid: uid.id
-        }
+                course: value.course,
+                selectbatch: value.selectbatch,
+                amounttype: value.amounttype,
+                uid: uid.id
+            }
 
 
-        axios.post(`${BASE_URL}/add_employeerecord`, data)
-            .then((res) => {
-                console.log(res)
-                getEmployeeData()
+            axios.post(`${BASE_URL}/add_employeerecord`, data)
+                .then((res) => {
+                    console.log(res)
+                    getEmployeeData()
 
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-        }
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+            }
+            
 
 
 
@@ -253,26 +252,38 @@ const FeesReport = () => {
                                         <div className='col-lg-12'>
                                             <div className='row justify-content-center' >
                                                 <div className='p-3' style={{ width: "100%" }}>
-                                                   
                                                     <form class="form-sample py-3" onSubmit={handleSubmit}>
                                                         <div class="row">
 
-                                                            <div class="form-group col-lg-3">
-                                                                <label for="exampleInputUsername1">From Date<span className="text-danger"></span></label>
-                                                                <input type="date" class="form-control" id="exampleInputUsename1" value={value.fromdate}
-                                                                name="fromdate" onChange={onhandleChange} />
-                                                                {<span className="text-danger"> {error.fromdate} </span>}
-                                                            </div>
+                                                           <div className="form-group col-lg-3">
+                                                            <lable for="exampleInputUsername1">From Date<span className="text-danger">*</span></lable>
+                                                            <input type="date" class="form-control" id="exampleInputUsername1" value={value.fromdate}
+                                                            name='fromdate' onChange={onhandleChange} />
 
-                                                            <div class="form-group col-lg-3">
-                                                                <lable for="exampleInputUsername1">From To Date<span className="text-danger">*</span></lable>
-                                                                <input type="date" class="form-control" id="exampleInpuUsername1" value={value.fromtodate}
-                                                                name="fromtodate" onChange={onhandleChange} />
-                                                                {<span className="text-danger"> {error.fromtodate} </span>}
-                                                            </div>
-                                                            <div className="p-4">
-                                                                <button className=' btn btn-primary' onClick={handleSubmit}>Print Recipt Details</button>
-                                                            </div>
+                                                            {<span className='text-danger'> {error.fromdate} </span>}
+                                                           </div>
+
+                                                           <div class="form-group col-lg-3">
+                                                            <lable for="exampleInputUsername1">To Date<span className="text-danger">*</span></lable>
+                                                            <input type="date" class="form-control" id="exampleInputUsername1" value={value.todate}
+                                                            name='todate' onChange={onhandleChange} />
+
+                                                            {<span className='text-danger'> {error.todate} </span>}
+                                                           </div>
+
+                                                           <div class="form-group col-lg-3">
+                                                            <lable for="exampleFormControlSelect1">Select Faculty<span className="text-danger">*</span></lable>
+                                                            <select class="form-control" id="exampleFromControlSelect1" value={value.facultyselect}
+                                                            name='facultyselect' onChange={onhandleChange} >
+                                                                <option>All</option>
+
+                                                            {<span className='text-danger'> {error.facultyselect} </span>}
+                                                            </select>
+                                                           </div>
+
+                                                            
+
+
                                                         </div>
 
                                                         <div className='row p-2 gap-2'>
@@ -296,4 +307,4 @@ const FeesReport = () => {
     )
 }
 
-export default FeesReport
+export default FacultyPayment
