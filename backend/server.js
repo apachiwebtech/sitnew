@@ -6,6 +6,7 @@ const path = require('path');
 const multer = require('multer');
 var session = require('express-session')
 var cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
 
 // Use CORS middleware before defining routes
 app.use(
@@ -24,13 +25,16 @@ app.use(function (req, res, next) {
 
 app.use(express.json());
 app.use(cookieParser());
+
+const JWT_SECRET = 'satyam';
+
 app.use(session({
   secret: 'secret',
   resave: false,
   saveUninitialized: false,
   cookie: {
     secure: false,
-    maxAge: 1000 * 60 * 60 * 24
+    maxAge: 1000 * 60 
 
   }
 }))
@@ -121,7 +125,7 @@ con.getConnection((err, connection) => {
     console.error('Error connecting to the database:', err);
   } else {
     console.log('Successfully connected to the database');
-    connection.release(); // Release the connection back to the pool
+    // connection.release(); // Release the connection back to the pool
   }
 });
 
@@ -136,18 +140,6 @@ app.get('/nodeapp/node', (req, res) => {
     }
   })
 });
-app.get('/nodeapp/getdata', (req, res) => {
-  const sql = "SELECT * FROM `awt_college`"
-
-  con.query(sql, (err, data) => {
-    if (err) {
-      return res.json(err)
-    } else {
-      return res.json(data)
-    }
-  })
-});
-
 
 
 
@@ -161,7 +153,7 @@ app.post('/nodeapp/login', (req, res) => {
   let password = req.body.password;
   let role = req.body.role;
 
-  const sql = "select * from awt_adminuser where email = ? and password = ? and role = ? and deleted = 0"
+  const sql = "select * from awt_adminuser where email = ? and password = ? and role = ? and deleted = 0";
 
   con.query(sql, [email, password, role], (err, data) => {
     if (err) {
@@ -169,25 +161,38 @@ app.post('/nodeapp/login', (req, res) => {
     } else {
       if (data.length > 0) {
         const id = data[0].id;
-        req.session.id = id
-        console.log(req.session.id)
-        return res.json({ data, sessionid: req.session.id, id: id })
-      }else{
-        console.log("connection failed")
+        // req.session.id = id;
+          const token = jwt.sign({ id: id }, JWT_SECRET, { expiresIn: '1h' });
+        return res.json({ data, id: id , token : token});
       }
 
     }
-  })
-})
+  });
+});
 
+app.get('/nodeapp/protected', (req, res) => {
+  const token = req.headers['authorization'];
 
-app.get('/nodeapp/checkauth', (req, res) => {
-  if (req.session.id) {
-    return res.json({ valid: true, sessionid: req.session.id })
-  } else {
-    return res.json({ valid: false })
+  if (!token) {
+    return res.status(401).json({ message: 'Token is missing' });
   }
-})
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    res.json({ message: 'This is a protected route', user: decoded });
+  } catch (error) {
+    res.status(401).json({ message: 'Invalid token' });
+  }
+});
+
+
+// app.get('/nodeapp/checkauth', (req, res) => {
+//   if (req.session.id) {
+//     return res.json({ valid: true, sessionid: req.session.id })
+//   } else {
+//     return res.json({ valid: false })
+//   };
+// });
 
 app.post('/nodeapp/add_data', (req, res) => {
   let title = req.body.title;
@@ -777,7 +782,15 @@ app.post('/nodeapp/process_admission', (req, res, next) => {
     if (error) {
       return res.json(error);
     } else {
-      return res.json(data);
+        const updatestudent = 'update Student_Master set Admission = 1 where Student_Id = ?'
+        
+        con.query(updatestudent , [Student_Id], (err,data) =>{
+            if(err){
+                return res.json(err)
+            }else{
+                return res.json(data)
+            }
+        })
     }
   })
   
@@ -810,7 +823,7 @@ app.post('/nodeapp/AdmitDetail', (req, res, next) => {
 
   const { id } = req.body;
 
-  const sql = 'select am.Admission_Id,am.Course_Id, am.Batch_Id,am.Admission_Date ,am.Payment_Type,am.Amount, sm.Student_Name  from Admission_master as am left join Student_Master as sm on sm.Student_Id = am.Student_Id left JOIN Course_Mst as cm on cm.Course_Id = am.Course_Id LEFT JOIN Batch_Mst as bm on bm.Batch_Id = am.Batch_Id where am.Admission_Id = ?'
+  const sql = 'select am.Admission_Id,am.Student_Code,am.Course_Id, am.Batch_Id,am.Admission_Date ,am.Payment_Type,am.Amount, sm.Student_Name ,sm.Student_Id from Admission_master as am left join Student_Master as sm on sm.Student_Id = am.Student_Id left JOIN Course_Mst as cm on cm.Course_Id = am.Course_Id LEFT JOIN Batch_Mst as bm on bm.Batch_Id = am.Batch_Id where am.Admission_Id = ?'
   
   con.query(sql, [id], (error, data) => {
     if (error) {
@@ -845,7 +858,7 @@ app.get('/nodeapp/getDiscipline', (req, res, next) => {
 })
 
 app.get('/nodeapp/getCourses', (req, res, next) => {
-  const sql = 'SELECT Course_Id, Course_Name FROM Course_Mst';
+  const sql = 'SELECT Course_Id, Course_Name FROM Course_Mst ';
 
   con.query(sql, (error, data) => {
     if (error) {
@@ -1178,11 +1191,11 @@ app.post(`/nodeapp/upload_doc`, upload.single("image"), (req, res) => {
 
 app.post('/nodeapp/updateStudent', (req, res, next) => {
 
-  const { Student_Id, studentName, Batch_Code, gender, nationality, dob, password, reference, presentaddress, presentPincode, presentCity, state, presentCountry, mobile, whatsapp, course, category, Referby, admission_dt, prestatus, changestatus, date, permanentAdress, permanentPincode, permanentCity, permanentState, permanentCountry, permanentmobile, perWatsapp, prestatusdate } = req.body;
+  const { Student_Id, studentName, Batch_Code, gender, nationality, dob, password, reference, presentaddress, presentPincode, presentCity, state, presentCountry, mobile, whatsapp, course, category, Referby, admission_dt, prestatus, changestatus, date, permanentAdress, permanentPincode, permanentCity, permanentState, permanentCountry, permanentmobile, perWatsapp, prestatusdate ,permanentemail } = req.body;
 
-  const sql = 'UPDATE Student_Master SET  Student_Name = ?, Sex = ?, DOB = ?, Present_Mobile = ?, Course_Id = ?,Batch_Code = ?,Nationality =?, Refered_By = ?,Present_Address =? ,Present_Pin = ?,Present_City = ?,Present_State= ? ,Present_Country = ? ,Batch_Category_id = ? ,Admission_Dt = ? ,Status_id = ?,Status_date = ? , OnlineState = ? ,StateChangeDt = ? ,Permanent_Address = ?,Permanent_Pin = ?,Permanent_City = ?,Permanent_State =? ,Permanent_Country = ?,Permanent_Tel = ?  WHERE Student_Id = ?';
+  const sql = 'UPDATE Student_Master SET  Student_Name = ?, Sex = ?, DOB = ?, Present_Mobile = ?, Course_Id = ?,Batch_Code = ?,Nationality =?, Refered_By = ?,Present_Address =? ,Present_Pin = ?,Present_City = ?,Present_State= ? ,Present_Country = ? ,Batch_Category_id = ? ,Admission_Dt = ? ,Status_id = ?,Status_date = ? , OnlineState = ? ,StateChangeDt = ? ,Permanent_Address = ?,Permanent_Pin = ?,Permanent_City = ?,Permanent_State =? ,Permanent_Country = ?,Permanent_Tel = ? ,Email = ?  WHERE Student_Id = ?';
 
-  con.query(sql, [studentName, gender, dob, mobile, course, Batch_Code, nationality, Referby, presentaddress, presentPincode, presentCity, state, presentCountry, category, admission_dt, prestatus, date, changestatus, prestatusdate, permanentAdress, permanentPincode, permanentCity, permanentState, permanentCountry, permanentmobile, Student_Id], (error, data) => {
+  con.query(sql, [studentName, gender, dob, mobile, course, Batch_Code, nationality, Referby, presentaddress, presentPincode, presentCity, state, presentCountry, category, admission_dt, prestatus, date, changestatus, prestatusdate, permanentAdress, permanentPincode, permanentCity, permanentState, permanentCountry, permanentmobile,permanentemail, Student_Id], (error, data) => {
     if (error) {
       res.json(error);
       return;
@@ -3299,17 +3312,18 @@ app.post('/nodeapp/add_oadmissiondiscussion', (req, res) => {
 
 app.post('/nodeapp/updateAdmission', (req, res) => {
 
-  let studentid = req.body.studentid;
   let date = req.body.date;
   let roll = req.body.roll;
   let course = req.body.course;
   let batch = req.body.batch;
-  let studentname = req.body.studentname;
+  let studentid = req.body.studentid;
+  let ptype = req.body.ptype;
+  let Amount = req.body.Amount;
+  let Admitid = req.body.Admitid;
   
+  const sql = "update Admission_master set Batch_Id = ? ,Admission_Date = ? , Course_Id = ? ,Student_Id = ? ,Payment_Type = ? ,Amount = ?,Student_Code = ?  where Admission_Id = ? "
 
-  const sql = "update Student_Master set Batch_Code = ? ,Admission_Dt = ? , Course_Id = ? ,Student_Name = ?, Admission = 1 where Student_Id = ? "
-
-  con.query(sql, [batch,date,course,studentname,studentid], (err, data) => {
+  con.query(sql, [batch,date,course,studentid,ptype,Amount,roll,Admitid], (err, data) => {
     if (err) {
       return res.json(err)
     }
@@ -3324,7 +3338,7 @@ app.post('/nodeapp/updateAdmission', (req, res) => {
 app.get('/nodeapp/getannualbatch' , (req,res)=>{
     
     
-    const sql = 'select Batch_Id,Course_Id,Batch_code,Category,Timings,SDate,EDate,Duration,Training_Coordinator from `Batch_Mst` where IsDelete = 0 order by Batch_Id desc'
+    const sql = 'select bm.Batch_Id,bm.Course_Id,bm.Batch_code,bm.Category,bm.Timings,bm.SDate,bm.EDate,bm.Duration,bm.Training_Coordinator,cm.Course_Name from `Batch_Mst` as bm left join Course_Mst as cm on cm.Course_Id = bm.Course_Id where bm.IsDelete = 0 order by bm.Batch_Id desc'
     
     con.query(sql, (err,data) =>{
         if(err){
@@ -3338,7 +3352,7 @@ app.get('/nodeapp/getannualbatch' , (req,res)=>{
 app.get('/nodeapp/getCourse' , (req,res)=>{
     
     
-    const sql = 'select Course_Id,Course_Name from `Course_Mst` where IsDelete = 0'
+    const sql = 'select Course_Id,Course_Name,Introduction,Course_Code from `Course_Mst` where IsDelete = 0 order by Course_Id desc'
     
     con.query(sql, (err,data) =>{
         if(err){
@@ -3830,7 +3844,7 @@ app.post('/nodeapp/getcoursewisebatch' , (req,res) =>{
 app.post('/nodeapp/getbatchwisestudent' , (req,res) =>{
     const {batch_code} = req.body
     
-    const sql = "select Student_Id ,FName ,Admission_Dt from Student_Master where batch_code = ?"
+    const sql = "SELECT sm.Student_Id,sm.Student_Name , am.Admission_Date,am.Student_Code , am.Phase FROM `Student_Master` as sm left JOIN Admission_master as am on am.Student_Id = sm.Student_Id where sm.IsDelete = 0 AND am.IsDelete = 0  AND Batch_Code =  ? "
     
     con.query(sql, [batch_code] , (err,data)=>{
         if(err){
@@ -3887,7 +3901,7 @@ app.post('/nodeapp/getbatchwiseassignment' , (req,res) =>{
     
     const {batch_id} = req.body;
     
-    const sql = "select id, batch_id ,assignmentname from assignmentstaken where batch_id = ?"
+    const sql = "select id, batch_id ,assignmentname , marks ,assignmentdate from assignmentstaken where batch_id = ?"
     
     con.query(sql, [batch_id] , (err,data)=>{
         if(err){
@@ -3989,7 +4003,17 @@ app.post('/nodeapp/add_finalexamtaken', (req, res) => {
 })
 
 
+app.get('/nodeapp/getcoursecode' , (req,res)=>{
 
-
-
-
+  const sql = 'select * from Course_Mst ';
+  
+  con.query(sql, (err,data)=>{
+      if(err){
+          return res.json(err)
+      }else{
+          
+          const getlength = data.length + 1
+          return res.json({code : getlength})
+      }
+  })
+})
