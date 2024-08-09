@@ -65,14 +65,14 @@ const CourseListing = () => {
 
     const handleDelete = (id) => {
         const data = {
-            cat_id: id,
-            tablename: "awt_course"
+            delete_id: id,
+            tablename: "Course_Mst",
+            column_name: 'Course_Id'
         }
 
-        axios.post(`${BASE_URL}/delete_data`, data)
+        axios.post(`${BASE_URL}/new_delete_data`, data)
             .then((res) => {
                 getCourseData()
-
             })
             .catch((err) => {
                 console.log(err)

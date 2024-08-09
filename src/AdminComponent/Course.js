@@ -1,15 +1,10 @@
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
-import decryptedUserId from '../Utils/UserID';
-import { DataGrid ,GridToolbar } from '@mui/x-data-grid';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-
 
 const Course = () => {
 
@@ -18,9 +13,9 @@ const Course = () => {
     const [specification3, setSpecification3] = useState("")
     const [uid, setUid] = useState([])
     const [error, setError] = useState({})
-    const {courseid} = useParams()
+    const { courseid } = useParams()
 
- 
+
 
     const [value, setValue] = useState({
         course: "" || uid.Course_Name,
@@ -46,15 +41,27 @@ const Course = () => {
 
         if (!value.course) {
             isValid = false;
-            newErrors.name = "Name is require"
+            newErrors.course = "Course is require"
         }
 
         setError(newErrors)
         return isValid
     }
 
+    async function getnewcode(params) {
 
-    async function getupdatedata(){
+        axios.get(`${BASE_URL}/getcoursecode`)
+        .then((res) =>{
+
+            setValue({
+                course_code : res.data.code
+            })
+        })
+
+    }
+
+
+    async function getupdatedata() {
 
         const data = {
             u_id: courseid,
@@ -78,30 +85,34 @@ const Course = () => {
 
     useEffect(() => {
 
-        if(courseid !== ':courseid'){
+        if (courseid !== ':courseid') {
 
             getupdatedata()
+        }
+        if(courseid == ':courseid'){
+            
+            getnewcode()
         }
         setError({})
     }, [courseid])
 
 
 
-
+    const navigate = useNavigate()
 
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        // if (validateForm()) {
+        if (validateForm()) {
             const data = {
                 course: value.course,
                 course_code: value.course_code,
                 eligibility: value.eligibility,
                 introduction: value.introduction,
-                keypoint :specification,
-                objective :specification2,
-                studyprep :specification3,
-                uid : uid.Course_Id
+                keypoint: specification,
+                objective: specification2,
+                studyprep: specification3,
+                uid: uid.Course_Id
             }
 
 
@@ -109,11 +120,12 @@ const Course = () => {
                 .then((res) => {
                     console.log(res)
                     alert("form submitted")
+                    navigate(`/courselisting`)
                 })
                 .catch((err) => {
                     console.log(err)
                 })
-        //}
+        }
 
 
 
@@ -127,7 +139,7 @@ const Course = () => {
     }
 
 
-  console.log(uid.Basic_Subject , "@@@")
+    console.log(uid.Basic_Subject, "@@@")
 
     return (
         <div class="container-fluid page-body-wrapper col-lg-10">
@@ -149,24 +161,24 @@ const Course = () => {
                                             </div>
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">Course Code</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.course_code} placeholder="Course Code*" name='course_code' onChange={onhandleChange} />
-                                                {error.course_code && <span className='text-danger'>{error.course_code}</span>}
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.course_code} placeholder="Course Code" name='course_code' onChange={onhandleChange} disabled/>
+
                                             </div>
                                             <div class="form-group col-lg-6">
                                                 <label for="exampleTextarea1">Eligibility</label>
-                                                <textarea class="form-control" id="exampleTextarea1" name='eligibility' value={value.eligibility} placeholder="Eligibility*" onChange={onhandleChange}></textarea>
-                                                {error.eligibility && <div className="text-danger">{error.eligibility}</div>}
+                                                <textarea class="form-control" id="exampleTextarea1" name='eligibility' value={value.eligibility} placeholder="Eligibility" onChange={onhandleChange}></textarea>
+
                                             </div>
                                             <div class="form-group col-lg-12">
                                                 <label for="exampleInputUsername1">Introduction</label>
                                                 <input type="text" class="form-control" id="exampleInputUsername1" value={value.introduction} placeholder="Introduction" name='introduction' onChange={onhandleChange} />
-                                                
+
                                             </div>
 
                                             <div class="form-group col-lg-12">
                                                 <label for="exampleTextarea1">Key Points of Syllabus:</label>
                                                 <CKEditor
-                                            
+
                                                     editor={ClassicEditor}
                                                     data={uid.Course_Description || specification}
                                                     onReady={editor => {
@@ -183,53 +195,53 @@ const Course = () => {
                                                     onFocus={(event, editor) => {
                                                         // console.log('Focus.', editor);
                                                     }}
-                                                    
+
                                                 />
                                             </div>
 
                                             <div class="form-group col-lg-12">
-                                            <label for="exampleTextarea1">Objective:</label>
-                                                 <CKEditor
+                                                <label for="exampleTextarea1">Objective:</label>
+                                                <CKEditor
                                                     editor={ClassicEditor}
                                                     data={uid.Objective || specification2}
                                                     onReady={editor => {
-                                                    // Allows you to store the editor instance and use it later.
-                                                    // console.log('Editor is ready to use!', editor);
+                                                        // Allows you to store the editor instance and use it later.
+                                                        // console.log('Editor is ready to use!', editor);
                                                     }}
                                                     onChange={(event, editor) => {
-                                                    const data = editor.getData();
-                                                    setSpecification2(data)
+                                                        const data = editor.getData();
+                                                        setSpecification2(data)
                                                     }}
                                                     onBlur={(event, editor) => {
-                                                    // console.log('Blur.', editor);
+                                                        // console.log('Blur.', editor);
                                                     }}
                                                     onFocus={(event, editor) => {
-                                                    // console.log('Focus.', editor);
+                                                        // console.log('Focus.', editor);
                                                     }}
-                                                    />
+                                                />
                                             </div>
-                                            
+
 
                                             <div class="form-group col-lg-12">
-                                            <label for="exampleTextarea1">Basic Study Preparation required:</label>
-                                                 <CKEditor
+                                                <label for="exampleTextarea1">Basic Study Preparation required:</label>
+                                                <CKEditor
                                                     editor={ClassicEditor}
                                                     data={uid.Basic_Subject || specification3}
                                                     onReady={editor => {
-                                                    // Allows you to store the editor instance and use it later.
-                                                    // console.log('Editor is ready to use!', editor);
+                                                        // Allows you to store the editor instance and use it later.
+                                                        // console.log('Editor is ready to use!', editor);
                                                     }}
                                                     onChange={(event, editor) => {
-                                                    const data = editor.getData();
-                                                    setSpecification3(data)
+                                                        const data = editor.getData();
+                                                        setSpecification3(data)
                                                     }}
                                                     onBlur={(event, editor) => {
-                                                    // console.log('Blur.', editor);
+                                                        // console.log('Blur.', editor);
                                                     }}
                                                     onFocus={(event, editor) => {
-                                                    // console.log('Focus.', editor);
+                                                        // console.log('Focus.', editor);
                                                     }}
-                                                    />
+                                                />
                                             </div>
 
 
@@ -238,6 +250,7 @@ const Course = () => {
 
 
                                         <button type="submit" class="btn btn-primary mr-2">Submit</button>
+
                                         <button type='button' onClick={() => {
                                             window.location.reload()
                                         }} class="btn btn-light">Cancel</button>
@@ -246,7 +259,7 @@ const Course = () => {
                                 </div>
                             </div>
                         </div>
-                    
+
                     </div>
                 </div>
             </div >

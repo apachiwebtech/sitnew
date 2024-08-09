@@ -36,7 +36,7 @@ import SiteVisit from './AdminComponent/SiteVisit';
 import StudentReport from './AdminComponent/StudentReport';
 import StudentBatch from './AdminComponent/StudentBatch';
 import YearlyMock from './AdminComponent/YearlyMock';
-import AnnualBatchPlan from './AdminComponent/AnnualBatchPlan';
+// import AnnualBatchPlan from './AdminComponent/AnnualBatchPlan';
 import CorporateRecord from './AdminComponent/CorporateRecord';
 import BatchRecord from './AdminComponent/BatchRecord';
 import CollogeFollowUp from './AdminComponent/CollegeFollowUp';
@@ -169,53 +169,53 @@ const Router = createBrowserRouter([
     path: '/weblog',
     element: <WebLogin />
   },
-  
-    {
-      path: '/mydocument',
-      element: <MyDocument/>
-    },
+
+  {
+    path: '/mydocument',
+    element: <MyDocument />
+  },
   {
     path: '/onlineadmissionform/personalinfo/:admissionid',
-    element: <PerssonalInfo/>
+    element: <PerssonalInfo />
   },
   {
     path: '/onlineadmissionform/academicqualification/:admissionid',
-    element: <AcademicQualification/>
+    element: <AcademicQualification />
   },
   {
     path: '/onlineadmissionform/companyinfo/:admissionid',
-    element: <CompanyInfo/>
+    element: <CompanyInfo />
   },
 
   {
     path: '/onlineadmissionform/discussion/:admissionid',
-    element: <Discussion/>
+    element: <Discussion />
   },
   {
     path: '/onlineadmissionform/documents/:admissionid',
-    element: <Documents/>
+    element: <Documents />
   },
 
   {
     path: '/admissionform/personalinfo/:admissionid',
-    element: <StudentPersonalInfo/>
+    element: <StudentPersonalInfo />
   },
   {
     path: '/admissionform/academicqualification/:admissionid',
-    element: <StudentAqualification/>
+    element: <StudentAqualification />
   },
   {
     path: '/admissionform/companyinfo/:admissionid',
-    element: <StudentCompanyInfo/>
+    element: <StudentCompanyInfo />
   },
 
   {
     path: '/admissionform/discussion/:admissionid',
-    element: <StudentDiscussion/>
+    element: <StudentDiscussion />
   },
   {
     path: '/admissionform/documents/:admissionid',
-    element: <StudentDocument/>
+    element: <StudentDocument />
   },
 
   {
@@ -273,11 +273,11 @@ const Router = createBrowserRouter([
       },
       {
         path: '/courselisting',
-        element: <CourseListing/>
+        element: <CourseListing />
       },
       {
         path: '/course/:courseid',
-        element: <Course/>
+        element: <Course />
       },
       {
         path: '/college',
@@ -294,349 +294,347 @@ const Router = createBrowserRouter([
 
       {
         path: '/batchcategory',
-        element: <BatchCategory/>
+        element: <BatchCategory />
       },
       {
         path: '/batchlisting',
-        element: <Batch/>
+        element: <Batch />
       },
 
       // batch details
       {
         path: '/batchedit',
-        element: <BatchEdit/>
+        element: <BatchEdit />
       },
       {
         path: '/batchedit/batchdetails/:batchid',
-        element: <BatchDetails/>
+        element: <BatchDetails />
       },
       {
         path: '/batchedit/feesstructure/:batchid',
-        element: <FeesStructure/>
+        element: <FeesStructure />
       },
       {
         path: '/batchedit/assignmentdetails/:batchid',
-        element: <Assignmentdetails/>
+        element: <Assignmentdetails />
       },
       {
         path: '/batchedit/unittest/:batchid',
-        element: <UnitTest/>
+        element: <UnitTest />
       },
       {
         path: '/batchedit/descipline/:batchid',
-        element: <Descipline/>
+        element: <Descipline />
       },
       {
         path: '/batchedit/feedbackdetails/:batchid',
-        element: <FeedbackDetails/>
+        element: <FeedbackDetails />
       },
       {
         path: '/batchedit/standardlecture/:batchid',
-        element: <StandardLecturePlan/>
+        element: <StandardLecturePlan />
       },
       {
         path: '/batchedit/lectureplan/:batchid',
-        element: <LecturePlan/>
+        element: <LecturePlan />
       },
       {
         path: '/batchedit/convocation/:batchid',
-        element: <Convocation/>
+        element: <Convocation />
       },
       {
         path: '/batchedit/result/:batchid',
-        element: <ResultStructure/>
+        element: <ResultStructure />
       },
       {
         path: '/batchedit/sitevisit/:batchid',
-        element: <SiteVise/>
+        element: <SiteVise />
       },
 
       // batch details
       {
         path: '/librarybook',
-        element: <LibraryBook/>
+        element: <LibraryBook />
       },
       {
         path: '/addfeedbacknewquestion',
-        element: <AddFeedbackNewQuestion/>
+        element: <AddFeedbackNewQuestion />
       },
 
       {
         path: '/faculty',
-        element: <Faculty/>
+        element: <Faculty />
       },
       {
         path: '/annualbatch/:batch_id',
-        element: <AnnualBatch/>
+        element: <AnnualBatch />
       },
       {
         path: '/annualbatchlisting',
-        element: <AnnualBatchListing/>
+        element: <AnnualBatchListing />
       },
       {
         path: '/bookissue',
-        element: <BookIssue/>
+        element: <BookIssue />
       },
       {
         path: '/returnbook',
-        element: <ReturnBook/>
+        element: <ReturnBook />
       },
       {
         path: '/employeetrainingplan',
-        element: <EmployeeTrainingPlanListing/>
+        element: <EmployeeTrainingPlanListing />
       },
       {
         path: '/employeetrainingplan/:employeetrainingplanid',
-        element: <EmployeeTrainingPlan/>
+        element: <EmployeeTrainingPlan />
       },
       {
         path: '/employeerecord',
-        element: <EmployeeRecordListing/>
+        element: <EmployeeRecordListing />
       },
       {
         path: '/employeerecord/:employeerecordid',
-        element: <EmployeeRecord/>
+        element: <EmployeeRecord />
       },
-      
+
       {
         path: '/rinquiry',
-        element: <RInquiry/>
+        element: <RInquiry />
       },
       {
         path: '/onlinestudent',
-        element: <OnlineStudent/>
+        element: <OnlineStudent />
       },
       {
         path: '/sitevisit',
-        element: <SiteVisit/>
+        element: <SiteVisit />
       },
       {
         path: '/studentreport',
-        element: <StudentReport/>
+        element: <StudentReport />
       },
       {
         path: '/studentbatch',
-        element: <StudentBatch/>
+        element: <StudentBatch />
       },
       {
         path: '/yearlymock',
-        element: <YearlyMock/>
+        element: <YearlyMock />
       },
-      {
-        path: '/annualbatchplan',
-        element: <AnnualBatchPlan/>
-      },
+
       {
         path: '/corporaterecord',
-        element: <CorporateRecord/>
+        element: <CorporateRecord />
       },
       {
         path: '/corporateinquiry',
-        element: <CorporateInquiry/>
+        element: <CorporateInquiry />
       },
       {
         path: '/feesreport',
-        element: <FeesReport/>
+        element: <FeesReport />
       },
       {
         path: '/batchrecord',
-        element: <BatchRecord/>
+        element: <BatchRecord />
       },
       {
         path: '/collegefollowup',
-        element: <CollogeFollowUp/>
+        element: <CollogeFollowUp />
       },
       {
         path: '/convocationguest',
-        element: <ConvocationGuest/>
+        element: <ConvocationGuest />
       },
       {
         path: '/finalexam',
-        element: <FinalExam/>
+        element: <FinalExam />
       },
       {
         path: '/smsemailreport',
-        element:  <SmsEmailReport/>
+        element: <SmsEmailReport />
       },
       {
         path: '/feedbackanalysis',
-        element: <FeedbackAnalysis/>
+        element: <FeedbackAnalysis />
       },
       {
         path: '/newfeedback',
-        element: <NewFeedback/>
+        element: <NewFeedback />
       },
       {
         path: '/studentsearch',
-        element: <StudentSearch/>
+        element: <StudentSearch />
       },
       {
         path: '/inquiryreport',
-        element: <InquiryReport/>
+        element: <InquiryReport />
       },
       // =====================Admission Activity===================
 
       {
         path: '/inquiry/:inquiryid',
-        element: <Inquiry/>
+        element: <Inquiry />
       },
       {
         path: '/Student',
-        element: <Students/>
+        element: <Students />
       },
       {
         path: '/onlineadmission',
-        element: <OnlineAdmissions/>
+        element: <OnlineAdmissions />
       },
       {
         path: '/inquirycorporate',
-        element: <InquiryCorporate/>
+        element: <InquiryCorporate />
       },
       {
         path: '/addcorporateinquiry/:corpid',
-        element: <AddCorporateInquiry/>
+        element: <AddCorporateInquiry />
       },
       //================Daily Activities======================
 
       {
         path: '/rollnumberallot',
-        element: <RollNumberAllot/>      },
+        element: <RollNumberAllot />
+      },
 
       {
         path: '/lecturetaken',
-        element: <LectureTakenListing/>
+        element: <LectureTakenListing />
       },
 
       {
         path: '/lecturetaken/:lecturetakenid',
-        element: <LectureTaken/>
+        element: <LectureTaken />
       },
       {
         path: '/assignmentstaken/:assignmentstakenid',
-        element: <AssignmentsTaken/>
+        element: <AssignmentsTaken />
       },
       {
         path: '/assignmentstaken',
-        element: <AssignmentsTakenListing/>
+        element: <AssignmentsTakenListing />
       },
       {
         path: '/unittesttaken',
-        element: <UnitTestTakenListing/>
+        element: <UnitTestTakenListing />
       },
       {
         path: '/unittesttaken/:unittesttakenid',
-        element: <UnitTestTaken/>
+        element: <UnitTestTaken />
       },
       {
         path: '/vivamoctaken',
-        element: <VivaMOCTakenListing/>
+        element: <VivaMOCTakenListing />
       },
       {
         path: '/vivamoctaken/:vivamoctakenid',
-        element: <VivaMOCTaken/>
+        element: <VivaMOCTaken />
       },
 
       {
         path: '/finalexamtaken',
-        element: <FinalExamTaken/>
+        element: <FinalExamTaken />
       },
       {
         path: '/generateresult',
-        element: <GenerateResultListing/>
+        element: <GenerateResultListing />
       },
       {
         path: '/generateresult/:generateresultid',
-        element: <GenerateResult/>
+        element: <GenerateResult />
       },
       {
         path: '/facultyworking',
-        element: <FacultyWorking/>
+        element: <FacultyWorking />
       },
       {
         path: '/visitsite',
-        element: <VisitSite/>
+        element: <VisitSite />
       },
 
       {
         path: '/feedback1',
-        element: <FeedBack1/>
+        element: <FeedBack1 />
       },
 
       //================Utility======================
 
       {
         path: '/festivalphoto',
-        element: <FestivalPhoto/>
+        element: <FestivalPhoto />
       },
       {
         path: '/noticeboard',
-        element: <NoticeBoard/>
+        element: <NoticeBoard />
       },
       {
         path: '/masssms',
-        element: <MassSMS/>
+        element: <MassSMS />
       },
       {
         path: '/massemail',
-        element: <MassEMail/>
+        element: <MassEMail />
       },
       {
         path: '/massemailcontent',
-        element: <MassEMailContent/>
+        element: <MassEMailContent />
       },
       {
         path: '/uploadeventphoto',
-        element: <UploadEventPhoto/>
+        element: <UploadEventPhoto />
       },
       {
         path: '/uploadbanner',
-        element: <UploadBanner/>
+        element: <UploadBanner />
       },
       {
         path: '/exportcontacts',
-        element: <ContactExport/>
+        element: <ContactExport />
       },
       {
         path: '/uploadtestimonial',
-        element: <UploadTestimonial/>
+        element: <UploadTestimonial />
       },
-      
+
       {
         path: '/emailmaster',
-        element: <EmailMasterListing/>
+        element: <EmailMasterListing />
       },
       {
         path: '/emailmaster/:emailmaster',
-        element: <EmailMaster/>
+        element: <EmailMaster />
       },
 
       {
         path: '/qmsdoes',
-        element: <QSMDoes/>
+        element: <QSMDoes />
       },
       {
         path: '/masswhatsapp',
-        element: <MassWhatsApp/>
+        element: <MassWhatsApp />
       },
       {
         path: '/taskmanagements',
-        element: <TaskManagement/>
+        element: <TaskManagement />
       },
       {
         path: '/addtasktemplate',
-        element: <AddTaskTemplate/>
+        element: <AddTaskTemplate />
       },
       {
         path: '/taskadd',
-        element: <TaskAdd/>
+        element: <TaskAdd />
       },
       {
         path: '/AddChecklist',
-        element: <AddChecklist/>
+        element: <AddChecklist />
       },
       {
         path: '/searchedittasktemplate',
-        element: <SearchEditTaskTemplate/>
+        element: <SearchEditTaskTemplate />
       },
       // {
       //   path: '/searchedittask',
@@ -645,11 +643,11 @@ const Router = createBrowserRouter([
 
       {
         path: '/searcheditchecklist',
-        element: <SearchEditChecklist/>
+        element: <SearchEditChecklist />
       },
 
 
-    //  ================Placements======================
+      //  ================Placements======================
 
       // {
       //   path: '/consultancymaster',
@@ -657,67 +655,67 @@ const Router = createBrowserRouter([
       // },
       {
         path: '/cvshortlisted',
-        element: <CVShortListed/>
+        element: <CVShortListed />
       },
       {
         path: '/latestcvupdated',
-        element: <CVUpdated/>
+        element: <CVUpdated />
       },
       {
         path: '/convocation',
-        element: <Convocation/>
+        element: <Convocation />
       },
       {
         path: '/viewstudent',
-        element: <ViewStudentCV/>
+        element: <ViewStudentCV />
       },
       {
         path: '/admissionlisting',
-        element: <AdmissionListing/>
+        element: <AdmissionListing />
       },
       {
         path: '/admission/:studentid',
-        element: <Admission/>
+        element: <Admission />
       },
       {
         path: '/inquirylisting',
-        element: <InquiryListing/>
+        element: <InquiryListing />
       },
 
       // ======================Inquiry form
 
       {
         path: '/onlineinquiry/inquiryform/:inquiryid',
-        element: <Inquiry/>
+        element: <Inquiry />
       },
       {
         path: '/onlineinquiry/inquirydiscussion/:inquiryid',
-        element: <InquiryDiscussuion/>
+        element: <InquiryDiscussuion />
       },
 
 
 
 
-    // ======================Account Master
+      // ======================Account Master
 
       {
         path: '/assets',
-        element: <Assets/>
+        element: <Assets />
       },
 
       {
         path: '/batchtransfer',
-        element: <BatchTransfer/>
+        element: <BatchTransfer />
       },
 
       {
         path: '/batchcancellation',
-        element: <BatchCancellation/>
+        element: <BatchCancellation />
       },
 
       {
         path: '/materialconsumption',
-        element: <MaterialConsumption/>
+        element: <MaterialConsumption />
       },
 
       {
@@ -726,47 +724,47 @@ const Router = createBrowserRouter([
       },
       {
         path: '/batchleft',
-        element: <BatchLeft/>
+        element: <BatchLeft />
       },
       {
         path: '/batchmoving',
-        element: <BatchMoving/>
+        element: <BatchMoving />
       },
       {
         path: '/employeeloan',
-        element: <EmployeeLoan/>
+        element: <EmployeeLoan />
       },
 
       {
         path: '/projectmaster',
-        element: <ProjectMaster/>
+        element: <ProjectMaster />
       },
       {
         path: '/mlwfmaster',
-        element: <MLWFMaster/>
+        element: <MLWFMaster />
       },
       {
         path: '/purchasematerial',
-        element: <PurchaseMaterial/>
+        element: <PurchaseMaterial />
       },
 
 
 
-    // ====================Role Rights
+      // ====================Role Rights
 
 
-    {
-      path: '/addrole',
-      element: <AddRole/>
-    },
-    {
-      path: '/adminuser',
-      element: <AdminUser/>
-    },
-    {
-      path: '/roleassign',
-      element: <RoleAssignment/>
-    }
+      {
+        path: '/addrole',
+        element: <AddRole />
+      },
+      {
+        path: '/adminuser',
+        element: <AdminUser />
+      },
+      {
+        path: '/roleassign',
+        element: <RoleAssignment />
+      }
 
 
 
@@ -780,12 +778,7 @@ const Router = createBrowserRouter([
   }
 ])
 
-function checkLocalStorageAndRedirect(navigate) {
-  const user_id = Cookies.get('userid');
-  if (user_id == null) {
-    navigate('/weblog'); // Redirect to dashboard if id exists in localStorage
-  }
-}
+
 
 
 
@@ -794,26 +787,39 @@ function checkLocalStorageAndRedirect(navigate) {
 
 function WebApp() {
 
-  const [click ,setClick] = useState(false)
+  const [click, setClick] = useState(false)
 
 
-  async function accessSession() {
-    axios.get(`${BASE_URL}/checkauth`)
-      .then((res) => {
-        if (res.data.valid) {
-        } else {
-          navigate('/')
-        }
+  async function accessSession(navigate) {
+
+    const token = Cookies.get('token')
+
+    try {
+      const response = await axios.get(`${BASE_URL}/protected`, {
+        headers: {
+          Authorization: token,
+        },
       });
+
+      console.log(response.data.message);
+
+    } catch (error) {
+      console.log('You are not authorized to view this content.');
+      navigate('/weblog')
+    }
   }
 
 
 
   const navigate = useNavigate();
   useEffect(() => {
-    checkLocalStorageAndRedirect(navigate);
-    accessSession()
-  }, [navigate]);
+
+    accessSession(navigate)
+
+    return () => {
+
+    };
+  }, []);
 
 
 
@@ -823,7 +829,7 @@ function WebApp() {
     <>
       <div className="container-scroller row">
         {/* <button onClick={() =>setClick(!click)} style={{background :"red", position:"absolute",top :"0px",left:"1px", zIndex:"100"}}>click</button> */}
-        <Header click={click}/>
+        <Header click={click} />
         <Outlet />
       </div>
     </>

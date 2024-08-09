@@ -20052,6 +20052,7 @@ code {
   line-height: 1.4rem;
   vertical-align: top;
   margin-bottom: .5rem;
+  font-weight: 700;
 }
 
 .form-group.has-danger .form-control {

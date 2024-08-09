@@ -44,41 +44,9 @@ const WebLogin = () => {
 
     return isValid;
   };
-  // const handleSubmit = (e) => {
-  //   e.preventDefault()
-
-  //   if (validateForm()) {
-
-  //     const hashpass = md5(value.password)
 
 
-
-  //     const data = {
-  //       email: value.email,
-  //       password: hashpass,
-  //       role: value.role
-  //     }
-  //     axios.post(`${BASE_URL}/login`, data)
-  //       .then((res) => {
-  //         console.log(res.data.data[0].id)
-  //         if (res.data.Login) {
-  //           Cookies.set('userid', res.data.data[0].id, { expires: 1 }); 
-  //           Cookies.set('token', res.data.token, { expires: 1 }); 
-  //           localStorage.setItem("token", res.data.token)
-  //           navigate('/webapp')
-  //         }
-  //         else {
-  //           setErr(res.data.err)
-  //         }
-
-  //       })
-  //       .catch((err) => {
-  //         console.log(err)
-  //       })
-  //   }
-  // }
-
-  const encryptionKey = 'secret-key';
+  const encryptionKey = 'sitsuvidya';
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -87,22 +55,22 @@ const WebLogin = () => {
 
       const hashpass = md5(value.password)
 
-
-
       const data = {
         email: value.email,
         password: hashpass,
         role: value.role
       }
+      
       axios.post(`${BASE_URL}/login`, data)
         .then((res) => {
           console.log(res.data.err)
           if (res.data.id) {
             const role = res.data.data[0].role
-            // localStorage.setItem("userid", res.data.id)
+            const token = res.data.token
             const ciphertext = CryptoJS.AES.encrypt(res.data.id.toString(), encryptionKey).toString();
             Cookies.set('userid', ciphertext, { expires: 1 });
-            Cookies.set('role', role, { expires: 2 });
+            Cookies.set('role', role, { expires: 1 });
+            Cookies.set('token', token, { expires: 1 });
             navigate('/')
           }
           else {

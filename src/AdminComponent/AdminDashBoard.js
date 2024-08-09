@@ -1,24 +1,38 @@
-import React, { useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
 import { mdiMenu } from '@mdi/js';
 import Icon from '@mdi/react';
-import logo from '../assets/frontimg/logo.jpg'
+import React from 'react';
+import logo from '../assets/frontimg/logo.jpg';
 import InnerHeader from './InnerHeader';
 import Cookies from 'js-cookie';
-import axios from 'axios';
-import { BASE_URL } from './BaseUrl';
+import { useNavigate } from 'react-router-dom';
+
 
 
 const AdminDashBoard = () => {
 
 
+  const navigate = useNavigate()
+
+  const handlelogout = () => {
+
+    const confirm = window.confirm("Do you want to logout ?")
+
+    if (confirm) {
+      Cookies.remove('token')
+      Cookies.remove('role')
+      Cookies.remove('userid')
+
+      navigate(`/weblog`)
+    }
+
+  }
 
 
   return (
 
 
     <div className="container-fluid page-body-wrapper">
-       <InnerHeader/>
+      <InnerHeader />
       <nav className="navbar col-lg-12 col-12 px-0 py-0 py-lg-4 d-flex flex-row">
         <div className="navbar-menu-wrapper d-flex align-items-center justify-content-end">
           <button className="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
@@ -30,16 +44,16 @@ const AdminDashBoard = () => {
           </div>
           <h4 className="font-weight-bold mb-0 d-none d-md-block mt-1">Welcome back, Brandon Haynes</h4>
           <ul className="navbar-nav navbar-nav-right">
-        
-           
-           
+
+
+
           </ul>
-              <button className="mb-0 font-weight-bold d-none d-xl-block" >Logout</button>
+          <button className="mb-0 font-weight-bold d-none d-xl-block" onClick={() => handlelogout()} >Logout</button>
           <button className="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
             <span className="mdi mdi-menu"></span>
           </button>
         </div>
-  
+
       </nav>
 
       <div className="main-panel">

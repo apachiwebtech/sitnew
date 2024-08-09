@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import axios from 'axios';
+import { DataGrid } from '@mui/x-data-grid';
 
 
 const AssignmentsTaken = () => {
@@ -19,7 +20,8 @@ const AssignmentsTaken = () => {
     const [batchid, setBatchid] = useState('')
     const [marks , setMarks] = useState('')
     const { assignmentstakenid } = useParams();
-
+    const [hide, setHide] = useState(false)
+    const [Studentdata, setStudent] = useState([])
     const [value, setValue] = useState({
 
         coursename: '',
@@ -67,6 +69,8 @@ const AssignmentsTaken = () => {
         return isValid
     }
 
+    
+
     async function getCourseData() {
 
         axios.get(`${BASE_URL}/getCourse`)
@@ -78,6 +82,19 @@ const AssignmentsTaken = () => {
                 console.log(err)
             })
     }
+
+    const getstudentlisitng = (id) => {
+        setHide(true)
+        const data = {
+            batch_code: id
+        }
+
+        axios.post(`${BASE_URL}/getbatchwisestudent`, data)
+            .then((res) => {
+                setStudent(res.data)
+            })
+    }
+
 
 
 
@@ -212,6 +229,43 @@ const AssignmentsTaken = () => {
         }
     }
 
+    const columns = [
+        {
+            field: 'index',
+            headerName: 'Id',
+            type: 'number',
+            align: 'center',
+            headerAlign: 'center',
+            flex: 1,
+            filterable: false,
+
+        },
+        { field: 'Student_Code', headerName: 'Student Code', flex: 2 },
+        { field: 'Student_Name', headerName: 'Student Name', flex: 2 },
+        { field: 'Admission_Date', headerName: 'Admission Date', flex: 2 },
+        { field: 'Phase', headerName: 'Phase', flex: 2 ,renderCell: (param) =>{
+            return (
+                <div class="form-group ">
+                <label for="exampleFormControlSelect1"></label>
+                <select class="form-control form-control-lg" id="exampleFromControlSelect1" >
+
+                    <option>Select Phase</option>
+
+                            <option value='part1'>Part 1</option>
+                            <option value='part2'>Part 2</option>
+              
+
+                </select>
+            </div>
+            )
+        }},
+
+     
+    ];
+
+
+    const rowsWithIds = Studentdata.map((row, index) => ({ index: index + 1, ...row }));
+
 
     const onhandleChange = (e) => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
@@ -250,7 +304,9 @@ const AssignmentsTaken = () => {
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Batch Code<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={batchid} onChange={(e) => getassign(e.target.value)} name='batchcode'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={batchid} onChange={(e) =>{ getassign(e.target.value) 
+                                                    getstudentlisitng(e.target.value)
+                                                }} name='batchcode'>
                                                     <option>Select Batch</option>
                                                     {batch.map((item) => {
                                                         return (
@@ -308,6 +364,43 @@ const AssignmentsTaken = () => {
                                         }} class="btn btn-light">Cancel</button>
 
                                     </form>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div className='d-flex justify-content-between'>
+                                        <div>
+                                            <h4 class="card-title">Student List</h4>
+                                        </div>
+
+                                    </div>
+                                    {hide && <div>
+
+                                        <DataGrid
+                                            rows={rowsWithIds}
+                                            columns={columns}
+                                            disableColumnFilter
+                                            disableColumnSelector
+                                            disableDensitySelector
+                                            rowHeight={35}
+                                            getRowId={(row) => row.Student_Id}
+                                            initialState={{
+                                                pagination: {
+                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                },
+                                            }}
+
+                                        />
+
+                                    </div>}
+             
+
+                                    <button type='button' onClick={() => {
+                                        window.location.reload()
+                                    }} class="btn btn-light">Save</button>
 
                                 </div>
                             </div>

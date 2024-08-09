@@ -6,7 +6,6 @@ import InnerHeader from './InnerHeader';
 import OnlineAdmissionForm from './OnlineAdmissionForm';
 import img from '../assets/pass.jpg';
 
-
 const PerssonalInfo = () => {
     const [course, setCourse] = useState([])
     const [batchCategoty, setbatchCategory] = useState([]);
@@ -49,6 +48,7 @@ const PerssonalInfo = () => {
         sdate: '',
         edate: '',
         Amount: '',
+        permanentemail :''
 
     })
     const { admissionid } = useParams();
@@ -162,13 +162,14 @@ const PerssonalInfo = () => {
             prestatus: data[0].Status_id,
             changestatus: data[0].OnlineState,
             date: data[0].Status_date,
-            prestatusdate: data[0].StateChangeDt,
+            prestatusdate: data[0].Status_date,
             permanentAdress: data[0].Permanent_Address,
             permanentPincode: data[0].Permanent_Pin,
             permanentCity: data[0].Permanent_City,
             permanentState: data[0].Permanent_State,
             permanentCountry: data[0].Permanent_Country,
             permanentmobile: data[0].Permanent_Tel,
+            permanentemail: data[0].Email,
             perWatsapp: '',
             sdate: data[0].SDate,
             edate: data[0].Edate
@@ -221,6 +222,7 @@ const PerssonalInfo = () => {
                 permanentCountry: personalInfo.permanentCountry,
                 permanentmobile: personalInfo.permanentmobile,
                 perWatsapp: personalInfo.perWatsapp,
+                permanentemail :personalInfo.permanentemail
             }),
             headers: {
                 'Content-Type': 'application/json'
@@ -294,7 +296,7 @@ const PerssonalInfo = () => {
                                                     <div className='row'>
                                                         <div className="form-group col-lg-4 ">
                                                             <label for="exampleInputUsername1">B.M. ID<span className='text-danger'>*</span></label>
-                                                            <input type="text" class="form-control" id="exampleInputUsername1" value={personalInfo.Student_Id} placeholder="Name*" name='Student_Id' onChange={handleChange} />
+                                                            <input type="text" class="form-control" id="exampleInputUsername1" value={personalInfo.Student_Id} placeholder="Name*" name='Student_Id' onChange={handleChange} disabled />
                                                         </div>
 
                                                         <div className="form-group col-lg-8">
@@ -319,7 +321,7 @@ const PerssonalInfo = () => {
 
                                                         <div className="form-group col-lg-4 ">
                                                             <label for="exampleInputUsername1">Date Of Birth</label>
-                                                            <input type="date" class="form-control" id="exampleInputUsername1" value={personalInfo.dob} placeholder="Contact Person" name='dob' onChange={handleChange} />
+                                                            <input type="date" class="form-control" id="exampleInputUsername1" value={personalInfo.dob} placeholder="Dob" name='dob' onChange={handleChange} />
 
                                                         </div>
 
@@ -330,7 +332,7 @@ const PerssonalInfo = () => {
 
                                                         <div className="form-group col-lg-12 ">
                                                             <label for="exampleInputUsername1">How they come to know about SIT</label>
-                                                            <input type="text" className="form-control" id="exampleInputUsername1" value={personalInfo.reference} placeholder="Name*" name='reference' onChange={handleChange} />
+                                                            <input type="text" className="form-control" id="exampleInputUsername1" value={personalInfo.reference} placeholder="Ex. Google" name='reference' onChange={handleChange}  disabled/>
                                                         </div>
 
                                                     </div>
@@ -397,7 +399,7 @@ const PerssonalInfo = () => {
                                             </div>
 
                                         </div>
-                                        <div className='col-md-4 col-lg-4'>
+                                        <div className='col-md-5 col-lg-5'>
                                             <div className='row justify-content-center' >
                                                 <div className='p-3' style={{ width: "100%" }}>
                                                     <div>
@@ -455,18 +457,18 @@ const PerssonalInfo = () => {
                                                     <div className='row'>
                                                         <div className="form-group col-lg-4">
                                                             <label for="exampleTextarea1">Online Admission Date	</label>
-                                                            <input type="date" className="form-control" id="exampleInputUsername1" value={personalInfo.admission_dt} placeholder="Contact Person" name='admission_dt' onChange={handleChange} />
+                                                            <input type="date" className="form-control" id="exampleInputUsername1" value={personalInfo.admission_dt} placeholder="" name='admission_dt' onChange={handleChange} disabled/>
 
                                                         </div>
 
                                                         <div className="form-group col-lg-4">
                                                             <label for="exampleInputUsername1">Status	</label>
-                                                            <input type="text" className="form-control" id="exampleInputUsername1" value={personalInfo.prestatus} placeholder="Contact Person" name='prestatus' disabled onChange={handleChange} />
+                                                            <input type="text" className="form-control" id="exampleInputUsername1" value={personalInfo.prestatus} placeholder="Ex. Closed" name='prestatus' disabled onChange={handleChange} />
                                                         </div>
                                                         <div className="form-group col-lg-4">
                                                             <label for="exampleInputUsername1">Date</label>
 
-                                                            <input type="text" className="form-control" id="exampleInputUsername1" value={personalInfo.prestatusdate} placeholder="Contact Person" name='prestatusdate' disabled onChange={handleChange} />
+                                                            <input type="text" className="form-control" id="exampleInputUsername1" value={personalInfo.prestatusdate} placeholder="Date" name='prestatusdate' disabled onChange={handleChange} />
                                                         </div>
                                                     </div>
 
@@ -521,56 +523,37 @@ const PerssonalInfo = () => {
                                                         </div>
 
                                                         <div className="form-group col-lg-3 ">
-                                                            <label for="exampleInputUsername1">Countryd<span className='text-danger'>*</span></label>
+                                                            <label for="exampleInputUsername1">Country<span className='text-danger'>*</span></label>
                                                             <input type="text" class="form-control" id="exampleInputUsername1" value={personalInfo.permanentCountry} placeholder="Name*" name='permanentCountry' onChange={handleChange} />
 
                                                         </div>
 
                                                         <div className='form-group col-3'>
-                                                            <label for="exampleInputUsername1">Mobile</label>
+                                                            <label for="exampleInputUsername1">Family Mobile</label>
                                                             <input type="number" className="form-control" id="exampleInputUsername1" value={personalInfo.permanentmobile} placeholder="Number" name='permanentmobile' onChange={handleChange} />
                                                         </div>
-                                                        {/* <div className='form-group col-3'>
-                                                            <label for="exampleInputUsername1">Whatsapp Number</label>
-                                                            <input type="number" className="form-control" id="exampleInputUsername1" value={personalInfo.perWatsapp} placeholder="Number" name='perWatsapp' onChange={handleChange} />
-                                                        </div> */}
+                                                    
+                                                        <div className='form-group col-3'>
+                                                            <label for="exampleInputUsername1">Email</label>
+                                                            <input type="email" className="form-control" id="exampleInputUsername1" value={personalInfo.permanentemail} placeholder="Email" name='permanentemail' onChange={handleChange} />
+                                                        </div>
+                                                        
                                                     </div>
 
                                                 </div>
                                             </div>
 
                                         </div>
-                                        <div className='col-md-3 col-lg-3'>
+                                        <div className='col-md-2 col-lg-2'>
                                             <div className='p-3'>
                                                 <div>
-                                                    <h4 className="card-title titleback">Student Info</h4>
+                                                    <h4 className="card-title titleback">Student Image</h4>
                                                 </div>
 
                                                 <div className='student-img text-center'>
                                                     <img style={{ width: "150px" }} src={img} alt='' />
                                                 </div>
 
-                                                <div className='p-2'>
-                                                    <h4>Balance Fees : 00</h4>
-                                                    <hr />
-                                                    <h4>Assignment Avg : 00</h4>
-                                                    <hr />
-                                                    <h4>Unit Test Avg : 00</h4>
-                                                    <hr />
-                                                    <h4>Final Exam Marks : 30.6</h4>
-                                                    <hr />
-                                                    <h4>Attendance(%) : 30.6</h4>
-                                                    <hr />
-                                                    <h4>Final Total : 30.6</h4>
-                                                    <hr />
-
-                                                    <h4>Batch Details :</h4>
-                                                    <div>
-                                                        <p><b>Batch Start:</b>{personalInfo.sdate}</p>
-                                                        <p><b>Batch End:</b>{personalInfo.edate}</p>
-                                                    </div>
-
-                                                </div>
                                             </div>
 
                                         </div>

@@ -6,18 +6,18 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import InnerHeader from './InnerHeader';
 import { Link } from 'react-router-dom';
+import { param } from 'jquery';
 
 const AnnualBatchListing = () => {
 
     const [annulbatch, setAnnulBatch] = useState([])
     const [cid, setCid] = useState("")
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
     const [uid, setUid] = useState([])
 
 
     async function getAnnualData() {
-    
+
         axios.get(`${BASE_URL}/getannualbatch`)
             .then((res) => {
                 console.log(res.data)
@@ -79,28 +79,41 @@ const AnnualBatchListing = () => {
             type: 'number',
             align: 'center',
             headerAlign: 'center',
-            flex: 1,
+            width: 10,
             filterable: false,
         },
-        { field: 'Course_Id', headerName: 'Course Name', flex: 2 },
-        { field: 'Batch_code', headerName: 'Batch No.', flex: 2 },
-        { field: 'Category', headerName: 'Category', flex: 2 },
-        { field: 'Timings', headerName: 'Timings', flex: 2 },
-        { field: 'SDate', headerName: 'Planned Start Date', flex: 2 },
-        { field: 'SDate', headerName: 'Actual Start Date', flex: 2 },
-        { field: 'EDate', headerName: 'Last Date of Admission', flex: 2 },
-        { field: 'EDate', headerName: 'Training Completion Date', flex: 2 },
-        { field: 'Duration', headerName: 'Duration', flex: 2 },
-        { field: 'Training_Coordinator', headerName: 'Training Coordinator', flex: 2 },
+        { field: 'Course_Name', headerName: 'Course Name', width: 200 },
+        { field: 'Batch_code', headerName: 'Batch No.', width: 100 },
+        { field: 'Category', headerName: 'Category', width: 160 },
+        { field: 'Timings', headerName: 'Timings', width: 130 },
+
+        { field: 'SDate', headerName: 'Planned Start Date', width: 130 },
+        { field: 'StartDate', headerName: 'Actual Start Date', width: 130 , renderCell: (param) => {
+            return (
+               <p>{param.row.SDate}</p>
+            )
+           } },
+
+        { field: 'EDate', headerName: 'Last Date of Admission', width: 130 },
+        {
+            field: 'EndDate', headerName: 'Training Completion Date', width: 130, renderCell: (param) => {
+             return (
+                <p>{param.row.EDate}</p>
+             )
+            }
+        },
+
+        { field: 'Duration', headerName: 'Duration', width: 130 },
+        { field: 'Training_Coordinator', headerName: 'Training Coordinator', width: 150 },
         {
             field: 'actions',
             type: 'actions',
             headerName: 'Action',
-            flex: 1,
+            width: 150,
             renderCell: (params) => {
                 return (
                     <>
-                        <Link to={`/annualbatch/${params.row.Batch_Id}`}><EditIcon style={{ cursor: "pointer" }}  /></Link>
+                        <Link to={`/annualbatch/${params.row.Batch_Id}`}><EditIcon style={{ cursor: "pointer" }} /></Link>
                         <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.Batch_Id)} />
                     </>
                 )
@@ -111,7 +124,7 @@ const AnnualBatchListing = () => {
 
     const rowsWithIds = annulbatch.map((row, index) => ({ index: index + 1, ...row }));
 
-    
+
     return (
         <div className="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
@@ -126,7 +139,7 @@ const AnnualBatchListing = () => {
                                     <div className='d-flex justify-content-between gap-3' style={{ width: "100%", padding: "10px 0" }}>
                                         <div>
                                             <h4 class="card-title">Annual Batch</h4>
-                             
+
                                         </div>
                                         <Link to='/annualbatch/:batch_id'> <button className='btn btn-success'>Add +</button></Link>
 

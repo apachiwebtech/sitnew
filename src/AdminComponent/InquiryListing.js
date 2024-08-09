@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
+import Loader from "./Loader";
 
 const InquiryListing = () => {
 
@@ -15,12 +16,13 @@ const InquiryListing = () => {
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const label = { inputProps: { 'aria-label': 'Color switch demo' } };
-
+    const [loading , setLoading] = useState(true)
     const [inquiryData, setInquiryData] = useState([]);
    
 
 
     const getInquiryData = async () => {
+
         const response = await fetch(`${BASE_URL}/getadmissionactivity`, {
             method: 'GET',
             headers: {
@@ -30,6 +32,7 @@ const InquiryListing = () => {
         const data = await response.json();
 
         setInquiryData(data);
+        setLoading(false)
     }
 
 
@@ -190,11 +193,18 @@ const InquiryListing = () => {
 
     const rowsWithIds = inquiryData.map((row, index) => ({ index: index + 1, ...row }));
 
+
+    const paginationModel = (param) =>{
+       console.log(param)
+    }
+
     return (
 
         <div className="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
-            <div className="main-panel">
+           {loading &&  <Loader />} 
+
+            <div className="main-panel" style={{display : loading ? "none" : "block"}}>
 
                 <div className="content-wrapper">
 
@@ -219,7 +229,9 @@ const InquiryListing = () => {
                                             disableColumnSelector
                                             disableDensitySelector
                                             rowHeight={37}
-                                            
+                                            // pageSizeOptions={[5]}
+                                            // paginationMode="server"
+                                            onPaginationModelChange={paginationModel}
                                             getRowId={(row) => row.id}
                                             initialState={{
                                                 pagination: {
