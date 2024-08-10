@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import Loader from "./Loader";
 //import FormControlLabel from '@mui/material/FormControlLabel';
 
 const RollNumberAllot = () => {
@@ -14,6 +15,7 @@ const RollNumberAllot = () => {
     const [vendordata, setStudent] = useState([])
     const [uid, setUid] = useState([])
     const [hide, setHide] = useState(false)
+    const [loading, setLoading] = useState(true)
 
 
     const getbatch = async (id) => {
@@ -39,6 +41,7 @@ const RollNumberAllot = () => {
             .then((res) => {
                 console.log(res.data)
                 SetCourse(res.data)
+                setLoading(false)
             })
             .catch((err) => {
                 console.log(err)
@@ -119,7 +122,11 @@ const RollNumberAllot = () => {
 
         <div class="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
-            <div class="main-panel">
+
+            {loading && <Loader />}
+
+            
+            <div class="main-panel" style={{display : loading ? "none" : "block"}}>
                 <div class="content-wrapper">
                     <div class="row">
                         <div class="col-lg-12 grid-margin stretch-card">

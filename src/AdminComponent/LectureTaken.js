@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import { idID } from '@mui/material/locale';
+import Loader from './Loader';
 
 
 const LectureTaken = () => {
@@ -22,6 +23,7 @@ const LectureTaken = () => {
     const [unitid, SetUnitid] = useState('')
     const [assignid, Setassignid] = useState('')
     const [batchid, setBatchid] = useState('')
+    const [loading, setLoading] = useState(true)
 
     const [value, setValue] = useState(
         {
@@ -127,6 +129,7 @@ const LectureTaken = () => {
             .then((res) => {
                 console.log(res.data)
                 SetCourse(res.data)
+                setLoading(false)
             })
             .catch((err) => {
                 console.log(err)
@@ -323,7 +326,9 @@ const LectureTaken = () => {
 
         <div className="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
-            <div className="main-panel">
+            {loading && <Loader />}
+
+            <div className="main-panel"  style={{dispale : loading ? "none" : "block"}}>
 
                 <div className="content-wrapper">
 

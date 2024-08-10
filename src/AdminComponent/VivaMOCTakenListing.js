@@ -8,6 +8,7 @@ import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 //import AssignmentsTaken from "./AssignmentsTaken";
 import VivaMOCTaken from "./VivaMOCTaken";
+import Loader from "./Loader";
 
 const VivaMOCTakenListing = () => {
 
@@ -16,7 +17,7 @@ const VivaMOCTakenListing = () => {
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const label = { inputProps: { 'aria-label': 'Color switch demo' } };
-
+    const [loading, setLoading] = useState(true)
     const [vivamoctakendata, setvivamoctakendata] = useState([]);
     const [value, setValue] = useState({
         coursename: ' ',
@@ -38,6 +39,7 @@ const VivaMOCTakenListing = () => {
             }
         });
         const data = await response.json();
+        setLoading(false)
 
         setvivamoctakendata(data);
     }
@@ -143,7 +145,8 @@ const VivaMOCTakenListing = () => {
 
         <div className="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
-            <div className="main-panel">
+            {loading && <Loader />}
+            <div className="main-panel" style={{display : loading ? "none" : "block"}} >
 
                 <div className="content-wrapper">
 

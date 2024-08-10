@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
+import Loader from "./Loader";
 //import AssignmentsTaken from "./AssignmentsTaken";
 
 const UnitTestTakenListing = () => {
@@ -16,7 +17,7 @@ const UnitTestTakenListing = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
     const label = { inputProps: { 'aria-label': 'Color switch demo' } };
-
+    const [loading, setLoading] = useState(true)
     const [unittesttakendata, setunittakendata] = useState([]);
     const [value, setValue] = useState({
         batchcode: ' ',
@@ -39,6 +40,7 @@ const UnitTestTakenListing = () => {
             }
         });
         const data = await response.json();
+        setLoading(false)
 
         setunittakendata(data);
     }
@@ -98,6 +100,7 @@ const UnitTestTakenListing = () => {
             .then((res) => {
                 console.log(res)
                 getInquiryData()
+                setLoading(false)
             })
     }
 
@@ -146,7 +149,8 @@ const UnitTestTakenListing = () => {
 
         <div className="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
-            <div className="main-panel">
+            {loading && <Loader />}
+            <div className="main-panel" style={{display : loading ? "none" : "block"}} >
 
                 <div className="content-wrapper">
 

@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import InnerHeader from './InnerHeader';
 import axios from 'axios';
 import { Switch } from '@mui/material';
+import Loader from './Loader';
 
 const Students = () => {
 
@@ -18,7 +19,7 @@ const Students = () => {
           </GridToolbarContainer>
         );
       }
-
+    const [loading, setLoading] = useState(true)
     const [onlineAdmissions, setOnlineAdmissions] = useState([])
     const label = { inputProps: { 'aria-label': 'Color switch demo' } };
     const getOnlineAdmissions = async () => {
@@ -32,6 +33,7 @@ const Students = () => {
         const data = await response.json();
         setOnlineAdmissions(data);
         console.log(data);
+        setLoading(false)
     }
 
     useEffect(() => {
@@ -48,6 +50,7 @@ const Students = () => {
         .then((res)=>{
             console.log(res)
             getOnlineAdmissions()
+            setLoading(false)
         })
      }
 
@@ -91,7 +94,8 @@ const Students = () => {
     return (
         <div className="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader/>
-            <div className="main-pannel">
+            {loading && <Loader />}
+            <div className="main-pannel" style={{display : loading ? "none" : "block"}} >
                 <div className="content-wrapper ">
                     <div className="row">
 

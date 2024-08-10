@@ -6,7 +6,6 @@ import InnerHeader from './InnerHeader';
 
 const Admission = () => {
 
-
     const [uid, setUid] = useState([])
     const [error, setError] = useState({})
     const [course, setCourse] = useState([])

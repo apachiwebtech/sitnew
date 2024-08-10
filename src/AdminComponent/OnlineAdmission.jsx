@@ -6,9 +6,11 @@ import { Link } from 'react-router-dom';
 import InnerHeader from './InnerHeader';
 import axios from 'axios';
 import { Switch } from '@mui/material';
+import Loader from './Loader';
 
 const OnlineAdmissions = () => {
 
+    const [loading, setLoading] = useState(true)
     const [onlineAdmissions, setOnlineAdmissions] = useState([])
     const label = { inputProps: { 'aria-label': 'Color switch demo' } };
     const getOnlineAdmissions = async () => {
@@ -22,6 +24,7 @@ const OnlineAdmissions = () => {
         const data = await response.json();
         setOnlineAdmissions(data);
         console.log(data);
+        setLoading(false)
     }
 
     useEffect(() => {
@@ -39,6 +42,7 @@ const OnlineAdmissions = () => {
             .then((res) => {
                 console.log(res)
                 getOnlineAdmissions()
+                setLoading(false)
             })
     }
 
@@ -89,8 +93,11 @@ const OnlineAdmissions = () => {
 
     return (
         <div className="container-fluid page-body-wrapper col-lg-10">
+            
             <InnerHeader />
-            <div className="main-pannel">
+            {loading && <Loader />}
+
+            <div className="main-pannel" style={{display : loading ? "none" : "block"}}>
                 <div className="content-wrapper ">
                     <div className="row">
 

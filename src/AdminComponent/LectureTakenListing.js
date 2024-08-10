@@ -8,6 +8,8 @@ import { Link } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import LectureTaken from "./LectureTaken";
+import Loader from "./Loader";
+import { Block } from "@mui/icons-material";
 
 const LectureTakenListing = () => {
 
@@ -17,8 +19,8 @@ const LectureTakenListing = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
     const label = { inputProps: { 'aria-label': 'Color switch demo' } };
-
     const [lecturetakendata, setlecturetakendata] = useState([]);
+    const [loading, setLoading] = useState(true)
 
 
 
@@ -33,6 +35,7 @@ const LectureTakenListing = () => {
             }
         });
         const data = await response.json();
+        setLoading(false)
 
         setlecturetakendata(data);
     }
@@ -72,6 +75,7 @@ const LectureTakenListing = () => {
         axios.post(`${BASE_URL}/new_delete_data`, data)
             .then((res) => {
                 getInquiryData()
+                
             })
             .catch((err) => {
                 console.log(err)
@@ -91,6 +95,7 @@ const LectureTakenListing = () => {
             .then((res) => {
                 console.log(res)
                 getInquiryData()
+                setLoading(false)
             })
     }
 
@@ -139,7 +144,10 @@ const LectureTakenListing = () => {
 
         <div className="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
-            <div className="main-panel">
+            
+            {loading && <Loader  />}
+
+            <div className="main-panel" style={{display : loading ? "nonr" : "Block"}}>
 
                 <div className="content-wrapper">
 

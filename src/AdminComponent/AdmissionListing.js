@@ -10,8 +10,8 @@ import InnerHeader from './InnerHeader';
 import { Box } from '@mui/material';
 import PrintIcon from '@mui/icons-material/Print';
 import { PDFDownloadLink } from '@react-pdf/renderer';
-import MyDocument1 from "./MyDocument1";
-import MyDocument from './MyDocument'
+import MyDocument from "./MyDocument";
+import Loader from "./Loader";
 
 function CustomToolbar() {
     return (
@@ -28,6 +28,7 @@ const AdmissionListing = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const label = { inputProps: { 'aria-label': 'Color switch demo' } };
     const [admission, setadmissionData] = useState([]);
+    const [loading, setLoading] = useState(true)
 
     const getInquiryData = async () => {
         const response = await fetch(`${BASE_URL}/admissiondata`, {
@@ -44,6 +45,8 @@ const AdmissionListing = () => {
 
     useEffect(() => {
         getInquiryData()
+        setLoading(false)
+
     }, [])
 
 
@@ -77,6 +80,7 @@ const AdmissionListing = () => {
         axios.post(`${BASE_URL}/new_delete_data`, data)
             .then((res) => {
                 getInquiryData()
+                
             })
             .catch((err) => {
                 console.log(err)
@@ -96,6 +100,7 @@ const AdmissionListing = () => {
             .then((res) => {
                 console.log(res)
                 getInquiryData()
+                setLoading(false)
             })
     }
 
@@ -162,7 +167,8 @@ const AdmissionListing = () => {
 
         <div className="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
-            <div className="main-panel">
+            {loading && <Loader />}
+            <div className="main-panel" style={{display : loading ? "none" : "block"}} >
 
                 <div className="content-wrapper">
 

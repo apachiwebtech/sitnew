@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
+import Loader from "./Loader";
 
 function CustomToolbar() {
     return (
@@ -25,14 +26,15 @@ const InquiryCorporate = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
     const label = { inputProps: { 'aria-label': 'Color switch demo' } };
-
     const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(true)
 
 
   async function getlisting(){
     axios.post(`${BASE_URL}/getcorporateinquiry`)
     .then((res)=>{
         setData(res.data)
+        setLoading(false)
     })
   }
   
@@ -112,6 +114,7 @@ const InquiryCorporate = () => {
     axios.post(`${BASE_URL}/data_status` , {status : newval, Inquiry_Id : Inquiry_Id, table_name : "CorporateInquiry"})
     .then((res)=>{
         console.log(res)
+        setLoading(false)
    
     })
  }
@@ -160,7 +163,8 @@ const InquiryCorporate = () => {
 
         <div className="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
-            <div className="main-panel">
+            {loading && <Loader />}
+            <div className="main-panel" style={{display : loading ? "none" : "block"}} >
 
                 <div className="content-wrapper">
                  

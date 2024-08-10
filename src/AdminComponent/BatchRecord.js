@@ -119,6 +119,7 @@ const BatchRecord = () => {
             .then((res) => {
                 console.log(res.data)
                 setVendorData(res.data)
+                
             })
             .catch((err) => {
                 console.log(err)
@@ -158,6 +159,7 @@ const BatchRecord = () => {
                 setUid(res.data[0])
 
                 console.log(res.data , "update")
+                
             })
             .catch((err) => {
                 console.log(err)

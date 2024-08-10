@@ -10,6 +10,7 @@ import { DataGrid ,GridToolbar } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import Loader from './Loader';
 
 
 const College = () => {
@@ -21,6 +22,7 @@ const College = () => {
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
+    const [loading, setLoading] = useState(true)
 
     const handleChange1 = (event) => {
       setChecked([event.target.checked, event.target.checked]);
@@ -117,6 +119,7 @@ const College = () => {
             .then((res) => {
                 console.log(res.data)
                 setBrand(res.data)
+                setLoading(false)
             })
             .catch((err) => {
                 console.log(err)
@@ -133,6 +136,7 @@ const College = () => {
             .then((res) => {
                 console.log(res.data)
                 setVendorData(res.data)
+                setLoading(false)
             })
             .catch((err) => {
                 console.log(err)
@@ -291,7 +295,9 @@ const College = () => {
 
         <div class="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
-            <div class="main-panel">
+
+            {loading && <Loader />}
+            <div class="main-panel" style={{display : loading ? "none" : "block"}}>
                 <div class="content-wrapper">
                     <div class="row">
                         <div class="col-lg-12 grid-margin stretch-card">
