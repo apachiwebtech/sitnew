@@ -16,6 +16,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 //import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
+import Loader from './Loader';
 
 const BatchRecord = () => {
 
@@ -265,7 +266,7 @@ const BatchRecord = () => {
 
         <div class="container-fluid page-body-wrapper">
             <InnerHeader />
-            {loading && <Loader />}
+            {/* {loading && <Loader />} */}
             <div class="main-panel" style={{display : loading ? "none" : "block"}} >
                 <div class="content-wrapper">
                     <div class="row">

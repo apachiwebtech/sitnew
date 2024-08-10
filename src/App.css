@@ -390,3 +390,15 @@ li{
   50% {clip-path: inset(0)}
   to {clip-path: inset(0 0 0 100%)}
 }
+.MuiDataGrid-filterFormOperatorInput {
+  display: none !important;
+}
+
+
+.MuiDataGrid-filterForm{
+  position: absolute !important;
+  top: -159px !important;
+  background-color: #fff;
+  border: 1px solid lightgray;
+}
+

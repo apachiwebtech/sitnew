@@ -28,6 +28,7 @@ const Batch = () => {
                 data: res.data,
                 timestamp: Date.now()
             }));
+            setLoading(false)
         } catch (err) {
             console.error("Error fetching data:", err);
         }
@@ -41,6 +42,7 @@ const Batch = () => {
             // Check if cache is expired
             if (Date.now() - timestamp < CACHE_EXPIRY_MS) {
                 setAnnulBatch(data);
+                setLoading(false)
             } else {
                 getAnnualData(); // Fetch new data if cache is expired
             }
@@ -99,15 +101,12 @@ const Batch = () => {
             flex: 1,
             filterable: false,
         },
-        { field: 'Course_Id', headerName: 'Course Name', flex: 2 },
-        { field: 'Batch_code', headerName: 'Batch No.', flex: 2 },
+        { field: 'Batch_code', headerName: 'Batch No.', flex: 1 },
+        { field: 'Course_Name', headerName: 'Course Name', flex: 3 },
         { field: 'Category', headerName: 'Category', flex: 2 },
         { field: 'Timings', headerName: 'Timings', flex: 2 },
         { field: 'SDate', headerName: 'Planned Start Date', flex: 2 },
-        { field: 'SDate', headerName: 'Actual Start Date', flex: 2 },
         { field: 'EDate', headerName: 'Last Date of Admission', flex: 2 },
-        { field: 'EDate', headerName: 'Training Completion Date', flex: 2 },
-        { field: 'Duration', headerName: 'Duration', flex: 2 },
         { field: 'Training_Coordinator', headerName: 'Training Coordinator', flex: 2 },
         {
             field: 'actions',

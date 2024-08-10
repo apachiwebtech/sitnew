@@ -815,7 +815,7 @@ function WebApp() {
 
     } catch (error) {
       console.log('You are not authorized to view this content.');
-      navigate('/weblog')
+      // navigate('/weblog')
     }
   }
 

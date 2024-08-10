@@ -211,7 +211,7 @@ const Status = () => {
 
             {loading && <Loader /> }
 
-            <div class="main-panel" style={{display : loading ? "none" : block}}>
+            <div class="main-panel" style={{display : loading ? "none" : "block"}}>
                 <div class="content-wrapper">
                     <div class="row">
                         <div class="col-lg-5 grid-margin stretch-card">
