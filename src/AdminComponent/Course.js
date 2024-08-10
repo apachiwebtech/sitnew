@@ -120,6 +120,7 @@ const Course = () => {
                 .then((res) => {
                     console.log(res)
                     alert("form submitted")
+                    localStorage.removeItem('course_data')
                     navigate(`/courselisting`)
                 })
                 .catch((err) => {

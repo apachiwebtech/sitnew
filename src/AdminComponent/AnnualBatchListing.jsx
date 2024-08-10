@@ -9,6 +9,9 @@ import { Link } from 'react-router-dom';
 import { param } from 'jquery';
 import Loader from './Loader';
 
+const CACHE_KEY = 'annual_data'; // Key for localStorage caching
+const CACHE_EXPIRY_MS = 1000 * 60 * 15; // Cache expiry time (15 minutes)
+
 const AnnualBatchListing = () => {
 
     const [annulbatch, setAnnulBatch] = useState([])
@@ -24,6 +27,10 @@ const AnnualBatchListing = () => {
             .then((res) => {
                 console.log(res.data)
                 setAnnulBatch(res.data)
+                localStorage.setItem(CACHE_KEY, JSON.stringify({
+                    data: res.data,
+                    timestamp: Date.now()
+                }));
                 setLoading(false)
             })
             .catch((err) => {
@@ -33,7 +40,21 @@ const AnnualBatchListing = () => {
     }
 
     useEffect(() => {
-        getAnnualData()
+        const cachedData = localStorage.getItem(CACHE_KEY);
+        if (cachedData) {
+            const { data, timestamp } = JSON.parse(cachedData);
+            // Check if cache is expired
+            if (Date.now() - timestamp < CACHE_EXPIRY_MS) {
+                setAnnulBatch(data);
+                setLoading(false)
+            } else {
+                getAnnualData(); // Fetch new data if cache is expired
+            }
+        } else {
+            getAnnualData(); // Fetch data if not cached
+        }
+    
+
         setUid([])
     }, [])
 

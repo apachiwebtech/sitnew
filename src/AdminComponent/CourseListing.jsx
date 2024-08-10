@@ -11,7 +11,8 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import Loader from './Loader';
 
-
+const CACHE_KEY = 'course_data'; // Key for localStorage caching
+const CACHE_EXPIRY_MS = 1000 * 60 * 15; // Cache expiry time (15 minutes)
 const CourseListing = () => {
 
     const [brand, setBrand] = useState([])
@@ -30,6 +31,11 @@ const CourseListing = () => {
         axios.get(`${BASE_URL}/getCourse`)
             .then((res) => {
                 console.log(res.data)
+                   // Cache data in localStorage
+            localStorage.setItem(CACHE_KEY, JSON.stringify({
+                data: res.data,
+                timestamp: Date.now()
+            }));
                 setCourseData(res.data)
                 setLoading(false)
             })
@@ -42,7 +48,20 @@ const CourseListing = () => {
 
 
     useEffect(() => {
-        getCourseData()
+        const cachedData = localStorage.getItem(CACHE_KEY);
+        if (cachedData) {
+            const { data, timestamp } = JSON.parse(cachedData);
+            // Check if cache is expired
+            if (Date.now() - timestamp < CACHE_EXPIRY_MS) {
+                setCourseData(data);
+                setLoading(false)
+            } else {
+                getCourseData(); // Fetch new data if cache is expired
+            }
+        } else {
+            getCourseData(); // Fetch data if not cached
+        }
+    
         setError({})
         setUid([])
     }, [])

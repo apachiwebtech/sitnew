@@ -196,12 +196,12 @@ const AnnualBatch = () => {
             }
 
 
-            axios.post(`${BASE_URL}/add_annual`, data)
+            axios.post(`${BASE_URL}/update_batchdetails`, data)
                 .then((res) => {
                     console.log(res)
                     alert("Date Submitted successfully")
                     navigate(`/annualbatchlisting`)
-                    //    localStorage.removeItem('annulbatch_data')
+                       localStorage.removeItem('annual_data')
 
                 })
                 .catch((err) => {

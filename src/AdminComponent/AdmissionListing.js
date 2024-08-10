@@ -10,7 +10,7 @@ import InnerHeader from './InnerHeader';
 import { Box } from '@mui/material';
 import PrintIcon from '@mui/icons-material/Print';
 import { PDFDownloadLink } from '@react-pdf/renderer';
-import MyDocument from "./MyDocument";
+import MyDocument1 from "./MyDocument";
 import Loader from "./Loader";
 
 function CustomToolbar() {
