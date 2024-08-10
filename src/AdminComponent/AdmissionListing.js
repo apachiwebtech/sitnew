@@ -10,7 +10,8 @@ import InnerHeader from './InnerHeader';
 import { Box } from '@mui/material';
 import PrintIcon from '@mui/icons-material/Print';
 import { PDFDownloadLink } from '@react-pdf/renderer';
-import MyDocument from "./MyDocument";
+import MyDocument1 from "./MyDocument1";
+import MyDocument from './MyDocument'
 
 function CustomToolbar() {
     return (
@@ -138,7 +139,7 @@ const AdmissionListing = () => {
                 return (
                     <>
 
-                        <PDFDownloadLink document={<MyDocument />} fileName="admission">
+                        <PDFDownloadLink document={<MyDocument1/>} fileName="admission">
                             {({ blob, url, loading, error }) =>
                                 loading ? 'Loading document...' : <PrintIcon />
                             }

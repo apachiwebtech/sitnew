@@ -5,10 +5,6 @@ import logo from '../assets/images/chair.jpg'
 import { BASE_URL } from './BaseUrl';
 import axios from 'axios';
 // Create styles
-
-
-
-
 const styles = StyleSheet.create({
   page: {
     padding: 30,
