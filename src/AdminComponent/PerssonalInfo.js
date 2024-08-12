@@ -5,6 +5,7 @@ import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import OnlineAdmissionForm from './OnlineAdmissionForm';
 import img from '../assets/pass.jpg';
+import InnerHeaderForm from './InnerHeaderForm';
 
 const PerssonalInfo = () => {
     const [course, setCourse] = useState([])
@@ -48,7 +49,7 @@ const PerssonalInfo = () => {
         sdate: '',
         edate: '',
         Amount: '',
-        permanentemail :''
+        permanentemail: ''
 
     })
     const { admissionid } = useParams();
@@ -95,7 +96,7 @@ const PerssonalInfo = () => {
 
         axios.post(`${BASE_URL}/getBtachwiseamount`, param)
             .then((res) => {
-                if(res.data[0]){
+                if (res.data[0]) {
                     setAmount(res.data[0].total_inr)
 
                 }
@@ -107,6 +108,18 @@ const PerssonalInfo = () => {
         axios.get(`${BASE_URL}/getstatus`)
             .then((res) => {
                 setStatus(res.data)
+            })
+    }
+
+    const handleStatus = (value) => {
+
+        const data = {
+            statusid: value
+        }
+
+        axios.post(`${BASE_URL}/updateadmissionstatus`, data)
+            .then((res) => {
+                console.log(res)
             })
     }
 
@@ -222,7 +235,7 @@ const PerssonalInfo = () => {
                 permanentCountry: personalInfo.permanentCountry,
                 permanentmobile: personalInfo.permanentmobile,
                 perWatsapp: personalInfo.perWatsapp,
-                permanentemail :personalInfo.permanentemail
+                permanentemail: personalInfo.permanentemail
             }),
             headers: {
                 'Content-Type': 'application/json'
@@ -272,8 +285,7 @@ const PerssonalInfo = () => {
 
 
         <div className="container-fluid page-body-wrapper">
-            <InnerHeader />
-
+            <InnerHeaderForm />
 
             <div className="main-panel">
 
@@ -332,7 +344,7 @@ const PerssonalInfo = () => {
 
                                                         <div className="form-group col-lg-12 ">
                                                             <label for="exampleInputUsername1">How they come to know about SIT</label>
-                                                            <input type="text" className="form-control" id="exampleInputUsername1" value={personalInfo.reference} placeholder="Ex. Google" name='reference' onChange={handleChange}  disabled/>
+                                                            <input type="text" className="form-control" id="exampleInputUsername1" value={personalInfo.reference} placeholder="Ex. Google" name='reference' onChange={handleChange} disabled />
                                                         </div>
 
                                                     </div>
@@ -390,9 +402,9 @@ const PerssonalInfo = () => {
                                             </div>
 
 
-                                            <div className='row p-2 gap-2'>
-                                                {location.pathname.match(/^\/onlineadmissionform\/personalinfo\/\d+$/) && <button type='button' className='mr-2 btn btn-success'>Accept</button>}
-                                                {location.pathname.match(/^\/onlineadmissionform\/personalinfo\/\d+$/) && <button type='button' className='mr-2 btn btn-danger'>Denied</button>}
+                                            <div className='row p-2 gap-2 '>
+                                                <button type='button' className='mr-2 btn btn-success' value={`11`} onClick={(e) => handleStatus(e.target.value)}>Accept</button>
+                                                <button type='button' className='mr-2 btn btn-danger' onClick={(e) => handleStatus(e.target.value)}>Denied</button>
                                                 <button type='button' className='mr-2 btn btn-secondary' onClick={() => handleadmission(admissionid)}>Admission</button>
                                                 <button type="submit" className='mr-2 btn btn-primary'>Save</button>
                                                 <Link to="/onlineadmission" className='mr-2 btn btn-secondary'>close</Link>
@@ -457,7 +469,7 @@ const PerssonalInfo = () => {
                                                     <div className='row'>
                                                         <div className="form-group col-lg-4">
                                                             <label for="exampleTextarea1">Online Admission Date	</label>
-                                                            <input type="date" className="form-control" id="exampleInputUsername1" value={personalInfo.admission_dt} placeholder="" name='admission_dt' onChange={handleChange} disabled/>
+                                                            <input type="date" className="form-control" id="exampleInputUsername1" value={personalInfo.admission_dt} placeholder="" name='admission_dt' onChange={handleChange} disabled />
 
                                                         </div>
 
@@ -532,12 +544,12 @@ const PerssonalInfo = () => {
                                                             <label for="exampleInputUsername1">Family Mobile</label>
                                                             <input type="number" className="form-control" id="exampleInputUsername1" value={personalInfo.permanentmobile} placeholder="Number" name='permanentmobile' onChange={handleChange} />
                                                         </div>
-                                                    
+
                                                         <div className='form-group col-3'>
                                                             <label for="exampleInputUsername1">Email</label>
                                                             <input type="email" className="form-control" id="exampleInputUsername1" value={personalInfo.permanentemail} placeholder="Email" name='permanentemail' onChange={handleChange} />
                                                         </div>
-                                                        
+
                                                     </div>
 
                                                 </div>

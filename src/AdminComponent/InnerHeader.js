@@ -264,17 +264,13 @@ const InnerHeader = () => {
             case '/shortlisted':
                 return 'Short Listed By SIT';
             
-            
-
-
-            
-            
 
 
             case location.pathname.match(/^\/addcorporateinquiry\/\d+$/) ? location.pathname : '':
                 return 'Corporate Inquiry';
             case location.pathname.match(/^\/admission\/\d+$/) ? location.pathname : '':
                 return 'Admission';
+
             case location.pathname.match(/^\/onlineadmissionform\/personalinfo\/\d+$/) ? location.pathname : '':
                 return 'Personal Information ';
             case location.pathname.match(/^\/onlineadmissionform\/academicqualification\/\d+$/) ? location.pathname : '':
@@ -292,7 +288,6 @@ const InnerHeader = () => {
 
     const navigate = useNavigate()
 
-
     return (
         <div>
             <header class="main-header">
@@ -301,6 +296,9 @@ const InnerHeader = () => {
                     { location.pathname !== "/" &&   <ArrowCircleLeftSharpIcon onClick={() => navigate(-1)} class="arrow" /> }
                         <div class="page-title px-2">
                             <h1>{getPageName()}</h1>
+                        </div>
+                        <div>
+
                         </div>
                         <div class="main-header-toolbar">
                             {/* <div class="header-action">

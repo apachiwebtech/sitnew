@@ -1,7 +1,7 @@
 import CryptoJS from 'crypto-js';
 import Cookies from 'js-cookie';
 
-const encryptionKey = 'secret-key';
+const encryptionKey = 'sitsuvidya';
 
 const decryptedUserId = () => {
     const ciphertext = Cookies.get('userid');

@@ -12,6 +12,16 @@ const InnerHeaderForm = () => {
                 return 'Dashboard';
             case '/onefieldform/awt_descipline/Descipline':
                 return 'Descipline';
+            case location.pathname.match(/^\/onlineadmissionform\/personalinfo\/\d+$/) ? location.pathname : '':
+                return 'Personal Information ';
+            case location.pathname.match(/^\/onlineadmissionform\/academicqualification\/\d+$/) ? location.pathname : '':
+                return 'Academic Qualification ';
+            case location.pathname.match(/^\/onlineadmissionform\/companyinfo\/\d+$/) ? location.pathname : '':
+                return 'Company Information';
+            case location.pathname.match(/^\/onlineadmissionform\/discussion\/\d+$/) ? location.pathname : '':
+                return 'Discussion';
+            case location.pathname.match(/^\/onlineadmissionform\/documents\/\d+$/) ? location.pathname : '':
+                return 'Documents';
             default:
                 return '';
         }
@@ -25,15 +35,31 @@ const InnerHeaderForm = () => {
             <header class="main-header">
                 <div class="container-fluid">
                     <div class="main-header-inner">
-             <ArrowCircleLeftSharpIcon onClick={() => navigate(-1)} class="arrow" /> 
+                        <ArrowCircleLeftSharpIcon onClick={() => navigate(-1)} class="arrow" />
                         <div class="page-title px-2">
-                            <h1>{getPageName()}</h1> 
+                            <h1>{getPageName()}</h1>
                         </div>
                         <div class="main-header-toolbar">
                             <div>
                                 {location.pathname.match(/^\/admissionform\/personalinfo\/\d+$/) && <Link to="/Student"><CancelIcon class="arrow" />
                                 </Link>}
-                                {location.pathname.match(/^\/onlineadmissionform\/personalinfo\/\d+$/) && <Link to="/Student"><CancelIcon class="arrow" />
+                                {location.pathname.match(/^\/admissionform\/academicqualification\/\d+$/) && <Link to="/Student"><CancelIcon class="arrow" />
+                                </Link>}
+                                {location.pathname.match(/^\/admissionform\/companyinfo\/\d+$/) && <Link to="/Student"><CancelIcon class="arrow" />
+                                </Link>}
+                                {location.pathname.match(/^\/admissionform\/discussion\/\d+$/) && <Link to="/Student"><CancelIcon class="arrow" />
+                                </Link>}
+                                {location.pathname.match(/^\/admissionform\/documents\/\d+$/) && <Link to="/Student"><CancelIcon class="arrow" />
+                                </Link>}
+                                {location.pathname.match(/^\/onlineadmissionform\/personalinfo\/\d+$/) && <Link to="/onlineadmission"><CancelIcon class="arrow" />
+                                </Link>}
+                                {location.pathname.match(/^\/onlineadmissionform\/academicqualification\/\d+$/) && <Link to="/onlineadmission"><CancelIcon class="arrow" />
+                                </Link>}
+                                {location.pathname.match(/^\/onlineadmissionform\/companyinfo\/\d+$/) && <Link to="/onlineadmission"><CancelIcon class="arrow" />
+                                </Link>}
+                                {location.pathname.match(/^\/onlineadmissionform\/discussion\/\d+$/) && <Link to="/onlineadmission"><CancelIcon class="arrow" />
+                                </Link>}
+                                {location.pathname.match(/^\/onlineadmissionform\/documents\/\d+$/) && <Link to="/onlineadmission"><CancelIcon class="arrow" />
                                 </Link>}
                             </div>
                             {/* <div class="header-action">
