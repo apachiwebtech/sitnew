@@ -221,7 +221,7 @@ const Header = ({click}) => {
             </li>
      
             <li className="nav-item">
-              <Link className="nav-link" to="/college">
+              <Link className="nav-link" to="/collegelisting">
                 {/* <Icon path={mdiCircleMedium } size={1} className='mx-3' /> */}
                 <Icon path={mdiCircleMedium} size={1} className='mx-3' />
                 <span className="menu-title">College</span>

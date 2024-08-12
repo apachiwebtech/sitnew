@@ -161,6 +161,7 @@ import MyDocument from './AdminComponent/MyDocument.js';
 import RInquiry from './AdminComponent/RInquiry.js';
 import FeesReport from './AdminComponent/FeesReport.js';
 import FeesDetails from './AdminComponent/FeesDetails.js'; 
+import CollegeListing from './AdminComponent/CollegeListing.jsx';
 // import FacultyPayment from './AdminComponent/FacultyPayment.js';
 
 
@@ -286,8 +287,12 @@ const Router = createBrowserRouter([
         element: <College />
       },
       {
-        path: '/college',
+        path: '/college/:collegeid',
         element: <College />
+      },
+      {
+        path: '/collegelisting',
+        element: <CollegeListing />
       },
       {
         path: '/Qualification',
