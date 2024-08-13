@@ -23,7 +23,8 @@ const MassEMail = () => {
     const { projectmasterid } = useParams();
     const [inquiryData, setInquiryData] = useState([]);
     const [Discipline, setDescipline] = useState([]);
-    const [Course, setCourse] = useState([]);
+    const [Course, SetCourse] = useState([]);
+    const [Department, SetDepartment] = useState([]);
     const [Education, setEducation] = useState([]);
     const [batch, setBatch] = useState([]);
     const [batchCategoty, setbatchCategory] = useState([]);
@@ -97,7 +98,9 @@ const MassEMail = () => {
         getEmployeeData()
         value.title = ""
         setError({})
+        getCourseData()
         setUid([])
+        getDepartment()
     }, [])
 
     const handleClick = (id) => {
@@ -152,6 +155,31 @@ const MassEMail = () => {
             [id]: false,
         }));
     }
+
+    async function getCourseData() {
+
+      axios.get(`${BASE_URL}/getCourse`)
+          .then((res) => {
+              console.log(res.data)
+              SetCourse(res.data)
+          })
+          .catch((err) => {
+              console.log(err)
+          })
+  }
+    async function getDepartment() {
+
+      axios.get(`${BASE_URL}/role_data`)
+          .then((res) => {
+              console.log(res.data)
+              SetDepartment(res.data)
+          })
+          .catch((err) => {
+              console.log(err)
+          })
+  }
+
+
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -255,7 +283,7 @@ const MassEMail = () => {
                                                     <hr></hr>
                                                     <form class="form-sample py-3" onSubmit={handleSubmit}>
                                                         <div class="row">
-                                                            <div class="form-group col-lg-12">
+                                                            <div class="form-group col-lg-3">
                                                                 <FormControl>Student Type
                                                                     <RadioGroup
 
@@ -272,13 +300,13 @@ const MassEMail = () => {
                                                                 <label for="exapmleFormControlSelect1">Course</label>
                                                                 <select class="form-control" id="exampleFormControlSelect1"
                                                                     value={value.course} name='course' onChange={onhandleChange}>
-                                                                    <option>--Select Course--</option>
-                                                                    <option>Autocad- Piping</option>
-                                                                    <option>Basic AutoCAD - 2D</option>
-                                                                    <option>Health, Safety &amp; Environment in Construction</option>
-                                                                    <option>Masonry/Carpentry</option>
-                                                                    <option>Offshore Engineering</option>
-                                                                    <option>Other</option>
+                                                                      <option value="">Select Course</option>
+                                                    {Course.map((item) => {
+                                                        return (
+
+                                                            <option value={item.Course_Id}>{item.Course_Name}</option>
+                                                        )
+                                                    })}
                                                                 </select>
                                                             </div>
 
@@ -299,25 +327,19 @@ const MassEMail = () => {
                                                                 <select class="form-control" id="exampleFormCpntrolSelect1" value={value.department}
                                                                     name='department' onChange={onhandleChange}>
                                                                     <option>--Select Department--</option>
-                                                                    <option>Select</option>
-                                                                    <option>Administration</option>
-                                                                    <option>Business Development</option>
-                                                                    <option>Training &amp; Development</option>
-                                                                    <option>Account</option>
-                                                                    <option>Placement</option>
-                                                                    <option>Purchase</option>
-                                                                    <option>Leadership / DD</option>
-                                                                    <option>Quality Assurance</option>
-                                                                    <option>Human Resources</option>
-                                                                    <option>Corporate Training</option>
-                                                                    <option>Test User</option>
+                                                                    {Department.map((item) => {
+                                                        return (
+
+                                                            <option value={item.id }>{item.title}</option>
+                                                        )
+                                                    })}
 
                                                                 </select>
                                                             </div>
 
                                                             <div class="form-group col-lg-3">
                                                                 <lable for="exampleFormControlSelect1">Nationality</lable>
-                                                                <select class="form-control" id="exampleFormControlSelect1" value={value.nationality} 
+                                                                <select class="form-control" id="exampleFormControlSelect1" value={value.nationality}
                                                                 name='nationality' on onChange={onhandleChange}>
                                                                     <option>--Select Nationality--</option>
                                                                     <option>All</option>
@@ -339,16 +361,16 @@ const MassEMail = () => {
                                                                     value={value.todate} name="todate" onchange={onhandleChange} />
                                                             </div>
 
-                                                            <div class="form-group col-lg-12">
-                                                                <FormControl>
-                                                                    <RadioGroup row aria-labelledby='demo-row-radio-button-group-lable'
-                                                                        name="row-radio-button-group">
+                                                            <div class="form-group col-lg-3" className="d-flex align-items-center">
+                                                                <FormControl  >
+                                                                    <RadioGroup row aria-labelledby='demo-row-radio-button-group-lable' name="row-radio-button-group">
                                                                         <FormControlLabel value="sendnotification" control={<Radio />} label="Send Notification " />
+                                                                        <button className=' btn btn-primary btn-sm '>Close</button>
                                                                     </RadioGroup>
                                                                 </FormControl>
                                                             </div>
 
-                                                            
+
                                                         </div>
 
                                                         <div className='row p-2 gap-2'>

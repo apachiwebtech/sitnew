@@ -77,6 +77,10 @@ function AddRole() {
                 .then((res) => {
                     alert(res.data)
                     getRole()
+                    setValue({
+                        title: "",
+                        description: "",
+                      })
 
                 })
                 .catch((err) => {

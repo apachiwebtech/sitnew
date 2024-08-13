@@ -94,7 +94,7 @@ const ContactExport = () => {
             newErrors.selectbatch = "Batch is Required"
         }
 
-        
+
         setError(newErrors)
         return isValid
     }
@@ -290,7 +290,7 @@ const ContactExport = () => {
 
                                                     {course.map((item) => {
                                                         return (
-                                                            <option value={item.Course_Id}>{item.Course_name}</option>
+                                                            <option value={item.Course_Id}>{item.Course_Name}</option>
 
                                                         )
                                                     })}
@@ -338,11 +338,11 @@ const ContactExport = () => {
                                                         <h3>Details</h3>
                                                     </div><hr></hr>
                                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
-                                                        
-                                                        <button type="submit" class="btn btn-primary mr-2">Excel    </button>
-                                                        
 
-                                                       
+                                                        <button type="submit" class="btn btn-primary mr-2">Excel    </button>
+
+
+
                                                     </form>
 
                                                 </div>
@@ -356,7 +356,7 @@ const ContactExport = () => {
                         </div>
                     </div>
                     <div className="#">
-                      
+
 
                     </div>
                 </div>

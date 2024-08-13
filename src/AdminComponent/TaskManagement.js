@@ -48,15 +48,15 @@ const TaskManagement = () => {
                                             <div className='row justify-content-center' >
                                                 <div className='p-3' style={{ width: "100%" }}>
                                                     <div>
-                                                        <Link to="/addtasktemplate"><h4> Add Task Template</h4></Link>
+                                                        <Link to="/addtasktemplate"><h4> ● Add Task Template</h4></Link>
                                                     </div>
 
                                                     <div>
-                                                        <Link to="/taskadd"><h4> Add Task</h4></Link>
+                                                        <Link to="/taskadd"><h4> ● Add Task</h4></Link>
                                                     </div>
 
                                                     <div>
-                                                        <Link to="/AddChecklist"><h4>Add Checklist</h4></Link>
+                                                        <Link to="/AddChecklist"><h4> ● Add Checklist</h4></Link>
                                                     </div>
 
 
@@ -67,15 +67,15 @@ const TaskManagement = () => {
                                             <div className='row justify-content-center' >
                                                 <div className='p-3' style={{ width: "100%" }}>
                                                     <div>
-                                                        <Link to="/searchedittasktemplate"> <h4>Search / Edit Task Template </h4></Link>
+                                                        <Link to="/searchedittasktemplate"> <h4> ● Search / Edit Task Template </h4></Link>
                                                     </div>
 
                                                     <div>
-                                                       <Link to="/searchedittask"><h4>Search / Edit Task</h4></Link>
+                                                       <Link to="/searchedittask"><h4> ● Search / Edit Task</h4></Link>
                                                     </div>
 
                                                     <div>
-                                                        <Link to="/searcheditchecklist"><h4>Search / Edit Checklist </h4></Link>
+                                                        <Link to="/searcheditchecklist"><h4> ● Search / Edit Checklist </h4></Link>
                                                     </div>
 
                                                 </div>

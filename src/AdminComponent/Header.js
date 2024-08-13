@@ -97,7 +97,7 @@ const Header = ({click}) => {
             </li>
             {/* <li className="nav-item">
               <Link className="nav-link" to='/color'>
-           
+
                 <Icon path={mdiCircleMedium } size={1} className='mx-3' />
                 <span className="menu-title">Room</span>
               </Link>
@@ -219,7 +219,7 @@ const Header = ({click}) => {
                 <span className="menu-title">Book Code</span>
               </Link>
             </li>
-     
+
             <li className="nav-item">
               <Link className="nav-link" to="/collegelisting">
                 {/* <Icon path={mdiCircleMedium } size={1} className='mx-3' /> */}
@@ -227,7 +227,7 @@ const Header = ({click}) => {
                 <span className="menu-title">College</span>
               </Link>
             </li>
-     
+
             <li className="nav-item">
               <Link className="nav-link" to="/librarybook">
                 {/* <Icon path={mdiCircleMedium } size={1} className='mx-3' /> */}
@@ -251,18 +251,18 @@ const Header = ({click}) => {
               </Link>
             </li>
 
-     
+
 
             {/* <li className="nav-item">
               <Link className="nav-link" to='/webapp/gallery'
-       
+
                 <Icon path={mdiCircleMedium } size={1} className='mx-3' />
                 <span className="menu-title">Library Book</span>
               </Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link" to='/webapp/gallery'>
-      
+
                 <Icon path={mdiCircleMedium } size={1} className='mx-3' />
                 <span className="menu-title">Feedback Questions</span>
               </Link>
@@ -494,7 +494,7 @@ const Header = ({click}) => {
         </li>
         <Collapse in={openStates.role} timeout="auto" unmountOnExit>
           <ul className='inner-item'>
-       
+
             <li className="nav-item">
               <Link className="nav-link" to="/addrole">
                 {/* <Icon path={mdiCircleMedium } size={1} className='mx-3' /> */}
@@ -975,7 +975,7 @@ const Header = ({click}) => {
             </li>
 
             <li className="nav-item">
-              <Link className="nav-link" to='qmsmaster'>
+              <Link className="nav-link" to='/qmsmaster'>
                 <Icon path={mdiCircleMedium} size={1} className='mx-3' />
                 <span className='menu-title'>QMS Master</span>
               </Link>
@@ -1027,7 +1027,7 @@ const Header = ({click}) => {
             <li className="nav-item">
               <Link className="nav-link" to="/massemail">
                 <Icon path={mdiCircleMedium} size={1} className='mx-3' />
-                <span className="menu-title">Mass EMIAL</span>
+                <span className="menu-title">Mass Email</span>
               </Link>
             </li>
 

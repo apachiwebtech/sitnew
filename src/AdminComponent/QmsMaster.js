@@ -1,30 +1,64 @@
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
+import decryptedUserId from '../Utils/UserID';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import Box from '@mui/material/Box';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import { LibraryBooks } from '@mui/icons-material';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+//import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
 
-const QSMDoes = () => {
+const QmsMaster = () => {
+
+
+
+
 
     const [brand, setBrand] = useState([])
-    const [QMS, setQMS] = useState([])
-    const [role, setrole] = useState([])
     const [vendordata, setVendorData] = useState([])
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
-    const [image , setImage] = useState()
 
+    const handleChange1 = (event) => {
+        setChecked([event.target.checked, event.target.checked]);
+    };
 
+    const handleChange2 = (event) => {
+        setChecked([event.target.checked, checked[1]]);
+    };
+
+    const handleChange3 = (event) => {
+        setChecked([checked[0], event.target.checked]);
+    };
+
+    // const children = (
+    //     <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
+    //       <FormControlLabel
+    //         label="Child 1"
+    //         control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
+    //       />
+    //       <FormControlLabel
+    //         label="Child 2"
+    //         control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
+    //       />
+    //     </Box>
+    //   );
 
     const [value, setValue] = useState({
-        qmsname : ""|| uid.qmsname,
-        department : ""|| uid.department,
-        file : ""|| uid.file,
+        qmsname: "" || uid.training,
+        description: "" || uid.attendee,
 
 
 
@@ -33,53 +67,51 @@ const QSMDoes = () => {
 
     useEffect(() => {
         setValue({
-            qmsname : uid.qmsname,
-            department : uid.department,
-            file : uid.file,
+            qmsname: uid.qmsname,
+            description: uid.description,
 
         })
     }, [uid])
 
 
-    const validateForm = () => {
-        let isValid = true
-        const newErrors = {}
+    // const validateForm = () => {
+    //     let isValid = true
+    //     const newErrors = {}
 
 
-       if (!value.qmsname) {
-        isValid = false;
-        newErrors.qmsname = "QMSName is Required"
-       }
-
-       if(!value.department){
-        isValid = false;
-        newErrors.department = "Department is Required"
-       }
-
-        setError(newErrors)
-        return isValid
-    }
+    //    if (!value.college) {
+    //     isValid = false;
+    //     newErrors.name = "Name is require"
+    //    }
+    //     if (!value.email) {
+    //         isValid = false;
+    //         newErrors.email = "Email is require"
+    //     }
+    //     setError(newErrors)
+    //     return isValid
+    // }
 
 
-    async function getEmployeeData() {
+    // async function getEmployeeData() {
 
-        axios.post(`${BASE_URL}/vendor_details`)
-            .then((res) => {
-                console.log(res.data)
-                setBrand(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
+    //     axios.post(`${BASE_URL}/vendor_details`)
+    //         .then((res) => {
+    //             console.log(res.data)
+    //             setBrand(res.data)
+    //         })
+    //         .catch((err) => {
+    //             console.log(err)
+    //         })
+    // }
 
 
 
     async function getEmployeeData() {
         const data = {
-            tablename : "awt_qmsdoes"
+            tablename: "QMS_master",
+            columnname: "*"
         }
-        axios.post(`${BASE_URL}/get_data`,data)
+        axios.post(`${BASE_URL}/get_new_data`, data)
             .then((res) => {
                 console.log(res.data)
                 setVendorData(res.data)
@@ -89,36 +121,8 @@ const QSMDoes = () => {
             })
     }
 
-    async function getqms() {
-      const data = {
-          tablename: "QMS_master",
-          columnname: "*"
-      }
-      axios.post(`${BASE_URL}/get_new_data`, data)
-          .then((res) => {
-              console.log(res.data)
-              setQMS(res.data)
-          })
-          .catch((err) => {
-              console.log(err)
-          })
-  }
-    async function getrole() {
-
-      axios.get(`${BASE_URL}/role_data`)
-          .then((res) => {
-              console.log(res.data)
-              setrole(res.data)
-          })
-          .catch((err) => {
-              console.log(err)
-          })
-  }
-
     useEffect(() => {
         getEmployeeData()
-        getqms()
-        getrole()
         value.title = ""
         setError({})
         setUid([])
@@ -142,14 +146,14 @@ const QSMDoes = () => {
 
     const handleUpdate = (id) => {
         const data = {
-            u_id : id,
-            tablename : "awt_qmsdoes"
+            u_id: id,
+            tablename: "QMS_master"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
                 setUid(res.data[0])
 
-                console.log(res.data , "update")
+                console.log(res.data, "update")
             })
             .catch((err) => {
                 console.log(err)
@@ -159,7 +163,7 @@ const QSMDoes = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename : "awt_qmsdoes"
+            tablename: "QMS_master"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
@@ -177,32 +181,28 @@ const QSMDoes = () => {
         }));
     }
 
-
-
-
     const handleSubmit = (e) => {
         e.preventDefault()
 
+        // if(validateForm()){
+        const data = {
 
-    if(validateForm()){
-
-    const formdata = new FormData()
-
-    formdata.append('image' , image)
-    formdata.append('qmsname' , value.qmsname)
-    formdata.append('department' , value.department)
+            qmsname: value.qmsname,
+            description: value.description,
+            uid: uid.id
+        }
 
 
-        axios.post(`${BASE_URL}/add_qmsdoes`, formdata)
+        axios.post(`${BASE_URL}/add_qmsmaster`, data)
             .then((res) => {
-               console.log(res)
-               getEmployeeData()
+                console.log(res)
+                getEmployeeData()
 
             })
             .catch((err) => {
                 console.log(err)
             })
-    }
+        // }
 
 
 
@@ -216,11 +216,6 @@ const QSMDoes = () => {
     }
 
 
-    const onhandleupload = (e) =>{
-        const image = e.target.files[0]
-
-        setImage(image)
-    }
 
 
 
@@ -236,10 +231,7 @@ const QSMDoes = () => {
             filterable: false,
 
         },
-        { field: 'qmsname', headerName: 'QMS Name', flex: 2},
-        { field: 'department', headerName: 'Department', flex: 2},
-        { field: 'file', headerName: 'File', flex: 2},
-
+        { field: 'QMS_name', headerName: 'Qms Name', flex: 2 },
         {
             field: 'actions',
             type: 'actions',
@@ -266,85 +258,53 @@ const QSMDoes = () => {
             <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="row">
-                        <div class="col-lg-12 grid-margin stretch-card">
+                        <div class="col-lg-6 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Add QMS Document</h4>
+                                    {/* <h4 class="card-title">View Roll No. Allocated Batches</h4> */}
+                                    <h4 class="card-title">View Qms Master</h4>
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
 
-
-                                            <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">QMS Name<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.qmsname} onChange={onhandleChange} name='qmsname'>
-                                                    <option>Select</option>
-                                                    {QMS.map((item) => {
-                                                        return (
-
-                                                            <option value={item.Id}>{item.QMS_name}</option>
-                                                        )
-                                                    })}
-
-                                                </select>
-                                                {<span className="text-danger"> {error.qmsname} </span>}
+                                            <div class="form-group col-lg-12">
+                                                <label for="exampleSelectUsername1">Qms Name</label>
+                                                <input type="text" class="form-control" id="exampleSelectUsername1" value={value.qmsname} placeholder='Qms Name' name='qmsname' onChange={onhandleChange} />
                                             </div>
 
-                                            <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Department<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.department} onChange={onhandleChange} name='department'>
-                                                    <option>Select</option>
-                                                    {role.map((item) => {
-                                                        return (
-
-                                                            <option value={item.id}>{item.title}</option>
-                                                        )
-                                                    })}
-                                                </select>
-                                                {<span className="text-danger"> {error.department} </span>}
+                                            <div class="form-group col-lg-12">
+                                                <lable for="exampleTextarea1">Description</lable>
+                                                <textarea class="form-control" rows={5} id="exampleTextarea1" value={value.description} placeholder='Description' name='description' onChange={onhandleChange} ></textarea>
                                             </div>
-
-
-                                            <div class="form-group col-lg-4">
-                                                <label for="exampleInputUsername1">Select File</label>
-                                                <input type="file" class="form-control" id="exampleInputUsername1" value={value.file} name='file' onChange={onhandleupload} />
-
-                                            </div>
-
-
-                                            {/* <div className="container-fluid page-body-wrapper">
-                                                <input type="file" onChange={handleFileChange} />
-                                                {selectedFile && (
-                                                    <div>
-                                                    <p>Selected File: {selectedFile.name}</p>
-                                                    <p>File Size: {selectedFile.size} bytes</p>
-                                                    </div>
-                                                )}
-                                            </div> */}
 
 
                                         </div>
 
-
                                         <button type="submit" class="btn btn-primary mr-2">Submit</button>
+
                                         <button type='button' onClick={() => {
                                             window.location.reload()
-                                        }} class="btn btn-light">Cancel</button>
+                                        }} class="btn btn-light">Back</button>
+
+
+
 
                                     </form>
 
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-12">
+                        <div class="col-lg-6">
                             <div class="card">
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
                                         <div>
-                                            <h4 class="card-title">QMS Docs Details</h4>
+                                            {/* <h4 class="card-title">Allot Roll Number List</h4> */}
+                                            <h4 class="card-title">View Qms Master</h4>
                                         </div>
 
                                     </div>
+
 
                                     <div>
                                         <DataGrid
@@ -354,7 +314,7 @@ const QSMDoes = () => {
                                             disableColumnSelector
                                             disableDensitySelector
                                             rowHeight={35}
-                                            getRowId={(row) => row.id}
+                                            getRowId={(row) => row.Id}
                                             initialState={{
                                                 pagination: {
                                                     paginationModel: { pageSize: 10, page: 0 },
@@ -377,15 +337,6 @@ const QSMDoes = () => {
                                         )}
                                     </div>
 
-
-                                      {/* <div>
-                                      <button type='button' onClick={() => {
-                                            window.location.reload()
-                                        }} class="btn btn-primary mr-2">Excel</button>
-                                      </div> */}
-
-
-
                                 </div>
                             </div>
                         </div>
@@ -397,4 +348,4 @@ const QSMDoes = () => {
     )
 }
 
-export default QSMDoes
+export default QmsMaster

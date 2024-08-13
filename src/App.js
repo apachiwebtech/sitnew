@@ -160,8 +160,9 @@ import EmailMasterListing from './AdminComponent/EmailMasterListing.js';
 import MyDocument from './AdminComponent/MyDocument.js';
 import RInquiry from './AdminComponent/RInquiry.js';
 import FeesReport from './AdminComponent/FeesReport.js';
-import FeesDetails from './AdminComponent/FeesDetails.js'; 
+import FeesDetails from './AdminComponent/FeesDetails.js';
 import CollegeListing from './AdminComponent/CollegeListing.jsx';
+import QmsMaster from './AdminComponent/QmsMaster.js';
 // import FacultyPayment from './AdminComponent/FacultyPayment.js';
 
 
@@ -626,6 +627,10 @@ const Router = createBrowserRouter([
       {
         path: '/qmsdoes',
         element: <QSMDoes />
+      },
+      {
+        path: '/qmsmaster',
+        element: <QmsMaster />
       },
       {
         path: '/masswhatsapp',

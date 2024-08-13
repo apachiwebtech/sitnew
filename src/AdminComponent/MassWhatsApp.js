@@ -15,6 +15,8 @@ const MassWhatsApp = () => {
     const [brand, setBrand] = useState([])
     const [vendordata, setVendorData] = useState([])
     const [uid, setUid] = useState([])
+    const [Course, setCourse] = useState([])
+    const [role, setrole] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
@@ -26,6 +28,18 @@ const MassWhatsApp = () => {
         invoiceamount: '',
     })
 
+
+    async function getcourses() {
+
+      axios.get(`${BASE_URL}/getCourse`)
+          .then((res) => {
+              console.log(res.data)
+              setCourse(res.data)
+          })
+          .catch((err) => {
+              console.log(err)
+          })
+  }
 
     useEffect(() => {
         setValue({
@@ -96,9 +110,20 @@ const MassWhatsApp = () => {
                 console.log(err)
             })
     }
+    async function getRole() {
+      axios.get(`${BASE_URL}/role_data`)
+          .then((res) => {
+            setrole(res.data)
+          })
+          .catch((err) => {
+              console.log(err)
+          })
+  }
 
     useEffect(() => {
         getEmployeeData()
+        getcourses()
+        getRole()
         value.title = ""
         setError({})
         setUid([])
@@ -253,7 +278,7 @@ const MassWhatsApp = () => {
                                                     <hr></hr>
                                                     <form class="form-sample py-3" onSubmit={handleSubmit}>
                                                         <div class="row">
-                                                            <div class="form-group col-lg-12">
+                                                            <div class="form-group col-lg-6">
                                                                 <FormControl>Student Type
                                                                     <RadioGroup
                                                                        defaultValue="student"
@@ -268,7 +293,7 @@ const MassWhatsApp = () => {
                                                                 </FormControl>
                                                             </div>
 
-                                                            <div class="form-group col-lg-12">
+                                                            <div class="form-group col-lg-6">
                                                                 <FormControl>Batch
                                                                     <RadioGroup row aria-labelledby='demo-row-radion-button-group-lable'
                                                                     name='row-radio-button-group'>
@@ -282,12 +307,12 @@ const MassWhatsApp = () => {
                                                                 <select class="form-control" id="exampleFormControlSelect1"
                                                                     value={value.course} name='course' onChange={onhandleChange}>
                                                                     <option>--Select Course--</option>
-                                                                    <option>Autocad- Piping</option>
-                                                                    <option>Basic AutoCAD - 2D</option>
-                                                                    <option>Health, Safety &amp; Environment in Construction</option>
-                                                                    <option>Masonry/Carpentry</option>
-                                                                    <option>Offshore Engineering</option>
-                                                                    <option>Other</option>
+                                                                    {Course.map((item) => {
+                                                                          return (
+
+                                                                     <option value={item.Course_Id}>{item.Course_Name}</option>
+                                                                          )
+                                                                      })}
                                                                 </select>
                                                                 {<span className="text-danger"> {error.course} </span>}
                                                             </div>
@@ -315,31 +340,25 @@ const MassWhatsApp = () => {
                                                                 <input type="date" class="form-control" id="exampleInputUsername1"
                                                                     value={value.todate} name="todate" onchange={onhandleChange} />
                                                             </div>
-                                                            
+
                                                             <div class="form-group col-lg-3">
                                                                 <lable for="exampleFormControlSelect1">Department<span className="text-danger">*</span></lable>
                                                                 <select class="form-control" id="exampleFormCpntrolSelect1" value={value.department}
                                                                     name='department' onChange={onhandleChange}>
                                                                     <option>--Select Department--</option>
-                                                                    <option>Select</option>
-                                                                    <option>Administration</option>
-                                                                    <option>Business Development</option>
-                                                                    <option>Training &amp; Development</option>
-                                                                    <option>Account</option>
-                                                                    <option>Placement</option>
-                                                                    <option>Purchase</option>
-                                                                    <option>Leadership / DD</option>
-                                                                    <option>Quality Assurance</option>
-                                                                    <option>Human Resources</option>
-                                                                    <option>Corporate Training</option>
-                                                                    <option>Test User</option>
+                                                                    {role.map((item) => {
+                                                                        return (
+
+                                                                            <option value={item.id}>{item.title}</option>
+                                                                        )
+                                                                    })}
                                                                 </select>
                                                                 {<span className="text-danger"> {error.department} </span>}
                                                             </div>
 
                                                             <div class="form-group col-lg-3">
                                                                 <lable for="exampleFormControlSelect1">Nationality<span className="text-danger">*</span></lable>
-                                                                <select class="form-control" id="exampleFormControlSelect1" value={value.nationality} 
+                                                                <select class="form-control" id="exampleFormControlSelect1" value={value.nationality}
                                                                 name='nationality' on onChange={onhandleChange}>
                                                                     <option>--Select Nationality--</option>
                                                                     <option>All</option>

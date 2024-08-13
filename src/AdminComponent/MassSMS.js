@@ -256,7 +256,7 @@ const MassSMS = () => {
                                                     <hr></hr>
                                                     <form class="form-sample py-3" onSubmit={handleSubmit}>
                                                         <div class="row">
-                                                            <div class="form-group col-lg-12">
+                                                            <div class="form-group col-lg-3">
                                                                 <FormControl>Student Type
                                                                     <RadioGroup
 
@@ -269,7 +269,7 @@ const MassSMS = () => {
                                                                 </FormControl>
                                                             </div>
 
-                                                            <div class="form-group col-lg-12">
+                                                            <div class="form-group col-lg-3">
                                                                 <FormControl>Batch
                                                                     <RadioGroup row aria-labelledby='demo-row-radion-button-group-lable'
                                                                     name='row-radio-button-group'>
@@ -314,7 +314,7 @@ const MassSMS = () => {
                                                                 <input type="date" class="form-control" id="exampleInputUsername1"
                                                                     value={value.todate} name="todate" onchange={onhandleChange} />
                                                             </div>
-                                                            
+
                                                             <div class="form-group col-lg-3">
                                                                 <lable for="exampleFormControlSelect1">Department</lable>
                                                                 <select class="form-control" id="exampleFormCpntrolSelect1" value={value.department}
@@ -338,7 +338,7 @@ const MassSMS = () => {
 
                                                             <div class="form-group col-lg-3">
                                                                 <lable for="exampleFormControlSelect1">Nationality</lable>
-                                                                <select class="form-control" id="exampleFormControlSelect1" value={value.nationality} 
+                                                                <select class="form-control" id="exampleFormControlSelect1" value={value.nationality}
                                                                 name='nationality' on onChange={onhandleChange}>
                                                                     <option>--Select Nationality--</option>
                                                                     <option>All</option>
@@ -348,25 +348,29 @@ const MassSMS = () => {
                                                             </div>
 
                                                             <div class="form-group col-lg-12">
-                                                                <FormControl>
+                                                                <FormControl  >
                                                                     <RadioGroup row aria-labelledby='demo-row-radio-button-group-lable'
                                                                     name="row-radio-button-group">
                                                                         <FormControlLabel value="sendstudent" control={<Radio />} label="Send Student"  />
                                                                         <FormControlLabel value="sendparents" control={<Radio />} label="Send Parents"  />
+                                                                        <FormControlLabel value="sendnotification" control={<Radio />} label="Send Notification"  />
+                                                                        <div className='d-flex align-items-center'>
+                                                                        <button className='btn btn-sm  btn-primary'>GO</button>
+                                                                        </div>
                                                                     </RadioGroup>
                                                                 </FormControl>
                                                             </div>
 
                                                             <div class="form-group col-lg-6">
                                                                 <lable for="exampleTextarea1">Message</lable>
-                                                                <input type="text" class="form-control form-control-lg" id="exampleTextarea1" value={value.message}
-                                                                placeholder='Message' name="message" onchange={onhandleChange}  />
+                                                                {/* <input type="text" class="" id="exampleTextarea1" value={value.message} placeholder='Message' name="message"   /> */}
+                                                                  <textarea className="form-control form-control-lg" rows={5} id="exampleTextarea1" onchange={onhandleChange} value={value.message} placeholder="Message" name='Message' onChange={onhandleChange}></textarea>
                                                             </div>
 
                                                             <div class="form-group col-lg-6">
                                                                 <lable for="exampleTextarea1">Log</lable>
-                                                                <input type="text" class="form-control form-control-lg" id="exapmleTextarea1" value={value.log}
-                                                                placeholder='Log' name='log' onchange={onhandleChange} />
+                                                                <textarea className="form-control form-control-lg" rows={5} id="exampleTextarea1" onchange={onhandleChange} value={value.log} placeholder="Log" name='Log' onChange={onhandleChange}></textarea>
+                                                                {/* <input type="text" class="form-control form-control-lg" id="exapmleTextarea1" value={value.log} placeholder='Log' name='log' onchange={onhandleChange} /> */}
                                                             </div>
                                                         </div>
 
