@@ -21,7 +21,7 @@ const BatchDetails = () => {
         batchcategory: "" || uid.Category,
         description: "" ,
         timings: "" || uid.Timings,
-        coursename: "" || uid.CourseName,
+        coursename: "" ,
         batchcode: "" || uid.Batch_code,
         planned: "" || uid.SDate,
         admissiondate: "" || uid.Admission_Date,
@@ -44,7 +44,7 @@ const BatchDetails = () => {
             batchcategory: "" || uid.Category,
             description: "" ,
             timings: "" || uid.Timings,
-            coursename: "" || uid.CourseName,
+            coursename: "" ,
             batchcode: "" || uid.Batch_code,
             planned: "" || uid.SDate,
             admissiondate: "" || uid.Admission_Date,
@@ -71,7 +71,7 @@ const BatchDetails = () => {
             isValid = false;
             newErrors.selectcourse = "Course is required"
         }
-    
+
         if (!value.eligibility) {
             isValid = false;
             newErrors.eligibility = "Eligibility is required"
@@ -260,7 +260,7 @@ const BatchDetails = () => {
                                                             })}
 
                                                         </select>
-                                             
+
                                                     </div>
 
 
@@ -273,7 +273,7 @@ const BatchDetails = () => {
                                                     <div class="form-group col-lg-6">
                                                         <label for="exampleInputUsername1">Duration From</label>
                                                         <input type="date" class="form-control" id="exampleInputUsername1" value={value.planned} placeholder="Planned Start Date" name='planned' onChange={onhandleChange} />
-                                     
+
 
                                                     </div>
 
@@ -307,7 +307,7 @@ const BatchDetails = () => {
 
                                             </div>
 
-                                            {/* 
+                                            {/*
                                             <div class="col-lg-12">
                                                 <hr></hr>
                                             </div> */}
@@ -315,10 +315,10 @@ const BatchDetails = () => {
                                             <div className='col-lg-6'>
                                                 <div className='row'>
                                                     <div class="form-group col-lg-6">
-                                                        <label for="exampleInputUsername1">Course Name (if changed)</label>
-                                                        <input type="text" class="form-control" id="exampleInputUsername1" value={value.coursename} placeholder="Course Name" name='coursename' onChange={onhandleChange} />
+                                                        <label for="exampleInputUsername1">Course Name(if changed)</label>
+                                                        <input type="text" class="form-control" id="exampleInputUsername1"  placeholder="Course Name" name='coursename' onChange={onhandleChange} />
 
-                               
+
                                                     </div>
 
                                                     <div class="form-group col-lg-6">
@@ -340,7 +340,7 @@ const BatchDetails = () => {
                                                     <div class="form-group col-lg-6">
                                                         <label for="exampleInputUsername1">Duration</label>
                                                         <input type="text" class="form-control" id="exampleInputUsername1" value={value.duration} placeholder="Duration" name='duration' onChange={onhandleChange} />
-                                             
+
                                                     </div>
 
                                                     <div class="form-group col-lg-6">
@@ -349,11 +349,11 @@ const BatchDetails = () => {
 
                                                     </div>
 
-                                          
+
                                                     <div class="form-group col-lg-6">
                                                         <label for="exampleInputUsername1">Timings</label>
                                                         <input type="text" class="form-control" id="exampleInputUsername1" value={value.timings} placeholder="Timings" name='timings' onChange={onhandleChange} />
-                                             
+
 
                                                     </div>
 

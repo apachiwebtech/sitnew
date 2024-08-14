@@ -90,7 +90,7 @@ const Course = () => {
             getupdatedata()
         }
         if(courseid == ':courseid'){
-            
+
             getnewcode()
         }
         setError({})

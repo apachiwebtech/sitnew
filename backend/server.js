@@ -34,60 +34,60 @@ app.use(session({
   saveUninitialized: false,
   cookie: {
     secure: false,
-    maxAge: 1000 * 60 
+    maxAge: 1000 * 60
 
   }
 }))
 
 
 const storage = multer.diskStorage({
-  destination: '../public_html/uploads/', // 
+  destination: '../public_html/uploads/', //
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
 
 const storage2 = multer.diskStorage({
-  destination: '../public_html/uploads/banner', // 
+  destination: '../public_html/uploads/banner', //
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
 const storage3 = multer.diskStorage({
-  destination: '../public_html/uploads/gallery', // 
+  destination: '../public_html/uploads/gallery', //
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
 const storage4 = multer.diskStorage({
-  destination: '../public_html/uploads/brand', // 
+  destination: '../public_html/uploads/brand', //
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
 
 const storage5 = multer.diskStorage({
-  destination: '../public_html/uploads/sizechart', // 
+  destination: '../public_html/uploads/sizechart', //
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
 
 const storage6 = multer.diskStorage({
-  destination: '../public_html/uploads/category', // 
+  destination: '../public_html/uploads/category', //
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
 const storage7 = multer.diskStorage({
-  destination: '../public_html/uploads/group', // 
+  destination: '../public_html/uploads/group', //
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
 
 const storage8 = multer.diskStorage({
-  destination: '../public_html/uploads/productimg', // 
+  destination: '../public_html/uploads/productimg', //
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
@@ -604,7 +604,7 @@ app.post('/nodeapp/add_annual', (req, res) => {
         return res.json(err)
       } else {
 
-        
+
         const count = data.length
 
         const code = selectcourse + '0' + count
@@ -612,7 +612,7 @@ app.post('/nodeapp/add_annual', (req, res) => {
         sql = "insert into Batch_Mst(`Course_Id`,`Category`,`Course_description`,`EDate`,`ActualDate`,`Timings`,`INR_Basic`,`INR_ServiceTax`,`CourseName`,`Batch_code`,`SDate`,`Admission_Date`,`Duration`,`Training_Coordinator`,`TaxRate`,`INR_Total`,`Dollar_ServiceTax`,`Corporate`) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
 
         param = [selectcourse, batchcategory, description, trainingdate, actualdate, timings, basicinr, servicetaxI, coursename, code, planned, admissiondate, duration, coordinator, taxrate, totalinr, servicetax, publish]
-    
+
         con.query(sql, param, (err, data) => {
           if (err) {
             return res.json(err)
@@ -627,7 +627,7 @@ app.post('/nodeapp/add_annual', (req, res) => {
     })
 
 
- 
+
 
 
 
@@ -651,7 +651,7 @@ app.post('/nodeapp/add_annual', (req, res) => {
 
 
   }
-  
+
 })
 
 
@@ -733,11 +733,11 @@ app.get('/nodeapp/getadmissionactivity', (req, res, next) => {
   })
 })
 app.post('/nodeapp/getBtachwiseamount', (req, res, next) => {
-    
+
     const Batch_Code = req.body.Batch_Code;
-    
+
   const sql = 'SELECT bm.Batch_Id,bm.Batch_code,fs.total_inr FROM `Batch_Mst` as bm LEFT JOIN Fees_Structure as fs  on bm.Batch_Id = fs.batch_id WHERE bm.Batch_code =  ? and isDelete = 0 '
-  
+
   con.query(sql,[Batch_Code],(error, data) => {
     if (error) {
       return res.json(error);
@@ -772,18 +772,18 @@ const sql = 'select am.Admission_Id,am.Admission_Date,am.Amount ,am.Payment_Type
 })
 
 app.post('/nodeapp/process_admission', (req, res, next) => {
-    
+
    let {Student_Id,Course_Id,Batch_Id,Amount,Admission_Dt} = req.body
 
    const sql = 'insert into Admission_master(`Student_Id`,`Course_Id`,`Batch_Id`,`Amount`,`Admission_Date`) values(?,?,?,?,?)'
-    
+
   con.query(sql,[Student_Id,Course_Id,Batch_Id,Amount,Admission_Dt],(error, data) => {
-      
+
     if (error) {
       return res.json(error);
     } else {
         const updatestudent = 'update Student_Master set Admission = 1 where Student_Id = ?'
-        
+
         con.query(updatestudent , [Student_Id], (err,data) =>{
             if(err){
                 return res.json(err)
@@ -793,7 +793,7 @@ app.post('/nodeapp/process_admission', (req, res, next) => {
         })
     }
   })
-  
+
 })
 
 
@@ -824,7 +824,7 @@ app.post('/nodeapp/AdmitDetail', (req, res, next) => {
   const { id } = req.body;
 
   const sql = 'select am.Admission_Id,am.Student_Code,am.Course_Id, am.Batch_Id,am.Admission_Date ,am.Payment_Type,am.Amount, sm.Student_Name ,sm.Student_Id from Admission_master as am left join Student_Master as sm on sm.Student_Id = am.Student_Id left JOIN Course_Mst as cm on cm.Course_Id = am.Course_Id LEFT JOIN Batch_Mst as bm on bm.Batch_Id = am.Batch_Id where am.Admission_Id = ?'
-  
+
   con.query(sql, [id], (error, data) => {
     if (error) {
       res.status(500).json(error);
@@ -1254,7 +1254,7 @@ app.post('/nodeapp/postqualification', (req, res, next) => {
 
   if (u_id == undefined) {
     sql = 'INSERT INTO awt_academicqualification (Student_id ,Qualification,Discipline, College , University ,PassingYear,Percentage,Status,KT,remark) VALUES(?,?,?,?,?,?,?,?,?,?)'
-    
+
     param= [studentId, qualification, descipline, college, uni, passYear, grade, status, kt, remark]
 
   } else {
@@ -1576,7 +1576,7 @@ app.post('/nodeapp/add_assignmentstaken', (req, res) => {
 
 })
 
- 
+
 app.post('/nodeapp/add_Moc', (req, res) => {
 
   let { subject, date, marks, uid, batch_id } = req.body
@@ -1627,7 +1627,7 @@ app.post('/nodeapp/add_batchstandardlecture', (req, res) => {
 
     param = [batch_id,lecture_no,subject_topic,starttime,endtime,assignment,assignment_date,faculty_name,duration,class_room,documents,unit_test,publish,subject,date,marks,uid]
 
-  } 
+  }
 
 
   con.query(sql, param, (err, data) => {
@@ -1659,7 +1659,7 @@ app.post('/nodeapp/add_batchlecturetaken', (req, res) => {
 
     param = [batch_id,lecture_no,subject_topic,starttime,endtime,assignment,assignment_date,faculty_name,duration,class_room,documents,unit_test,publish,subject,date,marks,uid]
 
-  } 
+  }
 
 
   con.query(sql, param, (err, data) => {
@@ -1691,7 +1691,7 @@ app.post('/nodeapp/add_batchconvocation', (req, res) => {
 
     param = [batch_id,faculty_name,guest_name,guest_mobile,email,guest_designation,uid]
 
-  } 
+  }
 
 
   con.query(sql, param, (err, data) => {
@@ -2027,9 +2027,9 @@ app.get('/nodeapp/getfinalexam', (req, res) => {
 })
 
 app.get('/nodeapp/site_vise' , (req,res) =>{
-    
+
     const sql = "select * from Batch_final_exam where deleted = 0"
-    
+
     con.query(sql , (err,data) =>{
         if(err){
             return res.json(err)
@@ -3320,7 +3320,7 @@ app.post('/nodeapp/updateAdmission', (req, res) => {
   let ptype = req.body.ptype;
   let Amount = req.body.Amount;
   let Admitid = req.body.Admitid;
-  
+
   const sql = "update Admission_master set Batch_Id = ? ,Admission_Date = ? , Course_Id = ? ,Student_Id = ? ,Payment_Type = ? ,Amount = ?,Student_Code = ?  where Admission_Id = ? "
 
   con.query(sql, [batch,date,course,studentid,ptype,Amount,roll,Admitid], (err, data) => {
@@ -3336,10 +3336,10 @@ app.post('/nodeapp/updateAdmission', (req, res) => {
 
 
 app.get('/nodeapp/getannualbatch' , (req,res)=>{
-    
-    
+
+
     const sql = 'select bm.Batch_Id,bm.Course_Id,bm.Batch_code,bm.Category,bm.Timings,bm.SDate,bm.EDate,bm.Duration,bm.Training_Coordinator,cm.Course_Name from `Batch_Mst` as bm left join Course_Mst as cm on cm.Course_Id = bm.Course_Id where bm.IsDelete = 0 order by bm.Batch_Id desc'
-    
+
     con.query(sql, (err,data) =>{
         if(err){
             return res.json(err)
@@ -3350,10 +3350,10 @@ app.get('/nodeapp/getannualbatch' , (req,res)=>{
 })
 
 app.get('/nodeapp/getCourse' , (req,res)=>{
-    
-    
+
+
     const sql = 'select Course_Id,Course_Name,Introduction,Course_Code from `Course_Mst` where IsDelete = 0 order by Course_Id desc'
-    
+
     con.query(sql, (err,data) =>{
         if(err){
             return res.json(err)
@@ -3363,10 +3363,10 @@ app.get('/nodeapp/getCourse' , (req,res)=>{
     })
 })
 app.get('/nodeapp/get_batchcategory' , (req,res)=>{
-    
-    
+
+
     const sql = 'select id,BatchCategory from `MST_BatchCategory` where IsDelete = 0'
-    
+
     con.query(sql, (err,data) =>{
         if(err){
             return res.json(err)
@@ -3410,10 +3410,10 @@ app.post('/nodeapp/add_status', (req, res) => {
 })
 
 app.get('/nodeapp/get_status' , (req,res)=>{
-    
-    
+
+
   const sql = 'select id,Status,Description from `Status_Master` where IsDelete = 0'
-  
+
   con.query(sql, (err,data) =>{
       if(err){
           return res.json(err)
@@ -3425,19 +3425,19 @@ app.get('/nodeapp/get_status' , (req,res)=>{
 })
 
 app.post('/nodeapp/Update_fees_structure' , (req,res)=>{
-    
+
     let {basicinr,sevicetaxinr,totalinr,basicdoller,sevicetaxdoller,totaldoller,actualfees,fullfees,installment,duedate,pmode,beforedate,afterdate,uid} = req.body;
-    
+
      const check = 'select * from Fees_Structure where batch_id = ?'
-     
+
      con.query(check ,[uid],(err,data) =>{
          if(err){
              return res.json(err)
          }else{
              if(data.length == 0){
-                         
+
               const sql ='insert into Fees_Structure(`batch_id`,`basic_inr`,`servicetax_inr`,`total_inr`,`basic_doller`,`servicetax_doller`,`total_doller`,`actualfees`,`fullfees`,`installment`,`duedate`,`paymode`,`bdateamt`,`adateamt`) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
-    
+
               con.query(sql , [uid,basicinr,sevicetaxinr,totalinr,basicdoller,sevicetaxdoller,totaldoller,actualfees,fullfees,installment,duedate,pmode,beforedate,afterdate] , (err,data) =>{
                   if(err){
                       return res.json(err)
@@ -3446,9 +3446,9 @@ app.post('/nodeapp/Update_fees_structure' , (req,res)=>{
                   }
               })
              } else{
-                 
+
               const sql ='update Fees_Structure set basic_inr =? ,servicetax_inr =? ,total_inr = ?,basic_doller =?,servicetax_doller =?, total_doller =? ,actualfees =?,fullfees=?,installment=?,duedate=?,paymode =?,bdateamt =?,adateamt=? where batch_id = ?'
-    
+
               con.query(sql , [basicinr,sevicetaxinr,totalinr,basicdoller,sevicetaxdoller,totaldoller,actualfees,fullfees,installment,duedate,pmode,beforedate,afterdate,uid] , (err,data) =>{
                   if(err){
                       return res.json(err)
@@ -3459,7 +3459,7 @@ app.post('/nodeapp/Update_fees_structure' , (req,res)=>{
              }
          }
      })
-    
+
 
 })
 
@@ -3498,10 +3498,10 @@ app.post('/nodeapp/add_dicipline', (req, res) => {
 })
 
 app.get('/nodeapp/get_dicipline' , (req,res)=>{
-    
-    
+
+
   const sql = 'select Id,Deciplin from `MST_Deciplin` where IsDelete = 0 '
-  
+
   con.query(sql, (err,data) =>{
       if(err){
           return res.json(err)
@@ -3513,10 +3513,10 @@ app.get('/nodeapp/get_dicipline' , (req,res)=>{
 })
 
 app.get('/nodeapp/get_qualification' , (req,res)=>{
-    
-    
+
+
   const sql = 'select Id,Education from `MST_Education` where IsDelete = 0 '
-  
+
   con.query(sql, (err,data) =>{
       if(err){
           return res.json(err)
@@ -3561,10 +3561,10 @@ app.post('/nodeapp/add_qualification', (req, res) => {
 })
 
 app.get('/nodeapp/get_bank' , (req,res)=>{
-    
-    
+
+
   const sql = 'select Id,Bank_Name from `bank` where IsDelete = 0 '
-  
+
   con.query(sql, (err,data) =>{
       if(err){
           return res.json(err)
@@ -3609,10 +3609,10 @@ app.post('/nodeapp/add_bank', (req, res) => {
 })
 
 app.get('/nodeapp/get_feesnotes' , (req,res)=>{
-    
-    
+
+
   const sql = 'select Id,Perticular from `Fees_notes` where IsDelete = 0 '
-  
+
   con.query(sql, (err,data) =>{
       if(err){
           return res.json(err)
@@ -3658,7 +3658,7 @@ app.post('/nodeapp/add_feesnotes', (req, res) => {
 
 app.get('/nodeapp/get_hoilday' , (req,res)=>{
   const sql = 'select Id,Holiday,Date_of_Holiday from `Holiday_master` where IsDelete = 0 '
-  
+
   con.query(sql, (err,data) =>{
       if(err){
           return res.json(err)
@@ -3703,7 +3703,7 @@ app.post('/nodeapp/add_hoilday', (req, res) => {
 
 app.get('/nodeapp/get_location' , (req,res)=>{
   const sql = 'select id,LocationMaster from `Location_master` where IsDelete = 0 '
-  
+
   con.query(sql, (err,data) =>{
       if(err){
           return res.json(err)
@@ -3830,9 +3830,9 @@ app.post('/nodeapp/add_faculty', (req, res) => {
 
 app.post('/nodeapp/getcoursewisebatch' , (req,res) =>{
     const {courseid} = req.body
-    
+
     const sql = "select Batch_Id,Batch_code from Batch_Mst where Course_Id = ?"
-    
+
     con.query(sql, [courseid] , (err,data)=>{
         if(err){
             return res.json(err)
@@ -3843,9 +3843,9 @@ app.post('/nodeapp/getcoursewisebatch' , (req,res) =>{
 })
 app.post('/nodeapp/getbatchwisestudent' , (req,res) =>{
     const {batch_code} = req.body
-    
+
     const sql = "SELECT sm.Student_Id,sm.Student_Name , am.Admission_Date,am.Student_Code , am.Phase FROM `Student_Master` as sm left JOIN Admission_master as am on am.Student_Id = sm.Student_Id where sm.IsDelete = 0 AND am.IsDelete = 0  AND Batch_Code =  ? "
-    
+
     con.query(sql, [batch_code] , (err,data)=>{
         if(err){
             return res.json(err)
@@ -3855,11 +3855,11 @@ app.post('/nodeapp/getbatchwisestudent' , (req,res) =>{
     })
 })
 app.post('/nodeapp/getbatchwiselecture' , (req,res) =>{
-    
+
     const {batch_id} = req.body;
-    
+
     const sql = "select id, batch_id ,subject_topic from Batch_Lecture_Master where batch_id = ?"
-    
+
     con.query(sql, [batch_id] , (err,data)=>{
         if(err){
             return res.json(err)
@@ -3869,11 +3869,11 @@ app.post('/nodeapp/getbatchwiselecture' , (req,res) =>{
     })
 })
 app.post('/nodeapp/getbatchwisemoc' , (req,res) =>{
-    
+
     const {batch_id} = req.body;
-    
+
     const sql = "select id, batch_id ,subject from Batch_Moc_Master where batch_id = ?"
-    
+
     con.query(sql, [batch_id] , (err,data)=>{
         if(err){
             return res.json(err)
@@ -3884,9 +3884,9 @@ app.post('/nodeapp/getbatchwisemoc' , (req,res) =>{
 })
 
 app.get('/nodeapp/getfaculty' , (req,res)=>{
-    
+
   const sql = 'select Faculty_Id, Faculty_Name from `faculty_master` where IsDelete = 0 '
-  
+
   con.query(sql, (err,data) =>{
       if(err){
           return res.json(err)
@@ -3898,11 +3898,11 @@ app.get('/nodeapp/getfaculty' , (req,res)=>{
 })
 
 app.post('/nodeapp/getbatchwiseassignment' , (req,res) =>{
-    
+
     const {batch_id} = req.body;
-    
+
     const sql = "select id, batch_id ,assignmentname , marks ,assignmentdate from assignmentstaken where batch_id = ?"
-    
+
     con.query(sql, [batch_id] , (err,data)=>{
         if(err){
             return res.json(err)
@@ -3913,7 +3913,7 @@ app.post('/nodeapp/getbatchwiseassignment' , (req,res) =>{
 })
 
 app.post('/nodeapp/getbatchwiseunittest', (req, res) => {
-    
+
   const { AnnulBatch } = req.body
 
   const sql = "select id,utname from awt_unittesttaken where batch_id = ? and deleted = 0"
@@ -3930,7 +3930,7 @@ app.post('/nodeapp/getbatchwiseunittest', (req, res) => {
 app.get('/nodeapp/getassignmentstakendata' , (req,res)=>{
 
   const sql = 'SELECT ast.Given_Id ,ast.Assign_Dt,ast.Return_Dt, cm.Course_Name , bm.Batch_code FROM `Assignment_taken` as ast LEFT JOIN Course_Mst as cm on ast.Course_Id = cm.Course_Id LEFT JOIN Batch_Mst as bm on  ast.Batch_Id = bm.Batch_Id LEFT JOIN faculty_master as fm on ast.Faculty_Id = fm.Faculty_Id WHERE ast.IsDelete = 0 order by ast.Given_Id asc';
-  
+
   con.query(sql, (err,data)=>{
       if(err){
           return res.json(err)
@@ -3945,7 +3945,7 @@ app.get('/nodeapp/getassignmentstakendata' , (req,res)=>{
 app.get('/nodeapp/getunittesttakendata' , (req,res)=>{
 
   const sql = 'SELECT ast.Take_Id ,ast.Test_Dt , cm.Course_Name , bm.Batch_code FROM `Test_taken_master` as ast LEFT JOIN Course_Mst as cm on ast.Course_Id = cm.Course_Id LEFT JOIN Batch_Mst as bm on  ast.Batch_Id = bm.Batch_Id  WHERE ast.IsDelete = 0 order by ast.Take_Id asc';
-  
+
   con.query(sql, (err,data)=>{
       if(err){
           return res.json(err)
@@ -3954,12 +3954,44 @@ app.get('/nodeapp/getunittesttakendata' , (req,res)=>{
       }
   })
 })
+app.post('/nodeapp/process_admission', (req, res, next) => {
+
+  let {Student_Id,Course_Id,Batch_Id,Amount,Admission_Dt} = req.body
+
+  const sql = 'insert into Admission_master(`Student_Id`,`Course_Id`,`Batch_Id`,`Amount`,`Admission_Date`) values(?,?,?,?,?)'
+
+ con.query(sql,[Student_Id,Course_Id,Batch_Id,Amount,Admission_Dt],(error, data) => {
+
+   if (error) {
+     return res.json(error);
+   } else {
+       const updatestudent = 'update Student_Master set Admission = 1 where Student_Id = ?'
+
+       con.query(updatestudent , [Student_Id], (err,data) =>{
+           if(err){
+               return res.json(err)
+           }else{
+
+               const sql = "update Student_Inquiry set Admission = 1 where Student_Id = ?"
+               con.query(sql , [Student_Id] , (err,data) =>{
+                   if(err){
+                       return res.json(err)
+                   }else{
+                       return res.json()
+                   }
+               })
+           }
+       })
+   }
+ })
+
+})
 
 
 app.get('/nodeapp/getvivamoctakendata' , (req,res)=>{
 
   const sql = 'SELECT ast.Take_Id ,ast.Take_Dt , cm.Course_Name , bm.Batch_code FROM `viva_taken` as ast LEFT JOIN Course_Mst as cm on ast.Course_Id = cm.Course_Id LEFT JOIN Batch_Mst as bm on  ast.Batch_Id = bm.Batch_Id  WHERE ast.IsDelete = 0 order by ast.Take_Id asc';
-  
+
   con.query(sql, (err,data)=>{
       if(err){
           return res.json(err)
@@ -4006,14 +4038,40 @@ app.post('/nodeapp/add_finalexamtaken', (req, res) => {
 app.get('/nodeapp/getcoursecode' , (req,res)=>{
 
   const sql = 'select * from Course_Mst ';
-  
+
   con.query(sql, (err,data)=>{
       if(err){
           return res.json(err)
       }else{
-          
+
           const getlength = data.length + 1
           return res.json({code : getlength})
       }
+  })
+})
+
+
+
+
+app.post('/nodeapp/update_batch', (req, res) => {
+  let { selectcourse, batchcategory, timings, coursename, planned, admissiondate, duration, coordinator, eligibility, targetstudent, passingcriteria, comments, briefdescription, attachment, documentrequire, todate, uid } = req.body
+  let sql
+  let param;
+  sql = "update `Batch_Mst` set Course_Id = ? , Category =? , Timings = ? , CourseName = ? ,SDate = ? ,Admission_Date = ?,Duration = ? ,Training_Coordinator = ? ,Min_Qualifiaction = ? ,Max_Students = ? , Passing_Criteria = ? , Comments = ? ,Course_description = ? ,Attachment = ? ,Documents_Required = ? ,EDate = ?  where `Batch_Id` = ?"
+  param = [selectcourse, batchcategory, timings, coursename, planned, admissiondate, duration, coordinator, eligibility, targetstudent, passingcriteria, comments, briefdescription, attachment, documentrequire, todate, uid]
+  con.query(sql, param, (err, data) => {
+    if (err) {
+      return res.json(err)
+    }else{
+      sql = "update `Course_Mst` set Course_Name = ? where Course_Id = ?"
+      param = [coursename, selectcourse]
+      con.query(sql, param, (err, data) => {
+        if (err) {
+          return res.json(err)
+        } else {
+          return res.json(data)
+        }
+      })
+    }
   })
 })
