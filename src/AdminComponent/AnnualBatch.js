@@ -164,7 +164,7 @@ const AnnualBatch = () => {
         }
         getBatchData()
         getCourseData()
-    }, [])
+    }, [batch_id])
 
 
     const navigate = useNavigate()
@@ -305,21 +305,21 @@ const AnnualBatch = () => {
                                                         <input type="number" class="form-control" id="exampleInputUsername1" value={value.basicinr} placeholder="Timings" name='basicinr' onChange={onhandleChange} />
 
                                                     </div>
-                                                    <div class="form-group col-lg-6">
+                                                    {/* <div class="form-group col-lg-6">
                                                         <label for="exampleInputUsername1">Service Tax(INR)</label>
                                                         <input type="number" class="form-control" id="exampleInputUsername1" value={value.servicetaxI} placeholder="Timings" name='servicetaxI' onChange={onhandleChange} disabled />
 
-                                                    </div>
+                                                    </div> */}
                                                     <div class="form-group col-lg-6">
                                                         <label for="exampleInputUsername1">Basic($)</label>
                                                         <input type="number" class="form-control" id="exampleInputUsername1" value={value.basicdoller} placeholder="" name='basicdoller' onChange={onhandleChange} disabled />
 
                                                     </div>
-                                                    <div class="form-group col-lg-6">
+                                                    {/* <div class="form-group col-lg-6">
                                                         <label for="exampleInputUsername1">Total($)</label>
                                                         <input type="number" class="form-control" id="exampleInputUsername1" value={value.totaldoller} placeholder="" name='totaldoller' onChange={onhandleChange} disabled />
 
-                                                    </div>
+                                                    </div> */}
                                                 </div>
                                             </div>
 
@@ -362,21 +362,21 @@ const AnnualBatch = () => {
                                                         <input type="text" class="form-control" id="exampleInputUsername1" value={value.coordinator} placeholder="Training Coordinator" name='coordinator' onChange={onhandleChange} />
 
                                                     </div>
-                                                    <div class="form-group col-lg-6">
+                                                    {/* <div class="form-group col-lg-6">
                                                         <label for="exampleInputUsername1">Tax Rate<span className='text-danger'>*</span></label>
                                                         <input type="number" class="form-control" id="exampleInputUsername1" value={value.taxrate} placeholder="Tax Rate" name='taxrate' onChange={onhandleChange} />
                                                         {error.taxrate && <span className='text-danger'>{error.taxrate}</span>}
-                                                    </div>
-                                                    <div class="form-group col-lg-6">
+                                                    </div> */}
+                                                    {/* <div class="form-group col-lg-6">
                                                         <label for="exampleInputUsername1">Total(INR)</label>
                                                         <input type="number" class="form-control" id="exampleInputUsername1" value={value.totalinr} placeholder="Total(INR)" name='totalinr' onChange={onhandleChange} disabled />
 
-                                                    </div>
-                                                    <div class="form-group col-lg-6">
+                                                    </div> */}
+                                                    {/* <div class="form-group col-lg-6">
                                                         <label for="exampleInputUsername1">Service Tax($)</label>
                                                         <input type="number" class="form-control" id="exampleInputUsername1" value={value.servicetax} placeholder="Total(INR)" name='servicetax' onChange={onhandleChange} disabled />
 
-                                                    </div>
+                                                    </div> */}
                                                     <div class="form-group col-lg-6">
                                                         <label for="exampleInputUsername1">Publish</label>
                                                         <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.publish} name='publish' onChange={onhandleChange} >

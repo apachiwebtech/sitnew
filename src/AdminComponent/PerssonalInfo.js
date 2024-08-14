@@ -16,6 +16,7 @@ const PerssonalInfo = () => {
     const [batchid, setBatchId] = useState([])
     const [batchcode, setbatchcode] = useState('')
     const location = useLocation();
+    const navigate = useNavigate()
     const [personalInfo, setPersonalInfo] = useState({
         studentName: '',
         Student_Id: '',
@@ -114,14 +115,20 @@ const PerssonalInfo = () => {
     const handleStatus = (value) => {
 
         const data = {
-            statusid: value
+            statusid: value,
+            student_id : admissionid
         }
 
         axios.post(`${BASE_URL}/updateadmissionstatus`, data)
             .then((res) => {
                 console.log(res)
+                alert('status updated')
+                navigate(`/onlineadmission`)
+                
             })
     }
+
+
 
     useEffect(() => {
         getStatus()
@@ -173,7 +180,7 @@ const PerssonalInfo = () => {
             // Referby: data[0].Refered_By,
             admission_dt: data[0].Admission_Dt,
             prestatus: data[0].Status_id,
-            changestatus: data[0].OnlineState,
+            changestatus: data[0].Status_id,
             date: data[0].Status_date,
             prestatusdate: data[0].Status_date,
             permanentAdress: data[0].Permanent_Address,
@@ -403,8 +410,8 @@ const PerssonalInfo = () => {
 
 
                                             <div className='row p-2 gap-2 '>
-                                                <button type='button' className='mr-2 btn btn-success' value={`11`} onClick={(e) => handleStatus(e.target.value)}>Accept</button>
-                                                <button type='button' className='mr-2 btn btn-danger' onClick={(e) => handleStatus(e.target.value)}>Denied</button>
+                                                <button type='button' className='mr-2 btn btn-success' value={`9`} onClick={(e) => handleStatus(e.target.value)}>Accept</button>
+                                                <button type='button' className='mr-2 btn btn-danger' value={`5`} onClick={(e) => handleStatus(e.target.value)}>Denied</button>
                                                 <button type='button' className='mr-2 btn btn-secondary' onClick={() => handleadmission(admissionid)}>Admission</button>
                                                 <button type="submit" className='mr-2 btn btn-primary'>Save</button>
                                                 <Link to="/onlineadmission" className='mr-2 btn btn-secondary'>close</Link>

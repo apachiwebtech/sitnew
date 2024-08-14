@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react'
-import { BASE_URL } from './BaseUrl'
 import EditIcon from "@mui/icons-material/Edit";
-import { DataGrid, GridToolbar, GridToolbarContainer, GridToolbarExport, GridToolbarFilterButton } from '@mui/x-data-grid';
-import { Link } from 'react-router-dom';
-import InnerHeader from './InnerHeader';
-import axios from 'axios';
 import { Switch } from '@mui/material';
+import { DataGrid, GridToolbarContainer, GridToolbarFilterButton } from '@mui/x-data-grid';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { BASE_URL } from './BaseUrl';
+import InnerHeader from './InnerHeader';
 import Loader from './Loader';
 
 const OnlineAdmissions = () => {
@@ -31,9 +31,6 @@ const OnlineAdmissions = () => {
         getOnlineAdmissions();
     }, [])
 
-    const handleUpdate = () => {
-        console.log('hehehe')
-    }
 
     const handleswitchchange = (value, Inquiry_Id) => {
         const newval = value == 0 ? 1 : 0
@@ -48,12 +45,12 @@ const OnlineAdmissions = () => {
 
     function CustomToolbar() {
         return (
-          <GridToolbarContainer>
-            {/* <GridToolbarExport /> */}
-            <GridToolbarFilterButton />
-          </GridToolbarContainer>
+            <GridToolbarContainer>
+                {/* <GridToolbarExport /> */}
+                <GridToolbarFilterButton />
+            </GridToolbarContainer>
         );
-      }
+    }
 
 
     const columns = [
@@ -66,12 +63,54 @@ const OnlineAdmissions = () => {
             flex: 1,
             filterable: false,
         },
-        { field: 'Student_Name', headerName: 'Student Name', flex: 2 },
-        { field: 'Email', headerName: 'Email', flex: 2 },
-        { field: 'Present_Mobile', headerName: 'Mobile', flex: 2 },
-        { field: 'Batch_Code', headerName: 'Batch Code', flex: 2 },
-        { field: 'Admission_Dt', headerName: 'Admission Date', flex: 2 },
-        { field: 'Status', headerName: 'Status', flex: 2 },
+        {
+            field: 'Student_Name', headerName: 'Student Name', flex: 2, renderCell: (params) => {
+                return (
+                    <>
+                        {params.row.Status == 'Closed' ? <p className='text-danger'>{params.row.Student_Name}</p> : params.row.Status == 'Accepted' ? <p className='text-success'>{params.row.Student_Name}</p> : <p>{params.row.Student_Name}</p>}
+                    </>
+                )
+            }
+        },
+        {
+            field: 'Email', headerName: 'Email', flex: 2, renderCell: (params) => {
+                return (
+                    <>
+                        {params.row.Status == 'Closed' ? <p className='text-danger'>{params.row.Email}</p> : params.row.Status == 'Accepted' ? <p className='text-success'>{params.row.Email}</p> : <p>{params.row.Email}</p>}
+                    </>
+                )
+            }
+        },
+        { field: 'Present_Mobile', headerName: 'Mobile', flex: 2 , renderCell: (params) => {
+            return (
+                <>
+                    {params.row.Status == 'Closed' ? <p className='text-danger'>{params.row.Present_Mobile}</p> : params.row.Status == 'Accepted' ? <p className='text-success'>{params.row.Present_Mobile}</p> : <p>{params.row.Present_Mobile}</p>}
+                </>
+            )
+        } },
+        { field: 'Batch_Code', headerName: 'Batch Code', flex: 2 , renderCell: (params) => {
+            return (
+                <>
+                    {params.row.Status == 'Closed' ? <p className='text-danger'>{params.row.Batch_Code}</p> : params.row.Status == 'Accepted' ? <p className='text-success'>{params.row.Batch_Code}</p> : <p>{params.row.Batch_Code}</p>}
+                </>
+            )
+        } },
+        { field: 'Admission_Dt', headerName: 'Admission Date', flex: 2 , renderCell: (params) => {
+            return (
+                <>
+                    {params.row.Status == 'Closed' ? <p className='text-danger'>{params.row.Admission_Dt}</p> : params.row.Status == 'Accepted' ? <p className='text-success'>{params.row.Admission_Dt}</p> : <p>{params.row.Admission_Dt}</p>}
+                </>
+            )
+        } },
+        {
+            field: 'Status', headerName: 'Status', flex: 2, renderCell: (params) => {
+                return (
+                    <>
+                        {params.row.Status == 'Closed' ? <p className='text-danger'>{params.row.Status}</p> : params.row.Status == 'Accepted' ? <p className='text-success'>{params.row.Status}</p> : <p>{params.row.Status}</p>}
+                    </>
+                )
+            }
+        },
         {
             field: 'actions',
             type: 'actions',
@@ -93,11 +132,11 @@ const OnlineAdmissions = () => {
 
     return (
         <div className="container-fluid page-body-wrapper col-lg-10">
-            
+
             <InnerHeader />
             {loading && <Loader />}
 
-            <div className="main-pannel" style={{display : loading ? "none" : "block"}}>
+            <div className="main-pannel" style={{ display: loading ? "none" : "block" }}>
                 <div className="content-wrapper ">
                     <div className="row">
 
@@ -130,7 +169,7 @@ const OnlineAdmissions = () => {
                                         slotProps={{
                                             toolbar: {
                                                 showQuickFilter: true,
-                                                
+
                                             },
                                         }}
                                     />
