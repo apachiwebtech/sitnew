@@ -4075,3 +4075,20 @@ app.post('/nodeapp/update_batch', (req, res) => {
     }
   })
 })
+
+
+app.post('/nodeapp/getprintinfo' , (req,res) =>{
+
+  let {id} = req.body;
+
+  const sql = "SELECT * FROM `Admission_master` as a left join `Student_Master`as o on a.Student_Id = o.Student_Id WHERE Admission_Id = ? "
+
+  con.query(sql , [id],(err,data) => {
+      if(err){
+          return res.json(err)
+      }else{
+          return res.json(data)
+      }
+  })
+
+})

@@ -13,12 +13,17 @@ const InquiryListing = () => {
 
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
+
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const label = { inputProps: { 'aria-label': 'Color switch demo' } };
     const [loading , setLoading] = useState(true)
     const [inquiryData, setInquiryData] = useState([]);
-   
+
+    const [value, setValue] = useState({
+      from_date:"",
+      to_date:""
+    })
 
 
     const getInquiryData = async () => {
@@ -46,6 +51,53 @@ const InquiryListing = () => {
         setError({})
         setUid([])
     }, [])
+
+
+    const handleSubmit = (e) => {
+      e.preventDefault()
+      if ( value.from_date || value.to_date ) {
+
+      }else{
+        alert('Nothing Is Select')
+        return
+      }
+      if (value.from_date) {
+        if (value.to_date) {
+
+        }else{
+          alert("Please select to date")
+          return
+
+        }
+      }else{
+        if (value.to_date) {
+          alert("Please select from date")
+          return
+        }
+      }
+      setLoading(true)
+      const data = {
+        from_date : value.from_date,
+        to_date : value.to_date
+      }
+
+      axios.post(`${BASE_URL}/getfilterinqury`, data)
+      .then((res) => {
+         console.log(res)
+         setInquiryData(res.data)
+         setLoading(false)
+         setUid([])
+         setValue({
+          from_date: '',
+          to_date: ''
+       })
+      })
+      .catch((err) => {
+          console.log(err)
+          setLoading(false)
+      })
+
+    }
 
     const handleClick = (id) => {
         setCid(id)
@@ -119,56 +171,56 @@ const InquiryListing = () => {
         { field: 'Student_Name', headerName: 'Student Name',  width : 200 , renderCell:(params) =>{
             return(
                 <>
-                  {params.row.IsUnread == 0 ?<p className ="text-danger" >{params.row.Student_Name}</p> : <p>{params.row.Student_Name}</p> }  
+                  {params.row.IsUnread == 0 ?<p className ="text-danger" >{params.row.Student_Name}</p> : <p>{params.row.Student_Name}</p> }
                 </>
             )
         } },
         { field: 'Course_Name', headerName: 'Course Name',  width : 150 , renderCell:(params) =>{
             return(
                 <>
-                  {params.row.IsUnread == 0 ?<p className ="text-danger" >{params.row.Course_Name}</p> : <p>{params.row.Course_Name}</p> }  
+                  {params.row.IsUnread == 0 ?<p className ="text-danger" >{params.row.Course_Name}</p> : <p>{params.row.Course_Name}</p> }
                 </>
             )
         }},
         { field: 'inquiry_DT', headerName: 'Inquiry Date', width : 100 , renderCell:(params) =>{
             return(
                 <>
-                  {params.row.IsUnread == 0 ?<p className ="text-danger" >{params.row.inquiry_DT}</p> : <p>{params.row.inquiry_DT}</p> }  
+                  {params.row.IsUnread == 0 ?<p className ="text-danger" >{params.row.inquiry_DT}</p> : <p>{params.row.inquiry_DT}</p> }
                 </>
             )
         }},
         { field: 'Discussion', headerName: 'Discuss', width : 200 , renderCell:(params) =>{
             return(
                 <>
-                  {params.row.IsUnread == 0 ?<p className ="text-danger" >{params.row.Discussion}</p> : <p>{params.row.Discussion}</p> }  
+                  {params.row.IsUnread == 0 ?<p className ="text-danger" >{params.row.Discussion}</p> : <p>{params.row.Discussion}</p> }
                 </>
             )
         }},
         { field: 'present_mobile', headerName: 'Mobile', width : 100 , renderCell:(params) =>{
             return(
                 <>
-                  {params.row.IsUnread == 0 ?<p className ="text-danger" >{params.row.present_mobile}</p> : <p>{params.row.present_mobile}</p> }  
+                  {params.row.IsUnread == 0 ?<p className ="text-danger" >{params.row.present_mobile}</p> : <p>{params.row.present_mobile}</p> }
                 </>
             )
         }},
         { field: 'Deciplin', headerName: 'Discipline',  width : 150 , renderCell:(params) =>{
             return(
                 <>
-                  {params.row.IsUnread == 0 ?<p className ="text-danger" >{params.row.Deciplin}</p> : <p>{params.row.Deciplin}</p> }  
+                  {params.row.IsUnread == 0 ?<p className ="text-danger" >{params.row.Deciplin}</p> : <p>{params.row.Deciplin}</p> }
                 </>
             )
         }},
         { field: 'Inquiry_type', headerName: 'Inquiry type', width : 100 , renderCell:(params) =>{
             return(
                 <>
-                  {params.row.IsUnread == 0 ?<p className ="text-danger" >{params.row.Inquiry_type}</p> : <p>{params.row.Inquiry_type}</p> }  
+                  {params.row.IsUnread == 0 ?<p className ="text-danger" >{params.row.Inquiry_type}</p> : <p>{params.row.Inquiry_type}</p> }
                 </>
             )
         }},
         { field: 'Status', headerName: 'Status', width : 150,renderCell: (params) => {
             return (
                 <>
-                  {params.row.IsUnread == 0 ?<p className ="text-danger" >{params.row.Status}</p> : <p>{params.row.Status}</p> }  
+                  {params.row.IsUnread == 0 ?<p className ="text-danger" >{params.row.Status}</p> : <p>{params.row.Status}</p> }
                 </>
             )
         }
@@ -189,7 +241,9 @@ const InquiryListing = () => {
             }
         },
     ];
-
+ const onhandleChange = (e) => {
+    setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+}
 
     const rowsWithIds = inquiryData.map((row, index) => ({ index: index + 1, ...row }));
 
@@ -202,7 +256,7 @@ const InquiryListing = () => {
 
         <div className="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
-           {loading &&  <Loader />} 
+           {loading &&  <Loader />}
 
             <div className="main-panel" style={{display : loading ? "none" : "block"}}>
 
@@ -220,6 +274,24 @@ const InquiryListing = () => {
                                         <Link to='/onlineinquiry/inquiryform/:inquiryid'> <button className='btn btn-success'>Add +</button></Link>
 
 
+                                    </div>
+                                    <div className="card" >
+                                      <div className="card-body">
+                                      <form class="forms-sample row py-3 " onSubmit={handleSubmit}>
+                                          <div class="form-group col-lg-3">
+                                            <label for="exampleInputUsername1">From Date <span className='text-danger'>*</span></label>
+                                            <input type="date" class="form-control" id="exampleInputUsername1" placeholder="from_date" name='from_date' onChange={onhandleChange}/>
+                                          </div>
+                                          <div class="form-group col-lg-3">
+                                            <label for="exampleInputUsername1">To Date <span className='text-danger'>*</span></label>
+                                            <input type="date" class="form-control" id="exampleInputUsername1" placeholder="to_date" name='to_date' onChange={onhandleChange}/>
+                                          </div>
+                                          <div className='d-flex align-items-center mt-3' >
+                                            <button type="submit" class="btn btn-sm btn-primary mr-2">Submit</button>
+                                            <button type='reset' onClick={()=>getInquiryData() } class="btn btn-sm btn-primary mr-2">Clear</button>
+                                          </div>
+                                        </form>
+                                      </div>
                                     </div>
 
                                     <div className="card">

@@ -129,9 +129,32 @@ const styles = StyleSheet.create({
   },
 });
 
-const MyDocument1 = (props) => {
-  const [order, setOrder] = useState([])
-  const [cart, setCart] = useState([])
+const MyDocument1 = (id) => {
+   const [data , setData] = useState([])
+
+  async function getdata() {
+
+    const data = {
+      id: id
+    }
+
+    axios.post(`${BASE_URL}/getprintinfo`, id)
+    .then((res) => {
+      console.log(res.data[0] , "DDD")
+      setData(res.data[0])
+
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+}
+
+useEffect(() => {
+  getdata()
+
+}, [id])
+
+
 
   return (
     <Document>
@@ -291,7 +314,7 @@ const MyDocument1 = (props) => {
             <Text style={{ lineHeight: "1.2", marginLeft: '100px', color: '#000', marginTop: '10px', }}> Yes</Text>
             <Text style={{ lineHeight: "1.2", marginLeft: '15px', color: '#000', marginTop: '10px',borderTop:'1px',borderLeft:'1px',borderBottom:'1px',borderRight:'1px', }}>         </Text>
           </View>
-          <View style={(styles.footer)}>  
+          <View style={(styles.footer)}>
             <Text style={{ lineHeight: "1.2", marginLeft: '5px', color: '#000', marginTop: '10px', }}>                                   </Text>
             <Text style={{ lineHeight: "1.2", marginLeft: '20px', color: '#000', marginTop: '10px', }}>iv. Resi Proof</Text>
             <Text style={{ lineHeight: "1.2", marginLeft: '90px', color: '#000', marginTop: '10px', }}> Yes</Text>
@@ -303,7 +326,7 @@ const MyDocument1 = (props) => {
             <Text style={{ lineHeight: "1.2", marginLeft: '113px', color: '#000', marginTop: '10px', }}> Yes</Text>
             <Text style={{ lineHeight: "1.2", marginLeft: '15px', color: '#000', marginTop: '10px',borderTop:'1px',borderLeft:'1px',borderBottom:'1px',borderRight:'1px', }}>         </Text>
           </View>
-          
+
           <View>
               <Text style={{ borderBottom: "2px solid #000" }}></Text>
            </View>
@@ -313,17 +336,17 @@ const MyDocument1 = (props) => {
             <Text style={{ lineHeight: "1.2", marginLeft: '20px', color: '#000', marginTop: '15px',borderBottom: '1px'}}>10-Aug-24</Text>
           </View>
 
-          
+
         </View>
         <View style={(styles.footer4)}>
             <Text style={{ lineHeight: "1.2", marginLeft: '5px', color: '#000', marginTop: '10px',fontSize:'8px' }}> F/CB/02/00</Text>
             <Text style={{ lineHeight: "1.2", marginLeft: '40px', color: '#000', marginTop: '10px',fontSize:'6px',marginRight:'1px', }}> This document is the property of “Suvidya Institute of Technology Pvt. Ltd. “ and unauthorised disclosure to any third party or duplication is not permitted.</Text>
             <Text style={{ lineHeight: "1.2", marginLeft: '113px', color: '#000', marginTop: '10px',fontSize:'8px',marginRight:'10px' }}> Page 2 of 2</Text>
       </View>
-       
+
       </Page>
-     
-      
+
+
     </Document>
   )
 
@@ -332,4 +355,3 @@ const MyDocument1 = (props) => {
 
 
 export default MyDocument1
-
