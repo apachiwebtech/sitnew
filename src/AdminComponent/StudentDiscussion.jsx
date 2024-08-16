@@ -25,7 +25,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 }));
 
 const StudentDiscussion = () => {
-    
+
   const [open, setOpen] = React.useState(false);
   const [uid, setUid] = useState([])
   const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
@@ -309,12 +309,12 @@ const StudentDiscussion = () => {
                       type="date"
                       class="form-control"
                       id="exampleInputUsername1"
-                       value={discussion.date}
+                      value={discussion.date}
                       placeholder="Discussion Date"
                       name="date"
                       onChange={handleChange}
                     />
-                       {error.date && <span className='text-danger'>{error.date}</span>}
+                    {error.date && <span className='text-danger'>{error.date}</span>}
                   </div>
                   <div className="form-group col-lg-6 ">
                     <label for="exampleInputUsername1">Department</label>
@@ -356,7 +356,7 @@ const StudentDiscussion = () => {
                       value={discussion.remark}
                       defaultValue={discussion.remark}
                     />
-                       {error.discussion && <span className='text-danger'>{error.discussion}</span>}
+                    {error.discussion && <span className='text-danger'>{error.discussion}</span>}
                   </div>
 
 

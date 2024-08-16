@@ -6,12 +6,16 @@ import React, { useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import Loader from './Loader';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import AddCollegeInfo from './AddCollegeInfo';
+import { MultiSelect } from 'react-multi-select-component';
+
 
 
 const College = () => {
 
     const [brand, setBrand] = useState([])
+    const [open, setOpen] = useState(false)
     const [vendordata, setVendorData] = useState([])
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
@@ -19,7 +23,15 @@ const College = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
     const [loading, setLoading] = useState(true)
+    //const [value, setValue] = useState({})
     const { collegeid } = useParams()
+    const [MultiSelectComponent, SetMultiSelectComponent] = useState()
+    const [Inject, setInject] = useState()
+    const [CheckBoxSelection, setCheckBoxSelection] = useState()
+    const [selected, setSelected] = useState ([]);
+    const [options, setOptions] = useState ([]);
+    
+
 
     const handleChange1 = (event) => {
         setChecked([event.target.checked, event.target.checked]);
@@ -33,18 +45,9 @@ const College = () => {
         setChecked([checked[0], event.target.checked]);
     };
 
-    const children = (
-        <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-            <FormControlLabel
-                label="Child 1"
-                control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
-            />
-            <FormControlLabel
-                label="Child 2"
-                control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
-            />
-        </Box>
-    );
+
+
+
 
     const [value, setValue] = useState({
         college_name: "" || uid.college_name,
@@ -56,13 +59,19 @@ const College = () => {
         pin: "" || uid.pin,
         state: "" || uid.state,
         country: "" || uid.country,
-        telephone: "" || uid.telephone,
-        mobile: "" || uid.mobile,
+        phone: "" || uid.phone,
         email: "" || uid.email,
+        mobile: "" || uid.mobile,
         website: "" || uid.website,
-        remark: "" || uid.remark,
         purpose: "" || uid.purpose,
-        course: "" || uid.course
+        remark: "" || uid.remark,
+        studentname: "" || uid.studentname,
+        mobile1: "" || uid.mobile1,
+        course: "" || uid.course,
+        email1: "" || uid.email1,
+        batch: "" || uid.batch,
+        status: "" || uid.status,
+        date: "" || uid.date,
 
 
     })
@@ -77,15 +86,21 @@ const College = () => {
             address: uid.address,
             city: uid.city,
             pin: uid.pin,
-            country: uid.country,
             state: uid.state,
-            telephone: uid.telephone,
-            mobile: uid.mobile,
+            country: uid.country,
+            phone: uid.phone,
             email: uid.email,
+            mobile: uid.mobile,
             website: uid.website,
-            remark: uid.remark,
             purpose: uid.purpose,
-            course: uid.course
+            remark: uid.remark,
+            studentname: uid.studentname,
+            mobile1: uid.mobile1,
+            course: uid.course,
+            email1: uid.email1,
+            batch: uid.batch,
+            status: uid.status,
+            date: uid.date,
 
 
         })
@@ -97,13 +112,13 @@ const College = () => {
         const newErrors = {}
 
 
-        if (!value.college) {
+        if (!value.college_name) {
             isValid = false;
-            newErrors.name = "Name is required"
+            newErrors.college_name = "Name is required"
         }
-        if (!value.email) {
+        if (!value.university) {
             isValid = false;
-            newErrors.email = "University is required"
+            newErrors.university = "University is required"
         }
         setError(newErrors)
         return isValid
@@ -188,16 +203,21 @@ const College = () => {
                 address: value.address,
                 city: value.city,
                 pin: value.pin,
-                country: value.country,
                 state: value.state,
-                telephone: value.telephone,
-                mobile: value.mobile,
+                country: value.country,
+                phone: value.phone,
                 email: value.email,
+                mobile: value.mobile,
                 website: value.website,
-                remark: value.remark,
                 purpose: value.purpose,
+                remark: value.remark,
+                studentname: value.studentname,
+                mobile1: value.mobile1,
                 course: value.course,
-                uid: uid.id
+                email1: value.email1,
+                batch: value.batch,
+                status: value.status,
+                date: value.date,
             }
 
 
@@ -232,127 +252,194 @@ const College = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper col-lg-10">
+        <div class="container-fluid page-body-wrapper col-lg-10" >
             <InnerHeader />
 
             {loading && <Loader />}
-            <div class="main-panel" style={{ display: loading ? "none" : "block" }}>
+            <div className='my-2 text-right'>
+                <button className='btn btn-success' onClick={() => setOpen(true)}>Add +</button>
+            </div>
+            <div class="main-panel" style={{ display: loading ? "none" : "block" }} >
                 <div class="content-wrapper">
                     <div class="row">
-                        <div class="col-lg-12 grid-margin stretch-card">
+                        <div class="col-lg-12 grid-margin">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">College Information</h4>
-                                    <hr></hr>
-                                    <form class="forms-sample py-3" onSubmit={handleSubmit}>
-                                        <div class='row'>
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">College Name<span className='text-danger'>*</span></label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.college_name} placeholder="College Name*" name='college_name' onChange={onhandleChange} />
-                                                {error.college_name && <span className='text-danger'>{error.college_name}</span>}
+                                    <div classNamae='container-fluid'>
+                                        <div className='row d-flex justify-container-between'>
+                                            <div className='col-md-6 col-lg-6'>
+                                                <div className='row justify-content-center'>
+                                                    <div className='p-3' style={{ width: "100%" }}>
+                                                        <div className='card-title titleback'>College Details</div>
+                                                        <div class='row'>
+                                                            <div class="form-group col-lg-4">
+                                                                <label for="exampleInputUsername1">College Name<span className='text-danger'>*</span></label>
+                                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.college_name} placeholder="College Name*" name='college_name' onChange={onhandleChange} />
+                                                                {error.college_name && <span className='text-danger'>{error.college_name}</span>}
+                                                            </div>
+                                                            <div class="form-group col-lg-4">
+                                                                <label for="exampleInputUsername1">University<span className='text-danger'>*</span></label>
+                                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.university} placeholder="University*" name='university' onChange={onhandleChange} />
+                                                                {error.university && <span className='text-danger'>{error.university}</span>}
+                                                            </div>
+                                                            <div class="form-group col-lg-4">
+                                                                <label for="exampleInputUsername1">Contact Person</label>
+                                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.contact_person} placeholder="Contact Person" name='contact_person' onChange={onhandleChange} />
+
+                                                            </div>
+                                                            <div class="form-group col-lg-4">
+                                                                <label for="exampleInputUsername1">Designation</label>
+                                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.designation} placeholder="Designation" name='designation' onChange={onhandleChange} />
+
+                                                            </div>
+
+                                                            <div class="form-group col-lg-8">
+                                                                <label for="exampleTextarea1">Address </label>
+                                                                <textarea class="form-control" id="exampleTextarea1" value={value.address} placeholder="Address*" name='address' onChange={onhandleChange}></textarea>
+                                                                {error.address && <div className="text-danger">{error.address}</div>}
+                                                            </div>
+                                                            <div class="form-group col-lg-4">
+                                                                <label for="exampleInputUsername1">City</label>
+                                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.city} placeholder="City" name='city' onChange={onhandleChange} />
+
+                                                            </div>
+
+                                                            <div class="form-group col-lg-4">
+                                                                <label for="exampleInputUsername1">Pin</label>
+                                                                <input type="number" class="form-control" id="exampleInputUsername1" value={value.pin} placeholder="Pin" name='pin' onChange={onhandleChange} />
+
+                                                            </div>
+                                                            <div class="form-group col-lg-4">
+                                                                <label for="exampleInputUsername1">State</label>
+                                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.state} placeholder="State" name='state' onChange={onhandleChange} />
+
+                                                            </div>
+
+                                                            <div class="form-group col-lg-4">
+                                                                <label for="exampleInputUsername1">Country</label>
+                                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.country} placeholder="Country" name='country' onChange={onhandleChange} />
+
+                                                            </div>
+
+                                                            <div class="form-group col-lg-4">
+                                                                <label for="exampleInputUsername1">Phone</label>
+                                                                <input type="number" class="form-control" id="exampleInputUsername1" value={value.phone} placeholder="Phone" name='phone' onChange={onhandleChange} />
+
+                                                            </div>
+
+                                                            <div class="form-group col-lg-4">
+                                                                <label for="exampleInputUsername1">E-Mail</label>
+                                                                <input type="email" class="form-control" id="exampleInputUsername1" value={value.email} placeholder="E-Mail" name='email' onChange={onhandleChange} />
+
+                                                            </div>
+                                                            <div class="form-group col-lg-4">
+                                                                <label for="exampleInputUsername1">Mobile</label>
+                                                                <input type="number" class="form-control" id="exampleInputUsername1" value={value.mobile} placeholder="Mobile" name='mobile' onChange={onhandleChange} />
+
+                                                            </div>
+                                                            <div class="form-group col-lg-4">
+                                                                <label for="exampleInputUsername1">Website</label>
+                                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.website} placeholder="Website" name='website' onChange={onhandleChange} />
+
+                                                            </div>
+                                                            <div class="form-group col-lg-4">
+                                                                <label for="exampleInputUsername1">Purpose</label>
+                                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.purpose} placeholder="Purpose" name='purpose' onChange={onhandleChange} />
+
+                                                            </div>
+                                                            <div class="form-group col-lg-8">
+                                                                <label for="exampleTextarea1">Remark </label>
+                                                                <textarea class="form-control" id="exampleTextarea1" value={value.remark} placeholder="Remark" name='remark' onChange={onhandleChange}></textarea>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                                <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                                                <button type='button' onClick={() => {
+                                                    window.location.reload()
+                                                }} class="btn btn-light">Cancel</button>
+
+                                                <AddCollegeInfo open={open} setOpen={setOpen} />
                                             </div>
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">University<span className='text-danger'>*</span></label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.university} placeholder="University*" name='university' onChange={onhandleChange} />
-                                                {error.university && <span className='text-danger'>{error.university}</span>}
+
+                                            <div className='col-md-6 col-lg-6'>
+                                                <div className='row justify-content-center'>
+                                                    <div className='p-3' style={{ width: "100%" }}>
+                                                        <div className='card-title titleback'>Referred By</div>
+                                                        <div className='row'>
+                                                            <div class="form-group col-lg-4">
+                                                                <lable for="exampleInputUsername1">Student Name</lable>
+                                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.studentname}
+                                                                    name='studentname' placeholder='Student Name' onChange={onhandleChange} />
+                                                            </div>
+                                                            <div class="form-group col-lg-4">
+                                                                <label for="exampleInputUsername1">Mobile</label>
+                                                                <input type="number" class="form-control" id="exampleInputUsername1" value={value.mobile1} placeholder="Mobile" name='mobile1' onChange={onhandleChange} />
+
+                                                            </div>
+                                                            <div class="form-group col-lg-4">
+                                                                <lable for="exampleInputUsername1">Course</lable>
+                                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.course}
+                                                                    placeholder='Course' name='course' onChange={onhandleChange} />
+                                                            </div>
+                                                            <div class="form-group col-lg-4">
+                                                                <lable for="exampleInputUsername1">Email Id</lable>
+                                                                <input type="email" class="form-control" id="exampleInputUsername1" value={value.email1}
+                                                                    placeholder="Email" name='email1' onChange={onhandleChange} />
+                                                            </div>
+                                                            <div class="form-group col-lg-4">
+                                                                <lable for="exampleInputUsername1">Batch</lable>
+                                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.batch}
+                                                                    placeholder="Batch" name='batch' onChange={onhandleChange} />
+                                                            </div>
+                                                        </div>
+                                                        <div className='row justify-content-center'>
+                                                            <div className='p-3' style={{ width: "100%" }}>
+                                                                <div className='card-title titleback'>
+                                                                    Status
+                                                                </div>
+                                                                <div className='row'>
+                                                                    <div class="form-group col-lg-4">
+                                                                        <lable for="exampleFormControlSelect1">Status</lable>
+                                                                        <select class="form-control" id="exampleFormControlSelect1" value={value.status}
+                                                                            name='status' onChange={onhandleChange}>
+                                                                            <option>--All--</option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="form-group col-lg-4">
+                                                                        <lable for="exampleInputUsername1">Date</lable>
+                                                                        <input type="date" class="form-control" id="exampleInputUsername1" value={value.date}
+                                                                            name='date' onChange={onhandleChange} />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+
+                                                <div className='row justify-content-center'>
+                                                    <div className='p-3' style={{ width: "100%" }}>
+                                                        <div className='card-title titleback'>Disciplines</div>
+
+                                                        <div class="form-group col-lg-6">
+                                                            <lable for="exampleFormControlSelect1"></lable>
+                                                            <MultiSelect options={options} value={selected}
+                                                            onChange={setSelected}
+                                                            labelledBy='Select All' name="selected"></MultiSelect>
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+
+
+
                                             </div>
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">Contact Person</label>
-                                                <input type="contact_person" class="form-control" id="exampleInputUsername1" value={value.contact_person} placeholder="Contact Person" name='contact_person' onChange={onhandleChange} />
-
-                                            </div>
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">Designation</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.designation} placeholder="Designation" name='designation' onChange={onhandleChange} />
-
-                                            </div>
-
-                                            <div class="form-group col-lg-4">
-                                                <label for="exampleTextarea1">Address </label>
-                                                <textarea class="form-control" id="exampleTextarea1" value={value.address} placeholder="Address*" name='address' onChange={onhandleChange}></textarea>
-                                                {error.address && <div className="text-danger">{error.address}</div>}
-                                            </div>
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">City</label>
-                                                <input type="city" class="form-control" id="exampleInputUsername1" value={value.city} placeholder="City" name='city' onChange={onhandleChange} />
-
-                                            </div>
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">Pin</label>
-                                                <input type="pin" class="form-control" id="exampleInputUsername1" value={value.pin} placeholder="Pin" name='pin' onChange={onhandleChange} />
-
-                                            </div>
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">State</label>
-                                                <input type="state" class="form-control" id="exampleInputUsername1" value={value.state} placeholder="State" name='state' onChange={onhandleChange} />
-
-                                            </div>
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">Country</label>
-                                                <input type="country" class="form-control" id="exampleInputUsername1" value={value.country} placeholder="Country" name='country' onChange={onhandleChange} />
-
-                                            </div>
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">Telephone</label>
-                                                <input type="telephone" class="form-control" id="exampleInputUsername1" value={value.telephone} placeholder="Telephone" name='telephone' onChange={onhandleChange} />
-
-                                            </div>
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">Mobile</label>
-                                                <input type="mobile" class="form-control" id="exampleInputUsername1" value={value.mobile} placeholder="Mobile" name='mobile' onChange={onhandleChange} />
-
-                                            </div>
-
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">E-Mail</label>
-                                                <input type="email" class="form-control" id="exampleInputUsername1" value={value.email} placeholder="E-Mail" name='email' onChange={onhandleChange} />
-
-                                            </div>
-
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">Website</label>
-                                                <input type="website" class="form-control" id="exampleInputUsername1" value={value.website} placeholder="Website" name='website' onChange={onhandleChange} />
-
-                                            </div>
-
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">Remark</label>
-                                                <input type="remark" class="form-control" id="exampleInputUsername1" value={value.remark} placeholder="Remark" name='remark' onChange={onhandleChange} />
-
-                                            </div>
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">Purpose</label>
-                                                <input type="purpose" class="form-control" id="exampleInputUsername1" value={value.purpose} placeholder="Purpose" name='purpose' onChange={onhandleChange} />
-
-                                            </div>
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleFormControlSelect1">Course </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course} onChange={onhandleChange} name='course'>
-                                                    <option>Select Course</option>
-                                                    <option value="1">Instrumentation & Control</option>
-                                                    <option value="2">Piping Engineering</option>
-                                                    <option value="3">Mechanical Design</option>
-                                                    <option value="4">Electrical Engineering,</option>
-                                                    <option value="6">Water & Waste Water Engg.</option>
-                                                </select>
-                                            </div>
-
-
-
-                                            {/* <div>
-                                            <FormControlLabel
-                                                label="Parent"
-                                                control={
-                                                <Checkbox
-                                                    checked={checked[0] && checked[1]}
-                                                    indeterminate={checked[0] !== checked[1]}
-                                                    onChange={handleChange1}
-                                                />
-                                                }
-                                            />
-                                            {children}
-                                            </div> */}
-
 
 
                                         </div>
@@ -363,22 +450,19 @@ const College = () => {
 
 
 
-                                        <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                        <button type='button' onClick={() => {
-                                            window.location.reload()
-                                        }} class="btn btn-light">Cancel</button>
-                                    </form>
+
+                                    </div>
 
                                 </div>
                             </div>
-                        </div>
 
+                        </div>
                     </div>
-                </div>
+                </div >
+
             </div >
-        </div >
+        </div>
 
     )
 }
-
 export default College

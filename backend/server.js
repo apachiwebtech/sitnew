@@ -457,7 +457,7 @@ app.post('/nodeapp/batch_category', (req, res) => {
 
 app.post('/nodeapp/add_college', (req, res) => {
 
-  let { college_name, university, contact_person, designation, address, city, pin, country, state, telephone, mobile, email, website, remark, purpose, course, uid } = req.body
+  let { college_name, university, contact_person, designation, address, city, pin, state, phone, country, email, mobile, website, purpose, remark, studentname, mobile1, course, email1, batch, status, date, uid } = req.body
 
   let sql
   let param;
@@ -465,14 +465,14 @@ app.post('/nodeapp/add_college', (req, res) => {
   console.log(uid)
 
   if (uid == undefined) {
-    sql = "insert into awt_college(`college_name`,`university`,`contact_person`,`designation`,`address`,`city`,`pin`,`country`,`state`,`telephone`,`mobile`,`email`,`website`,`remark`,`purpose`,`course`) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+    sql = "insert into awt_college(`college_name`, `university`, `contact_person`, `designation`, `address`, `city`, `pin`, `state`, `phone`, `country`, `email`, `mobile`, `website`, `purpose`, `remark`, `studentname`, `mobile1`, `course`, `email1`, `batch`, `status`, `date`) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
 
-    param = [college_name, university, contact_person, designation, address, city, pin, country, state, telephone, mobile, email, website, remark, purpose, course]
+    param = [college_name, university, contact_person, designation, address, city, pin, state, phone, country, email, mobile, website, purpose, remark, studentname, mobile1, course, email1, batch, status, date]
 
   } else {
-    sql = "update `awt_college` set `college_name` =? , `university` =? , `contact_person` =? , `designation` =? , `address` =? , `city` =? , `pin` =? , `country` =? , `state` =? , `telephone` =? , `mobile` =? , `email` =? , `website` =? , `remark` =? , `purpose` =? , `course` =?  where id =?"
+    sql = "update `awt_college` set `college_name` =? , `university` =? , `contact_person` =? , `designation` =? , `address` =? , `city` =? , `pin` =? , `state` =? , `phone` =? , `country` =? , `email` =? , `mobile` =? , `website` =? , `purpose` =? , `remark` =? , `studentname` =? , `mobile1` =? , `course` =? , `email1` =? , `batch` =? , `status` =? , `date` =?  where id =?"
 
-    param = [college_name, university, contact_person, designation, address, city, pin, country, state, telephone, mobile, email, website, remark, purpose, course, uid]
+    param = [college_name, university, contact_person, designation, address, city, pin, state, phone, country, email, mobile, website, purpose, remark, studentname, mobile1, course, email1, batch, status, date, uid]
 
   }
 

@@ -263,9 +263,14 @@ const InnerHeader = () => {
                 return 'Company Requirment';
             case '/shortlisted':
                 return 'Short Listed By SIT';
-            
+            case '/studentdetails':
+                return 'Student Details';
 
-
+                
+            case '/collegelisting':
+                return 'College Information';
+            case '/college/:collegeid':
+                return 'College Information';
             case location.pathname.match(/^\/addcorporateinquiry\/\d+$/) ? location.pathname : '':
                 return 'Corporate Inquiry';
             case location.pathname.match(/^\/admission\/\d+$/) ? location.pathname : '':

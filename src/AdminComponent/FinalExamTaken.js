@@ -5,6 +5,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
+import Loader from "./Loader";
 //import FormControlLabel from '@mui/material/FormControlLabel';
 
 const FinalExamTaken = () => {
@@ -20,6 +21,7 @@ const FinalExamTaken = () => {
     const [TestName, setTestName] = useState([])
     const [TestNameid, setTestNameid] = useState("")
     const [courseid, setCourseid] = useState("")
+    const [loading, setLoading] = useState(true)
 
 
  
@@ -82,6 +84,7 @@ const FinalExamTaken = () => {
             .then((res) => {
                 console.log(res.data)
                 setVendorData(res.data)
+                setLoading(false)
             })
             .catch((err) => {
                 console.log(err)
@@ -322,7 +325,8 @@ const FinalExamTaken = () => {
 
         <div class="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
-            <div class="main-panel">
+            {loading && <Loader />}
+            <div class="main-panel" style={{display : loading ? "none" : "block"}}>
                 <div class="content-wrapper">
                     <div class="row">
                         <div class="col-lg-5 grid-margin stretch-card">

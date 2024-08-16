@@ -8,6 +8,7 @@ import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 //import AssignmentsTaken from "./AssignmentsTaken";
 import GenerateResult from "./GenerateResult";
+import Loader from "./Loader";
 
 const GenerateResultListing = () => {
 
@@ -17,14 +18,8 @@ const GenerateResultListing = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
     const label = { inputProps: { 'aria-label': 'Color switch demo' } };
-    const [lecturetakendata, setlecturetakendata] = useState([]);
-    const [Discipline, setDescipline] = useState([]);
-    const [Course, setCourse] = useState([]);
-    const [Education, setEducation] = useState([]);
-    const [batch, setBatch] = useState([]);
-    const [batchCategoty, setbatchCategory] = useState([]);
-    const [unittesttakendata, setunittakendata] = useState([]);
     const [generateresultdata, setgenerateresultdata] = useState([]);
+    const [loading, setLoading] = useState(true)
     const [value, setValue] = useState({
         course: '',
         batch: '',
@@ -49,8 +44,10 @@ const GenerateResultListing = () => {
             }
         });
         const data = await response.json();
+        setLoading(false)
 
         setgenerateresultdata(data);
+       
     }
 
 
@@ -123,6 +120,7 @@ const GenerateResultListing = () => {
             .then((res) => {
                 console.log(res)
                 getInquiryData()
+                setLoading(false)
             })
     }
 
@@ -173,7 +171,8 @@ const GenerateResultListing = () => {
 
         <div className="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
-            <div className="main-panel">
+            {loading && <Loader />}
+            <div className="main-panel" style={{display : loading ? "none" : "block"}} >
 
                 <div className="content-wrapper">
 

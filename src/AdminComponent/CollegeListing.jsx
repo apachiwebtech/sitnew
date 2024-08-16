@@ -166,7 +166,7 @@ const CollegeListing = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <Link to={`/college/${params.row.id}`}><EditIcon style={{ cursor: "pointer" }} /></Link>
+                        <Link to={`/addcollegemaster/${params.row.id}`}><EditIcon style={{ cursor: "pointer" }} /></Link>
                         <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
                     </>
                 )
@@ -192,9 +192,9 @@ const CollegeListing = () => {
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
                                         <div>
-                                            <h4 class="card-title">View College Information</h4>
+                                            <h4 class="card-title">View College Information Details</h4>
                                         </div>
-                                        <div className='my-2'>
+                                        <div className='my-2 text-right'>
                                             <Link to='/college/:collegeid'> <button className='btn btn-success'>Add +</button></Link>
 
                                         </div>

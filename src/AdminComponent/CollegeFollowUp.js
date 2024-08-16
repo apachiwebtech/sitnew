@@ -293,16 +293,6 @@ const CollogeFollowUp = () => {
 
                                                     <option>Select College</option>
                                                     <option> Dilkap College of Diploma </option>
-                                                    <option> DR.S.&amp;S.S.GANDHY GOVERNMENT ENGINEERING COLLEGE,SURAT</option>
-                                                    <option> St. Johns College of Engineering &amp; Technology</option>
-                                                    <option> Thiagarajar College of Engineering</option>
-                                                    <option>A C PATIL COLLEGE OF ENGG</option>
-                                                    <option>A C Patil, Kharghar</option>
-                                                    <option>a d patel institute of technology</option>
-                                                    <option>A G high school dapoli</option>
-                                                    <option>A M G O I WATHAR KOLHAPUR</option>
-                                                    <option>A P Shah Institute Of Technology</option>
-                                                    <option>A. D. Patel institute of technology</option>
                                                 </select>
                                             </div>
 
@@ -313,89 +303,6 @@ const CollogeFollowUp = () => {
                                                     <option>Select City</option>
                                                     <option> Bharuch, Gujarat</option>
                                                     <option> Indore</option>
-                                                    <option>adhya Pradesh</option>
-                                                    <option>Ahmedabad</option>
-                                                    <option>Ahmednagar</option>
-                                                    <option>Alappuzha</option>
-                                                    <option>Alathukombai</option>
-                                                    <option>Ambarnath</option>
-                                                    <option>Ambernath</option>
-                                                    <option>Amravati</option>
-                                                    <option>Aurangabad</option>
-                                                    <option>Badlapur</option>
-                                                    <option>BANGALORE</option>
-                                                    <option>Bharuch</option>
-                                                    <option>Bhatkal</option>
-                                                    <option>Bhavnagar</option>
-                                                    <option>Bhopal</option>
-                                                    <option>Bidar</option>
-                                                    <option>Bikaner</option>
-                                                    <option>Chandigarh</option>
-                                                    <option>Chennai</option>
-                                                    <option>CHINCHOLI, NASHIK</option>
-                                                    <option>Coimbature</option>
-                                                    <option>Davangere</option>
-                                                    <option>Dhule</option>
-                                                    <option>Ernakulam</option>
-                                                    <option>Gandhinagar</option>
-                                                    <option>Gujarat</option>
-                                                    <option>GULBARGA</option>
-                                                    <option>Gwalior</option>
-                                                    <option>Hyderabad</option>
-                                                    <option>Indore</option>
-                                                    <option>Jalgaon</option>
-                                                    <option>KANNUR</option>
-                                                    <option>Kanyakumari</option>
-                                                    <option>Karjat</option>
-                                                    <option>Khalapur</option>
-                                                    <option>Kolhapur</option>
-                                                    <option>Kota</option>
-                                                    <option>Kottayam</option>
-                                                    <option>Latur</option>
-                                                    <option>Madurai</option>
-                                                    <option>Mangalore</option>
-                                                    <option>Mangaluru</option>
-                                                    <option>Meerut</option>
-                                                    <option>Mumbai</option>
-                                                    <option>Mysore </option>
-                                                    <option>Nagpur</option>
-                                                    <option>Nanded</option>
-                                                    <option>Nashik</option>
-                                                    <option>Nashik -</option>
-                                                    <option>Nasik</option>
-                                                    <option>Navi Mumbai</option>
-                                                    <option>Navi Mumbai.</option>
-                                                    <option>Navimumbai</option>
-                                                    <option >Neral</option>
-                                                    <option>Nerul</option>
-                                                    <option>New Delhi</option>
-                                                    <option>New Panvel</option>
-                                                    <option>North Gujarat, INDIA</option>
-                                                    <option>Oman</option>
-                                                    <option>Palghar</option>
-                                                    <option>Palghar</option>
-                                                    <option>Palghar East </option>
-                                                    <option>Pandharpur </option>
-                                                    <option>Pune </option>
-                                                    <option>Raigad</option>
-                                                    <option>Rajkot</option>
-                                                    <option>Rajwada, P.O.Box. No.130,</option>
-                                                    <option>Ratnagiri</option>
-                                                    <option>Sangli</option>
-                                                    <option>satara</option>
-                                                    <option >Shirpur</option>
-                                                    <option>Sikandarabad</option>
-                                                    <option>Sindhudurg</option>
-                                                    <option>Solapur</option>
-                                                    <option>Surat</option>
-                                                    <option>Tal- Khalapur</option>
-                                                    <option>Thane</option>
-                                                    <option>Thanjavur</option>
-                                                    <option>Tiruchirappalli</option>
-                                                    <option>Valsad</option>
-                                                    <option>Wardha</option>
-                                                    <option>Yavatmal</option>
-                                                    <option>Yemmiganur </option>
 
                                                 </select>
                                             </div>
@@ -407,14 +314,6 @@ const CollogeFollowUp = () => {
                                                     <option value="">Select Purpose</option>
                                                     <option>Adertisement</option>
                                                     <option>Advertisement</option>
-                                                    <option>Meeting</option>
-                                                    <option value="Other">Other</option>
-                                                    <option value="Others">Others</option>
-                                                    <option value="Placement">Placement</option>
-                                                    <option value="Proposal">Proposal</option>
-                                                    <option value="Seminar">Seminar</option>
-                                                    <option value="Sponsership- stall">Sponsership- stall</option>
-                                                    <option value="Training">Training</option>
                                                 </select>
                                             </div>
 

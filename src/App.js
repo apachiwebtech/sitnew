@@ -163,6 +163,11 @@ import FeesReport from './AdminComponent/FeesReport.js';
 import FeesDetails from './AdminComponent/FeesDetails.js';
 import CollegeListing from './AdminComponent/CollegeListing.jsx';
 import QmsMaster from './AdminComponent/QmsMaster.js';
+import AddCollegeInfo from './AdminComponent/AddCollegeInfo.js';
+import AddCollegeMaster from './AdminComponent/AddCollegeMaster.js';
+import StudentDetails from './AdminComponent/StudentDetails.js';
+import FollowUp from './AdminComponent/FollowUp.js';
+import LectureReport from './AdminComponent/LectureReport.js';
 // import FacultyPayment from './AdminComponent/FacultyPayment.js';
 
 
@@ -292,6 +297,18 @@ const Router = createBrowserRouter([
         element: <College />
       },
       {
+        path: '/addcollegemaster/:collegeid',
+        element: <AddCollegeMaster/>
+      },
+      {
+        path: '/studentdetails/:collegeid',
+        element: <StudentDetails/>
+      },
+      {
+        path: '/followup/:collegeid',
+        element: <FollowUp/>
+      },
+      {
         path: '/collegelisting',
         element: <CollegeListing />
       },
@@ -405,7 +422,7 @@ const Router = createBrowserRouter([
         path: '/employeerecord/:employeerecordid',
         element: <EmployeeRecord />
       },
-
+//===================Report================
       {
         path: '/rinquiry',
         element: <RInquiry />
@@ -486,6 +503,11 @@ const Router = createBrowserRouter([
       {
         path: '/inquiryreport',
         element: <InquiryReport />
+      },
+
+      {
+        path: '/lecturereport',
+        element: <LectureReport/>
       },
       // =====================Admission Activity===================
 
@@ -784,9 +806,13 @@ const Router = createBrowserRouter([
       {
         path: '/roleassign',
         element: <RoleAssignment />
+      },
+
+//===============================
+      {
+        path: '/addcollegeinfo',
+        element: <AddCollegeInfo/>
       }
-
-
 
 
 
