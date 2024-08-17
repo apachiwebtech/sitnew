@@ -16,21 +16,21 @@ const RInquiry = () => {
   const [batchcat, setbatchcat] = useState([])
   const [vendordata, setStudent] = useState([])
   const [inquery, setinquery] = useState([])
-const [status , setstatus] =useState([])
+  const [status, setstatus] = useState([])
   const [uid, setUid] = useState([])
   const [error, setError] = useState([])
   const [hide, setHide] = useState(false)
   const [inquiryData, setInquiryData] = useState([]);
 
   const [options, setOptions] = useState([]);
-  const [value , setValue] = useState({
+  const [value, setValue] = useState({
     fromdate: "",
-      fromtodate: "",
-      selectcourse: "",
-      rollnumberallot: "",
-      selctbatch: "",
-      allinquiries: "",
-      all: ""
+    fromtodate: "",
+    selectcourse: "",
+    rollnumberallot: "",
+    selctbatch: "",
+    allinquiries: "",
+    all: ""
   })
   const getbatch = async (id) => {
 
@@ -73,15 +73,15 @@ const [status , setstatus] =useState([])
   async function getBatchData() {
 
     axios.get(`${BASE_URL}/get_batchcategory`)
-        .then((res) => {
-            console.log(res.data)
-            setbatchcat(res.data)
+      .then((res) => {
+        console.log(res.data)
+        setbatchcat(res.data)
 
-        })
-        .catch((err) => {
-            console.log(err)
-        })
-}
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
   useEffect(() => {
     getBatchData()
     getCourseData()
@@ -90,18 +90,18 @@ const [status , setstatus] =useState([])
   }, [])
   async function getstatus() {
     const data = {
-        tablename : "Status_Master",
-        columnname : "*"
+      tablename: "Status_Master",
+      columnname: "*"
     }
-    axios.post(`${BASE_URL}/get_new_data`,data)
-        .then((res) => {
-            console.log(res.data)
-            setstatus(res.data)
-        })
-        .catch((err) => {
-            console.log(err)
-        })
-}
+    axios.post(`${BASE_URL}/get_new_data`, data)
+      .then((res) => {
+        console.log(res.data)
+        setstatus(res.data)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
 
 
   useEffect(() => {
@@ -139,15 +139,22 @@ const [status , setstatus] =useState([])
       return;
     }
 
-    const data = {
+    let data = {
       fromdate: value.fromdate,
       fromtodate: value.fromtodate,
       selectcourse: value.selectcourse,
       rollnumberallot: value.rollnumberallot,
-      selctbatch: value.selctbatch.map(option => option.value), // Extract only the values from the selected options
       allinquiries: value.allinquiries,
       all: value.all
     };
+
+
+    if (value.selctbatch) {
+      data = {
+        ...data,
+        selctbatch: value.selctbatch.map(option => option.value)
+      };
+    }
 
     axios.post(`${BASE_URL}/getdatas`, data)
       .then((res) => {
@@ -254,7 +261,7 @@ const [status , setstatus] =useState([])
                       <div class="form-group col-lg-3">
                         <label for="exampleFormControlSelect1">Select Course<span className="text-danger">*</span></label>
                         <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.selectcourse} name='selectcourse' onChange={onhandleChange} >
-                          <option>All</option>
+                          <option>Select Course</option>
 
                           {course.map((item) => {
                             return (
@@ -270,8 +277,8 @@ const [status , setstatus] =useState([])
                       <div class="form-group col-lg-3">
                         <label for="exampleFormControlSelect1">Batch Type<span className="text-danger">*</span></label>
                         <select class="form-control form-control-lg" id="exampleFromControlSelect1" value={value.rollnumberallot} name='rollnumberallot' onChange={onhandleChange} >
-                        <option value="">Select Batch Type</option>
-                        {batchcat.map((item) => {
+                          <option value="">Select Batch Type</option>
+                          {batchcat.map((item) => {
                             return (
                               <option value={item.id}>{item.BatchCategory}</option>
                             )
@@ -303,7 +310,7 @@ const [status , setstatus] =useState([])
 
                       <div class="form-group col-lg-3">
                         <lable for="exampleFormControlSelect1">Enquiry Type</lable>
-                        <select class="form-control"  id="exampleFormControlSelect1" value={value.allinquiries}
+                        <select class="form-control" id="exampleFormControlSelect1" value={value.allinquiries}
                           name='allinquiries' onChange={onhandleChange} >
                           <option value="">Select Enquiry Type</option>
                           {status.map((item) => {
@@ -319,7 +326,7 @@ const [status , setstatus] =useState([])
                         <lable for="exampleFormControlSelect1">Inquiry From</lable>
                         <select class="form-control" id="exampleFormControlSelect1" value={value.all} name='all'
                           onChange={onhandleChange}>
-
+                          <option value="">Select Inquiry From</option>
                           <option value="Website">Website</option>
                           <option value="Exhibition">Exhibition</option>
                           <option value="Reference">Reference</option>
@@ -341,7 +348,7 @@ const [status , setstatus] =useState([])
 
 
 
-                  <button type="submit" class="btn btn-primary mr-2">Search</button>
+                    <button type="submit" class="btn btn-primary mr-2">Search</button>
                   </form>
 
 
@@ -357,7 +364,7 @@ const [status , setstatus] =useState([])
                     </div>
 
                   </div>
-                  { <div>
+                  {<div>
 
                     <DataGrid
                       rows={rowsWithIds}
