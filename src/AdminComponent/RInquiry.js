@@ -224,10 +224,10 @@ const RInquiry = () => {
       filterable: false,
 
     },
-    { field: 'attendee', headerName: 'Student Code', flex: 2 },
-    { field: 'FName', headerName: 'Student Name', flex: 2 },
-    { field: 'Admission_Dt', headerName: 'Admission Date', flex: 2 },
-    { field: 'feedback', headerName: 'Phase', flex: 2 },
+    // { field: 'attendee', headerName: 'Student Code', flex: 2 },
+    { field: 'Student_Name', headerName: 'Student Name', flex: 2 },
+    { field: 'Inquiry_Dt', headerName: 'Inquiry Date', flex: 2 },
+    { field: 'Refered_By', headerName: 'Inquiry From', flex: 2 },
 
     {
       field: 'actions',
@@ -295,8 +295,8 @@ const RInquiry = () => {
 
                       <div class="form-group col-lg-3">
                         <label for="exampleFormControlSelect1">Batch Type<span className="text-danger">*</span></label>
-                        <select class="form-control form-control-lg" id="exampleFromControlSelect1" value={value.rollnumberallot} name='rollnumberallot' onChange={(e) => getstudentlisitng(e.target.value)}>
-
+                        <select class="form-control form-control-lg" id="exampleFromControlSelect1" value={value.rollnumberallot} name='rollnumberallot' onChange={onhandleChange} >
+                        <option value="">Select Batch Type</option>
                         {batchcat.map((item) => {
                             return (
                               <option value={item.id}>{item.BatchCategory}</option>
@@ -384,7 +384,7 @@ const RInquiry = () => {
                     </div>
 
                   </div>
-                  {hide && <div>
+                  { <div>
 
                     <DataGrid
                       rows={rowsWithIds}
