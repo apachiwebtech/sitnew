@@ -130,12 +130,17 @@ const RInquiry = () => {
     e.preventDefault();
 
     if (!value.all && !value.allinquiries && !value.selctbatch && !value.rollnumberallot && !value.selectcourse && !value.fromdate && !value.fromtodate) {
-      alert("Please fill all the fields");
+      alert("Please fill required fields");
       return;
     }
 
     if ((value.fromdate || value.fromtodate) && !(value.fromdate && value.fromtodate)) {
       alert("Please select both from date and to date");
+      return;
+    }
+
+    if (!value.selctbatch && ! value.selectcourse && !value.rollnumberallot ) {
+      alert("Please select the following: Batch, Course, Batch Type");
       return;
     }
 
@@ -160,16 +165,6 @@ const RInquiry = () => {
       .then((res) => {
         console.log(res);
         setinquery(res.data);
-        setUid([]);
-        setValue({
-          fromdate: "",
-          fromtodate: "",
-          selectcourse: "",
-          rollnumberallot: "",
-          selctbatch: [],  // Reset the multi-select to an empty array
-          allinquiries: "",
-          all: ""
-        });
       });
   };
 
