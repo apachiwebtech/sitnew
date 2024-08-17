@@ -20,10 +20,17 @@ const RInquiry = () => {
   const [uid, setUid] = useState([])
   const [error, setError] = useState([])
   const [hide, setHide] = useState(false)
+  const [inquiryData, setInquiryData] = useState([]);
 
   const [options, setOptions] = useState([]);
   const [value , setValue] = useState({
-    fromdate : "",
+    fromdate: "",
+      fromtodate: "",
+      selectcourse: "",
+      rollnumberallot: "",
+      selctbatch: "",
+      allinquiries: "",
+      all: ""
   })
   const getbatch = async (id) => {
 
@@ -177,6 +184,15 @@ const RInquiry = () => {
       .then((res) => {
         console.log(res)
         setinquery(res.data)
+        setUid([])
+        setValue({
+          fromdate:"",
+          fromtodate:"",
+          selectcourse:"",
+          rollnumberallot:"",
+          selctbatch:"",
+          allinquiries:"",
+          all:""})
       })
 
   }
@@ -186,11 +202,11 @@ const RInquiry = () => {
     if (e.target.name == "selectcourse" ) {
       getbatch(e.target.value)
     }
+    // if (e.target.name == "selctbatch") {
+    //   setSelected(e.target.value)
+    // }
   }
-  const onhandleChanges =  ({ name, value }) => {
-    setValue((prev) => ({ ...prev, [name]: value }));
 
-  }
 
 
 
@@ -228,10 +244,7 @@ const RInquiry = () => {
       }
     },
   ];
-  const handleMultiSelectChange = (values) => {
-    setSelected(values);
-    setValue((prev) => ({ ...prev, multiSelect: values }));
-  };
+
 
   const rowsWithIds = inquery.map((row, index) => ({ index: index + 1, ...row }));
 
@@ -299,8 +312,9 @@ const RInquiry = () => {
                         {/* <pre>{JSON.stringify(selected)}</pre> */}
                         <MultiSelect
                           options={options}
+                          disabled
                           value={selected}
-                          onChange={handleMultiSelectChange}
+                          onChange={onhandleChange}
                           labelledBy="Select Batch "
                           name="selctbatch"
                         />
@@ -316,7 +330,7 @@ const RInquiry = () => {
 
                       <div class="form-group col-lg-3">
                         <lable for="exampleFormControlSelect1">Enquiry Type</lable>
-                        <select class="form-control" id="exampleFormControlSelect1" value={value.allinquiries}
+                        <select class="form-control" disabled  id="exampleFormControlSelect1" value={value.allinquiries}
                           name='allinquiries' onChange={onhandleChange} >
                           <option>All Inquiries</option>
                           <option>Actual Inquiries</option>
