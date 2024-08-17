@@ -13,15 +13,17 @@ const RInquiry = () => {
   const [selected, setSelected] = useState([]);
   const [course, SetCourse] = useState([])
   const [batch, setAnnulBatch] = useState([])
+  const [batchcat, setbatchcat] = useState([])
   const [vendordata, setStudent] = useState([])
+  const [inquery, setinquery] = useState([])
+
   const [uid, setUid] = useState([])
   const [error, setError] = useState([])
   const [hide, setHide] = useState(false)
+
   const [options, setOptions] = useState([]);
   const [value , setValue] = useState({
     fromdate : "",
-    
-
   })
   const getbatch = async (id) => {
 
@@ -96,8 +98,20 @@ const RInquiry = () => {
   //             console.log(err)
   //         })
   // }
+  async function getBatchData() {
 
+    axios.get(`${BASE_URL}/get_batchcategory`)
+        .then((res) => {
+            console.log(res.data)
+            setbatchcat(res.data)
+
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+}
   useEffect(() => {
+    getBatchData()
     getCourseData()
     // getbatchdata()
     setUid([])
@@ -130,7 +144,26 @@ const RInquiry = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
 
-    const data = {
+    if (value.all || value.allinquiries || value.selctbatch || value.rollnumberallot || value.selectcourse || value.fromdate || value.fromtodate) {
+
+    }else{
+      alert("Please fill all the fields")
+      return
+    }
+
+    if (value.fromdate || value.fromtodate) {
+      if (value.fromdate) {
+        if (!value.fromtodate) {
+          alert("Please select to date");
+          return;
+        }
+      } else {
+        alert("Please select from date");
+        return;
+      }
+    }
+
+      const data = {
       fromdate: value.fromdate,
       fromtodate: value.fromtodate,
       selectcourse: value.selectcourse,
@@ -143,12 +176,20 @@ const RInquiry = () => {
     axios.post(`${BASE_URL}/getdatas`, data)
       .then((res) => {
         console.log(res)
+        setinquery(res.data)
       })
 
   }
 
   const onhandleChange = (e) => {
     setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+    if (e.target.name == "selectcourse" ) {
+      getbatch(e.target.value)
+    }
+  }
+  const onhandleChanges =  ({ name, value }) => {
+    setValue((prev) => ({ ...prev, [name]: value }));
+
   }
 
 
@@ -168,8 +209,8 @@ const RInquiry = () => {
 
     },
     { field: 'attendee', headerName: 'Student Code', flex: 2 },
-    { field: 'instructor', headerName: 'Student Name', flex: 2 },
-    { field: 'description', headerName: 'Admission Date', flex: 2 },
+    { field: 'FName', headerName: 'Student Name', flex: 2 },
+    { field: 'Admission_Dt', headerName: 'Admission Date', flex: 2 },
     { field: 'feedback', headerName: 'Phase', flex: 2 },
 
     {
@@ -180,16 +221,19 @@ const RInquiry = () => {
       renderCell: (params) => {
         return (
           <>
-            <EditIcon style={{ cursor: "pointer" }} onClick={() => (params.row.id)} />
-            <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => (params.row.id)} />
+            <EditIcon style={{ cursor: "pointer" }} onClick={() => (params.row.Student_Id)} />
+            <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => (params.row.Student_Id)} />
           </>
         )
       }
     },
   ];
+  const handleMultiSelectChange = (values) => {
+    setSelected(values);
+    setValue((prev) => ({ ...prev, multiSelect: values }));
+  };
 
-
-  const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
+  const rowsWithIds = inquery.map((row, index) => ({ index: index + 1, ...row }));
 
   return (
 
@@ -222,7 +266,7 @@ const RInquiry = () => {
 
                       <div class="form-group col-lg-3">
                         <label for="exampleFormControlSelect1">Select Course<span className="text-danger">*</span></label>
-                        <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.selectcourse} name='selectcourse' onChange={(e) => getbatch(e.target.value)}>
+                        <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.selectcourse} name='selectcourse' onChange={onhandleChange} >
                           <option>All</option>
 
                           {course.map((item) => {
@@ -240,11 +284,11 @@ const RInquiry = () => {
                         <label for="exampleFormControlSelect1">Batch Type<span className="text-danger">*</span></label>
                         <select class="form-control form-control-lg" id="exampleFromControlSelect1" value={value.rollnumberallot} name='rollnumberallot' onChange={(e) => getstudentlisitng(e.target.value)}>
 
-                          <option>All</option>
-                          <option>Full Time</option>
-                          <option>Part Time</option>
-                          <option>Weekend Batches</option>
-                          <option>ONLINE</option>
+                        {batchcat.map((item) => {
+                            return (
+                              <option value={item.id}>{item.BatchCategory}</option>
+                            )
+                          })}
                         </select>
                         {<span className='text-danger'> {error.selectcourse} </span>}
                       </div>
@@ -256,7 +300,7 @@ const RInquiry = () => {
                         <MultiSelect
                           options={options}
                           value={selected}
-                          onChange={setSelected}
+                          onChange={handleMultiSelectChange}
                           labelledBy="Select Batch "
                           name="selctbatch"
                         />
@@ -335,7 +379,7 @@ const RInquiry = () => {
                       disableColumnSelector
                       disableDensitySelector
                       rowHeight={35}
-                      getRowId={(row) => row.Batch_Id}
+                      getRowId={(row) => row.Inquiry_Id}
                       initialState={{
                         pagination: {
                           paginationModel: { pageSize: 10, page: 0 },

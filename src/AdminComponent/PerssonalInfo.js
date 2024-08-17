@@ -269,8 +269,9 @@ const PerssonalInfo = () => {
               const dataw =  { batch: personalInfo.Batch_Code }
 
 
-              const batchCodeResponse = await axios.post(`${BASE_URL}/getBatchCode`, dataw);
-              const batchCode = batchCodeResponse.data[0].Batch_code;
+              // const batchCodeResponse = await axios.post(`${BASE_URL}/getBatchCode`, dataw);
+              // const batchCode = batchCodeResponse.data[0].Batch_code;
+              const batchCode = personalInfo.Batch_Code;
               console.log(batchCode)
               // const batchCode = personalInfo.Batch_Code;
               const data =  { batch: personalInfo.Batch_Code }
