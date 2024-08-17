@@ -16,7 +16,7 @@ const RInquiry = () => {
   const [batchcat, setbatchcat] = useState([])
   const [vendordata, setStudent] = useState([])
   const [inquery, setinquery] = useState([])
-
+const [status , setstatus] =useState([])
   const [uid, setUid] = useState([])
   const [error, setError] = useState([])
   const [hide, setHide] = useState(false)
@@ -54,28 +54,7 @@ const RInquiry = () => {
     setSelected([])
   };
 
-  const validateForm = () => {
-    let isValid = true
-    const newErrors = {}
 
-    if (value.fromdate)
-      isValid = false;
-    newErrors.fromdate = "Frome Date is Required"
-    if (value.fromtodate)
-      isValid = false;
-    newErrors.fromtodate = "From To Date is Required"
-
-    if (value.selectcourse)
-      isValid = false;
-    newErrors.selectcourse = "Course is Required"
-
-    if (value.selectbatches)
-      isValid = false;
-    newErrors.selectbatchs = "Batch is Required"
-
-    setError(newErrors)
-    return isValid
-  }
 
 
 
@@ -90,21 +69,7 @@ const RInquiry = () => {
         console.log(err)
       })
   }
-  // async function getbatchdata() {
-  //   const data = {
 
-  //     tablename: "Batch_Mst",
-  //     columnname : "Batch_Id,Batch_code"
-  // }
-  //     axios.post(`${BASE_URL}/get_new_data`,data)
-  //         .then((res) => {
-  //             console.log(res.data)
-
-  //         })
-  //         .catch((err) => {
-  //             console.log(err)
-  //         })
-  // }
   async function getBatchData() {
 
     axios.get(`${BASE_URL}/get_batchcategory`)
@@ -123,15 +88,28 @@ const RInquiry = () => {
     // getbatchdata()
     setUid([])
   }, [])
-
+  async function getstatus() {
+    const data = {
+        tablename : "Status_Master",
+        columnname : "*"
+    }
+    axios.post(`${BASE_URL}/get_new_data`,data)
+        .then((res) => {
+            console.log(res.data)
+            setstatus(res.data)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+}
 
 
   useEffect(() => {
+    getstatus()
     setValue({
 
     })
   }, [uid])
-
 
 
   const getstudentlisitng = (id) => {
@@ -149,64 +127,58 @@ const RInquiry = () => {
 
 
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    if (value.all || value.allinquiries || value.selctbatch || value.rollnumberallot || value.selectcourse || value.fromdate || value.fromtodate) {
-
-    }else{
-      alert("Please fill all the fields")
-      return
+    if (!value.all && !value.allinquiries && !value.selctbatch && !value.rollnumberallot && !value.selectcourse && !value.fromdate && !value.fromtodate) {
+      alert("Please fill all the fields");
+      return;
     }
 
-    if (value.fromdate || value.fromtodate) {
-      if (value.fromdate) {
-        if (!value.fromtodate) {
-          alert("Please select to date");
-          return;
-        }
-      } else {
-        alert("Please select from date");
-        return;
-      }
+    if ((value.fromdate || value.fromtodate) && !(value.fromdate && value.fromtodate)) {
+      alert("Please select both from date and to date");
+      return;
     }
 
-      const data = {
+    const data = {
       fromdate: value.fromdate,
       fromtodate: value.fromtodate,
       selectcourse: value.selectcourse,
       rollnumberallot: value.rollnumberallot,
-      selctbatch: value.selctbatch,
+      selctbatch: value.selctbatch.map(option => option.value), // Extract only the values from the selected options
       allinquiries: value.allinquiries,
       all: value.all
-    }
+    };
 
     axios.post(`${BASE_URL}/getdatas`, data)
       .then((res) => {
-        console.log(res)
-        setinquery(res.data)
-        setUid([])
+        console.log(res);
+        setinquery(res.data);
+        setUid([]);
         setValue({
-          fromdate:"",
-          fromtodate:"",
-          selectcourse:"",
-          rollnumberallot:"",
-          selctbatch:"",
-          allinquiries:"",
-          all:""})
-      })
+          fromdate: "",
+          fromtodate: "",
+          selectcourse: "",
+          rollnumberallot: "",
+          selctbatch: [],  // Reset the multi-select to an empty array
+          allinquiries: "",
+          all: ""
+        });
+      });
+  };
 
-  }
 
   const onhandleChange = (e) => {
-    setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
-    if (e.target.name == "selectcourse" ) {
-      getbatch(e.target.value)
-    }
-    // if (e.target.name == "selctbatch") {
-    //   setSelected(e.target.value)
-    // }
-  }
+    if (e.target) {
+      setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
+      if (e.target.name === "selectcourse") {
+        getbatch(e.target.value);
+      }
+    } else {
+      setSelected(e); // Update the selected batch values
+      setValue((prev) => ({ ...prev, selctbatch: e })); // Save the selected batch values to the state
+    }
+  }
 
 
 
@@ -226,8 +198,10 @@ const RInquiry = () => {
     },
     // { field: 'attendee', headerName: 'Student Code', flex: 2 },
     { field: 'Student_Name', headerName: 'Student Name', flex: 2 },
-    { field: 'Inquiry_Dt', headerName: 'Inquiry Date', flex: 2 },
-    { field: 'Refered_By', headerName: 'Inquiry From', flex: 2 },
+    { field: 'Deciplin', headerName: 'Deciplin', flex: 2 },
+    { field: 'Course_Name', headerName: 'Course Name', flex: 2 },
+    { field: 'Status', headerName: 'Status', flex: 2 },
+    { field: 'inquiry_DT', headerName: 'inquiry Date', flex: 2 },
 
     {
       field: 'actions',
@@ -312,7 +286,6 @@ const RInquiry = () => {
                         {/* <pre>{JSON.stringify(selected)}</pre> */}
                         <MultiSelect
                           options={options}
-                          disabled
                           value={selected}
                           onChange={onhandleChange}
                           labelledBy="Select Batch "
@@ -330,14 +303,14 @@ const RInquiry = () => {
 
                       <div class="form-group col-lg-3">
                         <lable for="exampleFormControlSelect1">Enquiry Type</lable>
-                        <select class="form-control" disabled  id="exampleFormControlSelect1" value={value.allinquiries}
+                        <select class="form-control"  id="exampleFormControlSelect1" value={value.allinquiries}
                           name='allinquiries' onChange={onhandleChange} >
-                          <option>All Inquiries</option>
-                          <option>Actual Inquiries</option>
-                          <option>Admit</option>
-                          <option>Non-Admitted</option>
-                          <option>New Batchwise</option>
-                          <option>New Coursewise</option>
+                          <option value="">Select Enquiry Type</option>
+                          {status.map((item) => {
+                            return (
+                              <option value={item.Id}>{item.Status}</option>
+                            )
+                          })}
 
                         </select>
                       </div>
@@ -393,7 +366,7 @@ const RInquiry = () => {
                       disableColumnSelector
                       disableDensitySelector
                       rowHeight={35}
-                      getRowId={(row) => row.Inquiry_Id}
+                      getRowId={(row) => row.id}
                       initialState={{
                         pagination: {
                           paginationModel: { pageSize: 10, page: 0 },

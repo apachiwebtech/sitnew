@@ -4093,34 +4093,34 @@ app.post('/nodeapp/getprintinfo', (req, res) => {
   })
 
 })
-
-app.post('/nodeapp/getprintinfo', (req, res) => {
+app.post('/nodeapp/getdatas', (req, res) => {
 
   let { fromdate, fromtodate, selectcourse, rollnumberallot, selctbatch, allinquiries, all } = req.body;
   let sql
   let param
   param = []
-  sql = "select * form `Student_Inquiry` where "
+  sql = "SELECT i.Inquiry_Id as id,i.Student_Id,i.FName, i.LName, i.MName,i.Student_Name,i.Course_Id,i.Qualification, i.Discussion, i.present_mobile, i.Email, i.Discipline, i.Inquiry_type, i.isActive, i.inquiry_DT, c.Course_Name, i.Percentage , sm.Status , md.Deciplin , i.IsUnread FROM Student_Inquiry AS i LEFT JOIN Course_Mst AS c ON i.Course_id = c.Course_Id LEFT JOIN Status_Master as sm on sm.Id = i.OnlineState left JOIN MST_Deciplin as md on md.Id = i.Discipline WHERE i.isDelete = 0  and i.Admission != 1 "
+
   if (fromdate && fromtodate) {
-    sql+= "Inquiry_Dt >= ? and Inquiry_Dt <= ?";
+    sql+= "and  i.Inquiry_Dt >= ? and i.Inquiry_Dt <= ?";
     param.push(fromdate, fromtodate)
   }
   if (selectcourse) {
-    sql +="Course_Id = ?"
+    sql +="and i.Course_Id = ?"
     param.push(selectcourse)
   }
   if (rollnumberallot) {
-sql += "Batch_Category_id = ?"
+sql += "and i.Batch_Category_id = ?"
 param.push(rollnumberallot)
   }
   if (selctbatch) {
-    sql += "Batch_Code"
+    sql += "and i.Batch_Code = ?"
     param.push(selctbatch)
   }
   if (allinquiries) {
   }
 if (all) {
-  sql += "Refered_By = ?"
+  sql += "and i.Refered_By = ?"
   param.push(all)
 }
 
