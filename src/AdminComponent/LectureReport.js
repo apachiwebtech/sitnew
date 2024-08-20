@@ -1,18 +1,12 @@
-import CloseIcon from "@mui/icons-material/Close";
-import Checkbox from '@mui/material/Checkbox';
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import Dialog from "@mui/material/Dialog";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import FormControlLabel from '@mui/material/FormControlLabel';
-import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
+import { DataGrid } from "@mui/x-data-grid";
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { MultiSelect } from 'react-multi-select-component';
-import { useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from "./InnerHeader";
-import { batch } from "react-redux";
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     "& .MuiDialogContent-root": {
         padding: theme.spacing(2),
@@ -22,6 +16,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     },
 }));
 
+const CACHE_KEY = 'lecture_data';
 
 const LectureReport = () => {
 
@@ -30,6 +25,8 @@ const LectureReport = () => {
     const [batch, setAnnulBatch] = useState([])
     const [hide, setHide] = useState([])
     const [vendordata, setStudent] = useState([])
+    const [lecturereport, setLectureReport] = useState([])
+    const [loading, setLoading] = useState ([true])
 
 
 
@@ -42,7 +39,7 @@ const LectureReport = () => {
         try {
             const res = await axios.post(`${BASE_URL}/getcoursewisebatch`, data);
             setAnnulBatch(res.data);
-        }catch (err) {
+        } catch (err) {
             console.error(":", err);
         }
     };
@@ -51,12 +48,29 @@ const LectureReport = () => {
     const getstudentlisiting = (e) => {
         setHide(true)
         const data = {
-            batch_code: id
+            //batch_code: id
         }
 
         axios.post(`${BASE_URL}/getcoursewisebatch`, data)
+            .then((res) => {
+                setStudent(res.data)
+            })
+    }
+
+    async function getLectureReportData() {
+        
+        axios.get(`${BASE_URL}/lecturereport`)
         .then((res) => {
-            setStudent(res.data)
+            console.log (res.data)
+            setLectureReport(res.data)
+            localStorage.setItem(CACHE_KEY. JSON.stringify({
+                data:res.data,
+                timestamp: Date.now()
+            }));
+            setLoading(false)
+        })
+        .catch((err) => {
+            console.log(err)
         })
     }
 
@@ -70,8 +84,39 @@ const LectureReport = () => {
     }
 
     const onhandleChange = (e) => {
-        setValue((prev) => ({ ...prev, [e.target.name]: e.target.value}))
+        setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
+
+    const columns = [
+        {
+            field: 'index',
+            headerName: 'Id',
+            type: 'number',
+            align: 'center',
+            headerAlign: 'center',
+            flex: 1,
+            filterable: false,
+        },
+
+        //{ field: 'attendee', headerName: 'Student Code', flex: 2 },
+
+        {
+            field: 'actions',
+            type: 'actions',
+            headerName: 'Action',
+            flex: 1,
+            renderCall:(param) => {
+                return (
+                    <>
+                    <EditIcon style={{ cursor: "pointer" }} onClick={() => (param.row.id)} />
+                    <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => (param.row.id)} />
+                    </>
+                )
+            }
+        },
+    ];
+
+    const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row}));
 
     return (
 
@@ -82,7 +127,7 @@ const LectureReport = () => {
                     <div class="row">
                         <div class="col-lg-12 grid-margin stretch-card">
                             <div class="card">
-                                <div class="car-body">
+                                <div class="card-body">
                                     <h4 class='card-title'>
                                         Leacture Search
                                     </h4>
@@ -93,7 +138,7 @@ const LectureReport = () => {
                                             <div class="form-group col-lg-3">
                                                 <lable for="exampleFormControlSelect1">Course<span class="text-danger">*</span></lable>
                                                 <select class="form-control" id="exampleFormControlSelect1" value={value.course}
-                                                name="course" onChange={(e) => getbatch(e.target.value)}>
+                                                    name="course" onChange={(e) => getbatch(e.target.value)}>
                                                     <option>--Select Course--</option>
 
                                                     {course.map((item) => {
@@ -107,7 +152,7 @@ const LectureReport = () => {
                                             <div class="form-group col-lg-3">
                                                 <lable for="exampleFormControlSelect1">Batch<span class="text-danger">*</span></lable>
                                                 <select class="form-control" id="exampleFormControlSelect1" value={value.batch}
-                                                name="batch" onChange={(e) => getstudentlisiting(e.target.value)}>
+                                                    name="batch" onChange={(e) => getstudentlisiting(e.target.value)}>
                                                     <option>--Select Batch--</option>
 
                                                     {batch.map((item) => {
@@ -122,7 +167,7 @@ const LectureReport = () => {
                                             <div class="form-group col-lg-3">
                                                 <lable for="exampleFormControlSelect1">Lecture</lable>
                                                 <select class="form-control" id="exampleFormControlSelect1" value={value.lecture}
-                                                name="lecture" onChange={onhandleChange}>
+                                                    name="lecture" onChange={onhandleChange}>
                                                     <option>--Select Lecture--</option>
                                                 </select>
                                             </div>
@@ -130,7 +175,7 @@ const LectureReport = () => {
                                             <div class="form-group col-lg-3">
                                                 <lable for="exampleFormControlSelect1">Faculty</lable>
                                                 <select class="form-control" id="exampleFormControlSelect1" value={value.faculty}
-                                                name="faculty" onChange={onhandleChange}>
+                                                    name="faculty" onChange={onhandleChange}>
                                                     <option>--Select Faculty--</option>
                                                 </select>
                                             </div>
@@ -138,7 +183,7 @@ const LectureReport = () => {
                                             <div class="form-group col-lg-3">
                                                 <lable for="exampleFormControlSelect1">Months</lable>
                                                 <select class="form-control" id="exampleFormControlSelect1" value={value.months}
-                                                name="months" onChange={onhandleChange}>
+                                                    name="months" onChange={onhandleChange}>
                                                     <option>--Select Months--</option>
                                                 </select>
                                             </div>
@@ -146,15 +191,54 @@ const LectureReport = () => {
                                             <div class="form-group col-lg-3">
                                                 <lable for="exampleFormControlSelect1">Year</lable>
                                                 <select class="form-control" id="exampleFormControlSelect1" value={value.year}
-                                                name="year" onChange={onhandleChange}>
+                                                    name="year" onChange={onhandleChange}>
                                                     <option>--Select Year--</option>
                                                 </select>
                                             </div>
+                                            <div class='d-flex align-items-center mt-3'>
+                                                <button type="submit" class="btn btn-sm btn-primary mr-5">Go</button>
+                                                <button type="reset" onClick={() => getLectureReportData()} class="btn btn-sm btn-primary mr-2" >Clear All</button>
+                                                <button type="submit" class="btn btn-sm btn-primary mr-2">Back</button>
+                                            </div>
+                                           
                                         </div>
                                     </form>
                                 </div>
                             </div>
-                        </div>                       
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div className="d-flex justify-content-warrper">
+                                        <div>
+                                            <h4 class="card-title">Details</h4>
+                                        </div>
+                                    </div>
+                                    {hide && <div>
+                                        <DataGrid 
+                                        rows={rowsWithIds}
+                                        columns={columns}
+                                        disableColumnFilter
+                                        disableColumnSelector
+                                        disableDensitySelector
+                                        rowHeight={35}
+                                        getRowId={(row) => row.Batch_Id}
+                                        initialState={{
+                                            pagination: {
+                                                paginationModel: {pageSize: 10, page: 0 },
+                                            },
+                                        }}
+                                             />
+                                    </div>}
+
+                                    <button type="Submit" class="btn btn-primary mr-2">Excel</button>
+                                    <button type='button' onClick={() => {
+                                        window.location.reload()
+                                    }} class="btn btn-light">Print</button>
+
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

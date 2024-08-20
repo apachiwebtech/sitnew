@@ -60,7 +60,7 @@ const AddCollegeMaster = () => {
     const [maximumSelectionLength, setMaximumSelectionLength] = useState();
     // const [value, setValue] = useState(null);
     const applyRange = () => {
-        let textBoxValue = parseFloat(document.getElementById('length').value);
+        let textBoxValue = parseFloat(document.getElementById('Length').value);
         setValue(value === null ? [''] : null);
         setMaximumSelectionLength(textBoxValue);
     };

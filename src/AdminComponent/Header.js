@@ -749,10 +749,10 @@ const Header = ({click}) => {
             </li>
 
             <li className="nav-item">
-              <Link className="nav-link" to="/bathanalysis">
+              <Link className="nav-link" to="/batchanalysis">
                 {/* <Icon path={mdiCircleMedium } size={1} className='mx-3' /> */}
                 <Icon path={mdiCircleMedium} size={1} className='mx-3' />
-                <span className="menu-title">Bath Analysis Report</span>
+                <span className="menu-title">Batch Analysis Report</span>
               </Link>
             </li>
 
@@ -860,7 +860,7 @@ const Header = ({click}) => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to='/webapp/gallery'>
+              <Link className="nav-link" to='addfeesdetails'>
 
                 <Icon path={mdiCircleMedium} size={1} className='mx-3' />
                 <span className="menu-title">Fees Details</span>
@@ -889,8 +889,7 @@ const Header = ({click}) => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to='/webapp/gallery'>
-
+              <Link className="nav-link" to='facultypayment'>
                 <Icon path={mdiCircleMedium} size={1} className='mx-3' />
                 <span className="menu-title">Faculty Payment</span>
               </Link>
@@ -1187,7 +1186,7 @@ const Header = ({click}) => {
             </li>
 
             <li className="nav-item">
-              <Link className="nav-link" to="/">
+              <Link className="nav-link" to="/shortlistedcompany">
                 {/* <Icon path={mdiCircleMedium } size={1} className='mx-3' /> */}
                 <Icon path={mdiCircleMedium} size={1} className='mx-3' />
                 <span className="menu-title">Shortlisted By Company</span>
