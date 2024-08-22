@@ -1,17 +1,23 @@
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
+import decryptedUserId from '../Utils/UserID';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import Box from '@mui/material/Box';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import { LibraryBooks } from '@mui/icons-material';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
 //import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
 
-const QmsMaster = () => {
-
-
-
-
+const StudentPlacementReport = () => {
 
     const [brand, setBrand] = useState([])
     const [vendordata, setVendorData] = useState([])
@@ -47,8 +53,11 @@ const QmsMaster = () => {
     //   );
 
     const [value, setValue] = useState({
-        qmsname: "" || uid.training,
-        description: "" || uid.attendee,
+        training: "" || uid.training,
+        attendee: "" || uid.attendee,
+        instructor: "" || uid.instructor,
+        description: "" || uid.description,
+        feedback: "" || uid.feedback,
 
 
 
@@ -57,8 +66,11 @@ const QmsMaster = () => {
 
     useEffect(() => {
         setValue({
-            qmsname: uid.qmsname,
+            training: uid.training,
+            attendee: uid.attendee,
+            instructor: uid.instructor,
             description: uid.description,
+            feedback: uid.feedback,
 
         })
     }, [uid])
@@ -82,26 +94,25 @@ const QmsMaster = () => {
     // }
 
 
-    // async function getEmployeeData() {
+    async function getEmployeeData() {
 
-    //     axios.post(`${BASE_URL}/vendor_details`)
-    //         .then((res) => {
-    //             console.log(res.data)
-    //             setBrand(res.data)
-    //         })
-    //         .catch((err) => {
-    //             console.log(err)
-    //         })
-    // }
+        axios.post(`${BASE_URL}/vendor_details`)
+            .then((res) => {
+                console.log(res.data)
+                setBrand(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
 
 
 
     async function getEmployeeData() {
         const data = {
-            tablename: "QMS_master",
-            columnname: "*"
+            tablename: "awt_employeerecord"
         }
-        axios.post(`${BASE_URL}/get_new_data`, data)
+        axios.post(`${BASE_URL}/get_data`, data)
             .then((res) => {
                 console.log(res.data)
                 setVendorData(res.data)
@@ -137,7 +148,7 @@ const QmsMaster = () => {
     const handleUpdate = (id) => {
         const data = {
             u_id: id,
-            tablename: "QMS_master"
+            tablename: "awt_employeerecord"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
@@ -153,7 +164,7 @@ const QmsMaster = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename: "QMS_master"
+            tablename: "awt_employeerecord"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
@@ -177,13 +188,16 @@ const QmsMaster = () => {
         // if(validateForm()){
         const data = {
 
-            qmsname: value.qmsname,
+            training: value.training,
+            attendee: value.attendee,
+            instructor: value.instructor,
             description: value.description,
+            feedback: value.feedback,
             uid: uid.id
         }
 
 
-        axios.post(`${BASE_URL}/add_qmsmaster`, data)
+        axios.post(`${BASE_URL}/add_employeerecord`, data)
             .then((res) => {
                 console.log(res)
                 getEmployeeData()
@@ -210,33 +224,37 @@ const QmsMaster = () => {
 
 
 
-    const columns = [
-        {
-            field: 'index',
-            headerName: 'Id',
-            type: 'number',
-            align: 'center',
-            headerAlign: 'center',
-            flex: 1,
-            filterable: false,
+    // const columns = [
+    //     {
+    //         field: 'index',
+    //         headerName: 'Id',
+    //         type: 'number',
+    //         align: 'center',
+    //         headerAlign: 'center',
+    //         flex: 1,
+    //         filterable: false,
 
-        },
-        { field: 'QMS_name', headerName: 'Qms Name', flex: 2 },
-        {
-            field: 'actions',
-            type: 'actions',
-            headerName: 'Action',
-            flex: 1,
-            renderCell: (params) => {
-                return (
-                    <>
-                        <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
-                    </>
-                )
-            }
-        },
-    ];
+    //     },
+    //     { field: 'attendee', headerName: 'Attendee', flex: 2},
+    //     { field: 'instructor', headerName: 'Instructor', flex: 2},
+    //     { field: 'description', headerName: 'Description', flex: 2},
+    //     { field: 'feedback', headerName: 'FeedBack', flex: 2},
+
+    //     {
+    //         field: 'actions',
+    //         type: 'actions',
+    //         headerName: 'Action',
+    //         flex: 1,
+    //         renderCell: (params) => {
+    //             return (
+    //                 <>
+    //                     <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />
+    //                     <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
+    //                 </>
+    //             )
+    //         }
+    //     },
+    // ];
 
 
     const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
@@ -248,55 +266,54 @@ const QmsMaster = () => {
             <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="row">
-                        <div class="col-lg-6 grid-margin stretch-card">
+                        <div class="col-lg-12 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    {/* <h4 class="card-title">View Roll No. Allocated Batches</h4> */}
-                                    <h4 class="card-title">View Qms Master</h4>
+                                    <h4 class="card-title">Placement Report</h4>
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
 
-                                            <div class="form-group col-lg-12">
-                                                <label for="exampleSelectUsername1">Qms Name</label>
-                                                <input type="text" class="form-control" id="exampleSelectUsername1" value={value.qmsname} placeholder='Qms Name' name='qmsname' onChange={onhandleChange} />
+
+                                            <div class="form-group col-lg-4">
+                                                <label for="exampleFormControlSelect1">Course<span className='text-danger'>*</span> </label>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course} onChange={onhandleChange} name='course'>
+                                                    <option>Select Course</option>
+                                                    <option> Training in Process Plant System Modelling Using E3D</option>
+                                                    <option>Advance Pipe Stress Analysis </option>
+                                                </select>
                                             </div>
 
-                                            <div class="form-group col-lg-12">
-                                                <lable for="exampleTextarea1">Description</lable>
-                                                <textarea class="form-control" rows={5} id="exampleTextarea1" value={value.description} placeholder='Description' name='description' onChange={onhandleChange} ></textarea>
+                                            <div class="form-group col-lg-4">
+                                                <lable for="exampleFormControlSelect1">Batch</lable>
+                                                <select class="form-control form-control-lg" id="exampleFromControlSelect1" value={value.batch} name='batch' onChange={onhandleChange}>
+                                                    <option>Select Batch</option>
+                                                    <option>25004</option>
+                                                    <option>25003</option>
+                                                    <option>25002</option>
+                                                    <option>25001</option>
+                                                </select>
                                             </div>
-
-
                                         </div>
 
-                                        <button type="submit" class="btn btn-primary mr-2">Submit</button>
-
-                                        <button type='button' onClick={() => {
-                                            window.location.reload()
-                                        }} class="btn btn-light">Back</button>
-
-
-
+                                        <button type="submit" class="btn btn-primary mr-2">Go</button>
 
                                     </form>
 
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
                                         <div>
-                                            {/* <h4 class="card-title">Allot Roll Number List</h4> */}
-                                            <h4 class="card-title">View Qms Master</h4>
+                                            <h4 class="card-title">Details</h4>
                                         </div>
 
                                     </div>
 
-
-                                    <div>
+                                    {/* <div>
                                         <DataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
@@ -304,7 +321,7 @@ const QmsMaster = () => {
                                             disableColumnSelector
                                             disableDensitySelector
                                             rowHeight={35}
-                                            getRowId={(row) => row.Id}
+                                            getRowId={(row) => row.id}
                                             initialState={{
                                                 pagination: {
                                                     paginationModel: { pageSize: 10, page: 0 },
@@ -325,7 +342,13 @@ const QmsMaster = () => {
                                                 <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
                                             </div>
                                         )}
-                                    </div>
+                                    </div> */}
+
+                                    <button type="submit" class="btn btn-primary mr-2">Excel</button>
+                                    <button type='button' onClick={() => {
+                                        window.location.reload()
+                                    }} class="btn btn-primary mr-2">Close</button>
+
 
                                 </div>
                             </div>
@@ -338,4 +361,4 @@ const QmsMaster = () => {
     )
 }
 
-export default QmsMaster
+export default StudentPlacementReport

@@ -168,7 +168,23 @@ import AddCollegeMaster from './AdminComponent/AddCollegeMaster.js';
 import StudentDetails from './AdminComponent/StudentDetails.js';
 import FollowUp from './AdminComponent/FollowUp.js';
 import LectureReport from './AdminComponent/LectureReport.js';
-// import FacultyPayment from './AdminComponent/FacultyPayment.js';
+import FacultyMonthlyStatement from './AdminComponent/FacultyMonthlyStatement.js';
+import FacultySalaryReport from './AdminComponent/FacultySalaryReport.js';
+import PaymentCollectionReport from './AdminComponent/PaymentCollectionReport.js';
+import CashVoucher from './AdminComponent/CashVoucher.js';
+import AddCashVoucher from './AdminComponent/AddCashVoucher.js';
+import StockView from './AdminComponent/StockView.js';
+import StudentPlacementReport from './AdminComponent/StudentPlacementReport.js';
+import ConsultancyReport from './AdminComponent/ConsultancyReport.js';
+import ShortlistedByCompany from './AdminComponent/ShortlistedByCompany.js';
+import AddFeesDetails from './AdminComponent/AddFeesDetails.js';
+import AddFeesDetailsListing from './AdminComponent/AddFeesDetailsListing.js';
+import AddEmployeeSalary from './AdminComponent/AddEmployeeSalary.js';
+import AddEmployeeSalaryListing from './AdminComponent/AddEmployeeSalaryListing.js';
+import AddConsultancyMaster from './AdminComponent/AddConsultancyMaster.js';
+import AddConsultancyMasterListing from './AdminComponent/AddConsultancyMasterListing.js';
+import AddCompanyRequirementListing from './AdminComponent/AddCompanyRequirementListing.js';
+import AddCompanyRequirement from './AdminComponent/AddCompanyRequirement.js';
 
 
 
@@ -464,10 +480,7 @@ const Router = createBrowserRouter([
         path: '/feesdetails',
         element: <FeesDetails/>
       },
-      // {
-      //   path: '/facultypayment',
-      //   element: <FacultyPayment/>
-      // },
+      
       {
         path: '/batchrecord',
         element: <BatchRecord />
@@ -508,6 +521,18 @@ const Router = createBrowserRouter([
       {
         path: '/lecturereport',
         element: <LectureReport/>
+      },
+      {
+        path: '/facultymonthly',
+        element: <FacultyMonthlyStatement/>
+      },
+      {
+        path: '/facultysalary',
+        element: <FacultySalaryReport/>
+      },
+      {
+        path:'/paymentcollection',
+        element: <PaymentCollectionReport/>
       },
       // =====================Admission Activity===================
 
@@ -723,6 +748,18 @@ const Router = createBrowserRouter([
         path: '/inquirylisting',
         element: <InquiryListing />
       },
+      {
+        path: '/studentplacement',
+        element: <StudentPlacementReport/>
+      },
+      {
+        path: '/consultancyreport',
+        element: <ConsultancyReport/>
+      },
+      {
+        path: '/shortlistedcompany',
+        element: <ShortlistedByCompany/>
+      },
 
       // ======================Inquiry form
 
@@ -788,6 +825,50 @@ const Router = createBrowserRouter([
       {
         path: '/purchasematerial',
         element: <PurchaseMaterial />
+      },
+      {
+        path: '/addcashvoucher/:addcashvoucher',
+        element: <AddCashVoucher/>
+      },
+      {
+        path: '/cashvoucher',
+        element: <CashVoucher/>
+      },
+      {
+        path:'/stockview',
+        element: <StockView/>
+      },
+      {
+        path: '/addfeesdetails',
+        element: <AddFeesDetailsListing/>
+      },
+      {
+        path: '/addfeesdetails/:addfeesdetailsid',
+        element: <AddFeesDetails/>
+      },
+      {
+        path: '/employeesalary',
+        element: <AddEmployeeSalaryListing/>
+      },
+      {
+        path: '/addemployeesalary/:addemployeesalaryid',
+        element: <AddEmployeeSalary/>
+      },
+      {
+        path: '/consultancymaster',
+        element: <AddConsultancyMasterListing/>
+      },
+      {
+        path: '/consultancymaster/:consultancymasterid',
+        element: <AddConsultancyMaster/>
+      },
+      {
+        path: '/companyrequirment',
+        element: <AddCompanyRequirementListing/>
+      },
+      {
+        path: '/companyrequirment/:companyrequirmentid',
+        element: <AddCompanyRequirement/>
       },
 
 

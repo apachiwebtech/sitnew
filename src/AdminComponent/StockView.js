@@ -1,13 +1,12 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 //import FormControlLabel from '@mui/material/FormControlLabel';
 
-const QmsMaster = () => {
+const StockView = () => {
 
 
 
@@ -47,8 +46,11 @@ const QmsMaster = () => {
     //   );
 
     const [value, setValue] = useState({
-        qmsname: "" || uid.training,
-        description: "" || uid.attendee,
+        training: "" || uid.training,
+        attendee: "" || uid.attendee,
+        instructor: "" || uid.instructor,
+        description: "" || uid.description,
+        feedback: "" || uid.feedback,
 
 
 
@@ -57,8 +59,11 @@ const QmsMaster = () => {
 
     useEffect(() => {
         setValue({
-            qmsname: uid.qmsname,
+            training: uid.training,
+            attendee: uid.attendee,
+            instructor: uid.instructor,
             description: uid.description,
+            feedback: uid.feedback,
 
         })
     }, [uid])
@@ -82,26 +87,25 @@ const QmsMaster = () => {
     // }
 
 
-    // async function getEmployeeData() {
+    async function getEmployeeData() {
 
-    //     axios.post(`${BASE_URL}/vendor_details`)
-    //         .then((res) => {
-    //             console.log(res.data)
-    //             setBrand(res.data)
-    //         })
-    //         .catch((err) => {
-    //             console.log(err)
-    //         })
-    // }
+        axios.post(`${BASE_URL}/vendor_details`)
+            .then((res) => {
+                console.log(res.data)
+                setBrand(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
 
 
 
     async function getEmployeeData() {
         const data = {
-            tablename: "QMS_master",
-            columnname: "*"
+            tablename: "awt_employeerecord"
         }
-        axios.post(`${BASE_URL}/get_new_data`, data)
+        axios.post(`${BASE_URL}/get_data`, data)
             .then((res) => {
                 console.log(res.data)
                 setVendorData(res.data)
@@ -137,7 +141,7 @@ const QmsMaster = () => {
     const handleUpdate = (id) => {
         const data = {
             u_id: id,
-            tablename: "QMS_master"
+            tablename: "awt_employeerecord"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
@@ -153,7 +157,7 @@ const QmsMaster = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename: "QMS_master"
+            tablename: "awt_employeerecord"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
@@ -177,13 +181,16 @@ const QmsMaster = () => {
         // if(validateForm()){
         const data = {
 
-            qmsname: value.qmsname,
+            training: value.training,
+            attendee: value.attendee,
+            instructor: value.instructor,
             description: value.description,
+            feedback: value.feedback,
             uid: uid.id
         }
 
 
-        axios.post(`${BASE_URL}/add_qmsmaster`, data)
+        axios.post(`${BASE_URL}/add_employeerecord`, data)
             .then((res) => {
                 console.log(res)
                 getEmployeeData()
@@ -221,7 +228,11 @@ const QmsMaster = () => {
             filterable: false,
 
         },
-        { field: 'QMS_name', headerName: 'Qms Name', flex: 2 },
+        { field: 'attendee', headerName: 'Attendee', flex: 2 },
+        { field: 'instructor', headerName: 'Instructor', flex: 2 },
+        { field: 'description', headerName: 'Description', flex: 2 },
+        { field: 'feedback', headerName: 'FeedBack', flex: 2 },
+
         {
             field: 'actions',
             type: 'actions',
@@ -248,34 +259,30 @@ const QmsMaster = () => {
             <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="row">
-                        <div class="col-lg-6 grid-margin stretch-card">
+                        <div class="col-lg-12 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    {/* <h4 class="card-title">View Roll No. Allocated Batches</h4> */}
-                                    <h4 class="card-title">View Qms Master</h4>
+                                    <h4 class="card-title">View Roll No. Allocated Batches</h4>
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
 
-                                            <div class="form-group col-lg-12">
-                                                <label for="exampleSelectUsername1">Qms Name</label>
-                                                <input type="text" class="form-control" id="exampleSelectUsername1" value={value.qmsname} placeholder='Qms Name' name='qmsname' onChange={onhandleChange} />
-                                            </div>
+                                            <div class="form-group col-lg-3">
+                                                <label for="exampleFormControlSelect1">Select Course</label>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.selectcourse} name='selectcourse' onChange={onhandleChange}>
+                                                    <option>All</option>
+                                                    <option>PEN</option>
+                                                    <option>Apsara Pencil</option>
+                                                    <option>Asignment front Pages</option>
+                                                    <option>A4 Papers</option>
+                                                </select>
 
-                                            <div class="form-group col-lg-12">
-                                                <lable for="exampleTextarea1">Description</lable>
-                                                <textarea class="form-control" rows={5} id="exampleTextarea1" value={value.description} placeholder='Description' name='description' onChange={onhandleChange} ></textarea>
                                             </div>
 
 
                                         </div>
 
-                                        <button type="submit" class="btn btn-primary mr-2">Submit</button>
-
-                                        <button type='button' onClick={() => {
-                                            window.location.reload()
-                                        }} class="btn btn-light">Back</button>
-
+                                        <button type="submit" class="btn btn-primary mr-2">View</button>
 
 
 
@@ -284,39 +291,22 @@ const QmsMaster = () => {
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
                                         <div>
-                                            {/* <h4 class="card-title">Allot Roll Number List</h4> */}
-                                            <h4 class="card-title">View Qms Master</h4>
+                                            <h4 class="card-title">Allot Roll Number List</h4>
                                         </div>
 
                                     </div>
-
+                                    <button type="submit" class="btn btn-primary mr-2">Print</button>
+                                    <button type='button' onClick={() => {
+                                        window.location.reload()
+                                    }} class="btn btn-light">Back</button>
 
                                     <div>
-                                        <DataGrid
-                                            rows={rowsWithIds}
-                                            columns={columns}
-                                            disableColumnFilter
-                                            disableColumnSelector
-                                            disableDensitySelector
-                                            rowHeight={35}
-                                            getRowId={(row) => row.Id}
-                                            initialState={{
-                                                pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
-                                                },
-                                            }}
-                                            slots={{ toolbar: GridToolbar }}
-                                            slotProps={{
-                                                toolbar: {
-                                                    showQuickFilter: true,
-                                                },
-                                            }}
-                                        />
+
 
                                         {confirmationVisibleMap[cid] && (
                                             <div className='confirm-delete'>
@@ -338,4 +328,4 @@ const QmsMaster = () => {
     )
 }
 
-export default QmsMaster
+export default StockView
