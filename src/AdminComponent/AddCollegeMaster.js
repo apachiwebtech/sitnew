@@ -54,16 +54,8 @@ const AddCollegeMaster = () => {
     );
 
 
-    const temp = 'countries';
-    //const countries = data[temp];
-    const checkFields = { text: 'Name', value: 'Code' };
-    const [maximumSelectionLength, setMaximumSelectionLength] = useState();
-    // const [value, setValue] = useState(null);
-    const applyRange = () => {
-        let textBoxValue = parseFloat(document.getElementById('length').value);
-        setValue(value === null ? [''] : null);
-        setMaximumSelectionLength(textBoxValue);
-    };
+  
+
 
 
 
@@ -98,28 +90,28 @@ const AddCollegeMaster = () => {
     useEffect(() => {
         setValue({
 
-            college_name: uid.college_name,
-            university: uid.university,
-            contact_person: uid.contact_person,
-            designation: uid.designation,
-            address: uid.address,
-            city: uid.city,
-            pin: uid.pin,
-            state: uid.state,
-            country: uid.country,
-            phone: uid.phone,
-            email: uid.email,
-            mobile: uid.mobile,
-            website: uid.website,
-            purpose: uid.purpose,
-            remark: uid.remark,
-            studentname: uid.studentname,
-            mobile1: uid.mobile1,
-            course: uid.course,
-            email1: uid.email1,
-            batch: uid.batch,
-            status: uid.status,
-            date: uid.date,
+            college_name: uid.college_name || "",
+            university: uid.university || '',
+            contact_person: uid.contact_person || '',
+            designation: uid.designation || '',
+            address: uid.address || "",
+            city: uid.city || '',
+            pin: uid.pin || '',
+            state: uid.state || '',
+            country: uid.country || '',
+            phone: uid.phone || '',
+            email: uid.email || '',
+            mobile: uid.mobile || '',
+            website: uid.website || '',
+            purpose: uid.purpose || '',
+            remark: uid.remark || '',
+            studentname: uid.studentname || '',
+            mobile1: uid.mobile1 || '',
+            course: uid.course || '',
+            email1: uid.email1 || '',
+            batch: uid.batch || '',
+            status: uid.status || '',
+            date: uid.date || '',
 
 
         })
@@ -163,7 +155,7 @@ const AddCollegeMaster = () => {
     }
 
     useEffect(() => {
-        getCollegeData()
+        // getCollegeData()
         value.title = ""
         setError({})
         setUid([])
@@ -192,7 +184,7 @@ const AddCollegeMaster = () => {
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
-                setUid(res.data[0])
+                // setUid(res.data[0])
 
                 console.log(res.data, "update")
             })
@@ -201,12 +193,7 @@ const AddCollegeMaster = () => {
             })
     }
 
-    useEffect(() => {
-        if (collegeid != ':collegeid')
 
-            handleUpdate()
-
-    }, [collegeid])
 
 
 
@@ -243,7 +230,7 @@ const AddCollegeMaster = () => {
             axios.post(`${BASE_URL}/add_college`, data)
                 .then((res) => {
                     console.log(res)
-                    getCollegeData()
+                    // getCollegeData()
 
                 })
                 .catch((err) => {

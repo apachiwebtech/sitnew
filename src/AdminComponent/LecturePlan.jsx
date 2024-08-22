@@ -64,7 +64,11 @@ const LecturePlan = () => {
 
   async function getstandardlecture() {
 
-    axios.get(`${BASE_URL}/batch_lecturetaken`)
+
+    const data = {
+      batch_id : batchid
+    }
+    axios.post(`${BASE_URL}/batch_lecturetaken` , data)
 
       .then((res) => {
         setOnlineAdmissions(res.data)
@@ -244,6 +248,7 @@ const LecturePlan = () => {
       duration: value.duration,
       publish: value.publish,
       uid: uid.id,
+      batch_id : batchid
     }
 
     axios.post(`${BASE_URL}/add_batchlecturetaken`, data)

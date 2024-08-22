@@ -23,7 +23,7 @@ const Students = () => {
     const [onlineAdmissions, setOnlineAdmissions] = useState([])
     const label = { inputProps: { 'aria-label': 'Color switch demo' } };
     const getOnlineAdmissions = async () => {
-        const response = await fetch(`${BASE_URL}/getFinalStudents`, {
+        const response = await fetch(`${BASE_URL}/getAllStudent`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -118,7 +118,7 @@ const Students = () => {
                                             disableColumnSelector
                                             disableDensitySelector
                                             rowHeight={37}
-                                            getRowId={(row) => row.Present_Mobile}
+                                            getRowId={(row) => row.Student_Id}
                                             initialState={{
                                                 pagination: {
                                                     paginationModel: { pageSize: 10, page: 0 },

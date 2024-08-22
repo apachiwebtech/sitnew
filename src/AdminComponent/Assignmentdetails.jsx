@@ -52,7 +52,12 @@ const Assignmentdetails = () => {
   const [onlineAdmissions, setOnlineAdmissions] = useState([]);
 
   async function getAssignment() {
-    axios.get(`${BASE_URL}/assignment_taken`)
+
+    const data = {
+      batch_id : batchid
+    }
+    axios.post(`${BASE_URL}/assignment_taken`,data)
+    
       .then((res) => {
         setOnlineAdmissions(res.data)
       })
@@ -186,7 +191,7 @@ const Assignmentdetails = () => {
       marks: value.marks,
       date: value.date,
       uid: uid.id,
-      batchid :batchid
+      batch_id :batchid
     }
 
     axios.post(`${BASE_URL}/add_assignmentdetails`, data)

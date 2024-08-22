@@ -57,7 +57,11 @@ const UnitTest = () => {
 
   async function getUnitTest() {
 
-    axios.get(`${BASE_URL}/Unit_test`)
+    const data = {
+      batch_id : batchid
+    }
+
+    axios.post(`${BASE_URL}/Unit_test` , data)
 
       .then((res) => {
         setOnlineAdmissions(res.data)
@@ -203,8 +207,9 @@ const UnitTest = () => {
 
     axios.post(`${BASE_URL}/add_Unittest`, data)
       .then((res) => {
-        console.log(res)
+ 
         setOpen(false)
+
         getUnitTest()
       })
 

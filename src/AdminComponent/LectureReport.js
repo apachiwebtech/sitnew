@@ -51,7 +51,7 @@ const LectureReport = () => {
     const getstudentlisiting = (e) => {
         setHide(true)
         const data = {
-            batch_code: id
+            batch_code: ''
         }
 
         axios.post(`${BASE_URL}/getcoursewisebatch`, data)

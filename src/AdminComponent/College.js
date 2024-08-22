@@ -9,41 +9,22 @@ import Loader from './Loader';
 import { Link, useParams } from 'react-router-dom';
 import AddCollegeInfo from './AddCollegeInfo';
 import { MultiSelect } from 'react-multi-select-component';
+import CollegeForm from './CollegeForm';
 
 
 
 const College = () => {
 
     const [brand, setBrand] = useState([])
+    const [descipline, setDescipline] = useState([])
     const [open, setOpen] = useState(false)
-    const [vendordata, setVendorData] = useState([])
     const [uid, setUid] = useState([])
-    const [cid, setCid] = useState("")
     const [error, setError] = useState({})
-    const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
-    const [loading, setLoading] = useState(true)
-    //const [value, setValue] = useState({})
     const { collegeid } = useParams()
-    const [MultiSelectComponent, SetMultiSelectComponent] = useState()
-    const [Inject, setInject] = useState()
-    const [CheckBoxSelection, setCheckBoxSelection] = useState()
-    const [selected, setSelected] = useState ([]);
-    const [options, setOptions] = useState ([]);
-    
+    const [selected, setSelected] = useState([]);
+    const [desciplinevalue, setDesciplinevalue] = useState()
 
 
-    const handleChange1 = (event) => {
-        setChecked([event.target.checked, event.target.checked]);
-    };
-
-    const handleChange2 = (event) => {
-        setChecked([event.target.checked, checked[1]]);
-    };
-
-    const handleChange3 = (event) => {
-        setChecked([checked[0], event.target.checked]);
-    };
 
 
 
@@ -65,10 +46,10 @@ const College = () => {
         website: "" || uid.website,
         purpose: "" || uid.purpose,
         remark: "" || uid.remark,
-        studentname: "" || uid.studentname,
-        mobile1: "" || uid.mobile1,
+        refstudentname: "" || uid.refstudentname,
+        refmobile: "" || uid.refmobile,
         course: "" || uid.course,
-        email1: "" || uid.email1,
+        refemail: "" || uid.refemail,
         batch: "" || uid.batch,
         status: "" || uid.status,
         date: "" || uid.date,
@@ -94,10 +75,10 @@ const College = () => {
             website: uid.website,
             purpose: uid.purpose,
             remark: uid.remark,
-            studentname: uid.studentname,
-            mobile1: uid.mobile1,
+            refstudentname: uid.refstudentname,
+            refmobile: uid.refmobile,
             course: uid.course,
-            email1: uid.email1,
+            refemail: uid.refemail,
             batch: uid.batch,
             status: uid.status,
             date: uid.date,
@@ -128,43 +109,42 @@ const College = () => {
 
 
 
-    async function getCollegeData() {
-        const data = {
-            tablename: "awt_college"
-        }
-        axios.post(`${BASE_URL}/get_data`, data)
+
+    async function fetdescipline() {
+
+        axios.get(`${BASE_URL}/getDiscipline`)
             .then((res) => {
-                console.log(res.data)
-                setVendorData(res.data)
-                setLoading(false)
+                setDescipline(
+                    res.data.map(item => ({ label: item.Deciplin, value: item.Id }))
+                );
             })
             .catch((err) => {
                 console.log(err)
             })
+
+    }
+
+
+    const handleselect = (value) => {
+
+        setSelected(value)
+
+        setDesciplinevalue(value.map((item) => item.value).join(','))
+
+        console.log(value.map((item) => item.value))
+
     }
 
     useEffect(() => {
-        getCollegeData()
+
+        fetdescipline()
         value.title = ""
         setError({})
         setUid([])
+
     }, [])
 
-    const handleClick = (id) => {
-        setCid(id)
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: true,
-        }));
-    };
 
-    const handleCancel = (id) => {
-        // Hide the confirmation dialog without performing the delete action
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
-    };
 
     const handleUpdate = () => {
         const data = {
@@ -175,7 +155,13 @@ const College = () => {
             .then((res) => {
                 setUid(res.data[0])
 
-                console.log(res.data, "update")
+                const ids = res.data[0].descipline
+                const idArray = ids.split(',').map(Number)
+
+                const formattedArray = idArray.map((id, index) => ({ label: 'select' + (index + 1), value: id }));
+
+                setSelected(formattedArray)
+
             })
             .catch((err) => {
                 console.log(err)
@@ -192,6 +178,8 @@ const College = () => {
 
 
     const handleSubmit = (e) => {
+
+
         e.preventDefault()
 
         if (validateForm()) {
@@ -211,21 +199,24 @@ const College = () => {
                 website: value.website,
                 purpose: value.purpose,
                 remark: value.remark,
-                studentname: value.studentname,
-                mobile1: value.mobile1,
+
+                refstudentname: value.refstudentname,
+                refmobile: value.refmobile,
                 course: value.course,
-                email1: value.email1,
+                refemail: value.refemail,
                 batch: value.batch,
                 status: value.status,
                 date: value.date,
+                desciplinevalue: desciplinevalue,
+                uid: uid.id
+
             }
 
 
             axios.post(`${BASE_URL}/add_college`, data)
                 .then((res) => {
                     console.log(res)
-                    getCollegeData()
-
+                    alert("Data added successfully")
                 })
                 .catch((err) => {
                     console.log(err)
@@ -246,27 +237,26 @@ const College = () => {
 
 
 
-
-
-
-
     return (
 
         <div class="container-fluid page-body-wrapper col-lg-10" >
             <InnerHeader />
 
-            {loading && <Loader />}
-            <div className='my-2 text-right'>
-                <button className='btn btn-success' onClick={() => setOpen(true)}>Add +</button>
-            </div>
-            <div class="main-panel" style={{ display: loading ? "none" : "block" }} >
+
+            <div class="main-panel" >
                 <div class="content-wrapper">
+                    <div className='my-2 text-right'>
+                        <button className='btn btn-success' onClick={() => setOpen(true)}>Add +</button>
+                    </div>
+
+                    {collegeid !== ':collegeid' && <CollegeForm collegeid={collegeid} />}
+
                     <div class="row">
                         <div class="col-lg-12 grid-margin">
                             <div class="card">
                                 <div class="card-body">
                                     <div classNamae='container-fluid'>
-                                        <div className='row d-flex justify-container-between'>
+                                        <form onSubmit={handleSubmit} className='row d-flex justify-container-between'>
                                             <div className='col-md-6 col-lg-6'>
                                                 <div className='row justify-content-center'>
                                                     <div className='p-3' style={{ width: "100%" }}>
@@ -372,12 +362,12 @@ const College = () => {
                                                         <div className='row'>
                                                             <div class="form-group col-lg-4">
                                                                 <lable for="exampleInputUsername1">Student Name</lable>
-                                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.studentname}
-                                                                    name='studentname' placeholder='Student Name' onChange={onhandleChange} />
+                                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.refstudentname}
+                                                                    name='refstudentname' placeholder='Student Name' onChange={onhandleChange} />
                                                             </div>
                                                             <div class="form-group col-lg-4">
                                                                 <label for="exampleInputUsername1">Mobile</label>
-                                                                <input type="number" class="form-control" id="exampleInputUsername1" value={value.mobile1} placeholder="Mobile" name='mobile1' onChange={onhandleChange} />
+                                                                <input type="number" class="form-control" id="exampleInputUsername1" value={value.refmobile} placeholder="Mobile" name='refmobile' onChange={onhandleChange} />
 
                                                             </div>
                                                             <div class="form-group col-lg-4">
@@ -387,8 +377,8 @@ const College = () => {
                                                             </div>
                                                             <div class="form-group col-lg-4">
                                                                 <lable for="exampleInputUsername1">Email Id</lable>
-                                                                <input type="email" class="form-control" id="exampleInputUsername1" value={value.email1}
-                                                                    placeholder="Email" name='email1' onChange={onhandleChange} />
+                                                                <input type="email" class="form-control" id="exampleInputUsername1" value={value.refemail}
+                                                                    placeholder="Email" name='refemail' onChange={onhandleChange} />
                                                             </div>
                                                             <div class="form-group col-lg-4">
                                                                 <lable for="exampleInputUsername1">Batch</lable>
@@ -417,20 +407,20 @@ const College = () => {
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        <div className='row justify-content-center'>
+                                                            <div className='p-3' style={{ width: "100%" }}>
+                                                                <div className='card-title titleback'>Disciplines</div>
 
-                                                    </div>
+                                                                <div class="form-group col-lg-6 p-0">
+                                                                    <lable for="exampleFormControlSelect1"></lable>
+                                                                    <MultiSelect options={descipline} value={selected}
+                                                                        onChange={(value) => handleselect(value)}
+                                                                        labelledBy='Select All' name="selected"></MultiSelect>
 
-                                                </div>
+                                                                </div>
 
-                                                <div className='row justify-content-center'>
-                                                    <div className='p-3' style={{ width: "100%" }}>
-                                                        <div className='card-title titleback'>Disciplines</div>
+                                                            </div>
 
-                                                        <div class="form-group col-lg-6">
-                                                            <lable for="exampleFormControlSelect1"></lable>
-                                                            <MultiSelect options={options} value={selected}
-                                                            onChange={setSelected}
-                                                            labelledBy='Select All' name="selected"></MultiSelect>
                                                         </div>
 
                                                     </div>
@@ -439,10 +429,12 @@ const College = () => {
 
 
 
+
+
                                             </div>
 
 
-                                        </div>
+                                        </form>
 
 
 

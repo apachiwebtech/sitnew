@@ -22,50 +22,44 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 
 
 
-const AddCollegeInfo = ({ open, setOpen }) => {
+const AddCollegeInfo = ({ open, setOpen, collegeid, edit, add, getFollowData }) => {
 
 
-    const [brand, setBrand] = useState([])
-    const [vendordata, setVendorData] = useState([])
+
     const [uid, setUid] = useState([])
-    const [cid, setCid] = useState("")
     const [error, setError] = useState({})
-    const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
-    const [loading, setLoading] = useState(true)
-    const [category, setCat] = useState(' ')
-    const { collegeid } = useParams()
-    const [selected, setSelected] = useState ([]);
-    const [options, setOptions0] = useState ([]);
+    const [descipline, setDescipline] = useState([])
+    const [desciplinevalue, setDesciplinevalue] = useState()
+    const [selected, setSelected] = useState([]);
 
     const [value, setValue] = useState({
-        date: "" || uid.date,
-        contactperson: "" || uid.contactperson,
-        designation: "" || uid.designation,
-        purpose: "" || uid.purpose,
-        directline: "" || uid.directline,
-        email: "" || uid.email,
+        date: "" || uid.Tdate,
+        contactperson: "" || uid.CName,
+        designation: "" || uid.Designation,
+        purpose: "" || uid.Purpose,
+        directline: "" || uid.DirectLine,
+        email: "" || uid.Email,
         nextdate: "" || uid.nextdate,
-        remark: "" || uid.remark,
-        note: "" || uid.note
-
-
+        remark: "" || uid.Remark,
+        note: "" || uid.Note,
+        mobile: "" || uid.Phone
 
     })
 
     useEffect(() => {
+
         setValue({
 
-            date: uid.date,
-            contactperson: uid.contactperson,
-            designation: uid.designation,
-            purpose: uid.purpose,
-            directline: uid.directline,
-            email: uid.email,
+            date: uid.Tdate,
+            contactperson: uid.CName,
+            designation: uid.Designation,
+            purpose: uid.Purpose,
+            directline: uid.DirectLine,
+            email: uid.Email,
             nextdate: uid.nextdate,
-            remark: uid.remark,
-            note: uid.note,
-
+            remark: uid.Remark,
+            note: uid.Note,
+            mobile: uid.Phone
 
 
         })
@@ -76,14 +70,16 @@ const AddCollegeInfo = ({ open, setOpen }) => {
         let isValid = true
         const newErrors = {}
 
-
-        if (!value.college) {
+        const mobileRegex = /^[0-9]{10,14}$/;// Example: 10 digits, adjust as needed
+        if (value.mobile && !mobileRegex.test(value.mobile)) {
             isValid = false;
-            newErrors.name = "Name is required"
+            newErrors.mobile = "Mobile number is invalid"
         }
-        if (!value.email) {
+
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (value.email && !emailRegex.test(value.email)) {
             isValid = false;
-            newErrors.email = "University is required"
+            newErrors.email = "Invalid email"
         }
         setError(newErrors)
         return isValid
@@ -95,61 +91,63 @@ const AddCollegeInfo = ({ open, setOpen }) => {
     };
 
 
-    async function getCollegeData() {
+    async function getfollowdetails() {
+
         const data = {
-            tablename: "awt_college"
+            followid: edit || add
         }
-        axios.post(`${BASE_URL}/get_data`, data)
-            .then((res) => {
-                console.log(res.data)
-                setVendorData(res.data)
-                setLoading(false)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
 
-    useEffect(() => {
-        getCollegeData()
-        value.title = ""
-        setError({})
-        setUid([])
-    }, [])
-
-    const handleClick = (id) => {
-        setCid(id)
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: true,
-        }));
-    };
-
-
-
-    const handleUpdate = () => {
-        const data = {
-            u_id: collegeid,
-            tablename: "awt_college"
-        }
-        axios.post(`${BASE_URL}/update_data`, data)
+        axios.post(`${BASE_URL}/getfollowdetails`, data)
             .then((res) => {
                 setUid(res.data[0])
 
-                console.log(res.data, "update")
+                const ids = res.data[0].Discipline
+                const idArray = ids.split(',').map(Number)
+
+                const formattedArray = idArray.map((id, index) => ({ label: 'select' + (index + 1), value: id }));
+
+                setSelected(formattedArray)
+            })
+    }
+
+
+    async function fetdescipline() {
+
+        axios.get(`${BASE_URL}/getDiscipline`)
+            .then((res) => {
+                setDescipline(
+                    res.data.map(item => ({ label: item.Deciplin, value: item.Id }))
+                );
             })
             .catch((err) => {
                 console.log(err)
             })
+
     }
 
-    // useEffect(() => {
-    //     if (collegeid != ':collegeid')
+    useEffect(() => {
+        fetdescipline()
+        if (add || edit) {
+            getfollowdetails()
+        }
 
-    //         handleUpdate()
+        value.title = ""
+        setError({})
+        setUid([])
+    }, [add, edit])
 
-    // }, [collegeid])
 
+
+
+    const handleselect = (value) => {
+
+        setSelected(value)
+
+        setDesciplinevalue(value.map((item) => item.value).join(','))
+
+        console.log(value.map((item) => item.value))
+
+    }
 
 
     const handleSubmit = (e) => {
@@ -157,7 +155,7 @@ const AddCollegeInfo = ({ open, setOpen }) => {
 
         if (validateForm()) {
             const data = {
-                date: value.data,
+                date: value.date,
                 contactperson: value.contactperson,
                 designation: value.designation,
                 purpose: value.purpose,
@@ -166,14 +164,33 @@ const AddCollegeInfo = ({ open, setOpen }) => {
                 nextdate: value.nextdate,
                 remark: value.remark,
                 note: value.note,
-
+                mobile: value.mobile,
+                descipline: desciplinevalue,
+                collegeid: collegeid,
+                uid: edit
             }
 
 
-            axios.post(`${BASE_URL}/add_college`, data)
+            axios.post(`${BASE_URL}/add_college_follow`, data)
                 .then((res) => {
-                    console.log(res)
-                    getCollegeData()
+                    alert("Form submitted")
+                    setOpen(false)
+                    setValue({
+                        date: "",
+                        contactperson: "",
+                        designation: "" ,
+                        purpose: "" ,
+                        directline: "",
+                        email: "",
+                        nextdate: "" ,
+                        remark: "" ,
+                        note: "" ,
+                        mobile: "" 
+
+                    })
+                    setUid([])
+                    getFollowData()
+                    setSelected([])
 
                 })
                 .catch((err) => {
@@ -184,16 +201,7 @@ const AddCollegeInfo = ({ open, setOpen }) => {
     }
 
 
-    // const handleCheckboxChange = (event) => {
-    //     setIsChecked(event.target.cheched);
-    // };
 
-    const handleInputchenge = (event) => {
-        setValue({
-            ...value,
-            [event.target.name]: event.target.value,
-        });
-    }
     const onhandleChange = (e) => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
@@ -237,71 +245,85 @@ const AddCollegeInfo = ({ open, setOpen }) => {
                                     <form class="form-sample py-3" onSubmit={handleSubmit}>
                                         <div class="row">
                                             <div class="form-group col-lg-4">
-                                                <lable for="exampleInputUsername1">Date</lable>
+                                                <label for="exampleInputUsername1">Date</label>
                                                 <input type="date" class="form-control" id="exampleInputUasename1" value={value.date}
                                                     name='date' onChange={onhandleChange} />
                                             </div>
 
                                             <div class="form-group col-lg-4">
-                                                <lable for="exampleInputUsername1">Contact Person</lable>
+                                                <label for="exampleInputUsername1">Contact Person</label>
                                                 <input type="text" class="form-control" id="exampleInputUsername1" value={value.contactperson}
-                                                    placeholder="Contact Person" name='contactperson' onChange={onhashchange} />
+                                                    placeholder="Contact Person" name='contactperson' onChange={onhandleChange} />
                                             </div>
 
                                             <div class="form-group col-lg-4">
-                                                <lable for="exampleInputUsername1">Designation</lable>
+                                                <label for="exampleInputUsername1">Designation</label>
                                                 <input type="text" class="form-control" id="exampleInputUsername1" value={value.designation} placeholder="Designation"
                                                     name='designation' onChange={onhandleChange} />
                                             </div>
 
                                             <div class="form-group col-lg-4">
-                                                <lable for="exampleFromControlSelect1">Purpose</lable>
+                                                <label for="exampleFromControlSelect1">Purpose</label>
                                                 <select class="form-control" id="exampleFromControlSelect1" value={value.purpose}
                                                     name='purpose' onChange={onhandleChange}>
-                                                    <option>--Select All--</option>
+                                                    <option>select purpose</option>
+                                                    <option value="0">Others</option>
+                                                    <option value="Meeting">Meeting</option>
+                                                    <option value="Placement">Placement</option>
+                                                    <option value="Training">Training</option>
+                                                    <option value="Placement">Placement</option>
+                                                    <option value="Proposal">Proposal</option>
+                                                    <option value="Others">Others</option>
+                                                    <option value="Seminar">Seminar</option>
+                                                    <option value="Project">Project</option>
+
                                                 </select>
                                             </div>
 
                                             <div class="form-group col-lg-4">
-                                                <lable for="exampleInputUsername1">Mobile</lable>
+                                                <label for="exampleInputUsername1">Mobile</label>
                                                 <input type="number" class="form-control" id="exampleInputUsername1" value={value.mobile}
-                                                placeholder='Mobile Number' name='number' onChange={onhandleChange} />
+                                                    placeholder='Mobile Number' name='mobile' onChange={onhandleChange} />
+                                                {error.mobile && <span className="text-danger">{error.mobile}</span>}
                                             </div>
 
                                             <div class="form-group col-lg-4">
-                                                <lable for="exampleInputUsername1">Direct Line</lable>
+                                                <label for="exampleInputUsername1">Direct Line</label>
                                                 <input type="text" class="form-control" id="exampleInputUsername1" value={value.directline}
-                                                    placeholder="Direct Line" name='directline' onChange={onhashchange} />
+                                                    placeholder="Direct Line" name='directline' onChange={onhandleChange} />
                                             </div>
 
                                             <div class="form-group col-lg-4">
-                                                <lable for="exampleInputUsername1">Email</lable>
+                                                <label for="exampleInputUsername1">Email</label>
                                                 <input type="email" class="form-control" id="exampleInputUsername1" value={value.email}
-                                                    placeholder="Email" name='email' onChange={onhashchange} />
+                                                    placeholder="Email" name='email' onChange={onhandleChange} />
+                                                {error.email && <span className="text-danger">{error.email}</span>}
                                             </div>
 
                                             <div class="form-group col-lg-4">
-                                                <lable for="exampleFormControlSelect1">Disciplines</lable>
-                                                <MultiSelect options={options} value={selected} onChange={setSelected} labelledBy='Select All' name='selecteed' ></MultiSelect>
+                                                <label for="exampleFormControlSelect1">Disciplines</label>
+                                                <MultiSelect options={descipline} value={selected}
+                                                    onChange={(value) => handleselect(value)}
+                                                    labelledBy='Select All' name="selected" ></MultiSelect>
                                             </div>
 
                                             <div class="from-group col-lg-4">
-                                            <FormControlLabel control={<Checkbox />} label="Next Date" />
+                                                {/* <FormControlLabel control={<Checkbox />} label="Next Date" /> */}
 
-                                                <lable for="exampleInputUsername1"></lable>
+                                                <label for="exampleInputUsername1">Next Date</label>
                                                 <input type="text" class="form-control" id="exampleInputUsername1" value={value.nextdate}
-                                                    name='nextdate' onChange={onhandleChange} disabled />
+                                                    name='nextdate' placeholder="Enter next date" onChange={onhandleChange}  />
 
                                             </div>
 
                                             <div class="from-group col-lg-12">
-                                                <lable for="exampleTextarea1">Remark</lable>
+                                                <label for="exampleTextarea1">Remark</label>
                                                 <textarea class="form-control form-control-lg" id="exampleTextarea1" value={value.remark}
                                                     name='remark' onChange={onhandleChange} rows={`3`} ></textarea>
                                             </div>
 
                                             <div class="from-group col-lg-12">
-                                                <lable for="exampleTextarea1">Note</lable>
+                                                <label for="exampleTextarea1">Note</label>
                                                 <textarea class="form-control form-control-lg" id="exampleTextarea1" value={value.note}
                                                     name='note' onChange={onhandleChange} rows={`3`}></textarea>
                                             </div>

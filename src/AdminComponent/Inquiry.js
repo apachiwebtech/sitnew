@@ -318,6 +318,7 @@ const navigate = useNavigate()
                                                         <div className="form-group col-lg-4 ">
                                                             <label for="exampleInputUsername1">Gender</label>
                                                             <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.gender} name='gender' onChange={onhandleChange} defaultValue={value.gender}>
+                                                                <option>Select Gender</option>
                                                                 <option value="male">Male</option>
                                                                 <option value="female">Female</option>
                                                                 <option value="other">Other</option>
@@ -383,6 +384,7 @@ const navigate = useNavigate()
                                                         <div className="form-group col-lg-6 ">
                                                             <label for="exampleInputUsername1">Set Status</label>
                                                             <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.status} defaultValue={value.status} name='status' onChange={onhandleChange} >
+                                                                <option>Select Status</option>
                                                                 {status.map((item) => {
                                                                     return (
                                                                         <option value={item.Id} >{item.Status}</option>
@@ -416,6 +418,7 @@ const navigate = useNavigate()
                                                         <div className="form-group col-lg-3">
                                                             <label for="exampleInputUsername1">Mode Of Inquiry</label>
                                                             <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.modeEnquiry} name='modeEnquiry' defaultValue={value.modeEnquiry} onChange={onhandleChange} >
+                                                                <option>Select Inquiry</option>
                                                                 <option value="mail" >Mail</option>
                                                                 <option value="person" >Person</option>
                                                                 <option value="phone" >Phone</option>
@@ -471,6 +474,7 @@ const navigate = useNavigate()
                                                                 onChange={onhandleChange}
                                                                 defaultValue={value.selectedProgramme}
                                                             >
+                                                                <option>Select Course</option>
                                                                 {Course.map((item) => (
 
                                                                     <option key={item.id} value={item.Course_Id}>
@@ -483,7 +487,7 @@ const navigate = useNavigate()
                                                         <div className="form-group col-lg-4">
                                                             <label for="exampleInputUsername1">Category</label>
                                                             <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.category} defaultValue={value.category} name='category' onChange={onhandleChange} >
-
+                                                                <option>Select Category</option>
 
                                                                 {batchCategoty?.map((item) => {
                                                                     return <option value={item.id}>{item.BatchCategory}</option>
@@ -517,6 +521,7 @@ const navigate = useNavigate()
                                                             <label for="exampleInputUsername1">Qualification</label>
                                                             <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.qualification}
                                                                 defaultValue={value.qualification} name='qualification' onChange={onhandleChange} >
+                                                                    <option>Select Qualification</option>
                                                                 {
                                                                     Education.map((item) => {
                                                                         return (
@@ -530,6 +535,7 @@ const navigate = useNavigate()
                                                             <label for="exampleInputUsername1">Descipline</label>
                                                             <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.descipline}
                                                                 defaultValue={value.descipline} name='descipline' onChange={onhandleChange} >
+                                                                    <option>Select Descipline</option>
                                                                 {
                                                                     Discipline.map((item) => {
                                                                         return (

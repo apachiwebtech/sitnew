@@ -111,15 +111,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   footer3: {
-    position:'fixed',
-    bottom:0,
+    position: 'fixed',
+    bottom: 0,
     display: 'flex',
     flexDirection: 'row',
   },
   footer4: {
-    position:'fixed',
-    top:487,
-    bottom:0,
+    position: 'fixed',
+    top: 487,
+    bottom: 0,
     display: 'flex',
     flexDirection: 'row',
   },
@@ -129,31 +129,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const MyDocument1 = (id) => {
-   const [data , setData] = useState([])
-
-  async function getdata() {
-
-    const data = {
-      id: id
-    }
-
-    axios.post(`${BASE_URL}/getprintinfo`, id)
-    .then((res) => {
-      console.log(res.data[0] , "DDD")
-      setData(res.data[0])
-
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-}
-
-useEffect(() => {
-  getdata()
-
-}, [id])
-
+const MyDocument1 = ({ data }) => {
 
 
   return (
@@ -180,7 +156,7 @@ useEffect(() => {
               <Text style={{ fontSize: 9, fontWeight: '300', color: "#000" }}>Course No:</Text>
             </View>
             <View style={styles.coursecenter}>
-              <Text style={{ fontSize: 9, fontWeight: '300', color: "#000", marginLeft: '28px' }}>Batch  No:</Text>
+              <Text style={{ fontSize: 9, fontWeight: '300', color: "#000", marginLeft: '28px' }}>Batch  No:{data.Batch_Code}</Text>
             </View>
             <View style={styles.courseleft}>
               <Text style={{ fontSize: 9, fontWeight: '300', color: "#000" }}>ID No:</Text>
@@ -287,62 +263,62 @@ useEffect(() => {
             <Text style={{ lineHeight: "1.2", marginLeft: '20px', color: '#000', marginTop: '10px', }}>________________</Text>
 
           </View>
-          </View>
-          <View style={(styles.footer3)}>
-            <Text style={{ lineHeight: "1.2", marginLeft: '5px', color: '#000', marginTop: '10px',fontSize:'8px' }}> F/CB/02/00</Text>
-            <Text style={{ lineHeight: "1.2", marginLeft: '40px', color: '#000', marginTop: '10px',fontSize:'6px',marginRight:'1px', }}> This document is the property of “Suvidya Institute of Technology Pvt. Ltd. “ and unauthorised disclosure to any third party or duplication is not permitted.</Text>
-            <Text style={{ lineHeight: "1.2", marginLeft: '113px', color: '#000', marginTop: '10px',fontSize:'8px',marginRight:'10px' }}> Page 1 of 2</Text>
-           </View>
-          </Page>
-         <Page size="A4" style={styles.page}>
-         <View style={{ border: "2px solid black" }}>
+        </View>
+        <View style={(styles.footer3)}>
+          <Text style={{ lineHeight: "1.2", marginLeft: '5px', color: '#000', marginTop: '10px', fontSize: '8px' }}> F/CB/02/00</Text>
+          <Text style={{ lineHeight: "1.2", marginLeft: '40px', color: '#000', marginTop: '10px', fontSize: '6px', marginRight: '1px', }}> This document is the property of “Suvidya Institute of Technology Pvt. Ltd. “ and unauthorised disclosure to any third party or duplication is not permitted.</Text>
+          <Text style={{ lineHeight: "1.2", marginLeft: '113px', color: '#000', marginTop: '10px', fontSize: '8px', marginRight: '10px' }}> Page 1 of 2</Text>
+        </View>
+      </Page>
+      <Page size="A4" style={styles.page}>
+        <View style={{ border: "2px solid black" }}>
           <View style={(styles.footer)}>
             <Text style={{ lineHeight: "1.2", marginLeft: '5px', color: '#000', marginTop: '10px', }}>Document Attached  : </Text>
             <Text style={{ lineHeight: "1.2", marginLeft: '20px', color: '#000', marginTop: '10px', }}>i. Qualification Certificate</Text>
             <Text style={{ lineHeight: "1.2", marginLeft: '36px', color: '#000', marginTop: '10px', }}> Yes</Text>
-            <Text style={{ lineHeight: "1.2", marginLeft: '15px', color: '#000', marginTop: '10px',borderTop:'1px',borderLeft:'1px',borderBottom:'1px',borderRight:'1px', }}>         </Text>
+            <Text style={{ lineHeight: "1.2", marginLeft: '15px', color: '#000', marginTop: '10px', borderTop: '1px', borderLeft: '1px', borderBottom: '1px', borderRight: '1px', }}>         </Text>
           </View>
           <View style={(styles.footer)}>
             <Text style={{ lineHeight: "1.2", marginLeft: '5px', color: '#000', marginTop: '10px', }}>                                    </Text>
             <Text style={{ lineHeight: "1.2", marginLeft: '20px', color: '#000', marginTop: '10px', }}>ii. Qualification Marksheets</Text>
             <Text style={{ lineHeight: "1.2", marginLeft: '26px', color: '#000', marginTop: '10px', }}> Yes</Text>
-            <Text style={{ lineHeight: "1.2", marginLeft: '15px', color: '#000', marginTop: '10px',borderTop:'1px',borderLeft:'1px',borderBottom:'1px',borderRight:'1px', }}>         </Text>
+            <Text style={{ lineHeight: "1.2", marginLeft: '15px', color: '#000', marginTop: '10px', borderTop: '1px', borderLeft: '1px', borderBottom: '1px', borderRight: '1px', }}>         </Text>
           </View>
           <View style={(styles.footer)}>
             <Text style={{ lineHeight: "1.2", marginLeft: '5px', color: '#000', marginTop: '10px', }}>                                   </Text>
             <Text style={{ lineHeight: "1.2", marginLeft: '20px', color: '#000', marginTop: '10px', }}>iii. ID Proof</Text>
             <Text style={{ lineHeight: "1.2", marginLeft: '100px', color: '#000', marginTop: '10px', }}> Yes</Text>
-            <Text style={{ lineHeight: "1.2", marginLeft: '15px', color: '#000', marginTop: '10px',borderTop:'1px',borderLeft:'1px',borderBottom:'1px',borderRight:'1px', }}>         </Text>
+            <Text style={{ lineHeight: "1.2", marginLeft: '15px', color: '#000', marginTop: '10px', borderTop: '1px', borderLeft: '1px', borderBottom: '1px', borderRight: '1px', }}>         </Text>
           </View>
           <View style={(styles.footer)}>
             <Text style={{ lineHeight: "1.2", marginLeft: '5px', color: '#000', marginTop: '10px', }}>                                   </Text>
             <Text style={{ lineHeight: "1.2", marginLeft: '20px', color: '#000', marginTop: '10px', }}>iv. Resi Proof</Text>
             <Text style={{ lineHeight: "1.2", marginLeft: '90px', color: '#000', marginTop: '10px', }}> Yes</Text>
-            <Text style={{ lineHeight: "1.2", marginLeft: '15px', color: '#000', marginTop: '10px',borderTop:'1px',borderLeft:'1px',borderBottom:'1px',borderRight:'1px', }}>         </Text>
+            <Text style={{ lineHeight: "1.2", marginLeft: '15px', color: '#000', marginTop: '10px', borderTop: '1px', borderLeft: '1px', borderBottom: '1px', borderRight: '1px', }}>         </Text>
           </View>
           <View style={(styles.footer)}>
             <Text style={{ lineHeight: "1.2", marginLeft: '5px', color: '#000', marginTop: '10px', }}>                                   </Text>
             <Text style={{ lineHeight: "1.2", marginLeft: '20px', color: '#000', marginTop: '10px', }}>v. Photo</Text>
             <Text style={{ lineHeight: "1.2", marginLeft: '113px', color: '#000', marginTop: '10px', }}> Yes</Text>
-            <Text style={{ lineHeight: "1.2", marginLeft: '15px', color: '#000', marginTop: '10px',borderTop:'1px',borderLeft:'1px',borderBottom:'1px',borderRight:'1px', }}>         </Text>
+            <Text style={{ lineHeight: "1.2", marginLeft: '15px', color: '#000', marginTop: '10px', borderTop: '1px', borderLeft: '1px', borderBottom: '1px', borderRight: '1px', }}>         </Text>
           </View>
 
           <View>
-              <Text style={{ borderBottom: "2px solid #000" }}></Text>
-           </View>
+            <Text style={{ borderBottom: "2px solid #000" }}></Text>
+          </View>
 
-           <View style={(styles.footer)}>
+          <View style={(styles.footer)}>
             <Text style={{ lineHeight: "1.2", marginLeft: '5px', color: '#000', marginTop: '15px', }}>Date of Admission :</Text>
-            <Text style={{ lineHeight: "1.2", marginLeft: '20px', color: '#000', marginTop: '15px',borderBottom: '1px'}}>10-Aug-24</Text>
+            <Text style={{ lineHeight: "1.2", marginLeft: '20px', color: '#000', marginTop: '15px', borderBottom: '1px' }}>10-Aug-24</Text>
           </View>
 
 
         </View>
         <View style={(styles.footer4)}>
-            <Text style={{ lineHeight: "1.2", marginLeft: '5px', color: '#000', marginTop: '10px',fontSize:'8px' }}> F/CB/02/00</Text>
-            <Text style={{ lineHeight: "1.2", marginLeft: '40px', color: '#000', marginTop: '10px',fontSize:'6px',marginRight:'1px', }}> This document is the property of “Suvidya Institute of Technology Pvt. Ltd. “ and unauthorised disclosure to any third party or duplication is not permitted.</Text>
-            <Text style={{ lineHeight: "1.2", marginLeft: '113px', color: '#000', marginTop: '10px',fontSize:'8px',marginRight:'10px' }}> Page 2 of 2</Text>
-      </View>
+          <Text style={{ lineHeight: "1.2", marginLeft: '5px', color: '#000', marginTop: '10px', fontSize: '8px' }}> F/CB/02/00</Text>
+          <Text style={{ lineHeight: "1.2", marginLeft: '40px', color: '#000', marginTop: '10px', fontSize: '6px', marginRight: '1px', }}> This document is the property of “Suvidya Institute of Technology Pvt. Ltd. “ and unauthorised disclosure to any third party or duplication is not permitted.</Text>
+          <Text style={{ lineHeight: "1.2", marginLeft: '113px', color: '#000', marginTop: '10px', fontSize: '8px', marginRight: '10px' }}> Page 2 of 2</Text>
+        </View>
 
       </Page>
 

@@ -53,7 +53,11 @@ const Descipline = () => {
 
   async function getUnitTest() {
 
-    axios.get(`${BASE_URL}/getbatchmoc`)
+    const data = {
+      batch_id : batchid
+    }
+
+    axios.post(`${BASE_URL}/getbatchmoc` , data)
 
       .then((res) => {
         setOnlineAdmissions(res.data)
@@ -195,7 +199,7 @@ const Descipline = () => {
 
     axios.post(`${BASE_URL}/add_Moc`, data)
       .then((res) => {
-        console.log(res)
+
         setOpen(false)
         getUnitTest()
         setUid([])
@@ -324,7 +328,7 @@ const Descipline = () => {
                       Marks
                     </label>
                     <input
-                      type="number"
+                      type="text"
                       class="form-control"
                       id="exampleInputUsername1"
                       placeholder="Enter.."

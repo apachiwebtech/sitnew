@@ -4,7 +4,6 @@ import { Link, useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import AddIcon from "@mui/icons-material/Add"
 import InnerHeader from './InnerHeader';
 import decryptedUserId from '../Utils/UserID';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
@@ -14,7 +13,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Loader from './Loader';
 import AddCollegeInfo from './AddCollegeInfo';
 import CollegeForm from './CollegeForm';
-
+import AddIcon from '@mui/icons-material/Add';
 
 const FollowUp = () => {
 
@@ -27,7 +26,8 @@ const FollowUp = () => {
     const [loading, setLoading] = useState(true)
     const [open, setOpen] = useState(false)
     const { collegeid } = useParams()
-
+    const [add, setAdd] = useState("")
+    const [edit, setEdit] = useState("")
 
 
 
@@ -82,13 +82,13 @@ const FollowUp = () => {
 
 
 
-    async function getCollegeData() {
+    async function getFollowData() {
         const data = {
-            tablename: "awt_college"
+            collegeid: collegeid
         }
-        axios.post(`${BASE_URL}/get_data`, data)
+        axios.post(`${BASE_URL}/getcollegefollow`, data)
             .then((res) => {
-                console.log(res.data)
+
                 setVendorData(res.data)
                 setLoading(false)
             })
@@ -97,8 +97,9 @@ const FollowUp = () => {
             })
     }
 
+
     useEffect(() => {
-        getCollegeData()
+        getFollowData()
         value.title = ""
         setError({})
         setUid([])
@@ -139,13 +140,14 @@ const FollowUp = () => {
 
     const handleDelete = (id) => {
         const data = {
-            cat_id: id,
-            tablename: "awt_college"
+            delete_id: id,
+            tablename: "College_Follows",
+            column_name :"Follow_id"
         }
 
-        axios.post(`${BASE_URL}/delete_data`, data)
+        axios.post(`${BASE_URL}/new_delete_data`, data)
             .then((res) => {
-                getCollegeData()
+                getFollowData()
 
             })
             .catch((err) => {
@@ -171,29 +173,34 @@ const FollowUp = () => {
             flex: 1,
             filterable: false,
         },
-        { field: 'date', headerName: 'Date', flex: 2 },
-        { field: 'contact_person', headerName: 'ContactPerson', flex: 2 },
-        { field: 'designation', headerName: 'Designation', flex: 2 },
-        { field: 'mobile', headerName: 'Mobail', flex: 2 },
-        { field: 'email', headerName: 'Email', flex: 2 },
-        { field: 'remark', headerName: 'Remark', flex: 2 },
-        { filed: 'purpose', headerName: 'Purpose', flex: 2 },
-        { field: 'derectline', headerName: 'DerectLine', flex: 2 },
+        { field: 'Tdate', headerName: 'Date', flex: 2 },
+        { field: 'CName', headerName: 'ContactPerson', flex: 2 },
+        { field: 'Designation', headerName: 'Designation', flex: 2 },
+        { field: 'Phone', headerName: 'Mobile', flex: 2 },
+        { field: 'Email', headerName: 'Email', flex: 2 },
+        { field: 'Remark', headerName: 'Remark', flex: 2 },
+        { field: 'DirectLine', headerName: 'DerectLine', flex: 2 },
         { field: 'nextdate', headerName: 'Next Date', flex: 2 },
-        { filed: 'note', headerName: 'Note', flex: 2 },
+        { filed: 'Note', headerName: 'Note', flex: 2 },
 
         {
             field: 'actions',
             type: 'actions',
             headerName: 'Action',
-            flex: 1,
+            flex: 2,
             renderCell: (params) => {
                 return (
                     <>
-                        <Link to={`/collegeinfo/${params.row.id}`}><AddIcon style={{ cursor: "pointer " }} /></Link>
-                        <Link to={`/addcollegemaster/${params.row.id}`}><EditIcon style={{ cursor: "pointer" }} /></Link>
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
-
+                        <AddIcon onClick={() => {
+                            setOpen(true)
+                            setAdd(params.row.Follow_id)
+                        }
+                        } style={{ cursor: "pointer " }} />
+                        <EditIcon onClick={ () =>{
+                            setOpen(true)
+                            setEdit(params.row.Follow_id)
+                        }} style={{ cursor: "pointer" }} />
+                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.Follow_id)} />
                     </>
                 )
             }
@@ -209,13 +216,14 @@ const FollowUp = () => {
             <InnerHeader />
 
             {loading && <Loader />}
-            <div className='my-2 text-right'>
-                <button className='btn btn-success' onClick={() => setOpen(true)}>Add +</button>
-            </div>
+
             <div class="main-panel" style={{ display: loading ? "none" : "block" }}>
                 <div class="content-wrapper">
+                    <div className='my-2 text-right'>
+                        <button className='btn btn-success' onClick={() => setOpen(true)}>Add +</button>
+                    </div>
+                    <CollegeForm collegeid={collegeid} />
 
-                    <CollegeForm collegeid={{ collegeid }} />
                     <div class="row">
 
 
@@ -237,13 +245,13 @@ const FollowUp = () => {
                                             disableColumnSelector
                                             disableDensitySelector
                                             rowHeight={35}
-                                            getRowId={(row) => row.id}
+                                            getRowId={(row) => row.Follow_id}
                                             initialState={{
                                                 pagination: {
                                                     paginationModel: { pageSize: 10, page: 0 },
                                                 },
                                             }}
-                                            slots={{ toolbar: GridToolbar }}
+                                            // slots={{ toolbar: GridToolbar }}
                                             slotProps={{
                                                 toolbar: {
                                                     showQuickFilter: true,
@@ -258,7 +266,8 @@ const FollowUp = () => {
                                                 <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
                                             </div>
                                         )}
-                                        <AddCollegeInfo open={open} setOpen={setOpen} />
+                                        <AddCollegeInfo open={open} setOpen={setOpen} add={add} edit={edit} collegeid={collegeid} getFollowData={getFollowData} />
+
                                     </div>
 
 

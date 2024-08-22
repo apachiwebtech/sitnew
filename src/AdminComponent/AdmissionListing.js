@@ -26,7 +26,7 @@ const AdmissionListing = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [admission, setadmissionData] = useState([]);
     const [loading, setLoading] = useState(true);
-
+    const [data, setData] = useState([])
     const getInquiryData = async () => {
         const response = await fetch(`${BASE_URL}/admissiondata`, {
             method: 'GET',
@@ -73,8 +73,25 @@ const AdmissionListing = () => {
             });
     };
 
-    const downloadPDF = async (id) => {
-        const blob = await pdf(<MyDocument1 id={id} />).toBlob();
+    async function downloadPDF(id) {
+
+
+        axios.post(`${BASE_URL}/getprintinfo`, { id: id })
+            .then((res) => {
+                console.log(res.data[0], "DDD")
+                setData(res.data[0])
+
+                Blob(res.data[0])
+
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+
+    const Blob = async (data) => {
+
+        const blob = await pdf(<MyDocument1 data={data} />).toBlob();
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;

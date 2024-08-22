@@ -162,6 +162,7 @@ const AnnualBatch = () => {
         if (batch_id !== ':batch_id') {
             getupdatedata()
         }
+        
         getBatchData()
         getCourseData()
     }, [batch_id])

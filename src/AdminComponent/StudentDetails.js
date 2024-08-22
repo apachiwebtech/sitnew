@@ -13,83 +13,58 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Loader from './Loader';
 import AddCollegeInfo from './AddCollegeInfo';
 import CollegeForm from './CollegeForm';
-
+import CloseIcon from "@mui/icons-material/Close";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import IconButton from "@mui/material/IconButton";
+import { styled } from "@mui/material/styles";
+import { param } from 'jquery';
+const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+    "& .MuiDialogContent-root": {
+        padding: theme.spacing(2),
+    },
+    "& .MuiDialogActions-root": {
+        padding: theme.spacing(1),
+    },
+}));
 
 const StudentDetails = () => {
 
 
     const [vendordata, setVendorData] = useState([])
-    const [uid, setUid] = useState([])
-    const [cid, setCid] = useState("")
-    const [error, setError] = useState({})
-    const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [loading, setLoading] = useState(true)
     const [open, setOpen] = useState(false)
     const { collegeid } = useParams()
+    const [selectedRows, setSelectedRows] = useState([]);
+    const [opendi, setOpendi] = useState(false)
+    const [college, setCollege] = useState([])
+    const [collegeval , Setcollegeval] = useState("")
+    const handleClose = () => {
+        setOpendi(false);
+    };
 
+    async function getStudentData() {
+        const data = {
+            collegeid: collegeid
+        }
+        axios.post(`${BASE_URL}/getcollegestudent`, data)
+            .then((res) => {
 
-
-
-    const [value, setValue] = useState({
-        college_name: "" || uid.college_name,
-        university: "" || uid.university,
-        contact_person: "" || uid.contact_person,
-        designation: "" || uid.designation,
-        address: "" || uid.address,
-        city: "" || uid.city,
-        pin: "" || uid.pin,
-        state: "" || uid.state,
-        country: "" || uid.country,
-        telephone: "" || uid.telephone,
-        mobile: "" || uid.mobile,
-        email: "" || uid.email,
-        website: "" || uid.website,
-        remark: "" || uid.remark,
-        purpose: "" || uid.purpose,
-        course: "" || uid.course
-
-
-    })
-
-    useEffect(() => {
-        setValue({
-
-            college_name: uid.college_name,
-            university: uid.university,
-            contact_person: uid.contact_person,
-            designation: uid.designation,
-            address: uid.address,
-            city: uid.city,
-            pin: uid.pin,
-            country: uid.country,
-            state: uid.state,
-            telephone: uid.telephone,
-            mobile: uid.mobile,
-            email: uid.email,
-            website: uid.website,
-            remark: uid.remark,
-            purpose: uid.purpose,
-            course: uid.course
-
-
-        })
-    }, [uid])
-
-
-
-
-
-
-
+                setVendorData(res.data)
+                setLoading(false)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
     async function getCollegeData() {
         const data = {
-            tablename: "awt_college"
+            tablename: "awt_college",
         }
         axios.post(`${BASE_URL}/get_data`, data)
             .then((res) => {
-                console.log(res.data)
-                setVendorData(res.data)
-                setLoading(false)
+                setCollege(res.data)
             })
             .catch((err) => {
                 console.log(err)
@@ -98,69 +73,37 @@ const StudentDetails = () => {
 
     useEffect(() => {
         getCollegeData()
-        value.title = ""
-        setError({})
-        setUid([])
+        getStudentData()
+
     }, [])
 
-    const handleClick = (id) => {
-        setCid(id)
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: true,
-        }));
+
+
+
+    const handleSelectionChange = (newSelection) => {
+        setSelectedRows(newSelection);
     };
 
-    const handleUpdate = () => {
+
+    const handlechange = (id) => {
+
         const data = {
-
-            u_id: collegeid,
-            tablename: "awt_college"
-
-        }
-    }
-
-    const handleCancel = (id) => {
-        // Hide the confirmation dialog without performing the delete action
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
-    };
-
-    useEffect(() => {
-        if (collegeid != ':collegeid')
-            handleUpdate()
-
-    }, [collegeid])
-
-
-
-    const handleDelete = (id) => {
-        const data = {
-            cat_id: id,
-            tablename: "awt_college"
+            studentid: selectedRows,
+            collegeid: id
         }
 
-        axios.post(`${BASE_URL}/delete_data`, data)
+        axios.post(`${BASE_URL}/collegechange`, data)
             .then((res) => {
-                getCollegeData()
-
+                console.log(res.data)
+                setOpendi(false)
+                getStudentData()
             })
-            .catch((err) => {
-                console.log(err)
-            })
-
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
     }
-
 
 
 
     const columns = [
+
         {
             field: 'index',
             headerName: 'Id',
@@ -170,28 +113,14 @@ const StudentDetails = () => {
             flex: 1,
             filterable: false,
         },
-        { field: 'studentname', headerName: 'Student Name', flex: 2 },
-        { field: 'course', headerName: 'Course Name', flex: 2 },
-        { field: 'batch', headerName: 'Batch Code', flex: 2 },
+        { field: 'Student_Name', headerName: 'Student Name', flex: 2 },
+        { field: 'Course_Id', headerName: 'Course Name', flex: 2 },
+        { field: 'Batch_Code', headerName: 'Batch Code', flex: 2 },
         { field: 'date', headerName: 'Year of Passing', flex: 2 },
-        { field: 'mobile', headerName: 'Mobile', flex: 2 },
-        { field: 'email', headerName: 'Email', flex: 2 },
-        { filed: 'discipline', headerName: 'Discipline', flex: 2 },
+        { field: 'Present_Mobile', headerName: 'Mobile', flex: 2 },
+        { field: 'Email', headerName: 'Email', flex: 2 },
+        { filed: 'Discipline', headerName: 'Discipline', flex: 2 },
 
-        // {
-        //     field: 'actions',
-        //     type: 'actions',
-        //     headerName: 'Action',
-        //     flex: 1,
-        //     renderCell: (params) => {
-        //         return (
-        //             <>
-        //                 <Link to={`/addcollegemaster/${params.row.id}`}><EditIcon style={{ cursor: "pointer" }} /></Link>
-        //                 <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
-        //             </>
-        //         )
-        //     }
-        // },
     ];
 
 
@@ -203,13 +132,13 @@ const StudentDetails = () => {
             <InnerHeader />
 
             {loading && <Loader />}
-            <div className='my-2 text-right'>
-                <button className='btn btn-success' onClick={() => setOpen(true)}>Add +</button>
-            </div>
+
             <div class="main-panel" style={{ display: loading ? "none" : "block" }}>
                 <div class="content-wrapper">
-
-                    <CollegeForm collegeid={{ collegeid }} />
+                    <div className='my-2 text-right'>
+                        <button className='btn btn-success' onClick={() => setOpen(true)}>Add +</button>
+                    </div>
+                    <CollegeForm collegeid={collegeid} />
                     <div class="row">
 
 
@@ -227,32 +156,80 @@ const StudentDetails = () => {
                                         <DataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
-                                            disableColumnFilter
-                                            disableColumnSelector
-                                            disableDensitySelector
+
+                                            checkboxSelection
+                                            onRowSelectionModelChange={(newRowSelectionModel) => {
+                                                handleSelectionChange(newRowSelectionModel);
+                                            }}
                                             rowHeight={35}
-                                            getRowId={(row) => row.id}
+                                            getRowId={(row) => row.Student_Id}
                                             initialState={{
                                                 pagination: {
                                                     paginationModel: { pageSize: 10, page: 0 },
                                                 },
                                             }}
-                                            slots={{ toolbar: GridToolbar }}
-                                            slotProps={{
-                                                toolbar: {
-                                                    showQuickFilter: true,
-                                                },
-                                            }}
+
                                         />
 
-                                        {confirmationVisibleMap[cid] && (
-                                            <div className='confirm-delete'>
-                                                <p>Are you sure you want to delete?</p>
-                                                <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
-                                                <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
-                                            </div>
-                                        )}
+                                        <div className='my-3'>
+                                            <button className='btn btn-primary' onClick={() => setOpendi(true)}>Change College</button>
+                                            <button className='btn btn-success mx-2' >Print</button>
+                                        </div>
+
+
+                                        <BootstrapDialog
+                                            onClose={handleClose}
+                                            aria-labelledby="customized-dialog-title"
+                                            open={opendi}
+                                            maxWidth='lg'
+
+                                        >
+                                            <DialogTitle sx={{ m: 0, p: 2, width: "100%" }} id="customized-dialog-title">
+                                                Add College Info
+                                            </DialogTitle>
+                                            <IconButton
+                                                aria-label="close"
+                                                onClick={handleClose}
+                                                sx={{
+                                                    position: "absolute",
+                                                    right: 8,
+                                                    top: 8,
+                                                    color: (theme) => theme.palette.grey[500],
+                                                }}
+                                            >
+                                                <CloseIcon />
+                                            </IconButton>
+                                            <DialogContent dividers>
+
+                                                <div class="row m-2 align-items-center">
+                                                    <div class="form-group col-lg-9">
+                                                        <label for="exampleFromControlSelect1">College Name</label>
+                                                        <select class="form-control" id="exampleFromControlSelect1"
+                                                            name='purpose' onChange={(e) => Setcollegeval(e.target.value)}>
+                                                            <option>select college</option>
+                                                            {college.map((item) => {
+                                                                return (
+                                                                    <option value={item.id}>{item.college_name}</option>
+                                                                )
+                                                            })}
+
+                                                        </select>
+                                                    </div>
+                                                    <div class=" col-lg-3">
+                                                        <button className='btn btn-primary' onClick={() => handlechange(collegeval)}>Change</button>
+                                               
+                                                    </div>
+                                                </div>
+                                            </DialogContent>
+
+                                        </BootstrapDialog>
+
+
+                                        {/* this is form  */}
+
                                         <AddCollegeInfo open={open} setOpen={setOpen} />
+
+
                                     </div>
 
 

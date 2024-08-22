@@ -37,6 +37,7 @@ const RInquiry = () => {
     const data = {
       courseid: id
     }
+
     try {
       const res = await axios.post(`${BASE_URL}/getcoursewisebatch`, data);
       setAnnulBatch(res.data);
@@ -55,6 +56,24 @@ const RInquiry = () => {
   };
 
 
+    // if (value.fromdate)
+    //   isValid = false;
+    // newErrors.fromdate = "From Date is Required"
+    // if (value.fromtodate)
+    //   isValid = false;
+    // newErrors.fromtodate = "From To Date is Required"
+
+    // if (value.selectcourse)
+    //   isValid = false;
+    // newErrors.selectcourse = "Course is Required"
+
+    // if (value.selectbatches)
+    //   isValid = false;
+    // newErrors.selectbatchs = "Batch is Required"
+
+    // setError(newErrors)
+    // return isValid
+  
 
 
 

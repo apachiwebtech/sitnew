@@ -54,7 +54,11 @@ const FeedbackDetails = () => {
 
   async function getUnitTest() {
 
-    axios.get(`${BASE_URL}/getbatchfeedback`)
+    const data = {
+      batch_id : batchid
+    }
+
+    axios.post(`${BASE_URL}/getbatchfeedback` , data)
 
       .then((res) => {
         setOnlineAdmissions(res.data)

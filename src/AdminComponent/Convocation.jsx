@@ -55,9 +55,14 @@ const Convocation = () => {
 
   async function getUnitTest() {
 
-    axios.get(`${BASE_URL}/batch_convocation`)
+    const data = {
+      batch_id : batchid
+    }
+
+    axios.post(`${BASE_URL}/batch_convocation`,data)
 
       .then((res) => {
+        
         setOnlineAdmissions(res.data)
       })
 
