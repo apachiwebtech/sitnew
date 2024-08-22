@@ -185,6 +185,21 @@ import AddConsultancyMaster from './AdminComponent/AddConsultancyMaster.js';
 import AddConsultancyMasterListing from './AdminComponent/AddConsultancyMasterListing.js';
 import AddCompanyRequirementListing from './AdminComponent/AddCompanyRequirementListing.js';
 import AddCompanyRequirement from './AdminComponent/AddCompanyRequirement.js';
+import FacultyPayment from './AdminComponent/FacultyPayment.js';
+import ServiceTaxReportonFees from './AdminComponent/ServiceTaxReportonFees.js';
+import ChequeNumber from './AdminComponent/ChequeNumber.js';
+import AddEmployeeAttendance from './AdminComponent/AddEmployeeAttendance.js';
+import AddFacultySalary from './AdminComponent/AddFacultySalary.js';
+import AddFacultySalaryListing from './AdminComponent/AddFacultySalaryListing.js';
+import FacultyListing from './AdminComponent/FacultyListing.js';
+import AddFacultyMaster from './AdminComponent/AddFacultyMaster.js';
+import FacultyExperience from './AdminComponent/FacultyExperience.js';
+import FacultyDiscussion from './AdminComponent/FacultyDiscussion.js';
+import FAcademicQualification from './AdminComponent/FAcademicQualification.js';
+import ConsStudentDetails from './AdminComponent/ConsStudentDetails.js';
+import ConsultancyBranches from './AdminComponent/ConsultancyBranches.js';
+import ConsultancyMaster from './AdminComponent/ConsultancyMaster.js';
+// import FacultyPayment from './AdminComponent/FacultyPayment.js';
 
 
 
@@ -401,10 +416,30 @@ const Router = createBrowserRouter([
         path: '/addfeedbacknewquestion',
         element: <AddFeedbackNewQuestion />
       },
-
       {
         path: '/faculty',
+        element: <FacultyListing/>
+      },
+
+      {
+        path: '/faculty/:facultyid',
         element: <Faculty />
+      },
+      {
+        path: '/addfacultymaster',
+        element: <AddFacultyMaster/>
+      },
+      {
+        path: '/facultyexperience',
+        element: <FacultyExperience/>
+      },
+      {
+        path: '/facultydiscussion',
+        element: <FacultyDiscussion/>
+      },
+      {
+        path: '/facademicqualification',
+        element: <FAcademicQualification/>
       },
       {
         path: '/annualbatch/:batch_id',
@@ -480,7 +515,6 @@ const Router = createBrowserRouter([
         path: '/feesdetails',
         element: <FeesDetails/>
       },
-      
       {
         path: '/batchrecord',
         element: <BatchRecord />
@@ -533,6 +567,14 @@ const Router = createBrowserRouter([
       {
         path:'/paymentcollection',
         element: <PaymentCollectionReport/>
+      },
+      {
+        path: '/servicetaxreportonfees',
+        element: <ServiceTaxReportonFees/>
+      },
+      {
+        path: '/chequenumber',
+        element: <ChequeNumber/>
       },
       // =====================Admission Activity===================
 
@@ -813,6 +855,14 @@ const Router = createBrowserRouter([
         path: '/employeeloan',
         element: <EmployeeLoan />
       },
+      {
+        path: '/addfacultysalry',
+        element: <AddFacultySalaryListing/>
+      },
+      {
+        path: '/addfacultysalary/:addfacultysalaryid',
+        element: <AddFacultySalary/>
+      },
 
       {
         path: '/projectmaster',
@@ -863,12 +913,28 @@ const Router = createBrowserRouter([
         element: <AddConsultancyMaster/>
       },
       {
+        path: '/consstudentdetails',
+        element: <ConsStudentDetails/>
+      },
+      {
+        path: '/consultancymaster',
+        element: <ConsultancyMaster/>
+      },
+      {
+        path: '/consultancybranches',
+        element: <ConsultancyBranches/>
+      },
+      {
         path: '/companyrequirment',
         element: <AddCompanyRequirementListing/>
       },
       {
         path: '/companyrequirment/:companyrequirmentid',
         element: <AddCompanyRequirement/>
+      },
+      {
+        path: '/addemployeeattendance',
+        element: <AddEmployeeAttendance/>
       },
 
 

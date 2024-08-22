@@ -239,17 +239,7 @@ const AddFacultySalary = () => {
                                                             <lable for="exampleFormControlSelect1">Months</lable>
                                                             <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.months} name='months' onChange={onhandleChange} >
                                                                 <option>--Select Months--</option>
-                                                                <option>January</option>
-                                                                <option>February</option>
-                                                                <option>March</option>
-                                                                <option>May</option>
-                                                                <option>June</option>
-                                                                <option>July</option>
-                                                                <option>August</option>
-                                                                <option>September</option>
-                                                                <option>October</option>
-                                                                <option>November</option>
-                                                                <option>December</option>
+
                                                             </select>
                                                         </div>
 
@@ -258,7 +248,7 @@ const AddFacultySalary = () => {
                                                             <select class="form-control form-control-lg" id="exampleFormControlSelect" value={value.year} name='year' onChange={onhandleChange}>
                                                                 <option>--Select Year--</option>
                                                                 <option>2024</option>
-                                                                
+
                                                             </select>
                                                         </div>
 
@@ -289,6 +279,37 @@ const AddFacultySalary = () => {
 
                                                 </div>
                                             </div>
+
+                                            <div className='row justify-content-center'>
+                                                <div className='p-3' style={{ width: "100%" }}>
+                                                    <div>
+                                                        <h4 className="card-title titleback">Lecture Details</h4>
+                                                    </div>
+                                                    <div className='row'>
+                                                        <div class="form-group col-lg-12">
+                                                            <label for="exampleTextarea1"></label>
+                                                            <textarea class="form-control form-control-lg" id="exampleTextarea1"
+                                                                value={value.lecturedetails} name='lecturedetails' onChange={onhandleChange} disabled></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className='row justify-content-center'>
+                                                <div className='p-3' style={{ width: "100%" }}>
+                                                    <div>
+                                                        <h4 className="card-title titleback">Income Details</h4>
+                                                    </div>
+                                                    <div className='row'>
+                                                        <div class="form-group col-lg-8">
+                                                            <label for="exampleTextarea1"></label>
+                                                            <textarea class="form-control form-control-lg" id="exampleTextarea1"
+                                                                value={value.incomedetails} name='incomedetails' onChange={onhandleChange} disabled></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
 
                                             <div className='row justify-content-center' >
                                                 <div className='p-3' style={{ width: "100%" }}>
@@ -327,7 +348,8 @@ const AddFacultySalary = () => {
 
                                                 </div>
                                             </div>
-
+                                        </div>
+                                        <div className='col-md-6 col-lg-6'>
                                             <div className='row justify-content-center'>
                                                 <div className='p-3' style={{ width: "100%" }}>
                                                     <div>
@@ -358,12 +380,6 @@ const AddFacultySalary = () => {
                                                 </div>
                                             </div>
 
-                                            <div className='row p-2 gap-2'>
-                                                <button className='mr-2 btn btn-primary' onClick={handleSubmit}>Submit</button>
-                                                <button className='col-2'>Close</button>
-                                            </div>
-                                        </div>
-                                        <div className='col-md-6 col-lg-6'>
                                             <div className='row justify-content-center' >
                                                 <div className='p-3' style={{ width: "100%" }}>
                                                     <div>
@@ -421,21 +437,11 @@ const AddFacultySalary = () => {
                                                 </div>
                                             </div>
 
-                                            <div className='row justify-content-center'>
-
-                                                <div className='p-3' style={{ width: "100%" }}>
-                                                    <div class="form-group col-lg-12">
-                                                        <label for="exampleTextarea1">Lecture Details</label>
-                                                        <textarea class="form-control" id="exampleTextarea1" value={value.lecture} name='lecture' onChange={onhandleChange} disabled></textarea>
-
-                                                    </div>
-
-                                                    <div class="form-group col-lg-6">
-                                                        <lable for="exampleTextarea1">Income Details</lable>
-                                                        <textarea class="form-control" id="exampleTextarea1" value={value.income} name='income' onChange={onhandleChange} disabled ></textarea>
-                                                    </div>
-                                                </div>
+                                            <div className='row p-2 gap-2'>
+                                                <button className='mr-2 btn btn-primary' onClick={handleSubmit}>Submit</button>
+                                                <button className='col-2'>Close</button>
                                             </div>
+                                            
                                         </div>
 
                                     </div>

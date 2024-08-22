@@ -1,10 +1,19 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
-import ConsultancyMaster from './ConsultancyMaster';
+import decryptedUserId from '../Utils/UserID';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import Box from '@mui/material/Box';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import { LibraryBooks } from '@mui/icons-material';
 //import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
 
 const AddConsultancyMaster = () => {
 
@@ -15,9 +24,9 @@ const AddConsultancyMaster = () => {
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
-    const {consultancymasterid} = useParams();
-    const {addconsultancymasterid} = useParams ();
-    const  [category , setCat] = useState('')
+
+    const { addconsultancymasterid } = useParams();
+    const [category, setCat] = useState('')
 
 
     const handleChange1 = (event) => {
@@ -100,13 +109,13 @@ const AddConsultancyMaster = () => {
     }
 
 
-    async function getAddConsultancyMasterDetail(){
-        const response = await fetch(`${BASE_URL}/addconsultancymasterDetail` , {
+    async function getAddConsultancyMasterDetail() {
+        const response = await fetch(`${BASE_URL}/addconsultancymasterDetail`, {
             method: 'POST',
-            body: JSON.stringify ({
+            body: JSON.stringify({
                 id: addconsultancymasterid,
             }),
-            headers : {
+            headers: {
                 'Contect-Type': 'application/json',
             }
         })
@@ -117,7 +126,7 @@ const AddConsultancyMaster = () => {
 
     useEffect(() => {
 
-        if (addconsultancymasterid !== ":addconsultancymasterid"){
+        if (addconsultancymasterid !== ":addconsultancymasterid") {
             getAddConsultancyMasterDetail()
         }
         value.title = ""
@@ -168,7 +177,7 @@ const AddConsultancyMaster = () => {
         // }        
     }
 
-   
+
 
 
     const onhandleChange = (e) => {
@@ -178,7 +187,7 @@ const AddConsultancyMaster = () => {
 
 
     const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
-   
+
 
     const handleradiochange = (e) => {
         console.log(e.target.value)
@@ -192,20 +201,24 @@ const AddConsultancyMaster = () => {
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
-                    <ConsultancyMaster consultancymasterid={consultancymasterid} />
                     <div class="row">
+                        <div class="d-flex">
+
+                            <div className='px-2 mx-2'><Link to="/consultancymaster/:consultancymasterid"><h4>Consultancy Details</h4></Link></div>
+                            <div className='px-2 mx-2'><Link to="/consstudentdetails"><h4>Student Details</h4></Link></div>
+                        </div>
                         <div class="col-lg-12 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
                                     <h4 class="card-title">Add Consultancy Master</h4>
-                                    
+
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
 
                                             <div class="form-group col-lg-2">
                                                 <lable for="exampleInputUsername1">Consultancy  </lable>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.consultancy } placeholder='Consultancy ' name='consultancy ' onChange={onhandleChange} />
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.consultancy} placeholder='Consultancy ' name='consultancy ' onChange={onhandleChange} />
                                             </div>
 
                                             <div class="form-group col-lg-2">
@@ -215,12 +228,12 @@ const AddConsultancyMaster = () => {
 
                                             <div class="form-group col-lg-2">
                                                 <lable for="exampleInputUsername1">Designation  </lable>
-                                                <input type="text" class="form-control" id="exampleInputUsername" value={value.designation } placeholder='Designation ' name='designation' onChange={onhandleChange} />
+                                                <input type="text" class="form-control" id="exampleInputUsername" value={value.designation} placeholder='Designation ' name='designation' onChange={onhandleChange} />
                                             </div>
 
                                             <div class="form-group col-lg-4">
                                                 <lable for="exampleTextarea1">Address </lable>
-                                                <textarea class="form-control" id="exampleTextarea1" value={value.address } placeholder='Address ' name='address ' onChange={onhandleChange}></textarea>
+                                                <textarea class="form-control" id="exampleTextarea1" value={value.address} placeholder='Address ' name='address ' onChange={onhandleChange}></textarea>
                                             </div>
 
                                             <div class="form-group col-lg-2">
@@ -294,8 +307,6 @@ const AddConsultancyMaster = () => {
                                                 </select>
                                             </div>
 
-
-
                                             <div class="form-group col-lg-4">
                                                 <lable for="exampleTextarea1">Comment </lable>
                                                 <textarea class="form-control" id="exampleTextarea1" value={value.comment} placeholder='Comment' name='comment' onChange={onhandleChange} ></textarea>
@@ -309,6 +320,10 @@ const AddConsultancyMaster = () => {
                                                     <option>Advance Pipe Stress Analysis </option>
                                                     <option>Air Conditioning System Design (HVAC)</option>
                                                     <option>Autocad - Piping</option>
+                                                    <option>Basics AutoCAD – 2D</option>
+                                                    <option>Civil/Structural Design &amp; Drafting </option>
+                                                    <option>Electrical &amp; Instrumentation Design and Drafting </option>
+                                                    <option>Electrical System Design</option>
                                                 </select>
                                             </div>
 
@@ -319,6 +334,10 @@ const AddConsultancyMaster = () => {
                                                     <option>Advance Pipe Stress Analysis </option>
                                                     <option>Air Conditioning System Design (HVAC)</option>
                                                     <option>Autocad - Piping</option>
+                                                    <option>Basics AutoCAD – 2D</option>
+                                                    <option>Civil/Structural Design &amp; Drafting </option>
+                                                    <option>Electrical &amp; Instrumentation Design and Drafting </option>
+                                                    <option>Electrical System Design</option>
                                                 </select>
                                             </div>
 
@@ -329,16 +348,24 @@ const AddConsultancyMaster = () => {
                                                     <option>Advance Pipe Stress Analysis </option>
                                                     <option>Air Conditioning System Design (HVAC)</option>
                                                     <option>Autocad - Piping</option>
+                                                    <option>Basics AutoCAD – 2D</option>
+                                                    <option>Civil/Structural Design &amp; Drafting </option>
+                                                    <option>Electrical &amp; Instrumentation Design and Drafting </option>
+                                                    <option>Electrical System Design</option>
                                                 </select>
                                             </div>
 
                                             <div class="form-group col-lg-2">
-                                                <lable for="exampleFromControlSlect1">Course 4</lable>
+                                                <lable for="exampleFromControlSlect1">Course 54</lable>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course4} name='course4' onChange={onhandleChange} >
                                                     <option>--Select--</option>
                                                     <option>Advance Pipe Stress Analysis </option>
                                                     <option>Air Conditioning System Design (HVAC)</option>
                                                     <option>Autocad - Piping</option>
+                                                    <option>Basics AutoCAD – 2D</option>
+                                                    <option>Civil/Structural Design &amp; Drafting </option>
+                                                    <option>Electrical &amp; Instrumentation Design and Drafting </option>
+                                                    <option>Electrical System Design</option>
                                                 </select>
                                             </div>
 
@@ -349,6 +376,10 @@ const AddConsultancyMaster = () => {
                                                     <option>Advance Pipe Stress Analysis </option>
                                                     <option>Air Conditioning System Design (HVAC)</option>
                                                     <option>Autocad - Piping</option>
+                                                    <option>Basics AutoCAD – 2D</option>
+                                                    <option>Civil/Structural Design &amp; Drafting </option>
+                                                    <option>Electrical &amp; Instrumentation Design and Drafting </option>
+                                                    <option>Electrical System Design</option>
                                                 </select>
                                             </div>
 
@@ -359,6 +390,10 @@ const AddConsultancyMaster = () => {
                                                     <option>Advance Pipe Stress Analysis </option>
                                                     <option>Air Conditioning System Design (HVAC)</option>
                                                     <option>Autocad - Piping</option>
+                                                    <option>Basics AutoCAD – 2D</option>
+                                                    <option>Civil/Structural Design &amp; Drafting </option>
+                                                    <option>Electrical &amp; Instrumentation Design and Drafting </option>
+                                                    <option>Electrical System Design</option>
                                                 </select>
                                             </div>
 
@@ -369,7 +404,7 @@ const AddConsultancyMaster = () => {
 
                                         <div className='row p-2 gap-2'>
                                             <button className='mr-2 btn btn-primary' onClick={handleSubmit}>Submit</button>
-                                             <button class="btn btn-light">Cancel</button>
+                                            <button class="btn btn-light">Cancel</button>
 
                                         </div>
 

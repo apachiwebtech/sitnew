@@ -701,7 +701,7 @@ const Header = ({click}) => {
             </li>
 
             <li className="nav-item">
-              <Link className="nav-link" to="/servicetax">
+              <Link className="nav-link" to="/servicetaxreportonfees">
                 {/* <Icon path={mdiCircleMedium } size={1} className='mx-3' /> */}
                 <Icon path={mdiCircleMedium} size={1} className='mx-3' />
                 <span className="menu-title">Service Tax Report On Fees</span>
@@ -721,14 +721,6 @@ const Header = ({click}) => {
                 {/* <Icon path={mdiCircleMedium } size={1} className='mx-3' /> */}
                 <Icon path={mdiCircleMedium} size={1} className='mx-3' />
                 <span className="menu-title">Feedback Analysis Lecturewise</span>
-              </Link>
-            </li>
-
-            <li className="nav-item">
-              <Link className="nav-link" to="/servicetax">
-                {/* <Icon path={mdiCircleMedium } size={1} className='mx-3' /> */}
-                <Icon path={mdiCircleMedium} size={1} className='mx-3' />
-                <span className="menu-title">Service Tax Report On Fees</span>
               </Link>
             </li>
 
@@ -889,7 +881,7 @@ const Header = ({click}) => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to='facultypayment'>
+              <Link className="nav-link" to='addfacultysalry'>
                 <Icon path={mdiCircleMedium} size={1} className='mx-3' />
                 <span className="menu-title">Faculty Payment</span>
               </Link>
@@ -925,7 +917,7 @@ const Header = ({click}) => {
             </li>
 
             <li className="nav-item">
-              <Link className="nav-link" to='employeeattendance'>
+              <Link className="nav-link" to='addemployeeattendance'>
                 <Icon path={mdiCircleMedium} size={1} className='mx-3' />
                 <span className='menu-title'>Employee Attendance</span>
               </Link>

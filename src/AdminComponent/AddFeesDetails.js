@@ -330,7 +330,7 @@ const AddFeesDetails = () => {
                                                             <FormControl>Tax Type
                                                                 <RadioGroup
                                                                     row
-                                                                                                                                   aria-labelledby="demo-row-radio-buttons-group-label"
+                                                                    aria-labelledby="demo-row-radio-buttons-group-label"
                                                                     name="row-radio-buttons-group"  >
                                                                     <FormControlLabel value="0116" control={<Radio />} label="CGST" />
                                                                     <FormControlLabel value="0117" control={<Radio />} label="SGST" />
