@@ -2,57 +2,23 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
-import decryptedUserId from '../Utils/UserID';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { LibraryBooks } from '@mui/icons-material';
 //import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
+import { MultiSelect } from 'react-multi-select-component';
 
 const ConsultancyMaster = () => {
 
     const [brand, setBrand] = useState([])
     const [vendordata, setVendorData] = useState([])
     const [uid, setUid] = useState([])
-    const [cid, setCid] = useState("")
     const [error, setError] = useState({})
-    const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
-
     const { addconsultancymasterid } = useParams();
     const [category, setCat] = useState('')
+    const [options, setoptions] = useState ([])
+    const [selected, setSelected] = useState ([])
 
 
-    const handleChange1 = (event) => {
-        setChecked([event.target.checked, event.target.checked]);
-    };
 
-    const handleChange2 = (event) => {
-        setChecked([event.target.checked, checked[1]]);
-    };
-
-    const handleChange3 = (event) => {
-        setChecked([checked[0], event.target.checked]);
-    };
-
-    // const children = (
-    //     <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-    //       <FormControlLabel
-    //         label="Child 1"
-    //         control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
-    //       />
-    //       <FormControlLabel
-    //         label="Child 2"
-    //         control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
-    //       />
-    //     </Box>
-    //   );
 
     const [value, setValue] = useState({
         training: "" || uid.training,
@@ -207,7 +173,8 @@ const ConsultancyMaster = () => {
                             <div className='px-2 mx-2'><Link to="/consultancymaster/:consultancymasterid"><h4>Consultancy Details</h4></Link></div>
                             <div className='px-2 mx-2'><Link to="/consstudentdetails"><h4>Student Details</h4></Link></div>
                             <div className='px-2 mx-2'><Link to="/consultancybranches"><h4>Branches</h4></Link></div>
-                            <div className='px-2 mx-2'><Link to="/"><h4>Follow Up</h4></Link></div>
+                            <div className='px-2 mx-2'><Link to="/consultancyfollowup"><h4>Follow Up</h4></Link></div>
+                            
                         </div>
                         <div class="col-lg-12 grid-margin stretch-card">
                             <div class="card">
@@ -309,6 +276,15 @@ const ConsultancyMaster = () => {
                                                 </select>
                                             </div>
 
+                                            <div class="form-group col-lg-2">
+                                                <label for="examplFormControlSelect1">Industry</label>
+                                                <MultiSelect options={options} 
+                                                value={selected} 
+                                                id="exampleFormControlSelect1"
+                                                onChange={setSelected}
+                                                labelledBy='All Select' name='selected'></MultiSelect>
+                                            </div>
+
                                             <div class="form-group col-lg-4">
                                                 <lable for="exampleTextarea1">Comment </lable>
                                                 <textarea class="form-control" id="exampleTextarea1" value={value.comment} placeholder='Comment' name='comment' onChange={onhandleChange} ></textarea>
@@ -358,7 +334,7 @@ const ConsultancyMaster = () => {
                                             </div>
 
                                             <div class="form-group col-lg-2">
-                                                <lable for="exampleFromControlSlect1">Course 54</lable>
+                                                <lable for="exampleFromControlSlect1">Course 4</lable>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course4} name='course4' onChange={onhandleChange} >
                                                     <option>--Select--</option>
                                                     <option>Advance Pipe Stress Analysis </option>

@@ -134,16 +134,16 @@ const ConsultancyBranches = () => {
             <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="row">
-                        <div class="d-flex">
+                        
 
                             <div class="d-flex">
 
                                 <div className='px-2 mx-2'><Link to="/consultancymaster/:consultancymasterid"><h4>Consultancy Details</h4></Link></div>
                                 <div className='px-2 mx-2'><Link to="/consstudentdetails"><h4>Student Details</h4></Link></div>
                                 <div className='px-2 mx-2'><Link to="/consultancybranches"><h4>Branches</h4></Link></div>
-                                <div className='px-2 mx-2'><Link to="/"><h4>Follow Up</h4></Link></div>
+                                <div className='px-2 mx-2'><Link to="/consultancyfollowup"><h4>Follow Up</h4></Link></div>
                             </div>
-                        </div>
+                       
                         <div class="col-lg-12 grid-margin">
 
                             <div class="card">
@@ -151,8 +151,9 @@ const ConsultancyBranches = () => {
                                     <div className='row justify-content-center'>
                                         <div className='p-3' style={{ width: "100%" }}>
                                             <div>
-                                                <h4 class="card-title titleback">View Consultancy Info</h4>
+                                                <h4 class="card-title">View Consultancy Info</h4>
                                             </div>
+                                            {/* <Link to=''> <button className='btn btn-success'>Add +</button></Link> */}
                                             <div className='row'>
                                                 <div class="form-group col-lg-3">
                                                     <label for="exampleInputUsername1" >Contact Person</label>
@@ -168,11 +169,32 @@ const ConsultancyBranches = () => {
                                                 </div>
 
                                                 <div class="form-group col-lg-3">
-                                                    <label for="exampleFormControlSelect1">Department</label>
-                                                    <select class="form-control" id="exampleFormControlSelect1" value={value.department}
-                                                        name='department' onChange={onhandleChange}>
-                                                        <option>--Select Department--</option>
-                                                    </select>
+                                                    <label for="exampleInputUsername1">	Branch Address</label>
+                                                    <input type="text" class="form-control" id="exampleInputUsername1" value={value.branchaddress}
+                                                    placeholder="Branch Address" name='branchaddress' onChange={onhandleChange} />
+                                                </div>
+                                                <div class="form-group col-lg-3">
+                                                    <label for="exampleInputUsername1">	City</label>
+                                                    <input type="text" class="form-control" id="exampleInputUsername1" value={value.city}
+                                                    placeholder="City" name='city' onChange={onhandleChange} />
+                                                </div>
+
+                                                <div class="form-group col-lg-3">
+                                                    <label for="exxampleInputUsename1">Telephone</label>
+                                                    <input type="text" class="form-control" id="exampleInputUsername1" value={value.telephone}
+                                                    placeholder="City" name='telephone' onChange={onhandleChange} />
+                                                </div>
+
+                                                <div class="form-group col-lg-3">
+                                                    <label for="exampleInputUsername1">Mobile</label>
+                                                    <input type="number" class="form-control" id="exampleInputUsername1" value={value.mobile}
+                                                    placeholder="Mobile" name='mobile' onChange={onhandleChange} />
+                                                </div>
+
+                                                <div class="form-group col-lg-3">
+                                                    <label for="exampleInputUsername1">Email</label>
+                                                    <input type="email" class="form-control" id="exampleInputUsername1" value={value.email}
+                                                    placeholder="Email" name='email' onChange={onhandleChange} />
                                                 </div>
 
                                                 <button type="submit" class="btn btn-sm btn-primary mr-5 mt-5">Add More</button>

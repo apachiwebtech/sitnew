@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 
-const AddConsultancyMasterListing = () => {
+const ConsultancyFollowUp = () => {
 
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
@@ -30,19 +30,6 @@ const AddConsultancyMasterListing = () => {
         mobile: '',
         whatsapp: '',
         email: '',
-        nationality: '',
-        discussion: '',
-        country: '',
-        InquiryDate: '',
-        modeEnquiry: '',
-        advert: '',
-        programmeEnquired: '',
-        selectedProgramme: '',
-        category: '',
-        batch: '',
-        qualification: '',
-        descipline: '',
-        percentage: '',
     })
 
 
@@ -128,6 +115,11 @@ const AddConsultancyMasterListing = () => {
             })
     }
 
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        let response
+    }
+
 
     const columns = [
         {
@@ -139,14 +131,16 @@ const AddConsultancyMasterListing = () => {
             flex: 1,
             filterable: false,
         },
-        { field: 'FName', headerName: 'Student Name', flex: 2 },
-        { field: 'course', headerName: 'Course Name', flex: 2 },
-        { field: 'inquiry_DT', headerName: 'Inquiry Date', flex: 2 },
-        { field: 'discussion', headerName: 'Discuss', flex: 2 },
-        { field: 'present_mobile', headerName: 'Mobile', flex: 2 },
-        { field: 'Email', headerName: 'Email', flex: 2 },
-        { field: 'Discipline', headerName: 'Discipline', flex: 2 },
-        { field: 'Inquiry_type', headerName: 'Inquiry type', flex: 2 },
+        { field: 'date', headerName: 'Date', flex: 2 },
+        { field: 'contactperson', headerName: 'Contact Person', flex: 2 },
+        { field: 'designation', headerName: 'Designation', flex: 2 },
+        { field: 'mobile', headerName: 'Mobile', flex: 2 },
+        { field: 'email', headerName: 'Email', flex: 2 },
+        { field: 'purpose', headerName: 'Purpose', flex: 2 },
+        { field: 'course', headerName: 'Course', flex: 2 },
+        { field: 'directline', headerName: 'Direct Line', flex: 2 },
+        { field: 'remarks', headerName: 'Remarks', flex: 2},
+        { field: 'addedby', headerName: 'Added By', flex: 2},
         // { field: 'isActive', headerName: 'Options', flex: 2},
         {
             field: 'actions',
@@ -177,15 +171,21 @@ const AddConsultancyMasterListing = () => {
                 <div className="content-wrapper">
 
                     <div className="row">
+                        <div class="d-flex">
 
+                            <div className='px-2 mx-2'><Link to="/consultancymaster/:consultancymasterid"><h4>Consultancy Details</h4></Link></div>
+                            <div className='px-2 mx-2'><Link to="/consstudentdetails"><h4>Student Details</h4></Link></div>
+                            <div className='px-2 mx-2'><Link to="/consultancybranches"><h4>Branches</h4></Link></div>
+                            <div className='px-2 mx-2'><Link to="/consultancyfollowup"><h4>Follow Up</h4></Link></div>
+                        </div>
                         <div className="col-lg-12">
                             <div className="card">
                                 <div className="card-body">
                                     <div className='d-flex justify-content-between gap-3' style={{ width: "100%", padding: "10px 0" }}>
                                         <div >
-                                            <h4 class="card-title">View Consultancy</h4>
+                                            <h4 class="card-title">View Consultancy Info</h4>
                                         </div>
-                                        <Link to='/consultancymaster/:consultancymasterid'> <button className='btn btn-success'>Add +</button></Link>
+                                        <Link to=''> <button className='btn btn-success'>Add +</button></Link>
 
 
 
@@ -215,14 +215,17 @@ const AddConsultancyMasterListing = () => {
 
                                         {confirmationVisibleMap[cid] && (
                                             <div className='confirm-delete'>
-                                                <p>Are you sure you want to delete?</p>
-                                                <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
-                                                <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
+                                                <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>Export</button>
+                                                <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Print</button>
                                             </div>
                                         )}
                                     </div>
 
+                                    <div className='row p-2 gap-2'>
+                                            <button className='mr-2 btn btn-primary' onClick={handleSubmit}>Submit</button>
+                                            <button class="btn btn-light">Cancel</button>
 
+                                        </div>
 
                                 </div>
                             </div>
@@ -235,4 +238,4 @@ const AddConsultancyMasterListing = () => {
     )
 }
 
-export default AddConsultancyMasterListing
+export default ConsultancyFollowUp

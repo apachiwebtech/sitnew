@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 //import AssignmentsTaken from "./AssignmentsTaken";
-import EmployeeTrainingPlan from "./EmployeeTrainingPlan";
 
 const EmployeeTrainingPlanListing = () => {
 
@@ -15,16 +14,7 @@ const EmployeeTrainingPlanListing = () => {
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
     const label = { inputProps: { 'aria-label': 'Color switch demo' } };
-    const [lecturetakendata, setlecturetakendata] = useState([]);
-    const [Discipline, setDescipline] = useState([]);
-    const [Course, setCourse] = useState([]);
-    const [Education, setEducation] = useState([]);
-    const [batch, setBatch] = useState([]);
-    const [batchCategoty, setbatchCategory] = useState([]);
-    const [unittesttakendata, setunittakendata] = useState([]);
-    const [vivamoctakendata, setvivamoctakendata] = useState([]);
     const [employeerecorddata, setemployeerecorddata] = useState([]);
     const [employeetrainingplandata, setemployeetrainingplandata] = useState([]);
     const [value, setValue] = useState({

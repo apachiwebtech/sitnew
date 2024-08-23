@@ -199,6 +199,8 @@ import FAcademicQualification from './AdminComponent/FAcademicQualification.js';
 import ConsStudentDetails from './AdminComponent/ConsStudentDetails.js';
 import ConsultancyBranches from './AdminComponent/ConsultancyBranches.js';
 import ConsultancyMaster from './AdminComponent/ConsultancyMaster.js';
+import ConsultancyFollowUp from './AdminComponent/ConsultancyFollowUp.js';
+import ShortlistedBySIT from './AdminComponent/ShortlistedBySIT.js';
 // import FacultyPayment from './AdminComponent/FacultyPayment.js';
 
 
@@ -763,6 +765,10 @@ const Router = createBrowserRouter([
       //   element: <ConsultancyMaster/>
       // },
       {
+        path: '/shortlisted',
+        element: <ShortlistedBySIT/>
+      },
+      {
         path: '/cvshortlisted',
         element: <CVShortListed />
       },
@@ -923,6 +929,10 @@ const Router = createBrowserRouter([
       {
         path: '/consultancybranches',
         element: <ConsultancyBranches/>
+      },
+      {
+        path: '/consultancyfollowup',
+        element: <ConsultancyFollowUp/>
       },
       {
         path: '/companyrequirment',

@@ -1,12 +1,11 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import { DataGrid } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { MultiSelect } from "react-multi-select-component";
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import { error } from "jquery";
-import { MultiSelect } from "react-multi-select-component";
 //import FormControlLabel from '@mui/material/FormControlLabel';
 
 const RInquiry = () => {
