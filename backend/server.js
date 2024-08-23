@@ -4102,16 +4102,16 @@ app.post('/nodeapp/getdatas', (req, res) => {
   sql = "SELECT i.Inquiry_Id as id,i.Student_Id,i.FName, i.LName, i.MName,i.Student_Name,i.Course_Id,i.Qualification, i.Discussion, i.present_mobile, i.Email, i.Discipline, i.Inquiry_type, i.isActive, i.inquiry_DT, c.Course_Name, i.Percentage , sm.Status , md.Deciplin , i.IsUnread FROM Student_Inquiry AS i LEFT JOIN Course_Mst AS c ON i.Course_id = c.Course_Id LEFT JOIN Status_Master as sm on sm.Id = i.OnlineState left JOIN MST_Deciplin as md on md.Id = i.Discipline WHERE i.isDelete = 0  and i.Admission != 1 "
 
   if (fromdate && fromtodate) {
-    sql+= "and  i.Inquiry_Dt >= ? and i.Inquiry_Dt <= ?";
+    sql += "and  i.Inquiry_Dt >= ? and i.Inquiry_Dt <= ?";
     param.push(fromdate, fromtodate)
   }
   if (selectcourse) {
-    sql +="and i.Course_Id = ?"
+    sql += "and i.Course_Id = ?"
     param.push(selectcourse)
   }
   if (rollnumberallot) {
-sql += "and i.Batch_Category_id = ?"
-param.push(rollnumberallot)
+    sql += "and i.Batch_Category_id = ?"
+    param.push(rollnumberallot)
   }
   if (selctbatch) {
     sql += "and i.Batch_Code = ?"
@@ -4119,12 +4119,12 @@ param.push(rollnumberallot)
   }
   if (allinquiries) {
   }
-if (all) {
-  sql += "and i.Refered_By = ?"
-  param.push(all)
-}
+  if (all) {
+    sql += "and i.Refered_By = ?"
+    param.push(all)
+  }
 
-  con.query(sql, param , (err, data) => {
+  con.query(sql, param, (err, data) => {
     if (err) {
       return res.json(err)
     } else {
@@ -4133,3 +4133,33 @@ if (all) {
   })
 
 })
+
+
+
+
+app.post('/nodeapp/add_grade', (req, res) => {
+
+  const { start_from, end_from, grade, batchid, id } = req.body
+  const date = new Date()
+  let sql
+  let param
+
+  if (id) {
+    sql = "insert into grades (`batch_id`,`start_from`,`end_from`,`grade`,`created_date`) values (?,?,?,?,?)"
+    param = [batchid, start_from, end_from, grade, date]
+  } else {
+    sql = "update grades set `batch_id` = ? , `start_from` = ? , `end_from` = ? ,`grade` = ? , `updated_date` = ? where id = ? "
+    param = [batchid, start_from, end_from, grade, date, id]
+  }
+  con.query(sql, param, (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+})
+
+
+
+
