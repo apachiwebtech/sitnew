@@ -1,23 +1,10 @@
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
-import decryptedUserId from '../Utils/UserID';
-import { DataGrid ,GridToolbar} from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { LibraryBooks } from '@mui/icons-material';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-//import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
-// import ImageList from '@mui/material/ImageList';
-// import { ImageSourcePropType } from 'react-native';
 
 const FestivalPhoto = () => {
 
@@ -30,32 +17,6 @@ const FestivalPhoto = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
 
-    const handleChange1 = (event) => {
-      setChecked([event.target.checked, event.target.checked]);
-    };
-  
-    const handleChange2 = (event) => {
-      setChecked([event.target.checked, checked[1]]);
-    };
-  
-    const handleChange3 = (event) => {
-      setChecked([checked[0], event.target.checked]);
-    };
-
-    // const children = (
-    //     <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-    //       <FormControlLabel
-    //         label="Child 1"
-    //         control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
-    //       />
-    //       <FormControlLabel
-    //         label="Child 2"
-    //         control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
-    //       />
-    //     </Box>
-    //   );
-
-    			
 
     const [value, setValue] = useState({
         startdate : ""|| uid.startdate,
@@ -78,23 +39,28 @@ const FestivalPhoto = () => {
         })
     }, [uid])
 
+    
 
-    // const validateForm = () => {
-    //     let isValid = true
-    //     const newErrors = {}
+    const validateForm = () => {
+        let isValid = true
+        const newErrors = {}
 
 
-    //    if (!value.college) {
-    //     isValid = false;
-    //     newErrors.name = "Name is require"
-    //    }
-    //     if (!value.email) {
-    //         isValid = false;
-    //         newErrors.email = "Email is require"
-    //     }
-    //     setError(newErrors)
-    //     return isValid
-    // }
+       if (!value.startdate) {
+        isValid = false;
+        newErrors.startdate = "Date is Required"
+       }
+        if (!value.enddate) {
+            isValid = false;
+            newErrors.enddate = "Date is Required"
+        }
+        if (!value.description) {
+            isValid = false;
+            newErrors.description = "Description is Required"
+        }
+        setError(newErrors)
+        return isValid
+    }
 
 
     async function getEmployeeData() {
@@ -188,15 +154,15 @@ const FestivalPhoto = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-    // if(validateForm()){
-        // const data = {
+    if(validateForm()){
+        const data = {
             
-        // startdate : value.startdate,
-        // enddate : value.enddate,
-        // file : value.file,
-        // description :value.description,
-        // uid : uid.id
-        // }
+        startdate : value.startdate,
+        enddate : value.enddate,
+        file : value.file,
+        description :value.description,
+        uid : uid.id
+        }
 
          const formdata = new FormData()
 
@@ -214,7 +180,7 @@ const FestivalPhoto = () => {
             .catch((err) => {
                 console.log(err)
             })
-    // }
+    }
 
     }
 
@@ -244,7 +210,6 @@ const FestivalPhoto = () => {
         },
         { field: 'startdate', headerName: 'Start Date', flex: 2},
         { field: 'enddate', headerName: 'End Date', flex: 2},
-        { field: 'file', headerName: 'File', flex: 2},
         { field: 'description', headerName: 'Description', flex: 2},
         
         {
@@ -282,27 +247,32 @@ const FestivalPhoto = () => {
                                         <div class='row'>
 
                                             <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">Start Date</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.startdate} name='startdate' onChange={onhandleChange} />
-                                                
+                                                <label for="exampleInputUsername1">Start Date<span className="text-danger">*</span></label>
+                                                <input type="date" class="form-control" id="exampleInputUsername1" 
+                                                value={value.startdate} name='startdate' onChange={onhandleChange} />
+                                                {<span className='text-danger'> {error.startdate} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">End Date</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.enddate} name='enddate' onChange={onhandleChange} />
-                                                
+                                                <label for="exampleInputUsername1">End Date <span className="text-danger">*</span></label>
+                                                <input type="date" class="form-control" id="exampleInputUsername1" 
+                                                value={value.enddate} name='enddate' onChange={onhandleChange} />
+                                                {<span className='text-danger'> {error.enddate} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleInputUsername1"></label>
-                                                <input type="file" class="form-control" id="exampleInputUsername1" value={value.file} name='file' onChange={onhandleupload} />
+                                                <input type="file" class="form-control" id="exampleInputUsername1"
+                                                 value={value.file} name='file' onChange={onhandleupload} />
                                                 
                                             </div>
 
                                             <div class="form-group col-lg-6">
                                                 <label for="exampleTextarea1">Description<span className='text-danger'>*</span></label>
-                                                <textarea class="form-control" id="exampleTextarea1" value={value.description} placeholder="Description" name='description' onChange={onhandleChange}></textarea>
-                                                
+                                                <textarea class="form-control" id="exampleTextarea1" 
+                                                value={value.description} placeholder="Description" 
+                                                name='description' onChange={onhandleChange}></textarea>
+                                                {<span className='text-danger'> {error.description} </span>}
                                             </div>
 
                                             

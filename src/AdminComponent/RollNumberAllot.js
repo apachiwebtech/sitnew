@@ -1,11 +1,10 @@
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
+import { DataGrid } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Loader from "./Loader";
+import { error } from 'jquery';
 //import FormControlLabel from '@mui/material/FormControlLabel';
 
 const RollNumberAllot = () => {
@@ -138,8 +137,9 @@ const RollNumberAllot = () => {
                                         <div class='row'>
 
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Select Course</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.selectcourse} name='selectcourse' onChange={(e) => getbatch(e.target.value)}>
+                                                <label for="exampleFormControlSelect1">Select Course<span className="text-danger">*</span></label>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" 
+                                                value={value.selectcourse} name='selectcourse' onChange={(e) => getbatch(e.target.value)}>
                                                     <option>Select Course</option>
 
                                                     {course.map((item) => {
@@ -149,7 +149,7 @@ const RollNumberAllot = () => {
                                                     })}
 
                                                 </select>
-
+                                                {<span className='text-danger'> {error.selectcourse} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-3">

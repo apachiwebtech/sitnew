@@ -21,33 +21,23 @@ const ReturnBook = () => {
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
 
-    const handleChange1 = (event) => {
-      setChecked([event.target.checked, event.target.checked]);
-    };
-  
-    const handleChange2 = (event) => {
-      setChecked([event.target.checked, checked[1]]);
-    };
-  
-    const handleChange3 = (event) => {
-      setChecked([checked[0], event.target.checked]);
-    };
+    const [date, setDate] = useState('');
 
-    // const children = (
-    //     <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-    //       <FormControlLabel
-    //         label="Child 1"
-    //         control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
-    //       />
-    //       <FormControlLabel
-    //         label="Child 2"
-    //         control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
-    //       />
-    //     </Box>
-    //   );
+    useEffect(() => {
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        let month = currentDate.getMonth() + 1;
+        month = month < 10 ? '0' + month : month;
+        let day = currentDate.getDate();
+        day = day < 10 ? '0' + day : day;
+        const formattedDate = `${year}-${month}-${day}`;
+        setDate(formattedDate);
+    }, []);
 
+
+
+    
     const [value, setValue] = useState({
         student : "" || uid.student,
         book : "" || uid.book,
@@ -72,22 +62,22 @@ const ReturnBook = () => {
     }, [uid])
 
 
-    // const validateForm = () => {
-    //     let isValid = true
-    //     const newErrors = {}
+    const validateForm = () => {
+        let isValid = true
+        const newErrors = {}
 
 
-    //    if (!value.college) {
-    //     isValid = false;
-    //     newErrors.name = "Name is require"
-    //    }
-    //     if (!value.email) {
-    //         isValid = false;
-    //         newErrors.email = "Email is require"
-    //     }
-    //     setError(newErrors)
-    //     return isValid
-    // }
+       if (!value.student) {
+        isValid = false;
+        newErrors.student = "Student is Required"
+       }
+        if (!value.book) {
+            isValid = false;
+            newErrors.book = "Book is Required"
+        }
+        setError(newErrors)
+        return isValid
+    }
 
 
     async function getReturnData() {
@@ -181,12 +171,11 @@ const ReturnBook = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-    // if(validateForm()){
+    if(validateForm()){
         const data = {
             
         student : value.student,
         book : value.book,
-        bookcode : value.bookcode,
         returndate :value.returndate,
         fine :value.fine,
         uid : uid.id
@@ -202,7 +191,7 @@ const ReturnBook = () => {
             .catch((err) => {
                 console.log(err)
             })
-    // }
+    }
 
    
         
@@ -269,37 +258,37 @@ const ReturnBook = () => {
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
-                                        <div class="form-group col-lg-4">
-                                                <label for="exampleFormControlSelect1">Student </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.student} onChange={onhandleChange} name='student'>
+                                        <div class="form-group col-lg-3">
+                                                <label for="exampleFormControlSelect1">Student <span className="text-danger">*</span> </label>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" 
+                                                value={value.student} onChange={onhandleChange} name='student'>
                                                     <option>Select Student</option>
-                                                    <option>Instrumentation & Control</option>
-                                                    <option>Piping Engineering</option>
-                                                    <option>Mechanical Design</option>
-                                                    <option>Electrical Engineering,</option>
-                                                    <option>Water & Waste Water Engg.</option>
                                                 </select>
+                                                {<span className='text-danger'> {error.student} </span>}
                                             </div>
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">Book</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.book} placeholder="Book" name='book' onChange={onhandleChange} />
-                                                {error.book && <span className='text-danger'>{error.book}</span>}
-                                            </div>
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">Book Code</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.bookcode} placeholder="Book Code" name='bookcode' onChange={onhandleChange} />
-                                                {error.bookcode && <span className='text-danger'>{error.bookcode}</span>}
+                                            <div class="form-group col-lg-3">
+                                                <label for="exampleInputUsername1">Book<span className="text-danger">*</span></label>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" 
+                                                value={value.book} placeholder="Book" name='book' onChange={onhandleChange} />
+                                                {<span className='text-danger'>{error.book}</span>}
                                             </div>
                                             
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">Return Date</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.returndate} name='returndate' onChange={onhandleChange} />
-                                                
+                                            <div class="form-group col-lg-3">
+                                                <lable htmlfor="exampleInputUsername1">Return Date </lable>
+                                                <input type="date" class="form-control" 
+                                                id="exampleInputUsername1" 
+                                                value={date}
+                                                name='date' 
+                                                onChange={(e) => { }} disabled />
+
                                             </div>
 
-                                            <div class="form-group col-lg-2">
+
+                                            <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">Fine</label>
-                                                <input type="number" class="form-control" id="exampleInputUsername1" value={value.fine} placeholder='Fine' name='fine' onChange={onhandleChange} />
+                                                <input type="number" class="form-control" id="exampleInputUsername1"
+                                                 value={value.fine} placeholder='00.00' 
+                                                 name='fine' onChange={onhandleChange} disabled />
                                                
                                             </div>
                                             

@@ -12,56 +12,34 @@ import InnerHeader from './InnerHeader';
 
 const CVShortListed = () => {
 
+
+
     const [brand, setBrand] = useState([])
     const [vendordata, setVendorData] = useState([])
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
 
-    const handleChange1 = (event) => {
-      setChecked([event.target.checked, event.target.checked]);
-    };
-  
-    const handleChange2 = (event) => {
-      setChecked([event.target.checked, checked[1]]);
-    };
-  
-    const handleChange3 = (event) => {
-      setChecked([checked[0], event.target.checked]);
-    };
+    const [date, setDate] = useState('');
 
-    const children = (
-        <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-          <FormControlLabel
-            label="Child 1"
-            control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
-          />
-          <FormControlLabel
-            label="Child 2"
-            control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
-          />
-        </Box>
-      );
+    useEffect(() => {
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        let month = currentDate.getMonth() + 1;
+        month = month < 10 ? '0' + month : month;
+        let day = currentDate.getDate();
+        day = day < 10 ? '0' + day : day;
+        const formattedDate = `${year}-${month}-${day}`;
+        setDate(formattedDate);
+    }, []);
+
 
     const [value, setValue] = useState({
-        college_name : "" || uid.college_name,
-        university : "" || uid.university,
-        contact_person : "" || uid.contact_person,
-        designation : ""|| uid.designation,
-        address : ""|| uid.address,
-        city : ""|| uid.city,
-        pin : ""|| uid.pin,
-        state : ""|| uid.state,
-        country: ""|| uid.country,
-        telephone: ""|| uid.telephone,
-        mobile: ""|| uid.mobile,
-        email: ""|| uid.email,
-        website: ""|| uid.website,
-        remark: ""|| uid.remark,
-        purpose: ""|| uid.purpose,
-        course: ""|| uid.course
+        batchcode: "" || uid.batchcode,
+        coursename: "" || uid.coursename,
+        company: "" || uid.company,
+        date: "" || uid.date,
 
 
     })
@@ -69,44 +47,40 @@ const CVShortListed = () => {
     useEffect(() => {
         setValue({
 
-            college_name : uid.college_name,
-           university : uid.university,
-           contact_person : uid.contact_person,
-           designation : uid.designation,
-           address : uid.address,
-           city : uid.city,
-           pin : uid.pin,
-           country: uid.country,
-           state : uid.state,
-           telephone: uid.telephone,
-           mobile: uid.mobile,
-           email: uid.email,
-           website: uid.website,
-           remark: uid.remark,
-           purpose: uid.purpose,
-           course: uid.course
-   
+            batchcode: uid.batchcode,
+            coursename: uid.coursename,
+            company: uid.company,
+            date: uid.date,
+
 
         })
     }, [uid])
+   
+
+        const validateForm = () => {
+        let isValid = true
+        const newErrors = {}
 
 
-    // const validateForm = () => {
-    //     let isValid = true
-    //     const newErrors = {}
-
-
-    //    if (!value.college) {
-    //     isValid = false;
-    //     newErrors.name = "Name is require"
-    //    }
-    //     if (!value.email) {
-    //         isValid = false;
-    //         newErrors.email = "Email is require"
-    //     }
-    //     setError(newErrors)
-    //     return isValid
-    // }
+        if (!value.batchcode) {
+            isValid = false;
+            newErrors.batchcode = "Batch Code is Required"
+        }
+        if (!value.coursename) {
+            isValid = false;
+            newErrors.coursename = "Coures Name is Required"
+        }
+        if (!value.company){
+            isValid = false;
+            newErrors.company = "Companyn is Required"
+        }
+        // if (!value.date) {
+        //     isValid = false;
+        //     newErrors.date = "Date is Required"
+        // }
+        setError(newErrors)
+        return isValid
+    }
 
 
     async function getCollegeData() {
@@ -122,12 +96,12 @@ const CVShortListed = () => {
     }
 
 
-    
+
     async function getCollegeData() {
         const data = {
-            tablename : "awt_college"
+            tablename: "awt_college"
         }
-        axios.post(`${BASE_URL}/get_data`,data)
+        axios.post(`${BASE_URL}/get_data`, data)
             .then((res) => {
                 console.log(res.data)
                 setVendorData(res.data)
@@ -162,14 +136,14 @@ const CVShortListed = () => {
 
     const handleUpdate = (id) => {
         const data = {
-            u_id : id,
-            tablename : "awt_college"
+            u_id: id,
+            tablename: "awt_college"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
                 setUid(res.data[0])
 
-                console.log(res.data , "update")
+                console.log(res.data, "update")
             })
             .catch((err) => {
                 console.log(err)
@@ -179,7 +153,7 @@ const CVShortListed = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename : "awt_college"
+            tablename: "awt_college"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
@@ -200,41 +174,28 @@ const CVShortListed = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-    // if(validateForm()){
-        const data = {
-            college_name : value.college_name,
-            university : value.university,
-            contact_person : value.contact_person,
-            designation : value.designation,
-            address : value.address,
-            city : value.city,
-            pin : value.pin,
-            country: value.country,
-            state : value.state,
-            telephone: value.telephone,
-            mobile: value.mobile,
-            email: value.email,
-            website: value.website,
-            remark: value.remark,
-            purpose: value.purpose,
-            course: value.course,
-            uid:uid.id
+        if (validateForm()) {
+            const data = {
+                batchcode: value.batchcode,
+                coursename: value.coursename,
+                company: value.company,
+                date: value.date,
+            }
+
+
+            axios.post(`${BASE_URL}/add_college`, data)
+                .then((res) => {
+                    console.log(res)
+                    getCollegeData()
+
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
         }
 
 
-        axios.post(`${BASE_URL}/add_college`, data)
-            .then((res) => {
-               console.log(res)
-               getCollegeData()
 
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    // }
-
-   
-        
 
 
     }
@@ -244,8 +205,8 @@ const CVShortListed = () => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
 
- 
-    
+
+
 
 
 
@@ -259,13 +220,11 @@ const CVShortListed = () => {
             flex: 1,
             filterable: false,
         },
-        { field: 'college_name', headerName: 'College_Name', flex: 2 },
-        { field: 'university', headerName: 'University', flex: 2 },
-        { field: 'contact_person', headerName: 'Contact_Person', flex: 2},
-        { field: 'designation', headerName: 'Designation', flex: 2},
-        { field: 'address', headerName: 'Address', flex: 2},
-        { field: 'city', headerName: 'City', flex: 2},
-        
+        { field: 'batchcode', headerName: 'Batch Code', flex: 2 },
+        { field: 'coursename', headerName: 'Course Name', flex: 2 },
+        { field: 'company', headerName: 'Company Name', flex: 2 },
+        { field: 'date', headerName: 'Date', flex: 2 },
+
         {
             field: 'actions',
             type: 'actions',
@@ -287,7 +246,7 @@ const CVShortListed = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper">
+        <div class="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -299,44 +258,41 @@ const CVShortListed = () => {
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
-                                            
+
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">Date</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.date} placeholder="Purpose" name='date' onChange={onhandleChange} />
-                                                
+                                                <label htmlfor="exampleInputUsername1">Date<span className="text-danger">*</span></label>
+                                                <input type="date" class="form-control" id="exampleInputUsername1"
+                                                    value={date} name='date'
+                                                    onChange={(e) => { }} />
+
+                                                {/* {<span className='text-danger'> {error.date} </span>} */}
                                             </div>
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Company Name </label>
+                                                <label for="exampleFormControlSelect1">Company Name <span className="text-danger">*</span> </label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.company} onChange={onhandleChange} name='company'>
-                                                        <option> Allied System &amp; Integrators Private Limited</option>
-                                                        <option> Amocon Refrigeration &amp; Engineering Co.</option>
-                                                        <option> Anand Systems Engineering Pvt. Ltd.</option>
+                                                    <option>--Company Name--</option>
+
                                                 </select>
+                                                {<span className='text-danger'> {error.company} </span>}
                                             </div>
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Course Name</label>
+                                                <label for="exampleFormControlSelect1">Course Name<span className="text-danger">*</span> </label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.coursename} onChange={onhandleChange} name='coursename'>
-                                                        <option> Allied System &amp; Integrators Private Limited</option>
-                                                        <option> Amocon Refrigeration &amp; Engineering Co.</option>
-                                                        <option> Anand Systems Engineering Pvt. Ltd.</option>
-                                                        <option> Avenir International Engineers &amp; Consultants LLC, Abu Dhabi</option>
-                                                        <option> Bertrams India Pvt. Ltd.- (Formerly-Chemical &amp; Environmental Technologies- Thane)              </option>
-                                                        <option> Chloro Controls Equipment Co - Same as Capital Controls</option>
-                                                        <option> Chromline Equipment India Pvt Ltd</option>
+                                                    <option>--Course Name--</option>
                                                 </select>
+                                                {<span className='text-danger'> {error.coursename} </span>}
                                             </div>
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Batch Code </label>
+                                                <label for="exampleFormControlSelect1">Batch Code <span className="text-danger">*</span> </label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batchcode} onChange={onhandleChange} name='batchcode'>
-                                                        <option>01254</option>
-                                                        <option>95475</option>
-                                                        <option>01212</option>
+                                                    <option>--Batch Code--</option>
                                                 </select>
+                                                {<span className='text-danger'> {error.batchcode} </span>}
                                             </div>
 
-                                            
 
-                                                {/* <div>
+
+                                            {/* <div>
                                             <FormControlLabel
                                                 label="Parent"
                                                 control={
@@ -350,14 +306,14 @@ const CVShortListed = () => {
                                             {children}
                                             </div> */}
 
-                                            
+
 
                                         </div>
-                                            
 
-                                          
-                          
-                                        
+
+
+
+
 
 
                                         <button type="submit" class="btn btn-primary mr-2">Submit</button>

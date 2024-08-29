@@ -1,21 +1,15 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { BASE_URL } from './BaseUrl';
-import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import InnerHeader from './InnerHeader';
-import decryptedUserId from '../Utils/UserID';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
+import EditIcon from "@mui/icons-material/Edit";
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { LibraryBooks } from '@mui/icons-material';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { BASE_URL } from './BaseUrl';
+import InnerHeader from './InnerHeader';
 //import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
 
 const StudentBatch = () => {
 
@@ -27,30 +21,7 @@ const StudentBatch = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
     const  [category , setCat] = useState('')
-    const handleChange1 = (event) => {
-        setChecked([event.target.checked, event.target.checked]);
-    };
-
-    const handleChange2 = (event) => {
-        setChecked([event.target.checked, checked[1]]);
-    };
-
-    const handleChange3 = (event) => {
-        setChecked([checked[0], event.target.checked]);
-    };
-
-    // const children = (
-    //     <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-    //       <FormControlLabel
-    //         label="Child 1"
-    //         control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
-    //       />
-    //       <FormControlLabel
-    //         label="Child 2"
-    //         control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
-    //       />
-    //     </Box>
-    //   );
+   
 
     const [value, setValue] = useState({
         course: "" || uid.course,
@@ -72,22 +43,22 @@ const StudentBatch = () => {
     }, [uid])
 
 
-    // const validateForm = () => {
-    //     let isValid = true
-    //     const newErrors = {}
+    const validateForm = () => {
+        let isValid = true
+        const newErrors = {}
 
 
-    //    if (!value.college) {
-    //     isValid = false;
-    //     newErrors.name = "Name is require"
-    //    }
-    //     if (!value.email) {
-    //         isValid = false;
-    //         newErrors.email = "Email is require"
-    //     }
-    //     setError(newErrors)
-    //     return isValid
-    // }
+       if (!value.course) {
+        isValid = false;
+        newErrors.course = "Course is Required"
+       }
+        if (!value.batch) {
+            isValid = false;
+            newErrors.batch = "Batch is Required"
+        }
+        setError(newErrors)
+        return isValid
+    }
 
 
     async function getEmployeeData() {
@@ -181,7 +152,7 @@ const StudentBatch = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        // if(validateForm()){
+        if(validateForm()){
         const data = {
 
             course: value.course,
@@ -201,7 +172,7 @@ const StudentBatch = () => {
             .catch((err) => {
                 console.log(err)
             })
-        // }
+        }
 
 
 
@@ -321,22 +292,21 @@ const StudentBatch = () => {
 
                                             <div class="form-group col-lg-4">
                                                 <label for="exampleFormControlSelect1">Select Course<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course} onChange={onhandleChange} name='course'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course}
+                                                 onChange={onhandleChange} name='course'>
                                                     <option>Select</option>
-                                                    <option>Piping Design & Drafting</option>
-                                                    <option>MEP Engineering (Mechanical, Electrical & Plumbing)</option>
-                                                    <option>Engineering Design & Drafting</option>
-                                                    <option>Electrical & Instrumentation Design and Drafting</option>
-                                                    <option>Training in Process Plant System Modelling Using E3D</option>
                                                 </select>
+                                                {<span className='text-danger'> {error.course} </span>}
                                             </div>
 
 
                                             <div class="form-group col-lg-4">
                                                 <label for="exampleFormControlSelect1">Select Batch<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batch} onChange={onhandleChange} name='batch'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batch}
+                                                 onChange={onhandleChange} name='batch'>
                                                     <option></option>
                                                 </select>
+                                                {<span className='text-danger'> {error.batch} </span>}
                                             </div>
 
                                         </div>

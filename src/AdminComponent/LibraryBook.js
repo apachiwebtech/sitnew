@@ -1,16 +1,10 @@
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
-import decryptedUserId from '../Utils/UserID';
-import { DataGrid ,GridToolbar} from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { LibraryBooks } from '@mui/icons-material';
 import Loader from './Loader';
 
 
@@ -25,30 +19,7 @@ const LibraryBook = () => {
     const [checked, setChecked] = React.useState([true, false]);
     const [loading, setLoading] = useState(true)
 
-    const handleChange1 = (event) => {
-      setChecked([event.target.checked, event.target.checked]);
-    };
   
-    const handleChange2 = (event) => {
-      setChecked([event.target.checked, checked[1]]);
-    };
-  
-    const handleChange3 = (event) => {
-      setChecked([checked[0], event.target.checked]);
-    };
-
-    // const children = (
-    //     <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-    //       <FormControlLabel
-    //         label="Child 1"
-    //         control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
-    //       />
-    //       <FormControlLabel
-    //         label="Child 2"
-    //         control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
-    //       />
-    //     </Box>
-    //   );
 
     const [value, setValue] = useState({
         bookname : "" || uid.bookname,
@@ -86,22 +57,26 @@ const LibraryBook = () => {
     }, [uid])
 
 
-    // const validateForm = () => {
-    //     let isValid = true
-    //     const newErrors = {}
+    const validateForm = () => {
+        let isValid = true
+        const newErrors = {}
 
 
-    //    if (!value.college) {
-    //     isValid = false;
-    //     newErrors.name = "Name is require"
-    //    }
-    //     if (!value.email) {
-    //         isValid = false;
-    //         newErrors.email = "Email is require"
-    //     }
-    //     setError(newErrors)
-    //     return isValid
-    // }
+       if (!value.bookname) {
+        isValid = false;
+        newErrors.bookname = "Book Name is Required"
+       }
+        if (!value.booknumber) {
+            isValid = false;
+            newErrors.booknumber = "Book Number is Required"
+        }
+        if(!value.coursename)
+           isValid = false;
+        newErrors.coursename = "Course Name is Required"
+
+        setError(newErrors)
+        return isValid
+    }
 
 
     async function getLibraryData() {
@@ -198,7 +173,7 @@ const LibraryBook = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-    // if(validateForm()){
+    if(validateForm()){
         const data = {
             
         bookname : value.bookname,
@@ -225,7 +200,7 @@ const LibraryBook = () => {
             .catch((err) => {
                 console.log(err)
             })
-    // }
+    }
 
    
         
@@ -297,17 +272,20 @@ const LibraryBook = () => {
                                         <div class='row'>
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleInputUsername1">Book Name<span className='text-danger'>*</span></label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.bookname} placeholder="Book Name*" name='bookname' onChange={onhandleChange} />
-                                                {error.bookname && <span className='text-danger'>{error.bookname}</span>}
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.bookname}
+                                                 placeholder="Book Name*" name='bookname' onChange={onhandleChange} />
+                                                {<span className='text-danger'>{error.bookname}</span>}
                                             </div>
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleInputUsername1">Book Number<span className='text-danger'>*</span></label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.booknumber} placeholder="Book Number*" name='booknumber' onChange={onhandleChange} />
-                                                {error.booknumber && <span className='text-danger'>{error.booknumber}</span>}
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.booknumber}
+                                                 placeholder="Book Number*" name='booknumber' onChange={onhandleChange} />
+                                                { <span className='text-danger'>{error.booknumber}</span>}
                                             </div>
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleInputUsername1">Publication</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.publication} placeholder="Publication" name='publication' onChange={onhandleChange} />
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.publication}
+                                                 placeholder="Publication" name='publication' onChange={onhandleChange} />
                                                
                                             </div>
                                             <div class="form-group col-lg-2">
@@ -327,20 +305,12 @@ const LibraryBook = () => {
 
 
                                             <div class="form-group col-lg-2">
-                                                <label for="exampleFormControlSelect1">Course Name </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.coursename} onChange={onhandleChange} name='coursename'>
-                                                    <option></option>
-                                                    <option value="1">Training in Process Plant System Modelling Using E3D</option>
-                                                    <option value="2">Advance Pipe Stress Analysis</option>
-                                                    <option value="3">Air Conditioning System Design (HVAC)</option>
-                                                    <option value="4">Autocad - Piping</option>
-                                                    <option value="5">Civil/Structural Design & Drafting</option>
-                                                    <option value="6">Electrical & Instrumentation Design and Drafting</option>
-                                                    <option value="7">Electrical System Design</option>
-                                                    <option value="8">Health, Safety & Environment in Construction</option>
-                                                    <option value="9">Mechanical Design of Process Equipment</option>
-                                                    <option value="10">Others</option>
+                                                <label for="exampleFormControlSelect1">Course Name<span className="text-danger">*</span> </label>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" 
+                                                value={value.coursename} onChange={onhandleChange} name='coursename'>
+                                                    <option>--Select Course--</option>
                                                 </select>
+                                                {<span className="text-danger"> {error.coursename} </span>}
                                             </div>
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleInputUsername1">Author</label>

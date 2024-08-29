@@ -1,15 +1,12 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import Switch from '@mui/material/Switch';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
-import LectureTaken from "./LectureTaken";
 import Loader from "./Loader";
-import { Block } from "@mui/icons-material";
 
 const LectureTakenListing = () => {
 
@@ -17,7 +14,6 @@ const LectureTakenListing = () => {
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
     const label = { inputProps: { 'aria-label': 'Color switch demo' } };
     const [lecturetakendata, setlecturetakendata] = useState([]);
     const [loading, setLoading] = useState(true)

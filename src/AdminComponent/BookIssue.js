@@ -1,16 +1,10 @@
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import { DataGrid } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
-import decryptedUserId from '../Utils/UserID';
-import { DataGrid } from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { LibraryBooks } from '@mui/icons-material';
 
 
 const BookIssue = () => {
@@ -23,30 +17,7 @@ const BookIssue = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
 
-    const handleChange1 = (event) => {
-        setChecked([event.target.checked, event.target.checked]);
-    };
 
-    const handleChange2 = (event) => {
-        setChecked([event.target.checked, checked[1]]);
-    };
-
-    const handleChange3 = (event) => {
-        setChecked([checked[0], event.target.checked]);
-    };
-
-    // const children = (
-    //     <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-    //       <FormControlLabel
-    //         label="Child 1"
-    //         control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
-    //       />
-    //       <FormControlLabel
-    //         label="Child 2"
-    //         control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
-    //       />
-    //     </Box>
-    //   );
 
     const [value, setValue] = useState({
         student: "" || uid.student,
@@ -72,22 +43,22 @@ const BookIssue = () => {
     }, [uid])
 
 
-    // const validateForm = () => {
-    //     let isValid = true
-    //     const newErrors = {}
+    const validateForm = () => {
+        let isValid = true
+        const newErrors = {}
 
 
-    //    if (!value.college) {
-    //     isValid = false;
-    //     newErrors.name = "Name is require"
-    //    }
-    //     if (!value.email) {
-    //         isValid = false;
-    //         newErrors.email = "Email is require"
-    //     }
-    //     setError(newErrors)
-    //     return isValid
-    // }
+       if (!value.student) {
+        isValid = false;
+        newErrors.student = "Student is Required"
+       }
+        if (!value.book) {
+            isValid = false;
+            newErrors.book = "Book is Required"
+        }
+        setError(newErrors)
+        return isValid
+    }
 
 
     async function getBookData() {
@@ -181,7 +152,7 @@ const BookIssue = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        // if(validateForm()){
+        if(validateForm()){
         const data = {
 
             student: value.student,
@@ -202,7 +173,7 @@ const BookIssue = () => {
             .catch((err) => {
                 console.log(err)
             })
-        // }
+        }
 
 
 
@@ -271,18 +242,20 @@ const BookIssue = () => {
                                         <div class='row'>
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">Students Name<span className='text-danger'>*</span></label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.student} placeholder="Student Name*" name='student' onChange={onhandleChange} />
-                                                {error.student && <span className='text-danger'>{error.student}</span>}
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.student} 
+                                                placeholder="Student Name*" name='student' onChange={onhandleChange} />
+                                                {<span className='text-danger'>{error.student}</span>}
                                             </div>
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">Book</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.book} placeholder="Book *" name='book' onChange={onhandleChange} />
-                                                {error.book && <span className='text-danger'>{error.book}</span>}
+                                                <label for="exampleInputUsername1">Book<span className='text-danger'>*</span></label>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.book} 
+                                                placeholder="Book *" name='book' onChange={onhandleChange} />
+                                                {<span className='text-danger'>{error.book}</span>}
                                             </div>
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">Book Code</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.bookcode} placeholder="Book Code*" name='bookcode' onChange={onhandleChange} />
-                                                {error.bookcode && <span className='text-danger'>{error.bookcode}</span>}
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.bookcode} 
+                                                placeholder="Book Code*" name='bookcode' onChange={onhandleChange} />
                                             </div>
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">Issue Date</label>

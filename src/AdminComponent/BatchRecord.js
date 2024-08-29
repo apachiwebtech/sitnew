@@ -1,22 +1,11 @@
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
-import decryptedUserId from '../Utils/UserID';
-import { DataGrid ,GridToolbar } from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { LibraryBooks } from '@mui/icons-material';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
 //import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
-import Loader from './Loader';
+
 
 const BatchRecord = () => {
 
@@ -26,40 +15,22 @@ const BatchRecord = () => {
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
     const [loading, setLoading] = useState(true)
 
-    const handleChange1 = (event) => {
-      setChecked([event.target.checked, event.target.checked]);
-    };
-  
-    const handleChange2 = (event) => {
-      setChecked([event.target.checked, checked[1]]);
-    };
-  
-    const handleChange3 = (event) => {
-      setChecked([checked[0], event.target.checked]);
-    };
+    const [selectedYear, setselectedYear] = useState('');
 
-    // const children = (
-    //     <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-    //       <FormControlLabel
-    //         label="Child 1"
-    //         control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
-    //       />
-    //       <FormControlLabel
-    //         label="Child 2"
-    //         control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
-    //       />
-    //     </Box>
-    //   );
+    const currentYear = new Date().getFullYear();
+    const years = [];
+    for (let year = 2000; year <= currentYear; year++){
+        years.push(year);
+    }
+
+
 
     const [value, setValue] = useState({
-        training : ""|| uid.training,
-        attendee : ""|| uid.attendee,
-        instructor : ""|| uid.instructor,
-        description : ""|| uid.description,
-        feedback : ""|| uid.feedback,
+        course : ""|| uid.course,
+        year : ""|| uid.year,
+        yearto : ""|| uid.yearto,
 
         
 
@@ -68,32 +39,33 @@ const BatchRecord = () => {
 
     useEffect(() => {
         setValue({
-            training : uid.training,
-            attendee : uid.attendee,
-            instructor : uid.instructor,
-            description :uid.description,
-            feedback: uid.feedback,
+            course : uid.course,
+            year : uid.year,
+            yearto : uid.yearto,
 
         })
     }, [uid])
 
+    const validateForm = () => {
+        let isValid = true
+        const newErrors = {}
 
-    // const validateForm = () => {
-    //     let isValid = true
-    //     const newErrors = {}
 
-
-    //    if (!value.college) {
-    //     isValid = false;
-    //     newErrors.name = "Name is require"
-    //    }
-    //     if (!value.email) {
-    //         isValid = false;
-    //         newErrors.email = "Email is require"
-    //     }
-    //     setError(newErrors)
-    //     return isValid
-    // }
+       if (!value.course) {
+        isValid = false;
+        newErrors.course = "Course is Required"
+       }
+        if (!value.year) {
+            isValid = false;
+            newErrors.year = "Year is Required"
+        }
+        if(!value.yearto) {
+            isValid = false;
+            newErrors.yearto = "Year is Reuired"
+        }
+        setError(newErrors)
+        return isValid
+    }
 
 
     async function getEmployeeData() {
@@ -190,14 +162,12 @@ const BatchRecord = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-    // if(validateForm()){
+    if(validateForm()){
         const data = {
             
-        training : value.training,
-        attendee : value.attendee,
-        instructor : value.instructor,
-        description :value.description,
-        feedback: value.feedback,
+        course : value.course,
+        year : value.year,
+        yearto : value.yearto,
         uid : uid.id
         }
 
@@ -211,7 +181,7 @@ const BatchRecord = () => {
             .catch((err) => {
                 console.log(err)
             })
-    // }
+    }
 
    
         
@@ -283,51 +253,32 @@ const BatchRecord = () => {
 
                                             <div class="form-group col-lg-4">
                                                 <label for="exampleFormControlSelect1">Select Course<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.attendee} onChange={onhandleChange} name='attendee'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" 
+                                                value={value.course} onChange={onhandleChange} name='course'>
                                                     <option>All</option>
-                                                    <option>Piping Design & Drafting</option>
-                                                    <option>MEP Engineering (Mechanical, Electrical & Plumbing)</option>
-                                                    <option>Engineering Design & Drafting</option>
-                                                    <option>Electrical & Instrumentation Design and Drafting</option>
-                                                    <option>Training in Process Plant System Modelling Using E3D</option>
                                                 </select>
+                                                {<span className='text-danger'> {error.course} </span>}
                                             </div>
 
 
                                             <div class="form-group col-lg-4">
-                                                <label for="exampleFormControlSelect1">Select Year<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.attendee} onChange={onhandleChange} name='attendee'>
-                                                    <option>2024</option>
-                                                    <option>2023</option>
-                                                    <option>2022</option>
-                                                    <option>2021</option>
-                                                    <option>2020</option>
-                                                    <option>2019</option>
-                                                    <option>2018</option>
-                                                    <option>2017</option>
-                                                    <option>2016</option>
-                                                    <option>2015</option>
-                                                    <option>2014</option>
-                                                    <option>2013</option>
-                                                    <option>2012</option>
-                                                    <option>2011</option>
-                                                    <option>2010</option>
-                                                    <option>2009</option>
-                                                    <option>2008</option>
-                                                    <option>2007</option>
-                                                    <option>2006</option>
-                                                    <option>2005</option>
-                                                    <option>2004</option>
-                                                    <option>2003</option>
-                                                    <option>2002</option>
-                                                    <option>2001</option><option>2000</option>
+                                                <label htmlfor="yearInput">Select Year From<span className='text-danger'>*</span> </label>
+                                                <select class="form-control form-control-lg" 
+                                                id="yearInput" 
+                                                value={selectedYear} onChange={onhandleChange} name='yearinput'>
+                                                    <option value="year">--Select Year</option>
+                                                    {years.map(year => (
+                                                        <option key={year} value={year}>{year}</option>
+                                                    ))}
                                                 </select>
+                                                {<span className='text-danger'> {error.year} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-4">
-                                                <label for="exampleInputUsername1"></label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.fromyear} placeholder="From Year" name='fromyear' onChange={onhandleChange} />
-                                                
+                                                <label for="exampleInputUsername1">Select Year To<span className="text-danger">*</span></label>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.yearto}
+                                                 placeholder="From Year" name='yearto' onChange={onhandleChange} />
+                                                 {<span className='text-danger'> {error.yearto} </span>}
                                             </div>
                                             
 

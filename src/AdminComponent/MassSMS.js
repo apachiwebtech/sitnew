@@ -279,7 +279,7 @@ const MassSMS = () => {
                                                             </div>
 
                                                             <div class="form-group col-lg-3">
-                                                                <label for="exapmleFormControlSelect1">Course</label>
+                                                                <label for="exapmleFormControlSelect1">Course<span className="text-danger">*</span></label>
                                                                 <select class="form-control" id="exampleFormControlSelect1"
                                                                     value={value.course} name='course' onChange={onhandleChange}>
                                                                     <option>--Select Course--</option>
@@ -290,6 +290,7 @@ const MassSMS = () => {
                                                                     <option>Offshore Engineering</option>
                                                                     <option>Other</option>
                                                                 </select>
+                                                                {<span className='text-danger'> {error.course} </span>}
                                                             </div>
 
                                                             <div class="form-group col-lg-3">

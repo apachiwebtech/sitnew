@@ -3,8 +3,8 @@ import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import { Link, useParams } from 'react-router-dom';
 
-const FeedBack1 = () => {
-    const { feedback1id } = useParams();
+const FeedBack2 = () => {
+    const { feedback2id } = useParams();
     const [uid, setUid] = useState([])
     const [error, setError] = useState({})
 
@@ -69,7 +69,7 @@ const FeedBack1 = () => {
         const response = await fetch(`${BASE_URL}/studentDetail`, {
             method: 'POST',
             body: JSON.stringify({
-                id: feedback1id,
+                id: feedback2id,
             }),
             headers: {
                 'Content-Type': 'application/json',
@@ -93,7 +93,7 @@ const FeedBack1 = () => {
         }))
     }
     useEffect(() => {
-        if (':feedback1id' !== ":feedback1id") {
+        if (':feedback2id' !== ":feedback2id") {
             getStudentDetail()
         }
 
@@ -106,7 +106,7 @@ const FeedBack1 = () => {
         e.preventDefault()
         let response
         if (validateForm()) {
-            if (feedback1id == ":feedback1id") {
+            if (feedback2id == ":feedback2id") {
                 response = await fetch(`${BASE_URL}/add_feedback1`, {
                     method: 'POST',
                     body: JSON.stringify({
@@ -170,7 +170,7 @@ const FeedBack1 = () => {
                         <div class="col-lg-12 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Add Student Feedback On Training Co-ordination 1</h4>
+                                    <h4 class="card-title">Add Student Feedback On Training Co-ordination 2</h4>
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
@@ -974,4 +974,4 @@ const FeedBack1 = () => {
     )
 }
 
-export default FeedBack1
+export default FeedBack2

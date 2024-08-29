@@ -1,20 +1,10 @@
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
-import decryptedUserId from '../Utils/UserID';
-import { DataGrid ,GridToolbar } from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { LibraryBooks } from '@mui/icons-material';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 
 const OnlineStudent = () => {
@@ -25,34 +15,9 @@ const OnlineStudent = () => {
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
 
-    const handleChange1 = (event) => {
-        setChecked([event.target.checked, event.target.checked]);
-    };
 
-    const handleChange2 = (event) => {
-        setChecked([event.target.checked, checked[1]]);
-    };
 
-    const handleChange3 = (event) => {
-        setChecked([checked[0], event.target.checked]);
-    };
-
-    // const children = (
-    //     <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-    //       <FormControlLabel
-    //         label="Child 1"
-    //         control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
-    //       />
-    //       <FormControlLabel
-    //         label="Child 2"
-    //         control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
-    //       />
-    //     </Box>
-    //   );
-
-    			
     const [value, setValue] = useState({
         course: "" || uid.course,
         admission: "" || uid.admission,
@@ -75,22 +40,31 @@ const OnlineStudent = () => {
     }, [uid])
 
 
-    // const validateForm = () => {
-    //     let isValid = true
-    //     const newErrors = {}
+    const validateForm = () => {
+        let isValid = true
+        const newErrors = {}
 
 
-    //    if (!value.college) {
-    //     isValid = false;
-    //     newErrors.name = "Name is require"
-    //    }
-    //     if (!value.email) {
-    //         isValid = false;
-    //         newErrors.email = "Email is require"
-    //     }
-    //     setError(newErrors)
-    //     return isValid
-    // }
+        if (!value.course) {
+            isValid = false;
+            newErrors.course = "Course is Required"
+        }
+        if (!value.admission) {
+            isValid = false;
+            newErrors.admission = "Admission is Required"
+        }
+        if (!value.fromdate) {
+            isValid = false;
+            newErrors.fromdate = "Date is Required"
+        }
+        if (!value.todate) {
+            isValid = false;
+            newErrors.todate = "Date is Required"
+        }
+
+        setError(newErrors)
+        return isValid
+    }
 
 
     async function getEmployeeData() {
@@ -184,7 +158,7 @@ const OnlineStudent = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        // if(validateForm()){
+        if(validateForm()){
         const data = {
 
             course: value.course,
@@ -204,7 +178,7 @@ const OnlineStudent = () => {
             .catch((err) => {
                 console.log(err)
             })
-        // }
+        }
 
 
 
@@ -274,36 +248,38 @@ const OnlineStudent = () => {
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Select Course<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course} onChange={onhandleChange} name='course'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course}
+                                                    onChange={onhandleChange} name='course'>
                                                     <option>Select</option>
-                                                    <option>Civil/Structural Design & Drafting</option>
-                                                    <option>Electrical & Instrumentation Design and Drafting</option>
-                                                    <option>Electrical System Design</option>
-                                                    <option>Health, Safety & Environment in Construction</option>
-                                                    <option>MEP Engineering (Mechanical, Electrical & Plumbing)</option>
                                                 </select>
+                                                {<span className="text-danger"> {error.course} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Admission Status<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.admission} onChange={onhandleChange} name='admission'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.admission}
+                                                    onChange={onhandleChange} name='admission'>
                                                     <option>Select</option>
                                                     <option>Accepted</option>
                                                     <option>Denied</option>
                                                     <option>Pending</option>
 
                                                 </select>
+
+                                                {<span className="text-danger"> {error.admission} </span>}
                                             </div>
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">From Date</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.fromdate} name='fromdate' onChange={onhandleChange} />
-                                                
+                                                <label for="exampleInputUsername1">From Date<span className='text-danger'>*</span></label>
+                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.fromdate}
+                                                    name='fromdate' onChange={onhandleChange} />
+                                                {<span className="text-danger"> {error.fromdate} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">To Date</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.todate} name='todate' onChange={onhandleChange} />
-                                                
+                                                <label for="exampleInputUsername1">To Date <span className='text-danger'>*</span></label>
+                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.todate}
+                                                    name='todate' onChange={onhandleChange} />
+                                                {<span className="text-danger"> {error.todate} </span>}
                                             </div>
 
 

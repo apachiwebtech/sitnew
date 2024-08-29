@@ -3,14 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
-import { idID } from '@mui/material/locale';
 import Loader from './Loader';
 
 
 const LectureTaken = () => {
 
     const [uid, setUid] = useState([])
-    const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const { lecturetakenid } = useParams();
     const [course, SetCourse] = useState([])

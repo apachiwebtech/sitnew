@@ -1,21 +1,14 @@
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
-import decryptedUserId from '../Utils/UserID';
-import { DataGrid ,GridToolbar} from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { LibraryBooks } from '@mui/icons-material';
 
 
 const SiteVisit = () => {
 
-    const [brand, setBrand] = useState([])
     const [vendordata, setVendorData] = useState([])
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
@@ -25,16 +18,16 @@ const SiteVisit = () => {
 
 
     const [value, setValue] = useState({
-        course : ""|| uid.course,
-        batch : ""|| uid.batch,
-        site : ""|| uid.site,
+        course: "" || uid.course,
+        batch: "" || uid.batch,
+        site: "" || uid.site,
     })
 
     useEffect(() => {
         setValue({
-            course : uid.course,
-            batch : uid.batch,
-            site : uid.site,
+            course: uid.course,
+            batch: uid.batch,
+            site: uid.site,
 
         })
     }, [uid])
@@ -42,16 +35,37 @@ const SiteVisit = () => {
 
 
 
+    const validateForm = () => {
+        let isValid = true
+        const newErrors = {}
+
+
+        if (!value.course) {
+            isValid = false;
+            newErrors.course = "Course is Required"
+        }
+        if (!value.batch) {
+            isValid = false;
+
+            newErrors.batch = "Batch is Required"
+        }
+        if (!value.site) {
+            isValid = false;
+            newErrors.site = "Site is Required"
+        }
+        setError(newErrors)
+        return isValid
+    }
 
 
 
 
-    
+
     async function getEmployeeData() {
         const data = {
-            tablename : "awt_sitevisit"
+            tablename: "awt_sitevisit"
         }
-        axios.post(`${BASE_URL}/get_data`,data)
+        axios.post(`${BASE_URL}/get_data`, data)
             .then((res) => {
                 console.log(res.data)
                 setVendorData(res.data)
@@ -94,7 +108,7 @@ const SiteVisit = () => {
             .then((res) => {
                 setUid(res.data[0])
 
-                console.log(res.data , "update")
+                console.log(res.data, "update")
             })
             .catch((err) => {
                 console.log(err)
@@ -104,7 +118,7 @@ const SiteVisit = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename : "awt_sitevisit"
+            tablename: "awt_sitevisit"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
@@ -125,29 +139,29 @@ const SiteVisit = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-    // if(validateForm()){
-        const data = {
-            
-        course : value.course,
-        batch : value.batch,
-        site : value.site,
-        uid : uid.id
+        if (validateForm()) {
+            const data = {
+
+                course: value.course,
+                batch: value.batch,
+                site: value.site,
+                uid: uid.id
+            }
+
+
+            axios.post(`${BASE_URL}/add_sitevisit`, data)
+                .then((res) => {
+                    console.log(res)
+                    getEmployeeData()
+
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
         }
 
 
-        axios.post(`${BASE_URL}/add_sitevisit`, data)
-            .then((res) => {
-               console.log(res)
-               getEmployeeData()
 
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    // }
-
-   
-        
 
 
     }
@@ -157,8 +171,8 @@ const SiteVisit = () => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
 
- 
-    
+
+
 
 
 
@@ -171,12 +185,12 @@ const SiteVisit = () => {
             headerAlign: 'center',
             flex: 1,
             filterable: false,
-                                              
+
         },
-        { field: 'course', headerName: 'Course', flex: 2},
-        { field: 'batch', headerName: 'Batch', flex: 2},
-        { field: 'site', headerName: 'Site', flex: 2},
-        
+        { field: 'course', headerName: 'Course', flex: 2 },
+        { field: 'batch', headerName: 'Batch', flex: 2 },
+        { field: 'site', headerName: 'Site', flex: 2 },
+
         {
             field: 'actions',
             type: 'actions',
@@ -210,37 +224,38 @@ const SiteVisit = () => {
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
-                                          
+
 
                                             <div class="form-group col-lg-4">
                                                 <label for="exampleFormControlSelect1">Select Course<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course} onChange={onhandleChange} name='course'>
-                                                    <option>Select</option>
-                                                    <option>Admin</option>
-                                                    <option>BalKrishana</option>
-                                                    <option>Ankit</option>
-                                                    <option>Athrava</option>
-                                                    <option>Manshi Suresh</option>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1"
+                                                    value={value.course} onChange={onhandleChange} name='course'>
+                                                    <option>--Select Course--</option>
                                                 </select>
+                                                {<span className='text-danger'> {error.course} </span>}
                                             </div>
 
 
                                             <div class="form-group col-lg-4">
                                                 <label for="exampleFormControlSelect1">Select Batch<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batch} onChange={onhandleChange} name='batch'>
-                                                    <option></option>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batch}
+                                                    onChange={onhandleChange} name='batch'>
+                                                    <option>--Select Batch--</option>
                                                 </select>
+                                                {<span className="text-danger"> {error.batch} </span>}
                                             </div>
-                                           
+
                                             <div class="form-group col-lg-4">
                                                 <label for="exampleFormControlSelect1">Select Site<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.site} onChange={onhandleChange} name='site'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.site}
+                                                    onChange={onhandleChange} name='site'>
                                                     <option></option>
                                                 </select>
+                                                {<span className='text-danger'> {error.site} </span>}
                                             </div>
 
                                         </div>
-                                            
+
 
 
 

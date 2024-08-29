@@ -201,6 +201,9 @@ import ConsultancyBranches from './AdminComponent/ConsultancyBranches.js';
 import ConsultancyMaster from './AdminComponent/ConsultancyMaster.js';
 import ConsultancyFollowUp from './AdminComponent/ConsultancyFollowUp.js';
 import ShortlistedBySIT from './AdminComponent/ShortlistedBySIT.js';
+import FeedBack1Listing from './AdminComponent/FeedBack1Listing.js';
+import FeedBack2 from './AdminComponent/FeedBack2.js';
+import FeedBack2Listing from './AdminComponent/FeedBack2Listing.js';
 // import FacultyPayment from './AdminComponent/FacultyPayment.js';
 
 
@@ -664,7 +667,21 @@ const Router = createBrowserRouter([
 
       {
         path: '/feedback1',
+        element: <FeedBack1Listing/>
+      },
+
+      {
+        path: '/feedback1/:feedback1id',
         element: <FeedBack1 />
+      },
+      {
+        path: '/feedback2',
+        element: <FeedBack2Listing/>
+      },
+
+      {
+        path: '/feedback2/:feedback2id',
+        element: <FeedBack2/>
       },
 
       //================Utility======================

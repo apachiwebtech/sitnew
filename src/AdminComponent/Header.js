@@ -5,6 +5,13 @@ import { Collapse } from '@mui/material';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Sidebar.css';
+import { mdiAccountTie } from '@mdi/js';
+import { mdiCog } from '@mdi/js';
+//import { mdiAnimationOutline } from '@mdi/js';
+import { mdiChartTree } from '@mdi/js';
+import { mdiClipboardFileOutline } from '@mdi/js';
+import { mdiLayersTripleOutline } from '@mdi/js';
+import { mdiBookmarkMultipleOutline } from '@mdi/js';
 
 
 const Header = ({click}) => {
@@ -47,15 +54,15 @@ const Header = ({click}) => {
             {/* <div className="badge badge-info badge-pill">2</div> */}
           </Link>
         </li>
-        <li className="nav-item sidebar-category">
+        {/* <li className="nav-item sidebar-category">
           <p>Master</p>
           <span></span>
-        </li>
+        </li> */}
 
 
         <li className="nav-item" onClick={() => handleToggle('product')}>
           <div className="nav-link" >
-            <Icon path={mdiFormatListBulletedSquare} size={1} className='mx-3' />
+            <Icon path={mdiAccountTie} size={1} className='mx-3' />
             <span className="menu-title">General Master</span>
             {openStates.product ? <ExpandLess className='mx-3' /> : <ExpandMore className='mx-3' />}
           </div>
@@ -170,7 +177,7 @@ const Header = ({click}) => {
         <li className="nav-item" onClick={() => handleToggle('home')}>
           <div className="nav-link" >
 
-            <Icon path={mdiFormatListBulletedSquare} size={1} className='mx-3' />
+            <Icon path={mdiLayersTripleOutline} size={1} className='mx-3' />
             <span className="menu-title">Masters</span>
             {openStates.home ? <ExpandLess className='mx-3' /> : <ExpandMore className='mx-3' />}
           </div>
@@ -278,7 +285,7 @@ const Header = ({click}) => {
         <li className="nav-item" onClick={() => handleToggle('admission')}>
           <div className="nav-link" >
 
-            <Icon path={mdiFormatListBulletedSquare} size={1} className='mx-3' />
+            <Icon path={mdiChartTree} size={1} className='mx-3' />
             <span className="menu-title">Admission Activity</span>
             {openStates.admission ? <ExpandLess className='mx-3' /> : <ExpandMore className='mx-3' />}
           </div>
@@ -345,7 +352,7 @@ const Header = ({click}) => {
         <li className="nav-item" onClick={() => handleToggle('daily')}>
           <div className="nav-link" >
 
-            <Icon path={mdiFormatListBulletedSquare} size={1} className='mx-3' />
+            <Icon path={mdiChartTree} size={1} className='mx-3' />
             <span className="menu-title">Daily Activities</span>
             {openStates.daily ? <ExpandLess className='mx-3' /> : <ExpandMore className='mx-3' />}
           </div>
@@ -431,6 +438,13 @@ const Header = ({click}) => {
               </Link>
             </li>
 
+            <li className="nav-item">
+              <Link className="nav-link" to="/feedback2">
+              <Icon path={mdiCircleMedium} size={1} className='mx-3' />
+              <span className="menu-title">FeedBack2</span>
+              </Link>
+            </li>
+
 
             <li className="nav-item">
               <Link className="nav-link" to="/visitsite">
@@ -450,7 +464,7 @@ const Header = ({click}) => {
         <li className="nav-item" onClick={() => handleToggle('library')}>
           <div className="nav-link" >
 
-            <Icon path={mdiFormatListBulletedSquare} size={1} className='mx-3' />
+            <Icon path={mdiLayersTripleOutline} size={1} className='mx-3' />
             <span className="menu-title">Library Management</span>
             {openStates.library ? <ExpandLess className='mx-3' /> : <ExpandMore className='mx-3' />}
           </div>
@@ -528,7 +542,7 @@ const Header = ({click}) => {
         <li className="nav-item" onClick={() => handleToggle('employee')}>
           <div className="nav-link" >
 
-            <Icon path={mdiFormatListBulletedSquare} size={1} className='mx-3' />
+            <Icon path={mdiAccountTie} size={1} className='mx-3' />
             <span className="menu-title">Employee Training</span>
             {openStates.employee ? <ExpandLess className='mx-3' /> : <ExpandMore className='mx-3' />}
           </div>
@@ -568,7 +582,7 @@ const Header = ({click}) => {
         <li className="nav-item" onClick={() => handleToggle('reports')}>
           <div className="nav-link" >
 
-            <Icon path={mdiFormatListBulletedSquare} size={1} className='mx-3' />
+            <Icon path={mdiClipboardFileOutline} size={1} className='mx-3' />
             <span className="menu-title">Reports</span>
             {openStates.reports ? <ExpandLess className='mx-3' /> : <ExpandMore className='mx-3' />}
           </div>
@@ -796,7 +810,7 @@ const Header = ({click}) => {
         <li className="nav-item" onClick={() => handleToggle('Accountmaster')}>
           <div className="nav-link" >
 
-            <Icon path={mdiFormatListBulletedSquare} size={1} className='mx-3' />
+            <Icon path={mdiBookmarkMultipleOutline} size={1} className='mx-3' />
             <span className="menu-title">Account Masters</span>
             {openStates.Accountmaster ? <ExpandLess className='mx-3' /> : <ExpandMore className='mx-3' />}
           </div>
@@ -982,7 +996,7 @@ const Header = ({click}) => {
         <li className="nav-item" onClick={() => handleToggle('utility')}>
           <div className="nav-link" >
 
-            <Icon path={mdiFormatListBulletedSquare} size={1} className='mx-3' />
+            <Icon path={mdiCog} size={1} className='mx-3' />
             <span className="menu-title">Utility</span>
             {openStates.utility ? <ExpandLess className='mx-3' /> : <ExpandMore className='mx-3' />}
           </div>
@@ -1092,7 +1106,7 @@ const Header = ({click}) => {
         <li className="nav-item" onClick={() => handleToggle('placement')}>
           <div className="nav-link" >
 
-            <Icon path={mdiFormatListBulletedSquare} size={1} className='mx-3' />
+            <Icon path={mdiAccountTie} size={1} className='mx-3' />
             <span className="menu-title">Placement</span>
             {openStates.placement ? <ExpandLess className='mx-3' /> : <ExpandMore className='mx-3' />}
           </div>
