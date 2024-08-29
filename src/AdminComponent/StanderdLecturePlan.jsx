@@ -31,6 +31,11 @@ const StandardLecturePlan = () => {
   const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
   const [cid, setCid] = useState("")
   const [uid, setUid] = useState([])
+  const [faculty , setFaculty] = useState([])
+  const [onlineAdmissions, setOnlineAdmissions] = useState([]);
+ const [unit , setUnit] = useState([])
+ const [assignment , setAssignment] = useState([])
+
 
 
   const handleClickOpen = () => {
@@ -60,7 +65,38 @@ const StandardLecturePlan = () => {
     setUid([])
   };
 
-  const [onlineAdmissions, setOnlineAdmissions] = useState([]);
+
+  async function getfaculty(){
+
+    axios.get(`${BASE_URL}/getfaculty`)
+    .then((res) =>{
+      setFaculty(res.data)
+    })
+  }
+  async function getassignment(){
+
+    const data ={
+      batch_id : batchid
+    } 
+
+    axios.post(`${BASE_URL}/getbatchwiseassignment`, data)
+    .then((res) =>{
+      setAssignment(res.data)
+    })
+  }
+
+  async function getunittest(){
+
+    const data ={
+      AnnulBatch : batchid
+    } 
+
+    axios.post(`${BASE_URL}/getbatchwiseunittest`, data)
+    .then((res) =>{
+      setUnit(res.data)
+    })
+  }
+
 
   async function getstandardlecture() {
 
@@ -77,6 +113,9 @@ const StandardLecturePlan = () => {
   }
 
   useEffect(() => {
+    getassignment()
+    getfaculty()
+    getunittest()
     getstandardlecture();
   }, []);
 
@@ -433,20 +472,22 @@ const StandardLecturePlan = () => {
                       onChange={handleChange}
                     />
                   </div>
-                  <div className="form-group col-lg-4 ">
-                    <label for="exampleInputUsername1">
-                      Assignment
-                    </label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="exampleInputUsername1"
-                      placeholder="Enter.."
-                      value={value.assignment}
-                      name="assignment"
-                      onChange={handleChange}
-                    />
+             
+                  <div class="form-group col-lg-4">
+                    <label for="exampleInputUsername1">Assignment</label>
+                    <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.assignment} name='assignment' onChange={handleChange} >
+
+                      <option>Select Assignment</option>
+                      {assignment.map((item) =>{
+                        return (
+
+                          <option value={item.id} >{item.assignmentname}</option>
+                        )
+                      })}
+                 
+                    </select>
                   </div>
+
                   <div className="form-group col-lg-4 ">
                     <label for="exampleInputUsername1">
                       Assignment Date
@@ -461,19 +502,19 @@ const StandardLecturePlan = () => {
                       onChange={handleChange}
                     />
                   </div>
-                  <div className="form-group col-lg-4 ">
-                    <label for="exampleInputUsername1">
-                      Faculty Name
-                    </label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="exampleInputUsername1"
-                      placeholder="Enter.."
-                      value={value.faculty_name}
-                      name="faculty_name"
-                      onChange={handleChange}
-                    />
+             
+                  <div class="form-group col-lg-4">
+                    <label for="exampleInputUsername1"> Faculty Name</label>
+                    <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.faculty_name} name='faculty_name' onChange={handleChange} >
+                      <option>Select Faculty</option>
+                      {faculty.map((item) =>{
+                        return (
+
+                          <option value={item.Faculty_Id} >{item.Faculty_Name}</option>
+                        )
+                      })}
+                 
+                    </select>
                   </div>
                   <div className="form-group col-lg-4 ">
                     <label for="exampleInputUsername1">
@@ -518,20 +559,22 @@ const StandardLecturePlan = () => {
                     />
                   </div>
 
-                  <div className="form-group col-lg-4 ">
-                    <label for="exampleInputUsername1">
-                      Unit Test
-                    </label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="exampleInputUsername1"
-                      placeholder="Enter.."
-                      value={value.unit_test}
-                      name="unit_test"
-                      onChange={handleChange}
-                    />
+          
+                  <div class="form-group col-lg-4">
+                    <label for="exampleInputUsername1">Unit Test</label>
+                    <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.unit_test} name='unit_test' onChange={handleChange} >
+
+                      <option>Select </option>
+                      {unit.map((item) =>{
+                        return (
+
+                          <option value={item.id} >{item.subject}</option>
+                        )
+                      })}
+                 
+                    </select>
                   </div>
+                  
                   <div class="form-group col-lg-4">
                     <label for="exampleInputUsername1">Publish</label>
                     <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.publish} name='publish' onChange={handleChange} >

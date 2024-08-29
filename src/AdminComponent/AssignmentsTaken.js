@@ -18,10 +18,11 @@ const AssignmentsTaken = () => {
     const [assign, Setassign] = useState([])
     const [batch, setAnnulBatch] = useState([])
     const [batchid, setBatchid] = useState('')
-    const [marks , setMarks] = useState('')
+    const [marks, setMarks] = useState('')
     const { assignmentstakenid } = useParams();
     const [hide, setHide] = useState(false)
     const [Studentdata, setStudent] = useState([])
+    const [studentdata, setStudentdata] = useState([])
     const [value, setValue] = useState({
 
         coursename: '',
@@ -69,7 +70,7 @@ const AssignmentsTaken = () => {
         return isValid
     }
 
-    
+
 
     async function getCourseData() {
 
@@ -83,17 +84,7 @@ const AssignmentsTaken = () => {
             })
     }
 
-    const getstudentlisitng = (id) => {
-        setHide(true)
-        const data = {
-            batch_code: id
-        }
 
-        axios.post(`${BASE_URL}/getbatchwisestudent`, data)
-            .then((res) => {
-                setStudent(res.data)
-            })
-    }
 
 
 
@@ -135,18 +126,18 @@ const AssignmentsTaken = () => {
 
     }
 
-    const getmarks =  (id) =>{
+    const getmarks = (id) => {
         SetAssignid(id)
 
         setMarks('')
 
-        const Marks = assign.filter((item) =>(item.id == id)).map((item) => item.marks)
-        const AssignmentDate = assign.filter((item) =>(item.id == id)).map((item) => item.assignmentdate)
+        const Marks = assign.filter((item) => (item.id == id)).map((item) => item.marks)
+        const AssignmentDate = assign.filter((item) => (item.id == id)).map((item) => item.assignmentdate)
 
         setMarks(Marks[0])
 
         setValue({
-            assignmentdate :AssignmentDate
+            assignmentdate: AssignmentDate
         })
 
 
@@ -184,12 +175,21 @@ const AssignmentsTaken = () => {
         }))
     }
 
+    async function gettakedata(params) {
+        axios.post(`${BASE_URL}/geteditassignmenttaken`, { GivenId: assignmentstakenid })
+            .then((res) => {
+                console.log(res)
+                setStudentdata(res.data)
+            })
+    }
+
 
     useEffect(() => {
-        if ( assignmentstakenid !== ":assignmentstakenid") {
+        if (assignmentstakenid !== ":assignmentstakenid") {
             getUpdate()
+            setHide(true)
         }
-
+        gettakedata()
         getCourseData()
         setError({})
         setUid([])
@@ -209,11 +209,11 @@ const AssignmentsTaken = () => {
             const data = {
                 coursename: courseid,
                 batchcode: batchid,
-                marks:marks,
+                marks: marks,
                 assignmentname: assignid,
                 assignmentdate: value.assignmentdate,
                 returndate: value.returndate,
-                uid:uid.Given_Id
+                uid: uid.Given_Id
             }
 
 
@@ -229,47 +229,36 @@ const AssignmentsTaken = () => {
         }
     }
 
-    const columns = [
-        {
-            field: 'index',
-            headerName: 'Id',
-            type: 'number',
-            align: 'center',
-            headerAlign: 'center',
-            flex: 1,
-            filterable: false,
-
-        },
-        { field: 'Student_Code', headerName: 'Student Code', flex: 2 },
-        { field: 'Student_Name', headerName: 'Student Name', flex: 2 },
-        { field: 'Admission_Date', headerName: 'Admission Date', flex: 2 },
-        { field: 'Phase', headerName: 'Phase', flex: 2 ,renderCell: (param) =>{
-            return (
-                <div class="form-group ">
-                <label for="exampleFormControlSelect1"></label>
-                <select class="form-control form-control-lg" id="exampleFromControlSelect1" >
-
-                    <option>Select Phase</option>
-
-                            <option value='part1'>Part 1</option>
-                            <option value='part2'>Part 2</option>
-              
-
-                </select>
-            </div>
-            )
-        }},
-
-     
-    ];
+    const handleInputChange = (index, event) => {
+        const { name, value } = event.target;
+        const updatedStudents = [...studentdata];
+        updatedStudents[index][name] = value;
+        setStudentdata(updatedStudents);
+    };
 
 
-    const rowsWithIds = Studentdata.map((row, index) => ({ index: index + 1, ...row }));
 
 
     const onhandleChange = (e) => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
+
+
+    const handleSubmitTable = async (e) => {
+
+
+
+        try {
+            const response = await axios.post(`${BASE_URL}/update_assignment_child`, studentdata);
+
+            alert("Data updated successfully")
+        } catch (error) {
+            console.error('Error saving data', error);
+            // Handle the error
+        }
+    };
+
+
 
     return (
 
@@ -304,8 +293,9 @@ const AssignmentsTaken = () => {
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Batch Code<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={batchid} onChange={(e) =>{ getassign(e.target.value) 
-                                                    getstudentlisitng(e.target.value)
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={batchid} onChange={(e) => {
+                                                    getassign(e.target.value)
+
                                                 }} name='batchcode'>
                                                     <option>Select Batch</option>
                                                     {batch.map((item) => {
@@ -320,7 +310,7 @@ const AssignmentsTaken = () => {
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Assignment Name<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={assignid} onChange={(e) =>  getmarks(e.target.value) } name='assignmentname'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={assignid} onChange={(e) => getmarks(e.target.value)} name='assignmentname'>
                                                     <option>Select Batch</option>
                                                     {assign.map((item) => {
                                                         return (
@@ -335,7 +325,7 @@ const AssignmentsTaken = () => {
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">	Max Marks</label>
                                                 <input type="text" class="form-control" id="exampleInputUsername1" value={marks}
-                                                    placeholder="Max Marks" name='maxmarks'  disabled />
+                                                    placeholder="Max Marks" name='maxmarks' disabled />
                                             </div>
 
                                             <div class="form-group col-lg-3">
@@ -368,43 +358,99 @@ const AssignmentsTaken = () => {
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div className='d-flex justify-content-between'>
-                                        <div>
-                                            <h4 class="card-title">Student List</h4>
+                        {hide && <div class="col-lg-12 mt-3">
+                                <form class="card" >
+                                    <div class="card-body">
+                                        <div className='d-flex justify-content-between'>
+                                            {/* <div>
+                    <h4 class="card-title">Allot Roll Number List</h4>
+                </div> */}
+
                                         </div>
+                                        <div>
+
+
+
+
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>
+                                                            Id
+                                                        </th>
+                                                        <th>
+                                                            Student Code
+                                                        </th>
+
+                                                        <th>
+                                                            Student Name
+                                                        </th>
+                                                        <th>
+                                                            Marks
+                                                        </th>
+                                                        <th>
+                                                            Status
+                                                        </th>
+                                                       
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                    {studentdata.map((item, index) => {
+                                                        return (
+                                                            <tr key={index}>
+                                                                <td>
+                                                                    {index + 1}
+                                                                </td>
+                                                                <td>
+                                                                    {item.Student_Code}
+                                                                </td>
+                                                                <td>
+                                                                    {item.Student_Name}
+
+                                                                </td>
+                                                                <td>
+                                                                    <div class="form-group ">
+                                                                        <label for="exampleFormControlSelect1"></label>
+                                                                        <input type="number" class="form-control" id="exampleInputUsername1" name='Marks_Given' onChange={(e) => handleInputChange(index, e)} value={item.Marks_Given} />
+
+                                                                    </div>
+                                                                </td>
+                                                              
+                                                                <td>
+                                                                    <>
+                                                                        <select class="form-control form-control-lg" value={item.Status} onChange={(e) => handleInputChange(index, e)} name='Status' id="exampleFromControlSelect1" >
+
+                                                                            <option>Select</option>
+
+                                                                            <option value='Present'>Present</option>
+                                                                            <option value='Absent'>Absent</option>
+
+
+
+                                                                        </select>
+                                                                    </>
+                                                                </td>
+                                                             
+                                                            
+                                                            
+
+                                                            </tr>
+                                                        )
+                                                    })}
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                        <button type="button" onClick={handleSubmitTable} style={{ float: "right" }} class="btn btn-primary m-2">Update Sheet</button>
+
+
 
                                     </div>
-                                    {hide && <div>
+                                </form>
+                            </div>}
+                       
 
-                                        <DataGrid
-                                            rows={rowsWithIds}
-                                            columns={columns}
-                                            disableColumnFilter
-                                            disableColumnSelector
-                                            disableDensitySelector
-                                            rowHeight={35}
-                                            getRowId={(row) => row.Student_Id}
-                                            initialState={{
-                                                pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
-                                                },
-                                            }}
-
-                                        />
-
-                                    </div>}
-             
-
-                                    <button type='button' onClick={() => {
-                                        window.location.reload()
-                                    }} class="btn btn-light">Save</button>
-
-                                </div>
-                            </div>
-                        </div>
 
                     </div>
                 </div>

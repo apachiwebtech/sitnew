@@ -261,6 +261,7 @@ const PerssonalInfo = () => {
 
 
     const handleadmission = async (id) => {
+        
       let confirm = window.confirm("Are you sure you want to proceed?");
 
       if (confirm) {

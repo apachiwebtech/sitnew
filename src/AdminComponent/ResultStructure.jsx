@@ -6,7 +6,6 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { BASE_URL } from "./BaseUrl";
 import InnerHeader from "./InnerHeader";
-
 import CloseIcon from "@mui/icons-material/Close";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -28,9 +27,10 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 
 const ResultStructure = () => {
 
-  const [uid, setUid] = React.useState([]);
-  const [open, setOpen] = React.useState(false);
-  const [grade, setGrade] = React.useState([]);
+  const [uid, setUid] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [grade, setGrade] = useState([]);
+  const [result, setResult] = useState([]);
   const { batchid } = useParams();
 
   const handleClickOpen = () => {
@@ -40,17 +40,47 @@ const ResultStructure = () => {
     setOpen(false);
   };
 
-  const [onlineAdmissions, setOnlineAdmissions] = useState([]);
+
+  const [value, setValue] = useState({
+    last_mark_limit: "" || result.late_limit,
+    absent_wt: "" || result.absent_wt,
+    full_atten_wt: "" || result.full_atten_wt,
+    exam_wt: "" || result.exam_wt,
+    assignment_wt: "" || result.assignment_wt,
+    unit_test: "" || result.unit_test,
+
+
+
+    start_from: "" || uid.start_from,
+    end_from: "" || uid.end_from,
+    grade: "" || uid.grade,
+  })
+
+  useEffect(() => {
+    setValue({
+      last_mark_limit:  result.late_limit,
+      absent_wt:  result.absent_wt,
+      full_atten_wt: result.full_atten_wt,
+      exam_wt:  result.exam_wt,
+      assignment_wt:  result.assignment_wt,
+      unit_test:  result.unit_test,
+    })
+  }, [result])
+
+
+
 
   async function getOnlineAdmissions() {
 
     const data = {
-      batchid: batchid
+      batch_id: batchid
     }
-    axios.post(`${BASE_URL}/getcompanyinfo`, data)
+    axios.post(`${BASE_URL}/batch_result_Structure`, data)
       .then((res) => {
-        console.log(res)
-        setOnlineAdmissions(res.data)
+        if(res.data[0]){
+          
+          setResult(res.data[0])
+        }
       })
   }
 
@@ -61,7 +91,7 @@ const ResultStructure = () => {
     }
     axios.post(`${BASE_URL}/get_grade`, data)
       .then((res) => {
-        console.log(res)
+
         setGrade(res.data)
       })
   }
@@ -69,19 +99,9 @@ const ResultStructure = () => {
   useEffect(() => {
     getOnlineAdmissions();
     getGrade();
-  }, []);
+  }, [batchid]);
 
-  const [value, setValue] = useState({
-    last_mark_limit: "" || uid.last_mark_limit,
-    absent_wt: "" || uid.absent_wt,
-    full_atten_wt: "" || uid.full_atten_wt,
-    exam_wt: "" || uid.exam_wt,
-    assignment_wt: "" || uid.assignment_wt,
-    unit_test: "" || uid.unit_test,
-    start_from: "" || uid.start_from,
-    end_from: "" || uid.end_from,
-    grade: "" || uid.grade,
-  })
+
 
   const handleChange = (e) => {
     setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
@@ -89,39 +109,23 @@ const ResultStructure = () => {
 
 
 
-  const columns = [
-    {
-      field: "index",
-      headerName: "Id",
-      type: "number",
-      align: "center",
-      headerAlign: "center",
-      flex: 1,
-      filterable: false,
-    },
-    { field: "Company", headerName: "Assignment Name", flex: 2 },
-    { field: "BussinessNature", headerName: "Subject", flex: 2 },
-    { field: "Designation", headerName: "Marks", flex: 2 },
-    { field: "Duration", headerName: "Date", flex: 2 },
-  ];
 
-  const rowsWithIds = onlineAdmissions.map((row, index) => ({
-    index: index + 1,
-    ...row,
-  }));
+
+
 
   const handleGradeSubmit = (e) => {
+
     e.preventDefault()
     const data = {
       grade: value.grade,
       end_from: value.end_from,
       start_from: value.start_from,
       batchid: batchid,
-      id : value.id
+      id: value.id
     }
     axios.post(`${BASE_URL}/add_grade`, data)
       .then((res) => {
-        console.log(res)
+        alert("Data Added successfully")
         getGrade()
         setValue({
           grade: '',
@@ -131,6 +135,8 @@ const ResultStructure = () => {
         })
       })
   }
+
+
   const handleSubmit = (e) => {
     e.preventDefault()
 
@@ -142,11 +148,12 @@ const ResultStructure = () => {
       assignment_wt: value.assignment_wt,
       unit_test: value.unit_test,
       batchid: batchid,
+      uid:result.id
     }
 
-    axios.post(`${BASE_URL}/add_company_info`, data)
+    axios.post(`${BASE_URL}/add_batch_result`, data)
       .then((res) => {
-        console.log(res)
+        alert("Data Added successfully")
         setOpen(false)
         getGrade()
       })
@@ -164,6 +171,7 @@ const ResultStructure = () => {
     axios.post(`${BASE_URL}/new_update_data`, data)
       .then((res) => {
         setUid(res.data[0])
+
         setValue({
           grade: res.data[0].grade,
           end_from: res.data[0].end_from,
@@ -194,6 +202,8 @@ const ResultStructure = () => {
       })
 
   }
+
+
   return (
     <div className="container-fluid page-body-wrapper col-lg-10">
       <InnerHeader />
@@ -211,32 +221,32 @@ const ResultStructure = () => {
 
                           <div className="form-group col-lg-4 ">
                             <label for="exampleInputUsername1">Unit Test Wt.(%)</label>
-                            <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Unit Test Wt.(%)	" name="unit_test" onChange={handleChange} />
+                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.unit_test} placeholder="Unit Test Wt.(%)	" name="unit_test" onChange={handleChange} />
                           </div>
 
                           <div className="form-group col-lg-4 ">
                             <label for="exampleInputUsername1">Assignments Wt.(%)</label>
-                            <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Assignments Wt.(%)" name="assignment_wt" onChange={handleChange} />
+                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.assignment_wt} placeholder="Assignments Wt.(%)" name="assignment_wt" onChange={handleChange} />
                           </div>
 
                           <div className="form-group col-lg-4 ">
                             <label for="exampleInputUsername1">Exam Wt.(%)</label>
-                            <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Exam Wt.(%)" name="exam_wt" onChange={handleChange} />
+                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.exam_wt} placeholder="Exam Wt.(%)" name="exam_wt" onChange={handleChange} />
                           </div>
 
                           <div className="form-group col-lg-4 ">
                             <label for="exampleInputUsername1">Full Atten. Wt.(%)</label>
-                            <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Full Atten. Wt.(%)" name="full_atten_wt" onChange={handleChange} />
+                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.full_atten_wt} placeholder="Full Atten. Wt.(%)" name="full_atten_wt" onChange={handleChange} />
                           </div>
 
                           <div className="form-group col-lg-4 ">
                             <label for="exampleInputUsername1">Absent Wt.(%)</label>
-                            <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Absent Wt.(%)" name="absent_wt" onChange={handleChange} />
+                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.absent_wt} placeholder="Absent Wt.(%)" name="absent_wt" onChange={handleChange} />
                           </div>
 
                           <div className="form-group col-lg-4 ">
                             <label for="exampleInputUsername1">Late mark limit (min)</label>
-                            <input type="text" class="form-control " id="exampleInputUsername1" placeholder="0" name="last_mark_limit" onChange={handleChange} />
+                            <input type="text" class="form-control " id="exampleInputUsername1" value={value.last_mark_limit} placeholder="0" name="last_mark_limit" onChange={handleChange} />
                           </div>
 
 
@@ -256,43 +266,6 @@ const ResultStructure = () => {
                   </form>
                 </div>
               </div>
-              {/* <div className="card">
-                <div className="card-body">
-                  <div
-                    className="d-flex justify-content-between gap-3"
-                    style={{ width: "100%", padding: "10px 0" }}
-                  >
-                    <div>
-                      <h4 class="card-title">Add Company Information</h4>
-                    </div>
-
-                  </div>
-
-                  <div>
-                    <DataGrid
-                      rows={rowsWithIds}
-                      columns={columns}
-                      disableColumnFilter
-                      disableColumnSelector
-                      disableDensitySelector
-                      rowHeight={37}
-                      getRowId={(row) => row.id}
-                      initialState={{
-                        pagination: {
-                          paginationModel: { pageSize: 5, page: 0 },
-                        },
-                      }}
-                      slots={{ toolbar: GridToolbar }}
-                      slotProps={{
-                        toolbar: {
-                          showQuickFilter: true,
-                        },
-                      }}
-                    />
-                  </div>
-
-                </div>
-              </div> */}
             </div>
           </div>
         </div>
@@ -322,7 +295,7 @@ const ResultStructure = () => {
             <b className="d-flex justify-content-between"><p className="w-25 text-center ">Start From</p><p className="w-25 text-center ">End To</p><p className="w-25 text-center ">Grade</p><p className="w-25 text-center ">Action</p></b>
             {grade.map((item) => {
               return (
-                <b className="d-flex justify-content-between"><p className="w-25 text-center ">{item.start_from}</p><p className="w-25 text-center ">{item.end_from}</p><p className="w-25 text-center ">{item.grade}</p><p className="w-25 text-center "><span style={{cursor:"pointer"}} onClick={() => getupdatedata(item.id)} >Edit</span> / <span style={{cursor:"pointer"}} onClick={() => handleDelete(item.id)} >Delete</span></p></b>
+                <b className="d-flex justify-content-between"><p className="w-25 text-center ">{item.start_from}</p><p className="w-25 text-center ">{item.end_from}</p><p className="w-25 text-center ">{item.grade}</p><p className="w-25 text-center "><span style={{ cursor: "pointer" }} onClick={() => getupdatedata(item.id)} >Edit</span> / <span style={{ cursor: "pointer" }} onClick={() => handleDelete(item.id)} >Delete</span></p></b>
               )
             })}
           </div>
@@ -333,15 +306,15 @@ const ResultStructure = () => {
               <div className="row">
                 <div className="form-group col-lg-3 ">
                   <label for="exampleInputUsername1">Start From</label>
-                  <input type="text" class="form-control" id="exampleInputUsername1" value={value.start_from} placeholder="0" name="start_from" onChange={handleChange} />
+                  <input type="text" class="form-control" id="exampleInputUsername1" value={value.start_from}  name="start_from" onChange={handleChange} />
                 </div>
                 <div className="form-group col-lg-3 ">
                   <label for="exampleInputUsername1">End From</label>
-                  <input type="text" class="form-control" id="exampleInputUsername1" value={value.end_from} placeholder="0" name="end_from" onChange={handleChange} />
+                  <input type="text" class="form-control" id="exampleInputUsername1" value={value.end_from} name="end_from" onChange={handleChange} />
                 </div>
                 <div className="form-group col-lg-3 ">
                   <label for="exampleInputUsername1">Grade</label>
-                  <input type="text" class="form-control" id="exampleInputUsername1" value={value.grade} placeholder="0" name="grade" onChange={handleChange} />
+                  <input type="text" class="form-control" id="exampleInputUsername1" value={value.grade} name="grade" onChange={handleChange} />
                 </div>
                 <div className="form-group col-lg-3 d-flex align-items-end ">
                   <button className="btn btn-success" type="submit">Save</button>

@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import Loader from './Loader';
-
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 
 const LectureTaken = () => {
 
@@ -21,7 +21,13 @@ const LectureTaken = () => {
     const [unitid, SetUnitid] = useState('')
     const [assignid, Setassignid] = useState('')
     const [batchid, setBatchid] = useState('')
+    const [lectureid, setLectureid] = useState('')
     const [loading, setLoading] = useState(true)
+    const [studentdata, setStudentdata] = useState([])
+    const [hide, setHide] = useState(false)
+
+
+
 
     const [value, setValue] = useState(
         {
@@ -153,60 +159,139 @@ const LectureTaken = () => {
 
 
     const getbatch = async (id) => {
-        
+
         SetCoursid(id)
 
         const data = {
             courseid: id
         }
 
-        try {
-            const res = await axios.post(`${BASE_URL}/getcoursewisebatch`, data);
-            setAnnulBatch(res.data);
 
-        } catch (err) {
-            console.error("Error fetching data:", err);
+
+
+        if (id) {
+            try {
+                const res = await axios.post(`${BASE_URL}/getcoursewisebatch`, data);
+                setAnnulBatch(res.data);
+
+            } catch (err) {
+                console.error("Error fetching data:", err);
+            }
+        } else {
+            try {
+                const res = await axios.get(`${BASE_URL}/getbatch`, data);
+
+                setAnnulBatch(res.data);
+
+            } catch (err) {
+                console.error("Error fetching data:", err);
+            }
         }
 
 
 
+
+
     };
+
+    async function gettakedata(params) {
+        axios.post(`${BASE_URL}/geteditlecturetaken`, { Takeid: lecturetakenid })
+            .then((res) => {
+                console.log(res)
+                setStudentdata(res.data)
+            })
+    }
+
+    useEffect(() => {
+        gettakedata()
+        getbatch()
+        getlecture()
+    }, [])
+
+
+
     const getlecture = async (id) => {
+
         setBatchid(id)
+
         const data = {
             batch_id: id,
             AnnulBatch: id
         }
 
-        try {
-            const res = await axios.post(`${BASE_URL}/getbatchwiselecture`, data);
-            SetLecture(res.data);
 
-        } catch (err) {
-            console.error("Error fetching data:", err);
-        }
+        if (id) {
+            try {
+                const res = await axios.post(`${BASE_URL}/getbatchwiselecture`, data);
+                SetLecture(res.data);
 
-        try {
-            const res = await axios.post(`${BASE_URL}/getbatchwiseassignment`, data);
-            Setassign(res.data);
-
-        } catch (err) {
-            console.error("Error fetching data:", err);
-        }
-
-        try {
-            const res = await axios.post(`${BASE_URL}/getbatchwiseunittest`, data);
-            if(res.data[0].id){
-
-                SetUnit(res.data);
+            } catch (err) {
+                console.error("Error fetching data:", err);
             }
+        } else {
+            try {
+                const res = await axios.post(`${BASE_URL}/get_data`, { tablename: "Batch_Lecture_Master", columnname: "id,subject_topic" });
+                SetLecture(res.data);
 
-        } catch (err) {
-            console.error("Error fetching data:", err);
+            } catch (err) {
+                console.error("Error fetching data:", err);
+            }
         }
+
+
+
+        if (id) {
+            try {
+                const res = await axios.post(`${BASE_URL}/getbatchwiseassignment`, data);
+                Setassign(res.data);
+
+            } catch (err) {
+                console.error("Error fetching data:", err);
+            }
+        } else {
+            try {
+                const res = await axios.post(`${BASE_URL}/get_data`, { tablename: "assignmentstaken", columnname: "id,assignmentname" });
+                Setassign(res.data);
+
+            } catch (err) {
+                console.error("Error fetching data:", err);
+            }
+        }
+
+
+        if (id) {
+            try {
+                const res = await axios.post(`${BASE_URL}/getbatchwiseunittest`, data);
+                if (res.data[0].id) {
+
+                    SetUnit(res.data);
+                }
+
+            } catch (err) {
+                console.error("Error fetching data:", err);
+            }
+        } else {
+            try {
+                const res = await axios.post(`${BASE_URL}/get_data`, { tablename: "awt_unittesttaken", columnname: "id,subject" });
+                if (res.data[0].id) {
+
+                    SetUnit(res.data);
+                }
+
+            } catch (err) {
+                console.error("Error fetching data:", err);
+            }
+        }
+
+
+
+
 
 
     };
+
+
+
 
 
 
@@ -229,8 +314,8 @@ const LectureTaken = () => {
         SetCoursid(data[0].Course_Id)
         setBatchid(data[0].Batch_Id)
         SetUnitid(data[0].Test_Id)
-        Setassignid(data[0].assignid)
-
+        Setassignid(data[0].Assignment_Id)
+        setLectureid(data[0].Lecture_Id)
         setUid(data[0])
 
         setValue(prevState => ({
@@ -260,6 +345,7 @@ const LectureTaken = () => {
     useEffect(() => {
         if (lecturetakenid !== ":lecturetakenid") {
             getStudentDetail()
+            setHide(true)
         }
 
         setUid([])
@@ -310,13 +396,41 @@ const LectureTaken = () => {
 
 
 
+
         }
     }
+
+
+
+    const handleInputChange = (index, event) => {
+        const { name, value } = event.target;
+        const updatedStudents = [...studentdata];
+        updatedStudents[index][name] = value;
+        setStudentdata(updatedStudents);
+    };
+
+
+
 
 
     const onhandleChange = (e) => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
+
+
+    const handleSubmitTable = async (e) => {
+
+
+
+        try {
+            const response = await axios.post(`${BASE_URL}/update_lecture_child`, studentdata);
+            
+            alert("Data updated successfully")
+        } catch (error) {
+            console.error('Error saving data', error);
+            // Handle the error
+        }
+    };
 
 
 
@@ -326,7 +440,7 @@ const LectureTaken = () => {
             <InnerHeader />
             {loading && <Loader />}
 
-            <div className="main-panel"  style={{dispale : loading ? "none" : "block"}}>
+            <div className="main-panel" style={{ dispale: loading ? "none" : "block" }}>
 
                 <div className="content-wrapper">
 
@@ -367,11 +481,13 @@ const LectureTaken = () => {
 
                                                                 <option>Select Batch</option>
                                                                 {batch.map((item) => {
+
                                                                     return (
                                                                         <option value={item.Batch_Id}>{item.Batch_code}</option>
                                                                     )
+
                                                                 })}
-                                                                
+
                                                             </select>
                                                             {<span className="text-danger">{error.batch}</span>}
                                                         </div>
@@ -379,7 +495,7 @@ const LectureTaken = () => {
 
                                                         <div className="form-group col-lg-2 ">
                                                             <label for="exampleexampleFormControlSelect1InputUsername1">Lecture</label>
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" name='lecture' onChange={onhandleChange} >
+                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" name='lecture' value={lectureid} onChange={onhandleChange} >
 
                                                                 <option>Select Lecture</option>
                                                                 {lecture.map((item) => {
@@ -496,7 +612,7 @@ const LectureTaken = () => {
 
                                                         <div className="form-group col-lg-2 ">
                                                             <label for="exampleFormControlSelect1">Assignment<span className='text-danger'>*</span></label>
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={assignid} name='assignment' onChange={(e) =>Setassignid(e.target.value)} >
+                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={assignid} name='assignment' onChange={(e) => Setassignid(e.target.value)} >
 
                                                                 <option>select assignment</option>
                                                                 {assign.map((item) => {
@@ -520,11 +636,11 @@ const LectureTaken = () => {
                                                         </div>
                                                         <div className="form-group col-lg-2 ">
                                                             <label for="exampleFormControlSelect1">Test<span className='text-danger'>*</span></label>
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={unitid} name='test' onChange={(e) =>SetUnitid(e.target.value)} >
+                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={unitid} name='test' onChange={(e) => SetUnitid(e.target.value)} >
                                                                 <option>select test</option>
                                                                 {unit.map((item) => {
                                                                     return (
-                                                                        <option value={item.id}>{item.utname}</option>
+                                                                        <option value={item.id}>{item.subject}</option>
                                                                     )
                                                                 })}
                                                             </select>
@@ -549,11 +665,142 @@ const LectureTaken = () => {
                                             </div>
 
 
-                                            <div className='row p-2 gap-2'>
-                                                <button className='mr-2 btn btn-primary' onClick={handleSubmit}>Save</button>
+                                            <div className='row p-2 justify-content-end'>
+                                                <button className='mr-2 btn btn-primary' style={{float :"right"}} onClick={handleSubmit}>Save</button>
                                                 {/* <button className='col-2'>close</button> */}
                                             </div>
+
                                         </div>
+
+                                        {hide && <div class="col-lg-12 mt-3">
+                                            <form class="card" >
+                                                <div class="card-body">
+                                                    <div className='d-flex justify-content-between'>
+                                                        {/* <div>
+                                                            <h4 class="card-title">Allot Roll Number List</h4>
+                                                        </div> */}
+
+                                                    </div>
+                                                    <div>
+
+                                                   
+
+
+                                                        <table class="table table-bordered">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>
+                                                                        Id
+                                                                    </th>
+                                                                    <th>
+                                                                        Student Code
+                                                                    </th>
+
+                                                                    <th>
+                                                                        Student Name
+                                                                    </th>
+                                                                    <th>
+                                                                        Feedback
+                                                                    </th>
+                                                                    <th>
+                                                                        Attendence
+                                                                    </th>
+                                                                    <th>
+                                                                        In Time
+                                                                    </th>
+                                                                    <th>
+                                                                        Out Time
+                                                                    </th>
+                                                                    <th>
+                                                                        Assignment
+                                                                    </th>
+                                                                </tr>
+                                                            </thead>
+
+                                                            <tbody>
+                                                                {studentdata.map((item, index) => {
+                                                                    return (
+                                                                        <tr key={index}>
+                                                                            <td>
+                                                                                {index + 1}
+                                                                            </td>
+                                                                            <td>
+                                                                                {item.Student_Code}
+                                                                            </td>
+                                                                            <td>
+                                                                                {item.Student_Name}
+
+                                                                            </td>
+                                                                            <td>
+                                                                                <select class="form-control form-control-lg" name="Student_Reaction"  onChange={(e) => handleInputChange(index, e)}  value={item.Student_Reaction } id="exampleFromControlSelect1" >
+
+                                                                                    <option>Select</option>
+
+                                                                                    <option value='0'>0</option>
+                                                                                    <option value='1'>1</option>
+                                                                                    <option value='2'>2</option>
+                                                                                    <option value='3'>3</option>
+
+
+                                                                                </select>
+                                                                            </td>
+                                                                            <td>
+                                                                                <>
+                                                                                    <select class="form-control form-control-lg" value={item.Student_Atten} onChange={(e) => handleInputChange(index, e)} name='Student_Atten' id="exampleFromControlSelect1" >
+
+                                                                                        <option>Select</option>
+
+                                                                                        <option value='Present'>Present</option>
+                                                                                        <option value='Absent'>Absent</option>
+
+
+
+                                                                                    </select>
+                                                                                </>
+                                                                            </td>
+                                                                            <td>
+                                                                                <div class="form-group ">
+                                                                                    <label for="exampleFormControlSelect1"></label>
+                                                                                    <input type="time" class="form-control" id="exampleInputUsername1" name='In_Time' onChange={(e) => handleInputChange(index, e)} value={item.In_Time} />
+
+                                                                                </div>
+                                                                            </td>
+                                                                            <td>
+                                                                                <div class="form-group ">
+                                                                                    <label for="exampleFormControlSelect1"></label>
+                                                                                    <input type="time" class="form-control" id="exampleInputUsername1"
+                                                                                        name='Out_Time' onChange={(e) => handleInputChange(index, e)} value={item.Out_Time} />
+
+                                                                                </div>
+                                                                            </td>
+                                                                            <td>
+                                                                                <div class="form-group ">
+                                                                                    <label for="exampleFormControlSelect1"></label>
+                                                                                    <select class="form-control form-control-lg"
+                                                                                        name='AssignmentReceived' id="exampleFromControlSelect1" onChange={(e) => handleInputChange(index, e)} value={item.AssignmentReceived}>
+
+                                                                                        <option>Select </option>
+                                                                                        <option value='Yes'>Yes</option>
+                                                                                        <option value='No'>No</option>
+
+
+                                                                                    </select>
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>
+                                                                    )
+                                                                })}
+                                                            </tbody>
+                                                        </table>
+
+                                                    </div>
+                                                    <button type="button" onClick={handleSubmitTable} style={{float:"right"}} class="btn btn-primary m-2">Update Sheet</button>
+
+
+
+                                                </div>
+                                            </form>
+                                        </div>}
 
                                     </div>
                                 </div>

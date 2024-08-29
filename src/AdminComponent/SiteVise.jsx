@@ -1,13 +1,5 @@
-import CloseIcon from "@mui/icons-material/Close";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
 import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import IconButton from "@mui/material/IconButton";
-import { duration, styled } from "@mui/material/styles";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { styled } from "@mui/material/styles";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -29,65 +21,55 @@ const SiteVise = () => {
 
   const [open, setOpen] = React.useState(false);
   const { batchid } = useParams();
-  const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-  const [cid, setCid] = useState("")
   const [uid, setUid] = useState([])
   const [data, setData] = useState([])
-
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-    setValue(
-      {
-        assingmentname: "",
-        subject: "",
-        marks: "",
-        date: ""
-      }
-    )
-    setUid([])
-  };
-
-  const [onlineAdmissions, setOnlineAdmissions] = useState([]);
+  const [info, setInfo] = useState([]);
+  
 
   async function getUnitTest() {
 
-    axios.get(`${BASE_URL}/site_vise`)
+    const data ={
+      batch_id : batchid
+    }
+
+    axios.post(`${BASE_URL}/batch_site_vise`,data)
 
       .then((res) => {
-        setOnlineAdmissions(res.data)
+
+        if(res.data[0]){
+          
+          setInfo(res.data[0])
+        }
       })
 
   }
 
   useEffect(() => {
     getUnitTest();
-  }, []);
+  }, [batchid]);
 
   const [value, setValue] = useState({
-    company: "" || uid.company,
-    contact_person: "" || uid.contact_person,
-    designation: "" || uid.designation,
-    phone: "" || uid.phone,
-    visit_date: "" || uid.visit_date,
-    address: "" || uid.address,
+    company: "" || info.company,
+    contact_person: "" || info.contact_person,
+    designation: "" || info.designation,
+    phone: "" || info.phone,
+    visit_date: "" || info.visit_date,
+    address: "" || info.address,
+
     subject: "" || uid.subject,
     exam_date: "" || uid.exam_date,
-    max_mark: "" || uid.max_mark,
+    max_mark: "" || uid.max_marks,
     duration: "" || uid.duration,
 
   })
 
   async function getexam() {
     const data = {
-      tablename: "awt_batch_exam"
+      batch_id: batchid
     }
-    axios.post(`${BASE_URL}/get_data`, data)
+    axios.post(`${BASE_URL}/batch_exam_data`, data)
       .then((res) => {
-        console.log(res.data)
+     
         setData(res.data)
       })
       .catch((err) => {
@@ -97,20 +79,23 @@ const SiteVise = () => {
 
   useEffect(() => {
     getexam()
+
     setValue({
-      company: uid.company,
-      contact_person: uid.contact_person,
-      designation: uid.designation,
-      phone: uid.phone,
-      visit_date: uid.visit_date,
-      address: uid.address,
+      company: info.company,
+      contact_person: info.contact_person,
+      designation: info.designation,
+      phone: info.phone,
+      visit_date: info.visit_date,
+      address: info.address,
+
+
       subject: uid.subject,
       exam_date: uid.exam_date,
-      max_mark: uid.max_mark,
+      max_mark: uid.max_marks,
       duration: uid.duration,
 
     })
-  }, [uid])
+  }, [uid,info])
 
   const handleChange = (e) => {
     setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
@@ -118,21 +103,7 @@ const SiteVise = () => {
 
 
 
-  const handleClick = (id) => {
-    setCid(id)
-    setConfirmationVisibleMap((prevMap) => ({
-      ...prevMap,
-      [id]: true,
-    }));
-  };
 
-  const handleCancel = (id) => {
-    // Hide the confirmation dialog without performing the delete action
-    setConfirmationVisibleMap((prevMap) => ({
-      ...prevMap,
-      [id]: false,
-    }));
-  };
 
   const getupdatedata = (id) => {
 
@@ -141,7 +112,7 @@ const SiteVise = () => {
     const data = {
       u_id: id,
       uidname: "id",
-      tablename: "awt_unittesttaken"
+      tablename: "awt_batch_exam"
     }
     axios.post(`${BASE_URL}/new_update_data`, data)
       .then((res) => {
@@ -158,7 +129,7 @@ const SiteVise = () => {
   const handleDelete = (id) => {
     const data = {
       cat_id: id,
-      tablename: "awt_unittesttaken",
+      tablename: "awt_batch_exam",
 
     }
 
@@ -170,10 +141,7 @@ const SiteVise = () => {
         console.log(err)
       })
 
-    setConfirmationVisibleMap((prevMap) => ({
-      ...prevMap,
-      [id]: false,
-    }));
+ 
   }
 
 
@@ -194,13 +162,14 @@ const SiteVise = () => {
       visit_date: value.visit_date,
       address: value.address,
       batchid: batchid,
+      uid:info.id
     }
 
-    console.log(value.visit_date)
+
 
     axios.post(`${BASE_URL}/add_vist_data`, data)
       .then((res) => {
-        console.log(res)
+    alert("Data Added successfully")
         setOpen(false)
 
       })
@@ -216,11 +185,13 @@ const SiteVise = () => {
       max_mark: value.max_mark,
       duration: value.duration,
       batchid: batchid,
+      uid:uid.id
     }
 
     axios.post(`${BASE_URL}/add_exam_data`, data)
       .then((res) => {
-        console.log(res)
+        getexam()
+        alert("Data Added successfully")
         setOpen(false)
 
       })
@@ -248,29 +219,29 @@ const SiteVise = () => {
                           <div className="col-lg-12 row ">
                             <div className="form-group col-lg-3 ">
                               <label for="exampleInputUsername1">Company :</label>
-                              <input type="text" class="form-control" id="exampleInputUsername1" value={value.start_from} placeholder="Company" name="company" onChange={handleChange} />
+                              <input type="text" class="form-control" id="exampleInputUsername1" value={value.company} placeholder="Company" name="company" onChange={handleChange} />
                             </div>
                             <div className="form-group col-lg-3 ">
                               <label for="exampleInputUsername1">Contact Person :	</label>
-                              <input type="text" class="form-control" id="exampleInputUsername1" value={value.start_from} placeholder="Contact Person" name="contact_person" onChange={handleChange} />
+                              <input type="text" class="form-control" id="exampleInputUsername1" value={value.contact_person} placeholder="Contact Person" name="contact_person" onChange={handleChange} />
                             </div>
                             <div className="form-group col-lg-3 ">
                               <label for="exampleInputUsername1">Designation :</label>
-                              <input type="text" class="form-control" id="exampleInputUsername1" value={value.start_from} placeholder="Designation" name="designation" onChange={handleChange} />
+                              <input type="text" class="form-control" id="exampleInputUsername1" value={value.designation} placeholder="Designation" name="designation" onChange={handleChange} />
                             </div>
                             <div className="form-group col-lg-3 ">
                               <label for="exampleInputUsername1">Phone :</label>
-                              <input type="text" class="form-control" id="exampleInputUsername1" value={value.start_from} placeholder="Phone" name="phone" onChange={handleChange} />
+                              <input type="number" class="form-control" id="exampleInputUsername1" value={value.phone} placeholder="Phone" name="phone" onChange={handleChange} />
                             </div>
                           </div>
                           <div className="col-lg-12 row ">
-                            <div className="form-group col-lg-4 ">
+                            <div className="form-group col-lg-3 ">
                               <label for="exampleInputUsername1">Visit Date :</label>
-                              <input type="date" class="form-control" id="exampleInputUsername1" value={value.start_from} placeholder="0" name="visit_date" onChange={handleChange} />
+                              <input type="date" class="form-control" id="exampleInputUsername1" value={value.visit_date} placeholder="0" name="visit_date" onChange={handleChange} />
                             </div>
-                            <div className="form-group col-lg-4 ">
+                            <div className="form-group col-lg-6 ">
                               <label for="exampleInputUsername1">Address :</label>
-                              <textarea class="form-control form-control-lg" id="exampleTextarea1" placeholder="Address" value={value.remark} name='address' onChange={handleChange} rows={`3`} ></textarea>
+                              <textarea class="form-control form-control-lg" id="exampleTextarea1" placeholder="Address" value={value.address} name='address' onChange={handleChange} rows={`3`} ></textarea>
                             </div>
                           </div>
                         </div>
@@ -304,19 +275,19 @@ const SiteVise = () => {
                           <div className="col-lg-12 row ">
                             <div className="form-group col-lg-3 ">
                               <label for="exampleInputUsername1">Subject</label>
-                              <input type="text" class="form-control" id="exampleInputUsername1" value={value.start_from} placeholder="Subject" name="subject" onChange={handleChange} />
+                              <input type="text" class="form-control" id="exampleInputUsername1" value={value.subject} placeholder="Subject" name="subject" onChange={handleChange} />
                             </div>
                             <div className="form-group col-lg-3 ">
                               <label for="exampleInputUsername1">Exam Date	</label>
-                              <input type="date" class="form-control" id="exampleInputUsername1" value={value.start_from} placeholder="Exam Date" name="exam_date" onChange={handleChange} />
+                              <input type="date" class="form-control" id="exampleInputUsername1" value={value.exam_date} placeholder="Exam Date" name="exam_date" onChange={handleChange} />
                             </div>
                             <div className="form-group col-lg-3 ">
                               <label for="exampleInputUsername1">Max Marks</label>
-                              <input type="text" class="form-control" id="exampleInputUsername1" value={value.start_from} placeholder="Max Marks" name="max_mark" onChange={handleChange} />
+                              <input type="number" class="form-control" id="exampleInputUsername1" value={value.max_mark} placeholder="Max Marks" name="max_mark" onChange={handleChange} />
                             </div>
                             <div className="form-group col-lg-3 ">
                               <label for="exampleInputUsername1">Duration</label>
-                              <input type="text" class="form-control" id="exampleInputUsername1" value={value.start_from} placeholder="Duration" name="duration" onChange={handleChange} />
+                              <input type="text" class="form-control" id="exampleInputUsername1" value={value.duration} placeholder="Duration" name="duration" onChange={handleChange} />
                             </div>
                           </div>
                         </div>
