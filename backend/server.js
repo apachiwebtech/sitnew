@@ -1505,7 +1505,7 @@ app.post(`/nodeapp/geteditlecturetaken`, (req, res) => {
 
   let { Takeid } = req.body;
 
-  const sql = "select lt.ID, lt.Student_Id , am.Student_Code,lt.Student_Name,lt.Student_Reaction,lt.Student_Atten, lt.In_Time , lt.Out_Time, lt.AssignmentReceived from `Lecture_taken_child` as lt left join admission_master as am on am.Student_Id = lt.Student_Id  where lt.IsDelete = 0 and lt.Take_Id = ? group by lt.Student_Id";
+  const sql = "select lt.ID, lt.Student_Id , am.Student_Code,lt.Student_Name,lt.Student_Reaction,lt.Student_Atten, lt.In_Time , lt.Out_Time, lt.AssignmentReceived from `Lecture_taken_child` as lt left join Admission_master as am on am.Student_Id = lt.Student_Id  where lt.IsDelete = 0 and lt.Take_Id = ? group by lt.Student_Id";
 
   con.query(sql, [Takeid], (err, data) => {
     if (err) {
@@ -1519,9 +1519,53 @@ app.post(`/nodeapp/geteditassignmenttaken`, (req, res) => {
 
   let { GivenId } = req.body;
 
-  const sql = "select  am.Student_Code , ag.* from `Assignment_given_child` as ag left join admission_master as am on am.Student_Id = ag.Student_Id  where ag.IsDelete = 0 and ag.Given_Id = ? group by ag.Student_Id";
+  const sql = "select  am.Student_Code , ag.* from `Assignment_given_child` as ag left join Admission_master as am on am.Student_Id = ag.Student_Id  where ag.IsDelete = 0 and ag.Given_Id = ? group by ag.Student_Id";
 
   con.query(sql, [GivenId], (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+})
+
+app.post(`/nodeapp/geteditunittesttaken`, (req, res) => {
+
+  let { Takeid } = req.body;
+
+  const sql = "select  am.Student_Code , ag.* from `Test_taken_child` as ag left join Admission_master as am on am.Student_Id = ag.Student_Id  where ag.IsDelete = 0 and ag.Take_Id = ? group by ag.Student_Id";
+
+  con.query(sql, [Takeid], (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+})
+
+app.post(`/nodeapp/geteditvivataken`, (req, res) => {
+
+  let { Takeid } = req.body;
+
+  const sql = "select  am.Student_Code , ag.* from `viva_taken_child` as ag left join Admission_master as am on am.Student_Id = ag.Student_Id  where ag.IsDelete = 0 and ag.Take_Id = ? group by ag.Student_Id";
+
+  con.query(sql, [Takeid], (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+})
+app.post(`/nodeapp/geteditfinalexam`, (req, res) => {
+
+  let { Takeid } = req.body;
+
+  const sql = "select  am.Student_Code , ag.* from `Exam_taken_child` as ag left join Admission_master as am on am.Student_Id = ag.Student_Id  where ag.IsDelete = 0 and ag.Take_Id = ? group by ag.Student_Id";
+
+  con.query(sql, [Takeid], (err, data) => {
     if (err) {
       return res.json(err)
     } else {
@@ -1726,6 +1770,8 @@ app.post('/nodeapp/add_finalexam', (req, res) => {
     }
     else {
       return res.json(data)
+
+
     }
   })
 
@@ -1733,21 +1779,21 @@ app.post('/nodeapp/add_finalexam', (req, res) => {
 
 app.post('/nodeapp/add_assignmentstaken', (req, res) => {
 
-  let { coursename, batchcode, assignmentname, assignmentdate, returndate, uid } = req.body
+  let { coursename, batchcode, assignmentname, assignmentdate, returndate, uid ,marks} = req.body
 
   let sql
   let param;
 
 
   if (uid == undefined) {
-    sql = "insert into Assignment_taken(`Course_Id`,`Batch_Id`, `Assignment_Id`,`Assign_Dt`,`Return_Dt`) values(?,?,?,?,?)"
+    sql = "insert into Assignment_taken(`Course_Id`,`Batch_Id`, `Assignment_Id`,`Assign_Dt`,`Return_Dt`,`Marks`) values(?,?,?,?,?,?)"
 
-    param = [coursename, batchcode, assignmentname, assignmentdate, returndate]
+    param = [coursename, batchcode, assignmentname, assignmentdate, returndate,marks]
 
   } else {
-    sql = "update `Assignment_taken` set `Course_Id` = ? , `Batch_Id` =? , `Assignment_Id` =? , `Assign_Dt` =? ,Return_Dt =?  where Given_Id =?"
+    sql = "update `Assignment_taken` set `Course_Id` = ? , `Batch_Id` =? , `Assignment_Id` =? , `Assign_Dt` =? ,Return_Dt =?,Marks = ?  where Given_Id =?"
 
-    param = [coursename, batchcode, assignmentname, assignmentdate, returndate, uid]
+    param = [coursename, batchcode, assignmentname, assignmentdate, returndate,marks, uid]
 
   }
 
@@ -1757,6 +1803,8 @@ app.post('/nodeapp/add_assignmentstaken', (req, res) => {
       return res.json(err)
     }
     else {
+
+
       const GivenId = data.insertId;
 
       if (GivenId) {
@@ -1793,6 +1841,7 @@ app.post('/nodeapp/add_assignmentstaken', (req, res) => {
       } else {
         return res.json("Main data inserted");
       }
+
     }
   })
 
@@ -2032,22 +2081,21 @@ app.post(`/nodeapp/Unit_test`, (req, res) => {
 app.post('/nodeapp/add_unittesttaken', (req, res) => {
 
 
-  let { coursename, batch_id, utname, utdate, uid } = req.body
+  let { coursename, batch_id, utname, utdate, uid ,marks} = req.body
 
   let sql
   let param;
 
-  console.log(uid)
 
   if (uid == undefined) {
-    sql = "insert into Test_taken_master(`Course_Id`,`Batch_Id`,`Test_Id`,`Test_Dt`) values(?,?,?,?)"
+    sql = "insert into Test_taken_master(`Course_Id`,`Batch_Id`,`Test_Id`,`Test_Dt`,`Marks`) values(?,?,?,?,?)"
 
-    param = [coursename, batch_id, utname, utdate]
+    param = [coursename, batch_id, utname, utdate,marks]
 
   } else {
-    sql = "update `Test_taken_master` set `Course_Id` =? , `Batch_Id` =? , `Test_Id` =? , `Test_Dt` =? where Take_Id = ?"
+    sql = "update `Test_taken_master` set `Course_Id` =? , `Batch_Id` =? , `Test_Id` =? , `Test_Dt` =? , `Marks` =?  where Take_Id = ?"
 
-    param = [coursename, batch_id, utname, utdate, uid]
+    param = [coursename, batch_id, utname, utdate, marks,uid]
 
   }
 
@@ -2057,7 +2105,46 @@ app.post('/nodeapp/add_unittesttaken', (req, res) => {
       return res.json(err)
     }
     else {
-      return res.json(data)
+      
+      const GivenId = data.insertId;
+
+      if (GivenId) {
+        const getdata = `SELECT sm.Student_Id, sm.Student_Name FROM Batch_Mst as bm LEFT JOIN Student_Master as sm ON bm.Batch_code = sm.Batch_code WHERE bm.Batch_Id = ? AND bm.isDelete = 0 AND sm.isDelete = 0`;
+
+        con.query(getdata, [batch_id], (err, result) => {
+          if (err) {
+            return res.json(err);
+          } else {
+            let insertions = result.map((item) => {
+
+              const { Student_Id, Student_Name } = item;
+
+              // console.log(stu)
+              const insert = `INSERT INTO Test_taken_child (Take_Id, Student_Id, Student_Name, isDelete) VALUES (?, ?, ?, ?)`;
+
+              return new Promise((resolve, reject) => {
+
+                con.query(insert, [GivenId, Student_Id, Student_Name, 0], (err, data) => {
+                  if (err) {
+                    reject(err);
+                  } else {
+                    resolve("Data Inserted");
+                  }
+                });
+              });
+
+            });
+
+            Promise.all(insertions)
+              .then((results) => res.json("Data Inserted"))
+              .catch((error) => res.json(error));
+          }
+        });
+      } else {
+        return res.json("Main data Updated");
+      }
+
+
     }
   })
 })
@@ -2131,22 +2218,22 @@ app.post('/nodeapp/add_vivamoctaken', (req, res) => {
 app.post('/nodeapp/add_finalexamtaken', (req, res) => {
 
 
-  let { coursename, batchcode, examtestname, date, uid } = req.body
+  let { course_id,batch_id, date, uid ,testid, marks} = req.body
 
   let sql
   let param;
 
-  console.log(uid)
+
 
   if (uid == undefined) {
-    sql = "insert into awt_finalexamtaken(`coursename`,`batchcode`,`examtestname`,`date`) values(?,?,?,?)"
+    sql = "insert into Final_exam_master(`Course_Id`,`Batch_Id`,`Test_Id`,`Test_Dt`,`Marks`) values(?,?,?,?,?)"
 
-    param = [coursename, batchcode, examtestname, date]
+    param = [course_id, batch_id, testid, date,marks]
 
   } else {
-    sql = "update `awt_finalexamtaken` set `coursename` =? , `batchcode` =? , `examtestname` =? , `date` =? where id = ?"
+    sql = "update `Final_exam_master` set `Course_Id` =? , `Batch_Id` =? , `Test_Id` =? , `Test_Dt` =?, `Marks` = ? where Take_Id = ?"
 
-    param = [coursename, batchcode, examtestname, date, uid]
+    param = [course_id, batch_id, testid, date,marks, uid]
 
   }
 
@@ -2156,7 +2243,42 @@ app.post('/nodeapp/add_finalexamtaken', (req, res) => {
       return res.json(err)
     }
     else {
-      return res.json(data)
+      const Takeid = data.insertId;
+
+      if (Takeid) {
+        const getdata = `SELECT sm.Student_Id, sm.Student_Name FROM Batch_Mst as bm LEFT JOIN Student_Master as sm ON bm.Batch_code = sm.Batch_code WHERE bm.Batch_Id = ? AND bm.isDelete = 0 AND sm.isDelete = 0`;
+
+        con.query(getdata, [batch_id], (err, result) => {
+          if (err) {
+            return res.json(err);
+          } else {
+            let insertions = result.map((item) => {
+
+              const { Student_Id, Student_Name } = item;
+
+          
+              const insert = `INSERT INTO Exam_taken_child (Take_Id, Student_Id, Student_Name, isDelete) VALUES (?, ?, ?, ?)`;
+
+              return new Promise((resolve, reject) => {
+                con.query(insert, [Takeid, Student_Id, Student_Name, 0], (err, data) => {
+                  if (err) {
+                    reject(err);
+                  } else {
+                    resolve("Data Inserted");
+                  }
+                });
+              });
+
+            });
+
+            Promise.all(insertions)
+              .then((results) => res.json("Data I"))
+              .catch((error) => res.json(error));
+          }
+        });
+      } else {
+        return res.json("Main data inserted");
+      }
     }
   })
 })
@@ -2258,19 +2380,7 @@ app.get('/nodeapp/get_workingtime', (req, res) => {
 
 })
 
-app.get('/nodeapp/getfinalexam', (req, res) => {
 
-  const sql = 'select fe.date ,fe.coursename , fe.batchcode , bm.Batch_code , cm.Course_Name , fe.id from awt_finalexamtaken as fe left join Batch_Mst as bm on fe.batchcode = bm.Batch_Id left join Course_Mst as cm on fe.coursename = cm.Course_Name where fe.deleted=0;'
-
-  con.query(sql, (err, data) => {
-    if (err) {
-      return res.json(err)
-    } else {
-      return res.json(data)
-    }
-  })
-
-})
 
 app.post('/nodeapp/batch_site_vise', (req, res) => {
 
@@ -4136,7 +4246,21 @@ app.post('/nodeapp/getbatchwisemoc', (req, res) => {
 
   const { batch_id } = req.body;
 
-  const sql = "select id, batch_id ,subject from Batch_Moc_Master where batch_id = ?"
+  const sql = "select id, batch_id ,subject,date,marks from Batch_Moc_Master where batch_id = ?"
+
+  con.query(sql, [batch_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+})
+app.post('/nodeapp/getbatchwisefinalexam', (req, res) => {
+
+  const { batch_id } = req.body;
+
+  const sql = "select id, subject,exam_date,max_marks from awt_batch_exam where batch_id = ?"
 
   con.query(sql, [batch_id], (err, data) => {
     if (err) {
@@ -4180,7 +4304,7 @@ app.post('/nodeapp/getbatchwiseunittest', (req, res) => {
 
   const { AnnulBatch } = req.body
 
-  const sql = "select id,subject from awt_unittesttaken where batch_id = ? and deleted = 0"
+  const sql = "select id,subject,marks,utdate from awt_unittesttaken where batch_id = ? and deleted = 0"
 
   con.query(sql, [AnnulBatch], (err, data) => {
     if (err) {
@@ -4218,6 +4342,18 @@ app.get('/nodeapp/getunittesttakendata', (req, res) => {
     }
   })
 })
+app.get('/nodeapp/getunittesttakendata', (req, res) => {
+
+  const sql = 'SELECT ast.Take_Id ,ast.Test_Dt , cm.Course_Name , bm.Batch_code FROM `Test_taken_master` as ast LEFT JOIN Course_Mst as cm on ast.Course_Id = cm.Course_Id LEFT JOIN Batch_Mst as bm on  ast.Batch_Id = bm.Batch_Id  WHERE ast.IsDelete = 0 order by ast.Take_Id asc';
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+})
 
 
 app.get('/nodeapp/getvivamoctakendata', (req, res) => {
@@ -4232,39 +4368,19 @@ app.get('/nodeapp/getvivamoctakendata', (req, res) => {
     }
   })
 })
+app.get('/nodeapp/getfinalexam', (req, res) => {
 
-app.post('/nodeapp/add_finalexamtaken', (req, res) => {
+  const sql = 'SELECT ast.Take_Id ,ast.Test_Dt , cm.Course_Name , bm.Batch_code FROM `final_exam_master` as ast LEFT JOIN Course_Mst as cm on ast.Course_Id = cm.Course_Id LEFT JOIN Batch_Mst as bm on  ast.Batch_Id = bm.Batch_Id  WHERE ast.IsDelete = 0 order by ast.Take_Id asc';
 
-
-  let { coursename, batchcode, examtestname, date, uid } = req.body
-
-  let sql
-  let param;
-
-
-
-  if (uid == undefined) {
-    sql = "insert into awt_finalexamtaken(`coursename`,`batchcode`,`examtestname`,`date`) values(?,?,?,?)"
-
-    param = [coursename, batchcode, examtestname, date]
-
-  } else {
-    sql = "update `awt_finalexamtaken` set `coursename` =? , `batchcode` =? , `examtestname` =? , `date` =? where id = ?"
-
-    param = [coursename, batchcode, examtestname, date, uid]
-
-  }
-
-
-  con.query(sql, param, (err, data) => {
+  con.query(sql, (err, data) => {
     if (err) {
       return res.json(err)
-    }
-    else {
+    } else {
       return res.json(data)
     }
   })
 })
+
 
 
 app.get('/nodeapp/getcoursecode', (req, res) => {
@@ -4707,6 +4823,110 @@ app.post('/nodeapp/update_assignment_child', async (req, res) => {
           return new Promise((resolve, reject) => {
               const { Marks_Given,Status ,ID} = student;
               const updatedata = `UPDATE Assignment_given_child set Marks_Given = ? ,Status = ?  WHERE ID = ?`;
+
+              con.query(updatedata, [Marks_Given,Status, ID], (err, result) => {
+                  if (err) {
+                      return reject(err);
+                  }
+                  resolve(result);
+              });
+          });
+      };
+
+      // Iterate over all students and update each one
+      for (const student of students) {
+          await updateStudent(student);
+      }
+
+      res.status(200).json({ message: 'Students data updated successfully' });
+  } catch (err) {
+      console.error('Error updating student data:', err);
+      res.status(500).json({ error: 'Error updating student data', details: err });
+  }
+});
+
+app.post('/nodeapp/update_unittest_child', async (req, res) => {
+  const students = req.body;
+
+  try {
+      // Wrap the database operations in a promise to use async/await
+      const updateStudent = (student) => {
+          return new Promise((resolve, reject) => {
+
+              const { Marks_Given,Status ,ID} = student;
+
+              const updatedata = `UPDATE Test_taken_child set Marks_Given = ? ,Status = ?  WHERE ID = ?`;
+
+              con.query(updatedata, [Marks_Given,Status, ID], (err, result) => {
+                  if (err) {
+                      return reject(err);
+                  }
+                  resolve(result);
+              });
+          });
+      };
+
+      // Iterate over all students and update each one
+      for (const student of students) {
+          await updateStudent(student);
+      }
+
+      res.status(200).json({ message: 'Students data updated successfully' });
+  } catch (err) {
+      console.error('Error updating student data:', err);
+      res.status(500).json({ error: 'Error updating student data', details: err });
+  }
+});
+
+app.post('/nodeapp/update_vivataken_child', async (req, res) => {
+  const students = req.body;
+
+  try {
+      // Wrap the database operations in a promise to use async/await
+      const updateStudent = (student) => {
+
+          return new Promise((resolve, reject) => {
+
+              const { Marks_Given,Status ,ID} = student;
+
+              console.log(Marks_Given)
+
+              const updatedata = `UPDATE viva_taken_child set Marks_Given = ? ,Status = ?  WHERE ID = ?`;
+
+              con.query(updatedata, [Marks_Given,Status, ID], (err, result) => {
+                  if (err) {
+                      return reject(err);
+                  }
+                  resolve(result);
+              });
+          });
+      };
+
+      // Iterate over all students and update each one
+      for (const student of students) {
+          await updateStudent(student);
+      }
+
+      res.status(200).json({ message: 'Students data updated successfully' });
+  } catch (err) {
+      console.error('Error updating student data:', err);
+      res.status(500).json({ error: 'Error updating student data', details: err });
+  }
+});
+app.post('/nodeapp/update_fexamtaken_child', async (req, res) => {
+  const students = req.body;
+
+  try {
+      // Wrap the database operations in a promise to use async/await
+      const updateStudent = (student) => {
+
+          return new Promise((resolve, reject) => {
+
+              const { Marks_Given,Status ,ID} = student;
+
+              console.log(Marks_Given)
+
+              const updatedata = `UPDATE Exam_taken_child set Marks_Given = ? ,Status = ?  WHERE ID = ?`;
 
               con.query(updatedata, [Marks_Given,Status, ID], (err, result) => {
                   if (err) {

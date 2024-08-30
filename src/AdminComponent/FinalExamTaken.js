@@ -6,11 +6,12 @@ import React, { useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import Loader from "./Loader";
+import { useParams } from "react-router-dom";
 //import FormControlLabel from '@mui/material/FormControlLabel';
 
 const FinalExamTaken = () => {
 
-    const [vendordata, setVendorData] = useState([])
+
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
@@ -22,26 +23,18 @@ const FinalExamTaken = () => {
     const [TestNameid, setTestNameid] = useState("")
     const [courseid, setCourseid] = useState("")
     const [loading, setLoading] = useState(true)
-
-
- 
-
+    const [batchid, setBatchid] = useState('')
+    const {finalexamtakenid} = useParams()
+    const [marks, setMarks] = useState('')
+    const [hide, setHide] = useState(false)
+    const [studentdata, setStudentdata] = useState([])
     const [value, setValue] = useState({
-        coursename: "" || uid.coursename,
-        batchcode: "" || uid.batchcode,
-        examtestname: "" || uid.examtestname,
-        data: "" || uid.date,
+        coursename: "" ,
+        batchcode: "" ,
+        examtestname: "" ,
+        date: "" ,
     })
 
-    useEffect(() => {
-        setValue({
-            coursename: uid.coursename,
-            batchcode: uid.batchcode,
-            examtestname: uid.examtestname,
-            data: uid.date,
-
-        })
-    }, [uid])
 
 
     const validateForm = () => {
@@ -49,17 +42,17 @@ const FinalExamTaken = () => {
         const newErrors = {}
 
 
-        if (!value.coursename) {
+        if (!courseid) {
             isValid = false;
             newErrors.coursename = "Name is require"
         }
 
-        if (!value.batchcode) {
+        if (!batchid) {
             isValid = false;
             newErrors.batchcode = "Batch Code is Required"
         }
 
-        if (!value.examtestname) {
+        if (!TestNameid) {
             isValid = false;
             newErrors.examtestname = "Exam is Required"
         }
@@ -78,94 +71,49 @@ const FinalExamTaken = () => {
 
 
 
-    async function getEmployeeData() {
-     
-        axios.get(`${BASE_URL}/getfinalexam`)
-            .then((res) => {
-                console.log(res.data)
-                setVendorData(res.data)
-                setLoading(false)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
+
+
+
+
+    async function getMocDetail() {
+        const response = await fetch(`${BASE_URL}/new_update_data`, {
+            method: 'POST',
+            body: JSON.stringify({
+                u_id: finalexamtakenid,
+                uidname: "Take_Id",
+                tablename: "Final_exam_master"
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        const data = await response.json();
+
+        setUid(data[0])
+        setCourseid(data[0].Course_Id)
+        setBatchid(data[0].Batch_Id)
+        setTestNameid(data[0].Test_Id)
+        setMarks(data[0].Marks)
+        setValue(prevState => ({
+            ...prevState,
+            date: data[0].Test_Dt,
+        }))
     }
 
-    useEffect(() => {
-        getCourseData()
-        getfinalexam()
-        getbatch()
-        getEmployeeData()
-        value.title = ""
-        setError({})
-        setUid([])
-    }, [])
-
-    const handleClick = (id) => {
-        setCid(id)
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: true,
-        }));
-    };
-
-    const handleCancel = (id) => {
-        // Hide the confirmation dialog without performing the delete action
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
-    };
-
-    const handleUpdate = (id) => {
-        const data = {
-            u_id: id,
-            tablename: "awt_finalexamtaken"
-        }
-        axios.post(`${BASE_URL}/update_data`, data)
-            .then((res) => {
-                setUid(res.data[0])
-                setCourseid(res.data[0].coursename)
-                setAnnulBatchid(res.data[0].batchcode)
-                setTestNameid(res.data[0].examtestname)
-
-                console.log(res.data, "update")
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
-
-    const handleDelete = (id) => {
-        const data = {
-            cat_id: id,
-            tablename: "awt_finalexamtaken"
-        }
-
-        axios.post(`${BASE_URL}/delete_data`, data)
-            .then((res) => {
-                getEmployeeData()
-
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
-    }
+  
 
     const handleSubmit = (e) => {
         e.preventDefault()
 
         if (validateForm()) {
+            
             const data = {
-                coursename: value.coursename,
-                batchcode: value.batchcode,
-                examtestname: value.examtestname,
+                course_id: courseid,
+                batch_id: batchid,
+                testid: TestNameid,
                 date: value.date,
+                marks:marks,
                 uid: uid.id
             }
 
@@ -173,7 +121,7 @@ const FinalExamTaken = () => {
             axios.post(`${BASE_URL}/add_finalexamtaken`, data)
                 .then((res) => {
                     console.log(res)
-                    getEmployeeData()
+   
                     setUid([])
                     setValue({
                         setTestNameid : '',
@@ -209,6 +157,7 @@ const FinalExamTaken = () => {
     const getbatch = async (id) => {
 
         if (id != undefined) {
+
             setCourseid(id)
 
             const data = {
@@ -244,92 +193,115 @@ const FinalExamTaken = () => {
     const getfinalexam = async (id) => {
 
         if (id != undefined) {
-            setAnnulBatchid(id)
+            setBatchid(id)
 
             const data = {
-                AnnulBatch: id
+                batch_id: id
             }
 
             try {
-                const res = await axios.post(`${BASE_URL}/  `, data);
+                const res = await axios.post(`${BASE_URL}/getbatchwisefinalexam`, data);
                 setTestName(res.data);
 
             } catch (err) {
                 console.error("Error fetching data:", err);
             }
         } else {
-            const data = {
-                tablename: "awt_unittesttaken"
+            try {
+                const res = await axios.post(`${BASE_URL}/get_data`, { tablename: "awt_batch_exam", columnname: "id,subject" });
+                if (res.data[0].id) {
+
+                    setTestName(res.data);
+                }
+
+            } catch (err) {
+                console.error("Error fetching data:", err);
             }
-            axios.post(`${BASE_URL}/get_data`, data)
-                .then((res) => {
-                    console.log(res.data)
-                    setTestName(res.data)
-                })
-                .catch((err) => {
-                    console.log(err)
-                })
 
         }
 
     };
 
-
-    const onhandleChange = (e) => {
-        setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-        if ([e.target.name] == 'coursename') {
-            getbatch([e.target.value]);
-        }
-        if ([e.target.name] == 'batchcode') {
-            getfinalexam([e.target.value]);
-        }
+    async function gettakedata(params) {
+        axios.post(`${BASE_URL}/geteditfinalexam`, { Takeid: finalexamtakenid })
+            .then((res) => {
+                console.log(res)
+                setStudentdata(res.data)
+            })
     }
 
 
-
-    const columns = [
-        {
-            field: 'index',
-            headerName: 'Id',
-            type: 'number',
-            align: 'center',
-            headerAlign: 'center',
-            flex: 1,
-            filterable: false,
-
-        },
-        { field: 'coursename', headerName: 'Course Name', flex: 2 },
-        { field: 'batchcode', headerName: 'Batch Code', flex: 2 },
-        { field: 'date', headerName: 'Exam Date', flex: 2 },
-
-        {
-            field: 'actions',
-            type: 'actions',
-            headerName: 'Action',
-            flex: 1,
-            renderCell: (params) => {
-                return (
-                    <>
-                        <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
-                    </>
-                )
-            }
-        },
-    ];
+    useEffect(() => {
+        if(finalexamtakenid !== ":finalexamtakenid" ){
+            getMocDetail()
+            setHide(true)
+            gettakedata()
+            getbatch()
+            getfinalexam()
+        }
+        getCourseData()
+        value.title = ""
+        setError({})
+        setUid([])
+    }, [])
 
 
-    const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
+    const onhandleChange = (e) => {
+        setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+   
+    }
+
+
+    const getmarks = (id) => {
+
+        setTestNameid(id)
+
+        setMarks('')
+
+        const Marks = TestName.filter((item) => (item.id == id)).map((item) => item.max_marks)
+        
+        const ExamDate = TestName.filter((item) => (item.id == id)).map((item) => item.exam_date)
+
+        setMarks(Marks[0])
+
+        setValue({
+            date: ExamDate[0]
+        })
+
+    }
+
+    const handleInputChange = (index, event) => {
+        const { name, value } = event.target;
+        const updatedStudents = [...studentdata];
+        updatedStudents[index][name] = value;
+        setStudentdata(updatedStudents);
+    };
+
+    
+    const handleSubmitTable = async (e) => {
+
+
+
+        try {
+            const response = await axios.post(`${BASE_URL}/update_fexamtaken_child`, studentdata);
+
+            alert("Data updated successfully")
+        } catch (error) {
+            console.error('Error saving data', error);
+            // Handle the error
+        }
+    };
+
 
     return (
 
         <div class="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
-            {loading && <Loader />}
-            <div class="main-panel" style={{display : loading ? "none" : "block"}}>
+       
+            <div class="main-panel" >
                 <div class="content-wrapper">
                     <div class="row">
-                        <div class="col-lg-5 grid-margin stretch-card">
+                        <div class="col-lg-12 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
                                     <h4 class="card-title">Add Final Exam Details</h4>
@@ -338,9 +310,9 @@ const FinalExamTaken = () => {
                                         <div class='row'>
 
 
-                                            <div class="form-group col-lg-6">
+                                            <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Course Name<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={courseid} onChange={onhandleChange} name='coursename'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={courseid} onChange={(e) => getbatch(e.target.value)} name='coursename'>
                                                     <option>-Select-</option>
 
                                                     {course.map((item) => {
@@ -354,9 +326,9 @@ const FinalExamTaken = () => {
                                                 {<span className="text-danger"> {error.coursename} </span>}
                                             </div>
 
-                                            <div class="form-group col-lg-6">
+                                            <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Batch Code<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={AnnulBatchid} onChange={onhandleChange} name='batchcode'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={batchid} onChange={(e) => getfinalexam(e.target.value)} name='batchcode'>
                                                     <option>-Select-</option>
                                                     {AnnulBatch.map((item) => {
                                                         return (
@@ -368,15 +340,15 @@ const FinalExamTaken = () => {
                                                 {<span className="text-danger"> {error.batchcode} </span>}
                                             </div>
 
-                                            <div class="form-group col-lg-6">
+                                            <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Exam Test Name<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={TestNameid} onChange={onhandleChange} name='examtestname'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={TestNameid} onChange={(e) => getmarks(e.target.value)} name='examtestname'>
                                                     <option>-Select-</option>
 
                                                     {TestName.map((item) => {
                                                         return (
 
-                                                            <option value={item.id}>{item.utname}</option>
+                                                            <option value={item.id}>{item.subject}</option>
                                                         )
                                                     })}
 
@@ -384,15 +356,15 @@ const FinalExamTaken = () => {
                                                 {<span className="text-danger"> {error.examtestname} </span>}
                                             </div>
 
-                                            <div class="form-group col-lg-6">
+                                            <div class="form-group col-lg-3">
                                                 <lable for="exampleInputUsername1">Max Marks</lable>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.maxmarks}
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={marks}
                                                     placeholder="Max Marks" name='maxmarks' onChange={onhandleChange} disabled />
                                             </div>
 
 
 
-                                            <div class="form-group col-lg-6">
+                                            <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">Date<span className="text-danger"></span></label>
                                                 <input type="date" class="form-control" id="exampleInputUsername1" value={value.date} name='date' onChange={onhandleChange} />
                                                 {<span className="text-danger"> {error.date} </span>}
@@ -413,59 +385,98 @@ const FinalExamTaken = () => {
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-7">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div className='d-flex justify-content-between'>
-                                        <div>
-                                            <h4 class="card-title">Final Exam Taken</h4>
+                        {hide && <div class="col-lg-12 mt-3">
+                                <form class="card" >
+                                    <div class="card-body">
+                                        <div className='d-flex justify-content-between'>
+                                            {/* <div>
+                    <h4 class="card-title">Allot Roll Number List</h4>
+                </div> */}
+
                                         </div>
+                                        <div>
+
+
+
+
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>
+                                                            Id
+                                                        </th>
+                                                        <th>
+                                                            Student Code
+                                                        </th>
+
+                                                        <th>
+                                                            Student Name
+                                                        </th>
+                                                        <th>
+                                                            Marks
+                                                        </th>
+                                                        <th>
+                                                            Status
+                                                        </th>
+                                                       
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                    {studentdata.map((item, index) => {
+                                                        return (
+                                                            <tr key={index}>
+                                                                <td>
+                                                                    {index + 1}
+                                                                </td>
+                                                                <td>
+                                                                    {item.Student_Code}
+                                                                </td>
+                                                                <td>
+                                                                    {item.Student_Name}
+
+                                                                </td>
+                                                                <td>
+                                                                    <div class="form-group ">
+                                                                        <label for="exampleFormControlSelect1"></label>
+                                                                        <input type="number" class="form-control" id="exampleInputUsername1" name='Marks_Given' onChange={(e) => handleInputChange(index, e)} value={item.Marks_Given} />
+
+                                                                    </div>
+                                                                </td>
+                                                              
+                                                                <td>
+                                                                    <>
+                                                                        <select class="form-control form-control-lg" value={item.Status} onChange={(e) => handleInputChange(index, e)} name='Status' id="exampleFromControlSelect1" >
+
+                                                                            <option>Select</option>
+
+                                                                            <option value='Present'>Present</option>
+                                                                            <option value='Absent'>Absent</option>
+
+
+
+                                                                        </select>
+                                                                    </>
+                                                                </td>
+                                                             
+                                                            
+                                                            
+
+                                                            </tr>
+                                                        )
+                                                    })}
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                        <button type="button" onClick={handleSubmitTable} style={{ float: "right" }} class="btn btn-primary m-2">Update Sheet</button>
+
+
 
                                     </div>
-
-                                    <div>
-                                        <DataGrid
-                                            rows={rowsWithIds}
-                                            columns={columns}
-                                            disableColumnFilter
-                                            disableColumnSelector
-                                            disableDensitySelector
-                                            rowHeight={35}
-                                            getRowId={(row) => row.id}
-                                            initialState={{
-                                                pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
-                                                },
-                                            }}
-                                            slots={{ toolbar: GridToolbar }}
-                                            slotProps={{
-                                                toolbar: {
-                                                    showQuickFilter: true,
-                                                },
-                                            }}
-                                        />
-
-                                        {confirmationVisibleMap[cid] && (
-                                            <div className='confirm-delete'>
-                                                <p>Are you sure you want to delete?</p>
-                                                <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
-                                                <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
-                                            </div>
-                                        )}
-                                    </div>
-
-
-                                    {/* <div>
-                                      <button type='button' onClick={() => {
-                                            window.location.reload()
-                                        }} class="btn btn-primary mr-2">Excel</button>
-                                      </div> */}
-
-
-
-                                </div>
-                            </div>
-                        </div>
+                                </form>
+                            </div>}
+                      
                     </div>
                 </div>
             </div >

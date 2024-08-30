@@ -21,7 +21,6 @@ const AssignmentsTaken = () => {
     const [marks, setMarks] = useState('')
     const { assignmentstakenid } = useParams();
     const [hide, setHide] = useState(false)
-    const [Studentdata, setStudent] = useState([])
     const [studentdata, setStudentdata] = useState([])
     const [value, setValue] = useState({
 
@@ -97,13 +96,27 @@ const AssignmentsTaken = () => {
             courseid: id
         }
 
-        try {
-            const res = await axios.post(`${BASE_URL}/getcoursewisebatch`, data);
-            setAnnulBatch(res.data);
 
-        } catch (err) {
-            console.error("Error fetching data:", err);
+        if(id){
+            try {
+                const res = await axios.post(`${BASE_URL}/getcoursewisebatch`, data);
+                setAnnulBatch(res.data);
+    
+            } catch (err) {
+                console.error("Error fetching data:", err);
+            }
+        }else{
+            try {
+                const res = await axios.get(`${BASE_URL}/getbatch`, data);
+
+                setAnnulBatch(res.data);
+
+            } catch (err) {
+                console.error("Error fetching data:", err);
+            }
         }
+
+   
 
     };
 
@@ -116,13 +129,26 @@ const AssignmentsTaken = () => {
             AnnulBatch: id
         }
 
-        try {
-            const res = await axios.post(`${BASE_URL}/getbatchwiseassignment`, data);
-            Setassign(res.data);
 
-        } catch (err) {
-            console.error("Error fetching data:", err);
+        if(id){
+            try {
+                const res = await axios.post(`${BASE_URL}/getbatchwiseassignment`, data);
+                Setassign(res.data);
+    
+            } catch (err) {
+                console.error("Error fetching data:", err);
+            }
+        }else{
+            try {
+                const res = await axios.post(`${BASE_URL}/get_data`, { tablename: "assignmentstaken", columnname: "id,assignmentname" });
+                Setassign(res.data);
+
+            } catch (err) {
+                console.error("Error fetching data:", err);
+            }
         }
+
+     
 
     }
 
@@ -132,6 +158,7 @@ const AssignmentsTaken = () => {
         setMarks('')
 
         const Marks = assign.filter((item) => (item.id == id)).map((item) => item.marks)
+        
         const AssignmentDate = assign.filter((item) => (item.id == id)).map((item) => item.assignmentdate)
 
         setMarks(Marks[0])
@@ -164,6 +191,7 @@ const AssignmentsTaken = () => {
         SetCoursid(data[0].Course_Id)
         setBatchid(data[0].Batch_Id)
         SetAssignid(data[0].Assignment_Id)
+        setMarks(data[0].Marks)
 
         setUid(data[0])
 
@@ -171,7 +199,8 @@ const AssignmentsTaken = () => {
             ...prevState,
             coursename: data[0].Course_Id,
             assignmentdate: data[0].Assign_Dt,
-            returndate: data[0].Return_Dt
+            returndate: data[0].Return_Dt,
+            maxmarks:data[0].Marks
         }))
     }
 
@@ -188,10 +217,13 @@ const AssignmentsTaken = () => {
         if (assignmentstakenid !== ":assignmentstakenid") {
             getUpdate()
             setHide(true)
+            getbatch()
+            getassign()
         }
         gettakedata()
         getCourseData()
         setError({})
+   
         setUid([])
     }, [])
 

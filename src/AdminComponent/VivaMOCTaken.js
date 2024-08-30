@@ -12,12 +12,13 @@ const VivaMOCTaken = () => {
     const [error, setError] = useState({})
     const [course, SetCourse] = useState([])
     const [courseid, SetCoursid] = useState('')
-    const [batch, setAnnulBatch] = useState([])
     const [batchid, setBatchid] = useState('')
+    const [batch, setAnnulBatch] = useState([])
     const [moc, SetMoc] = useState([])
     const [mocid, SetMocid] = useState('')
-
-
+    const [studentdata, setStudentdata] = useState([])
+    const [hide, setHide] = useState(false)
+    const [marks, setMarks] = useState('')
 
     const [value, setValue] = useState({
         coursename: '',
@@ -79,16 +80,13 @@ const VivaMOCTaken = () => {
         setUid(data[0])
         SetCoursid(data[0].Course_Id)
         setBatchid(data[0].Batch_Id)
-
+        SetMocid(data[0].Viva_Id)
+        setMarks(data[0].Marks)
         
         
         setValue(prevState => ({
             ...prevState,
-            coursename: data[0].coursename,
-            batchcode: data[0].batchcode,
-            vivamocname: data[0].vivamocname,
-            maxmarks: data[0].maxmarks,
-            date: data[0].date,
+            date: data[0].Take_Dt,
         }))
     }
 
@@ -114,41 +112,89 @@ const VivaMOCTaken = () => {
             courseid: id
         }
 
-        try {
-            const res = await axios.post(`${BASE_URL}/getcoursewisebatch`, data);
-            setAnnulBatch(res.data);
+        if(id){
 
-        } catch (err) {
-            console.error("Error fetching data:", err);
+            try {
+                const res = await axios.post(`${BASE_URL}/getcoursewisebatch`, data);
+                setAnnulBatch(res.data);
+    
+            } catch (err) {
+                console.error("Error fetching data:", err);
+            }
+        }else{
+
+            try {
+                  const res = await axios.get(`${BASE_URL}/getbatch`, data);
+    
+                  setAnnulBatch(res.data);
+    
+              } catch (err) {
+                  console.error("Error fetching data:", err);
+              }
         }
+
+
+
+   
 
     };
 
     const getmoc = async (id) => {
         setBatchid(id)
 
+
+    
+
         const data = {
             batch_id: id,
         }
 
-        try {
-            const res = await axios.post(`${BASE_URL}/getbatchwisemoc`, data);
 
-            SetMoc(res.data);
-            
-        } catch (err) {
-            console.error("Error fetching data:", err);
+        if(id){
+
+            try {
+                const res = await axios.post(`${BASE_URL}/getbatchwisemoc`, data);
+    
+                SetMoc(res.data);
+                
+            } catch (err) {
+                console.error("Error fetching data:", err);
+            }
+        }else{
+            try {
+                const res = await axios.post(`${BASE_URL}/get_data`, { tablename: "Batch_Moc_Master", columnname: "id,subject" });
+                if (res.data[0].id) {
+
+                    SetMoc(res.data);
+                }
+
+            } catch (err) {
+                console.error("Error fetching data:", err);
+            }
         }
 
 
+
     };
+
+    async function gettakedata(params) {
+        axios.post(`${BASE_URL}/geteditvivataken`, { Takeid: vivamoctakenid })
+            .then((res) => {
+                console.log(res)
+                setStudentdata(res.data)
+            })
+    }
 
 
     useEffect(() => {
         if (vivamoctakenid !== ":vivamoctakenid") {
             getMocDetail()
+            setHide(true)
+            getbatch()
+            getmoc()
         }
-
+        
+        gettakedata()
         getCourseData()
         setError({})
         setUid([])
@@ -191,6 +237,49 @@ const VivaMOCTaken = () => {
 
     const onhandleChange = (e) => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+    }
+
+
+    
+    const handleInputChange = (index, event) => {
+        const { name, value } = event.target;
+        const updatedStudents = [...studentdata];
+        updatedStudents[index][name] = value;
+        setStudentdata(updatedStudents);
+    };
+
+    
+    const handleSubmitTable = async (e) => {
+
+
+
+        try {
+            const response = await axios.post(`${BASE_URL}/update_vivataken_child`, studentdata);
+
+            alert("Data updated successfully")
+        } catch (error) {
+            console.error('Error saving data', error);
+            // Handle the error
+        }
+    };
+
+
+    const getmarks = (id) => {
+
+        SetMocid(id)
+
+        setMarks('')
+
+        const Marks = moc.filter((item) => (item.id == id)).map((item) => item.marks)
+        
+        const MocDate = moc.filter((item) => (item.id == id)).map((item) => item.date)
+
+        setMarks(Marks[0])
+
+        setValue({
+            date: MocDate
+        })
+
     }
 
     return (
@@ -238,7 +327,7 @@ const VivaMOCTaken = () => {
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Viva/Moc Name:<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={mocid} onChange={(e) => SetMocid(e.target.value)} name='vivamocname'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={mocid} onChange={(e) => getmarks(e.target.value)} name='vivamocname'>
                                                     <option>--Select--</option>
                                                     {moc.map((item) => {
                                                         return (
@@ -251,7 +340,7 @@ const VivaMOCTaken = () => {
 
                                             <div class="form-group col-lg-3">
                                                 <lable for="exampleInputUsername1">Max Marks</lable>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.maxmarks} placeholder="Max Marks"
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={marks} placeholder="Max Marks"
                                                     name='maxmarks' onChange={onhandleChange} disabled />
                                             </div>
 
@@ -277,6 +366,97 @@ const VivaMOCTaken = () => {
                                 </div>
                             </div>
                         </div>
+                        {hide && <div class="col-lg-12 mt-3">
+                                <form class="card" >
+                                    <div class="card-body">
+                                        <div className='d-flex justify-content-between'>
+                                            {/* <div>
+                    <h4 class="card-title">Allot Roll Number List</h4>
+                </div> */}
+
+                                        </div>
+                                        <div>
+
+
+
+
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>
+                                                            Id
+                                                        </th>
+                                                        <th>
+                                                            Student Code
+                                                        </th>
+
+                                                        <th>
+                                                            Student Name
+                                                        </th>
+                                                        <th>
+                                                            Marks
+                                                        </th>
+                                                        <th>
+                                                            Status
+                                                        </th>
+                                                       
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                    {studentdata.map((item, index) => {
+                                                        return (
+                                                            <tr key={index}>
+                                                                <td>
+                                                                    {index + 1}
+                                                                </td>
+                                                                <td>
+                                                                    {item.Student_Code}
+                                                                </td>
+                                                                <td>
+                                                                    {item.Student_Name}
+
+                                                                </td>
+                                                                <td>
+                                                                    <div class="form-group ">
+                                                                        <label for="exampleFormControlSelect1"></label>
+                                                                        <input type="number" class="form-control" id="exampleInputUsername1" name='Marks_Given' onChange={(e) => handleInputChange(index, e)} value={item.Marks_Given} />
+
+                                                                    </div>
+                                                                </td>
+                                                              
+                                                                <td>
+                                                                    <>
+                                                                        <select class="form-control form-control-lg" value={item.Status} onChange={(e) => handleInputChange(index, e)} name='Status' id="exampleFromControlSelect1" >
+
+                                                                            <option>Select</option>
+
+                                                                            <option value='Present'>Present</option>
+                                                                            <option value='Absent'>Absent</option>
+
+
+
+                                                                        </select>
+                                                                    </>
+                                                                </td>
+                                                             
+                                                            
+                                                            
+
+                                                            </tr>
+                                                        )
+                                                    })}
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                        <button type="button" onClick={handleSubmitTable} style={{ float: "right" }} class="btn btn-primary m-2">Update Sheet</button>
+
+
+
+                                    </div>
+                                </form>
+                            </div>}
                     </div>
                 </div>
             </div >

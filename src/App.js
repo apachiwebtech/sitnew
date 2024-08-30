@@ -204,6 +204,7 @@ import ShortlistedBySIT from './AdminComponent/ShortlistedBySIT.js';
 import FeedBack1Listing from './AdminComponent/FeedBack1Listing.js';
 import FeedBack2 from './AdminComponent/FeedBack2.js';
 import FeedBack2Listing from './AdminComponent/FeedBack2Listing.js';
+import FinalExamListing from './AdminComponent/FinalExamListing.js';
 // import FacultyPayment from './AdminComponent/FacultyPayment.js';
 
 
@@ -645,7 +646,11 @@ const Router = createBrowserRouter([
       },
 
       {
-        path: '/finalexamtaken',
+        path: '/finalexamtakenlisting',
+        element: <FinalExamListing />
+      },
+      {
+        path: '/finalexamtaken/:finalexamtakenid',
         element: <FinalExamTaken />
       },
       {

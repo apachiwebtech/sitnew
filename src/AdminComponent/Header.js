@@ -406,7 +406,7 @@ const Header = ({click}) => {
             </li>
 
             <li className="nav-item">
-              <Link className="nav-link" to="/finalexamtaken">
+              <Link className="nav-link" to="/finalexamtakenlisting">
                 {/* <Icon path={mdiCircleMedium } size={1} className='mx-3' /> */}
                 <Icon path={mdiCircleMedium} size={1} className='mx-3' />
                 <span className="menu-title">Final Exam Taken</span>
