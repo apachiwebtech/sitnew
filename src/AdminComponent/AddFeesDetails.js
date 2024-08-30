@@ -71,10 +71,26 @@ const AddFeesDetails = () => {
         const newErrors = {}
 
 
-        // if (!value.facultyname) {
-        //     isValid = false;
-        //     newErrors.name = "Name is require"
-        // }
+        if (!value.batchcode) {
+            isValid = false;
+            newErrors.batchcode = "BatchCode is Required"
+        }
+        if (!value.type) {
+            isValid = false;
+            newErrors.type = "Type is Required"
+        }
+        if (!value.bank) {
+            isValid = false;
+            newErrors.bank = "Bank is Required"
+        }
+        if (!value.chequeddno) {
+            isValid = false;
+            newErrors.chequeddno = "Cheque/D.D.No is Required"
+        }
+        if (!value.date) {
+            isValid = false;
+            newErrors.date = "Receipt Date is Required"
+        }
 
         setError(newErrors)
         return isValid
@@ -99,75 +115,75 @@ const AddFeesDetails = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         let response
-        // if(validateForm()){
-        if (addfeesdetailsid == ":addfeesdetailsid") {
-            response = await fetch(`${BASE_URL}/add_addfeesdetails`, {
-                method: 'POST',
-                body: JSON.stringify({
-                    studentname: value.studentname,
-                    studentid: value.studentid,
-                    coursename: value.coursename,
-                    batchcode: value.batchcode,
-                    contactno: value.contactno,
-                    emailaddress: value.emailaddress,
-                    type: value.type,
-                    generatereceipt: value.generatereceipt,
-                    materialissued: value.materialissued,
-                    paymenttype: value.paymenttype,
-                    bank: value.bank,
-                    chequeddno: value.chequeddno,
-                    chequedate: value.chequedate,
-                    branch: value.branch,
-                    amount: value.amount,
-                    particular: value.particular,
-                    deudate: value.deudate,
-                }),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-        } else {
+        if (validateForm()) {
+            if (addfeesdetailsid == ":addfeesdetailsid") {
+                response = await fetch(`${BASE_URL}/add_addfeesdetails`, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        studentname: value.studentname,
+                        studentid: value.studentid,
+                        coursename: value.coursename,
+                        batchcode: value.batchcode,
+                        contactno: value.contactno,
+                        emailaddress: value.emailaddress,
+                        type: value.type,
+                        generatereceipt: value.generatereceipt,
+                        materialissued: value.materialissued,
+                        paymenttype: value.paymenttype,
+                        bank: value.bank,
+                        chequeddno: value.chequeddno,
+                        chequedate: value.chequedate,
+                        branch: value.branch,
+                        amount: value.amount,
+                        particular: value.particular,
+                        deudate: value.deudate,
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+            } else {
 
-            response = await fetch(`${BASE_URL}/updateaddfeesdetails`, {
-                method: 'POST',
-                body: JSON.stringify({
+                response = await fetch(`${BASE_URL}/updateaddfeesdetails`, {
+                    method: 'POST',
+                    body: JSON.stringify({
 
-                    studentname: value.studentname,
-                    studentid: value.studentid,
-                    coursename: value.coursename,
-                    batchcode: value.batchcode,
-                    contactno: value.contactno,
-                    emailaddress: value.emailaddress,
-                    type: value.type,
-                    generatereceipt: value.generatereceipt,
-                    materialissued: value.materialissued,
-                    paymenttype: value.paymenttype,
-                    bank: value.bank,
-                    chequeddno: value.chequeddno,
-                    chequedate: value.chequedate,
-                    branch: value.branch,
-                    amount: value.amount,
-                    particular: value.particular,
-                    deudate: value.deudate,
+                        studentname: value.studentname,
+                        studentid: value.studentid,
+                        coursename: value.coursename,
+                        batchcode: value.batchcode,
+                        contactno: value.contactno,
+                        emailaddress: value.emailaddress,
+                        type: value.type,
+                        generatereceipt: value.generatereceipt,
+                        materialissued: value.materialissued,
+                        paymenttype: value.paymenttype,
+                        bank: value.bank,
+                        chequeddno: value.chequeddno,
+                        chequedate: value.chequedate,
+                        branch: value.branch,
+                        amount: value.amount,
+                        particular: value.particular,
+                        deudate: value.deudate,
 
-                }),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+            }
+
+
+
+
+
+            const data = await response.json();
+
+            alert(data.message)
+            //   window.location.pathname = '/inquirylisting'
+
+
         }
-
-
-
-
-
-        const data = await response.json();
-
-        alert(data.message)
-        //   window.location.pathname = '/inquirylisting'
-
-
-        // }        
     }
 
 
@@ -216,10 +232,12 @@ const AddFeesDetails = () => {
                                                         </div>
 
                                                         <div class="form-group col-lg-2">
-                                                            <lable class="exapmleInputUsername1">Batch Code</lable>
-                                                            <select className="form-control form-control-lg" id="exampleInputUsername1" value={value.batchcode} name='batchcode' onChange={onhandleChange} disabled>
+                                                            <lable class="exapmleInputUsername1">Batch Code<span className="text-danger">*</span></lable>
+                                                            <select className="form-control form-control-lg" id="exampleInputUsername1"
+                                                                value={value.batchcode} name='batchcode' onChange={onhandleChange} disabled>
                                                                 <option>---Select Batch Code---</option>
                                                             </select>
+                                                            {<span className='text-danger'> {error.batchcode} </span>}
 
                                                         </div>
                                                         <div className='form-group col-2'>
@@ -232,11 +250,13 @@ const AddFeesDetails = () => {
                                                             <input type="email" class="form-control" id="exampleInputUsername1" value={value.emailaddress} placeholder="Emial Address" name='emailaddress' onChange={onhandleChange} disabled />
                                                         </div>
                                                         <div class="form-group col-lg-2">
-                                                            <lable class="exampleInputUsername1">Type</lable>
-                                                            <select className="form-control form-control-lg" id="exampleInputUsername1" value={value.type} name='type' onChange={onhandleChange}>
+                                                            <lable class="exampleInputUsername1">Type<span className="text-danger">*</span></lable>
+                                                            <select className="form-control form-control-lg" id="exampleInputUsername1"
+                                                                value={value.type} name='type' onChange={onhandleChange}>
                                                                 <option>Credit</option>
                                                                 <option>Debit</option>
                                                             </select>
+                                                            {<span className='text-danger'> {error.type} </span>}
                                                         </div>
 
                                                         <div className="form-group col-lg-2 ">
@@ -268,19 +288,21 @@ const AddFeesDetails = () => {
                                                         </div>
 
                                                         <div className="form-group col-lg-2 ">
-                                                            <label for="exampleInputUsername1">Bank</label>
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.bank} name='bank' onChange={onhandleChange} >
+                                                            <label for="exampleInputUsername1">Bank<span className="text-danger">*</span></label>
+                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1"
+                                                                value={value.bank} name='bank' onChange={onhandleChange} >
                                                                 <option>Select Bank Name</option>
                                                                 <option>0028FIR1101138</option>
                                                                 <option>11336825293</option>
-
-
                                                             </select>
+                                                            {<span className='text-danger'> {error.bank} </span>}
                                                         </div>
 
                                                         <div class="form-group col-lg-2">
-                                                            <lable for="exampleInputUsername1">Cheque/D.D.No.</lable>
-                                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.chequeddno} placeholder='Cheque/D.D.No.' name='chequeddno' onChange={onhandleChange} />
+                                                            <lable for="exampleInputUsername1">Cheque/D.D.No.<span className="text-danger">*</span></lable>
+                                                            <input type="text" class="form-control" id="exampleInputUsername1"
+                                                                value={value.chequeddno} placeholder='Cheque/D.D.No.' name='chequeddno' onChange={onhandleChange} />
+                                                            {<span className='text-danger'> {error.chequeddno} </span>}
                                                         </div>
 
                                                         <div class="form-group col-lg-2">
@@ -303,13 +325,13 @@ const AddFeesDetails = () => {
                                                                 <option>Select Particular Type</option>
                                                                 <option>Cheque Bounce</option>
                                                                 <option>Cheque Bounce Charges</option>
-                                                               
+
                                                             </select>
                                                         </div>
 
 
                                                         <div className="form-group col-lg-2">
-                                                            <label htmlFor="exampleInputUsername1">Receipt Date</label>
+                                                            <label htmlFor="exampleInputUsername1">Receipt Date<span className="text-danger">*</span></label>
                                                             <input
                                                                 type="date"
                                                                 className="form-control"
@@ -319,6 +341,7 @@ const AddFeesDetails = () => {
                                                                 onChange={(e) => { }}
                                                                 disabled
                                                             />
+                                                            {<span className='text-danger'> {error.date} </span>}
                                                         </div>
 
                                                         <div class="form-group col-lg-2">
@@ -370,20 +393,27 @@ const AddFeesDetails = () => {
                                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                                         <div className='row'>
                                                             <div class="form-group col-lg-4">
-                                                                <lable for="exampleInputUsername1">Debit</lable>
-                                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.debit} name='debit' onChange={onhandleChange} disabled />
+                                                                <lable for="exampleInputUsername1">Debit<span className="text-danger">*</span></lable>
+                                                                <input type="text" class="form-control" id="exampleInputUsername1"
+                                                                    value={value.debit} name='debit' onChange={onhandleChange} disabled />
+                                                                {<span className='text-danger'> {error.debit} </span>}
                                                             </div>
                                                             <div class="form-group col-lg-4">
-                                                                <lable for="exampleInputUsername1">Credit</lable>
-                                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.credit} name='credit' onChange={onhandleChange} disabled />
+                                                                <lable for="exampleInputUsername1">Credit<span className="text-danger">*</span></lable>
+                                                                <input type="text" class="form-control" id="exampleInputUsername1"
+                                                                    value={value.credit} name='credit' onChange={onhandleChange} disabled />
+                                                                {<span className='text-danger'> {error.credit} </span>}
+
                                                             </div>
                                                             <div class="form-group col-lg-4">
-                                                                <lable for="exampleInputUsername1">Balance</lable>
-                                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.balance} name='balance' onChange={onhandleChange} disabled />
+                                                                <lable for="exampleInputUsername1">Balance<span className="text-danger">*</span></lable>
+                                                                <input type="text" class="form-control" id="exampleInputUsername1"
+                                                                    value={value.balance} name='balance' onChange={onhandleChange} disabled />
+                                                                {<span className='text-danger'> {error.balance} </span>}
                                                             </div>
                                                         </div>
 
-                                                        
+
 
 
                                                         <button type="submit" class="btn btn-primary mr-2">Generate Invoice</button>

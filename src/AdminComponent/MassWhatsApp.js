@@ -22,32 +22,39 @@ const MassWhatsApp = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
     const [value, setValue] = useState({
-        projectno: '',
-        projectname: '',
-        invoicedate: '',
-        invoiceamount: '',
+        course: '',
+        batchtype: '',
+        fromdate: '',
+        todate: '',
+        department: '',
+        nationality: '',
+        message: '',
+        log: '',
     })
 
 
     async function getcourses() {
 
-      axios.get(`${BASE_URL}/getCourse`)
-          .then((res) => {
-              console.log(res.data)
-              setCourse(res.data)
-          })
-          .catch((err) => {
-              console.log(err)
-          })
-  }
+        axios.get(`${BASE_URL}/getCourse`)
+            .then((res) => {
+                console.log(res.data)
+                setCourse(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
 
     useEffect(() => {
         setValue({
-            training: uid.training,
-            attendee: uid.attendee,
-            instructor: uid.instructor,
-            description: uid.description,
-            feedback: uid.feedback,
+            course: uid.course,
+            batchtype: uid.batchtype,
+            fromdate: uid.fromdate,
+            todate: uid.todate,
+            department: uid.department,
+            nationality: uid.nationality,
+            message: uid.message,
+            log: uid.log,
 
         })
     }, [uid])
@@ -58,25 +65,25 @@ const MassWhatsApp = () => {
         const newErrors = {}
 
 
-       if (!value.course) {
-        isValid = false;
-        newErrors.course = "Course is Required"
-       }
+        if (!value.course) {
+            isValid = false;
+            newErrors.course = "Course is Required"
+        }
 
-       if(!value.batchtype){
-        isValid = false;
-        newErrors.batchtype = "Batch Type is Required"
-       }
+        if (!value.batchtype) {
+            isValid = false;
+            newErrors.batchtype = "Batch Type is Required"
+        }
 
-       if(!value.department){
-        isValid = false;
-        newErrors.department = "Department is Required"
-       }
+        if (!value.department) {
+            isValid = false;
+            newErrors.department = "Department is Required"
+        }
 
-       if(!value.nationality){
-        isValid = false;
-        newErrors.nationality = "Nationality is Required"
-       }
+        if (!value.nationality) {
+            isValid = false;
+            newErrors.nationality = "Nationality is Required"
+        }
 
         setError(newErrors)
         return isValid
@@ -111,14 +118,14 @@ const MassWhatsApp = () => {
             })
     }
     async function getRole() {
-      axios.get(`${BASE_URL}/role_data`)
-          .then((res) => {
-            setrole(res.data)
-          })
-          .catch((err) => {
-              console.log(err)
-          })
-  }
+        axios.get(`${BASE_URL}/role_data`)
+            .then((res) => {
+                setrole(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
 
     useEffect(() => {
         getEmployeeData()
@@ -185,14 +192,17 @@ const MassWhatsApp = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        // if(validateForm()){
+        if(validateForm()){
         const data = {
 
-            training: value.training,
-            attendee: value.attendee,
-            instructor: value.instructor,
-            description: value.description,
-            feedback: value.feedback,
+            course: value.course,
+batchtype: value.batchtype,
+fromdate: value.fromdate,
+todate: value.todate,
+department: value.department,
+nationality: value.nationality,
+message: value.message,
+log: value.log,
             uid: uid.id
         }
 
@@ -206,7 +216,7 @@ const MassWhatsApp = () => {
             .catch((err) => {
                 console.log(err)
             })
-        // }
+        }
 
 
 
@@ -257,7 +267,7 @@ const MassWhatsApp = () => {
     ];
 
 
-    const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
+    //const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
 
 
     return (
@@ -281,10 +291,10 @@ const MassWhatsApp = () => {
                                                             <div class="form-group col-lg-6">
                                                                 <FormControl>Student Type
                                                                     <RadioGroup
-                                                                       defaultValue="student"
+                                                                        defaultValue="student"
                                                                         row aria-labelledby='demo-row-radio-button-group-lable'
                                                                         name='row-radio-button-group'>
-                                                                        <FormControlLabel value="student" control={<Radio />} label="Student"  />
+                                                                        <FormControlLabel value="student" control={<Radio />} label="Student" />
                                                                         <FormControlLabel value="inquiry" control={<Radio />} label="Inquiry" />
                                                                         <FormControlLabel value="college" control={<Radio />} label="College" />
                                                                         <FormControlLabel value="consultancy" control={<Radio />} label="Consultancy" />
@@ -296,8 +306,8 @@ const MassWhatsApp = () => {
                                                             <div class="form-group col-lg-6">
                                                                 <FormControl>Batch
                                                                     <RadioGroup row aria-labelledby='demo-row-radion-button-group-lable'
-                                                                    name='row-radio-button-group'>
-                                                                        <FormControlLabel value="selectall" control={<Radio />} label="Select All"  />
+                                                                        name='row-radio-button-group'>
+                                                                        <FormControlLabel value="selectall" control={<Radio />} label="Select All" />
                                                                     </RadioGroup>
                                                                 </FormControl>
                                                             </div>
@@ -308,11 +318,11 @@ const MassWhatsApp = () => {
                                                                     value={value.course} name='course' onChange={onhandleChange}>
                                                                     <option>--Select Course--</option>
                                                                     {Course.map((item) => {
-                                                                          return (
+                                                                        return (
 
-                                                                     <option value={item.Course_Id}>{item.Course_Name}</option>
-                                                                          )
-                                                                      })}
+                                                                            <option value={item.Course_Id}>{item.Course_Name}</option>
+                                                                        )
+                                                                    })}
                                                                 </select>
                                                                 {<span className="text-danger"> {error.course} </span>}
                                                             </div>
@@ -359,7 +369,7 @@ const MassWhatsApp = () => {
                                                             <div class="form-group col-lg-3">
                                                                 <lable for="exampleFormControlSelect1">Nationality<span className="text-danger">*</span></lable>
                                                                 <select class="form-control" id="exampleFormControlSelect1" value={value.nationality}
-                                                                name='nationality' on onChange={onhandleChange}>
+                                                                    name='nationality' on onChange={onhandleChange}>
                                                                     <option>--Select Nationality--</option>
                                                                     <option>All</option>
                                                                     <option>Indian</option>
@@ -371,9 +381,9 @@ const MassWhatsApp = () => {
                                                             <div class="form-group col-lg-12">
                                                                 <FormControl>
                                                                     <RadioGroup row aria-labelledby='demo-row-radio-button-group-lable'
-                                                                    name="row-radio-button-group">
-                                                                        <FormControlLabel value="sendstudent" control={<Radio />} label="Send Student"  />
-                                                                        <FormControlLabel value="sendparents" control={<Radio />} label="Send Parents"  />
+                                                                        name="row-radio-button-group">
+                                                                        <FormControlLabel value="sendstudent" control={<Radio />} label="Send Student" />
+                                                                        <FormControlLabel value="sendparents" control={<Radio />} label="Send Parents" />
                                                                     </RadioGroup>
                                                                 </FormControl>
                                                             </div>
@@ -381,13 +391,13 @@ const MassWhatsApp = () => {
                                                             <div class="form-group col-lg-6">
                                                                 <lable for="exampleTextarea1">Message</lable>
                                                                 <textarea type="text" class="form-control form-control-lg" id="exampleTextarea1" value={value.message}
-                                                                placeholder='Message' name="message" onchange={onhandleChange}  />
+                                                                    placeholder='Message' name="message" onchange={onhandleChange} />
                                                             </div>
 
                                                             <div class="form-group col-lg-6">
                                                                 <lable for="exampleTextarea1">Log</lable>
                                                                 <textarea type="text" class="form-control form-control-lg" id="exapmleTextarea1" value={value.log}
-                                                                placeholder='Log' name='log' onchange={onhandleChange} />
+                                                                    placeholder='Log' name='log' onchange={onhandleChange} />
                                                             </div>
                                                         </div>
 

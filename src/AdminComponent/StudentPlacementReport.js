@@ -1,26 +1,13 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
-import decryptedUserId from '../Utils/UserID';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { LibraryBooks } from '@mui/icons-material';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
 //import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
 
 const StudentPlacementReport = () => {
 
     const [brand, setBrand] = useState([])
-    const [vendordata, setVendorData] = useState([])
+    const [studentplacementdata, setstudentplacementData] = useState([])
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
@@ -96,7 +83,7 @@ const StudentPlacementReport = () => {
 
     async function getEmployeeData() {
 
-        axios.post(`${BASE_URL}/vendor_details`)
+        axios.post(`${BASE_URL}/studentplacement_details`)
             .then((res) => {
                 console.log(res.data)
                 setBrand(res.data)
@@ -115,7 +102,7 @@ const StudentPlacementReport = () => {
         axios.post(`${BASE_URL}/get_data`, data)
             .then((res) => {
                 console.log(res.data)
-                setVendorData(res.data)
+                setstudentplacementData(res.data)
             })
             .catch((err) => {
                 console.log(err)
@@ -257,7 +244,7 @@ const StudentPlacementReport = () => {
     // ];
 
 
-    const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
+    const rowsWithIds = studentplacementdata.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
 
@@ -279,8 +266,6 @@ const StudentPlacementReport = () => {
                                                 <label for="exampleFormControlSelect1">Course<span className='text-danger'>*</span> </label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course} onChange={onhandleChange} name='course'>
                                                     <option>Select Course</option>
-                                                    <option> Training in Process Plant System Modelling Using E3D</option>
-                                                    <option>Advance Pipe Stress Analysis </option>
                                                 </select>
                                             </div>
 
@@ -288,10 +273,6 @@ const StudentPlacementReport = () => {
                                                 <lable for="exampleFormControlSelect1">Batch</lable>
                                                 <select class="form-control form-control-lg" id="exampleFromControlSelect1" value={value.batch} name='batch' onChange={onhandleChange}>
                                                     <option>Select Batch</option>
-                                                    <option>25004</option>
-                                                    <option>25003</option>
-                                                    <option>25002</option>
-                                                    <option>25001</option>
                                                 </select>
                                             </div>
                                         </div>

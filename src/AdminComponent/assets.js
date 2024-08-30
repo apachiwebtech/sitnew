@@ -1,25 +1,10 @@
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
-import decryptedUserId from '../Utils/UserID';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { LibraryBooks } from '@mui/icons-material';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-//import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
-// import ImageList from '@mui/material/ImageList';
-// import { ImageSourcePropType } from 'react-native';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 const Assets = () => {
 
@@ -34,34 +19,10 @@ const Assets = () => {
 
     console.log(specification)
 
-    const handleChange1 = (event) => {
-        setChecked([event.target.checked, event.target.checked]);
-    };
-
-    const handleChange2 = (event) => {
-        setChecked([event.target.checked, checked[1]]);
-    };
-
-    const handleChange3 = (event) => {
-        setChecked([checked[0], event.target.checked]);
-    };
-
-    // const children = (
-    //     <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-    //       <FormControlLabel
-    //         label="Child 1"
-    //         control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
-    //       />
-    //       <FormControlLabel
-    //         label="Child 2"
-    //         control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
-    //       />
-    //     </Box>
-    //   );
 
     const [value, setValue] = useState({
         startdate: "" || uid.startdate,
-        vindername: "" || uid.vindername,
+        vindorname: "" || uid.vindorname,
         assets: "" || uid.assets,
         quantity: "" || uid.quantity,
         price: "" || uid.price,
@@ -76,7 +37,7 @@ const Assets = () => {
     useEffect(() => {
         setValue({
             startdate: uid.startdate,
-            vindername: uid.vindername,
+            vindorname: uid.vindorname,
             assets: uid.assets,
             quantity: uid.quantity,
             price: uid.price,
@@ -85,23 +46,27 @@ const Assets = () => {
         })
     }, [uid])
 
+    const validateForm = () => {
+        let isValid = true
+        const newErrors = {}
 
-    // const validateForm = () => {
-    //     let isValid = true
-    //     const newErrors = {}
+        if (!value.startdate) {
+            isValid = false;
+            newErrors.startdate = "Date id Required"
+        }
+        if (!value.vindorname) {
+            isValid = false;
+            newErrors.vindorname = "Name is Required"
+        }
+        if (!value.assets) {
+            isValid = false;
+            newErrors.assets = "Assets is Required"
+        }
 
 
-    //    if (!value.college) {
-    //     isValid = false;
-    //     newErrors.name = "Name is require"
-    //    }
-    //     if (!value.email) {
-    //         isValid = false;
-    //         newErrors.email = "Email is require"
-    //     }
-    //     setError(newErrors)
-    //     return isValid
-    // }
+        setError(newErrors)
+        return isValid
+    }
 
 
     async function getEmployeeData() {
@@ -194,32 +159,30 @@ const Assets = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
+        if (validateForm()) {
 
-        // if(validateForm()){
-        const data = {
+            const data = {
+
+                startdate: value.startdate,
+                vindorname: value.vindorname,
+                assets: value.assets,
+                quantity: value.quantity,
+                price: value.price,
+                location: value.location,
+                uid: uid.id
+            }
 
 
+            axios.post(`${BASE_URL}/add_assets`, data)
+                .then((res) => {
+                    console.log(res)
+                    getEmployeeData()
 
-            startdate: value.startdate,
-            vindername: value.vindername,
-            assets: value.assets,
-            quantity: value.quantity,
-            price: value.price,
-            location: value.location,
-            uid: uid.id
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
         }
-
-
-        axios.post(`${BASE_URL}/add_assets`, data)
-            .then((res) => {
-                console.log(res)
-                getEmployeeData()
-
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-        // }
 
 
 
@@ -249,7 +212,7 @@ const Assets = () => {
 
         },
         { field: 'startdate', headerName: 'Start Date', flex: 2 },
-        { field: 'vindername', headerName: 'Vinder Name', flex: 2 },
+        { field: 'vindorname', headerName: 'Vindor Name', flex: 2 },
         { field: 'assets', headerName: 'Assets', flex: 2 },
         { field: 'quantity', headerName: 'Quantity', flex: 2 },
         { field: 'price', headerName: 'Price', flex: 2 },
@@ -290,92 +253,52 @@ const Assets = () => {
                                         <div class='row'>
 
                                             <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">Date</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.startdate} name='startdate' onChange={onhandleChange} />
+                                                <label for="exampleInputUsername1">Date<span className="text-danger">*</span></label>
+                                                <input type="date" class="form-control" id="exampleInputUsername1"
+                                                    value={value.startdate} name='startdate' onChange={onhandleChange} />
+                                                {<span className='text-danger'> {error.startdate} </span>}
 
                                             </div>
 
                                             <div class="form-group col-lg-2">
-                                                <lable for="exampleFormControlSelect1">Vinder Name</lable>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.vindername} name='vindername' onChange={onhandleChange}>
+                                                <lable for="exampleFormControlSelect1">Vindor Name<span className="text-danger">*</span></lable>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1"
+                                                    value={value.vindorname} name='vindorname' onChange={onhandleChange}>
                                                     <option>Select Vendor</option>
                                                     <option>Anupam Stationery Mart</option>
                                                     <option>Modern General Stores</option>
-                                                    <option>Parle Book Depot</option>
-                                                    <option>Balaji Stationery Mart</option>
-                                                    <option>Avenue Hotel</option>
-                                                    <option>A To Z Digital Prints</option>
-                                                    <option>Swati Gurav</option>
-                                                    <option>Vinayak  Books &amp; Stationery</option>
-                                                    <option>Vandana Graphics</option>
-                                                    <option>Bombay Book Buraue</option>
-                                                    <option>Super Jumbo Xerox</option>
-                                                    <option>OPENING STOCK - 141210</option>
-                                                    <option>Shree Balaji Computers</option>
-                                                    <option>Deltron Bussiness system</option>
-                                                    <option>Add Cool</option>
-                                                    <option>Eureka Forbs Ltd</option>
-                                                    <option>Other</option>
-                                                    <option>All Ark</option>
-                                                    <option>Hiral Tektronix Pvt Ltd</option>
-                                                    <option>Eureka</option>
-                                                    <option>Vishwakarma Furnitures</option>
-                                                    <option>KLG</option>
-                                                    <option>Plus Business</option>
-                                                    <option>Harsh Electrical</option>
-                                                    <option>Aquagaurd</option>
                                                 </select>
+                                                {<span className='text-danger'> {error.vindorname} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-2">
-                                                <label for="exampleFormControlSelect1">Assets Category</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.assets} name='assets' onChange={onhandleChange}>
+                                                <label for="exampleFormControlSelect1">Assets Category<span className="text-danger">*</span></label>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1"
+                                                    value={value.assets} name='assets' onChange={onhandleChange}>
                                                     <option>Select Category</option>
                                                     <option>AIR CONDITIONERS</option>
-                                                    <option>AQUA GUARD MACHINE</option>
-                                                    <option>ASSIGNMENT BOX</option>
-                                                    <option>BIOMETRIC FINGER SCANNING MACHINE</option>
-                                                    <option>CARS</option>
-                                                    <option>CCTV CAMERA</option>
-                                                    <option>CD DRIVE EXTRA</option>
-                                                    <option>CEASOR LOCK</option>
-                                                    <option>CEILLING FANS</option>
-                                                    <option>COMPLAINT BOX</option>
-                                                    <option>COMPUTERS</option>
-                                                    <option>D.V.R MACHINE</option>
-                                                    <option>DATA SWITCH</option>
-                                                    <option>DRAWING BOARD</option>
-                                                    <option>EPBX</option>
-                                                    <option>EXHAUST FANS</option>
-                                                    <option>EXTERNAL HARDDISK</option>
-                                                    <option>FIRE INSTRUMENTS</option>
-                                                    <option>LANDLINE TELEPHONE INSTRUMENT</option>
-                                                    <option>LAPTOP MACHINE</option>
-                                                    <option>LCD PROJECTOR</option>
-                                                    <option>LCD T.V.</option>
-                                                    <option>MOBILE HANDSET</option>
-                                                    <option>NORMAL CALCULATOR</option>
-                                                    <option>NOTICE BOARD</option>
-                                                    <option>OFFICE CHAIRS</option>
-                                                    <option>OFFICE TABLE</option>
-                                                    <option>OVERHEAD PROJECTOR(OHP)</option>
                                                 </select>
+                                                {<span className='text-danger'> {error.assets} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleInputUsername1">Quantity</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.quantity} placeholder='Quantity' name='quantity' onChange={onhandleChange} />
+                                                <input type="text" class="form-control" id="exampleInputUsername1"
+                                                    value={value.quantity} placeholder='Quantity' name='quantity'
+                                                    onChange={onhandleChange} />
 
                                             </div>
 
                                             <div class="form-group col-lg-2">
                                                 <lable for="exampleInputUsername1">Price</lable>
-                                                <input text="text" class="form-control" id="exampleInputUsername1" value={value.price} placeholder='Price' name='price' onChange={onhandleChange} />
+                                                <input text="text" class="form-control" id="exampleInputUsername1"
+                                                    value={value.price} placeholder='Price' name='price' onChange={onhandleChange} />
                                             </div>
 
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleFomrControlSelect1">Location</label>
-                                                <select className='form-control form-control-lg' id="exampleFormControlSelect1" value={value.location} name='location' onChange={onhandleChange}>
+                                                <select className='form-control form-control-lg' id="exampleFormControlSelect1"
+                                                    value={value.location} name='location' onChange={onhandleChange}>
                                                     <option>Select Location</option>
                                                     <option>TR-001</option>
                                                     <option>TR-002</option>

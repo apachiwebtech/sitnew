@@ -279,7 +279,7 @@ const QSMDoes = () => {
                                                 <label for="exampleFormControlSelect1">QMS Name<span className='text-danger'>*</span> </label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.qmsname} onChange={onhandleChange} name='qmsname'>
                                                     <option>Select</option>
-                                                    {QMS.map((item) => {
+                                                    {((item) => {
                                                         return (
 
                                                             <option value={item.Id}>{item.QMS_name}</option>

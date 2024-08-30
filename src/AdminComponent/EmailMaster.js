@@ -1,13 +1,9 @@
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { BASE_URL } from './BaseUrl';
-import InnerHeader from './InnerHeader';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from "react-router-dom";
+import { BASE_URL } from './BaseUrl';
+import InnerHeader from './InnerHeader';
 
 const EmailMaster = () => {
 
@@ -18,9 +14,6 @@ const EmailMaster = () => {
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
-    const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
-
 
 
     const [value, setValue] = useState({

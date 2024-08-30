@@ -16,7 +16,7 @@ const EmailMasterListing = () => {
     const [checked, setChecked] = React.useState([true, false]);
     const label = { inputProps: { 'aria-label': 'Color switch demo' } };
 
-    const [assignmentstakendata, setassignmentstakendata] = useState ([]);
+    const [emailmasterdata, setemailmasterdata] = useState ([]);
 
     const [value, setValue] = useState({
         emailpurpose: ' ',
@@ -32,7 +32,7 @@ const EmailMasterListing = () => {
 
 
     const getInquiryData = async () => {
-        const response = await fetch(`${BASE_URL}/getassignmentstakendata`, {
+        const response = await fetch(`${BASE_URL}/getemailmasterdata`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -40,7 +40,7 @@ const EmailMasterListing = () => {
         });
         const data = await response.json();
 
-        setassignmentstakendata(data);
+        setemailmasterdata(data);
     }
 
 
@@ -71,10 +71,10 @@ const EmailMasterListing = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename: "assignmentstaken"
+            tablename: "emailmaster"
         }
 
-        axios.post(`${BASE_URL}/delete_assignmentstaken_data`, data)
+        axios.post(`${BASE_URL}/delete_emailmaster_data`, data)
             .then((res) => {
                 getInquiryData()
             })
@@ -92,7 +92,7 @@ const EmailMasterListing = () => {
     const handleswitchchange = (value, Inquiry_Id) => {
         const newval = value == 0 ? 1 : 0
 
-        axios.post(`${BASE_URL}/data_status`, { status: newval, Inquiry_Id: Inquiry_Id, table_name: "assignmentstaken" })
+        axios.post(`${BASE_URL}/data_status`, { status: newval, Inquiry_Id: Inquiry_Id, table_name: "emailmaster" })
             .then((res) => {
                 console.log(res)
                 getInquiryData()
@@ -125,7 +125,7 @@ const EmailMasterListing = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <Link to={`/assignmentstaken/${params.row.Given_Id}`} ><EditIcon style={{ cursor: "pointer" }}  /></Link>
+                        <Link to={`/emailmaster/${params.row.Given_Id}`} ><EditIcon style={{ cursor: "pointer" }}  /></Link>
                         <DeleteIcon style={{ color: "red", cursor: "pointer" }} Link={() => handleClick(params.row.Given_Id)} />
                     </>
                 )
@@ -135,7 +135,7 @@ const EmailMasterListing = () => {
 
 
 
-    const rowsWithIds = assignmentstakendata.map((row, index) => ({ index: index + 1, ...row }));
+    const rowsWithIds = emailmasterdata.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
 

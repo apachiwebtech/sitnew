@@ -7,37 +7,13 @@ import InnerHeader from './InnerHeader';
 const ConsultancyReport = () => {
 
     const [brand, setBrand] = useState([])
-    const [vendordata, setVendorData] = useState([])
+    const [consultancyreportdata, setConsultancyReportData] = useState([])
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
 
-    const handleChange1 = (event) => {
-        setChecked([event.target.checked, event.target.checked]);
-    };
-
-    const handleChange2 = (event) => {
-        setChecked([event.target.checked, checked[1]]);
-    };
-
-    const handleChange3 = (event) => {
-        setChecked([checked[0], event.target.checked]);
-    };
-
-    // const children = (
-    //     <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-    //       <FormControlLabel
-    //         label="Child 1"
-    //         control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
-    //       />
-    //       <FormControlLabel
-    //         label="Child 2"
-    //         control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
-    //       />
-    //     </Box>
-    //   );
 
     const [value, setValue] = useState({
         training: "" || uid.training,
@@ -102,7 +78,7 @@ const ConsultancyReport = () => {
         axios.post(`${BASE_URL}/get_data`, data)
             .then((res) => {
                 console.log(res.data)
-                setVendorData(res.data)
+                setConsultancyReportData(res.data)
             })
             .catch((err) => {
                 console.log(err)
@@ -244,7 +220,7 @@ const ConsultancyReport = () => {
     // ];
 
 
-    const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
+    //const rowsWithIds = consultancyreportdata.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
 
@@ -263,7 +239,7 @@ const ConsultancyReport = () => {
 
 
                                             <div class="form-group col-lg-4">
-                                                <label for="exampleFormControlSelect1">Course<span className='text-danger'>*</span> </label>
+                                                <label for="exampleFormControlSelect1">Course</label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course} onChange={onhandleChange} name='course'>
                                                     
                                                         <option>Select Course</option>
@@ -275,7 +251,7 @@ const ConsultancyReport = () => {
 
 
                                             <div class="form-group col-lg-2">
-                                                <label for="exampleFormControlSelect1">City<span className='text-danger'>*</span> </label>
+                                                <label for="exampleFormControlSelect1">City </label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.city} onChange={onhandleChange} name='city'>
                                                     <option>Select City</option>
                                                     <option>Thane(W)</option>
@@ -286,7 +262,7 @@ const ConsultancyReport = () => {
                                             </div>
 
                                             <div class="form-group col-lg-2">
-                                                <label for="exampleFormControlSelect1">Purpose <span className='text-danger'>*</span> </label>
+                                                <label for="exampleFormControlSelect1">Purpose </label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.purpose} onChange={onhandleChange} name='purpose'>
                                                     <option></option>
                                                     <option>Meeting</option>

@@ -18,53 +18,67 @@ const MassEMail = () => {
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
 
     const { projectmasterid } = useParams();
-    const [inquiryData, setInquiryData] = useState([]);
-    const [Discipline, setDescipline] = useState([]);
     const [Course, SetCourse] = useState([]);
     const [Department, SetDepartment] = useState([]);
-    const [Education, setEducation] = useState([]);
-    const [batch, setBatch] = useState([]);
-    const [batchCategoty, setbatchCategory] = useState([]);
     const [value, setValue] = useState({
-        projectno: '',
-        projectname: '',
-        invoicedate: '',
-        invoiceamount: '',
+        course: '',
+        batchtype: '',
+        department: '',
+        nationality: '',
+        fromdate: '',
+        todate: '',
+        sendnotification: '',
     })
 
 
     useEffect(() => {
         setValue({
-            training: uid.training,
-            attendee: uid.attendee,
-            instructor: uid.instructor,
-            description: uid.description,
-            feedback: uid.feedback,
+            course: uid.course,
+            batchtype: uid.batchtype,
+            department: uid.department,
+            nationality: uid.nationality,
+            fromdate: uid.fromdate,
+            todate: uid.todate,
+            sendnotification: uid.sendnotification,
 
         })
     }, [uid])
 
 
-    // const validateForm = () => {
-    //     let isValid = true
-    //     const newErrors = {}
+    const validateForm = () => {
+        let isValid = true
+        const newErrors = {}
 
 
-    //    if (!value.college) {
-    //     isValid = false;
-    //     newErrors.name = "Name is require"
-    //    }
-    //     if (!value.email) {
-    //         isValid = false;
-    //         newErrors.email = "Email is require"
-    //     }
-    //     setError(newErrors)
-    //     return isValid
-    // }
-
+        if (!value.course) {
+            isValid = false;
+            newErrors.course = "Course is Required"
+        }
+        if (!value.batchtype) {
+            isValid = false;
+            newErrors.batchtype = "Batch is Required"
+        }
+        if (!value.department) {
+            isValid = false;
+            newErrors.department = "Department is Required"
+        }
+        if (!value.nationality) {
+            isValid = false;
+            newErrors.nationality = "Nationality is Required"
+        }
+        if (!value.fromdate) {
+            isValid = false;
+            newErrors.fromdate = "Date is Required"
+        }
+        if (!value.todate) {
+            isValid = false;
+            newErrors.todate = "Date is Required"
+        }
+        setError(newErrors)
+        return isValid
+    }
 
     async function getEmployeeData() {
 
@@ -158,54 +172,56 @@ const MassEMail = () => {
 
     async function getCourseData() {
 
-      axios.get(`${BASE_URL}/getCourse`)
-          .then((res) => {
-              console.log(res.data)
-              SetCourse(res.data)
-          })
-          .catch((err) => {
-              console.log(err)
-          })
-  }
+        axios.get(`${BASE_URL}/getCourse`)
+            .then((res) => {
+                console.log(res.data)
+                SetCourse(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
     async function getDepartment() {
 
-      axios.get(`${BASE_URL}/role_data`)
-          .then((res) => {
-              console.log(res.data)
-              SetDepartment(res.data)
-          })
-          .catch((err) => {
-              console.log(err)
-          })
-  }
+        axios.get(`${BASE_URL}/role_data`)
+            .then((res) => {
+                console.log(res.data)
+                SetDepartment(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
 
 
 
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        // if(validateForm()){
-        const data = {
+        if (validateForm()) {
+            const data = {
 
-            training: value.training,
-            attendee: value.attendee,
-            instructor: value.instructor,
-            description: value.description,
-            feedback: value.feedback,
-            uid: uid.id
+                course: value.course,
+                batchtype: value.batchtype,
+                department: value.department,
+                nationality: value.nationality,
+                fromdate: value.fromdate,
+                todate: value.todate,
+                sendnotification: value.sendnotification,
+                uid: uid.id
+            }
+
+
+            axios.post(`${BASE_URL}/add_employeerecord`, data)
+                .then((res) => {
+                    console.log(res)
+                    getEmployeeData()
+
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
         }
-
-
-        axios.post(`${BASE_URL}/add_employeerecord`, data)
-            .then((res) => {
-                console.log(res)
-                getEmployeeData()
-
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-        // }
 
 
 
@@ -256,7 +272,7 @@ const MassEMail = () => {
     ];
 
 
-    const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
+    //const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
 
 
     return (
@@ -297,68 +313,68 @@ const MassEMail = () => {
                                                             </div>
 
                                                             <div class="form-group col-lg-3">
-                                                                <label for="exapmleFormControlSelect1">Course</label>
+                                                                <label for="exapmleFormControlSelect1">Course<span className="text-danger">*</span></label>
                                                                 <select class="form-control" id="exampleFormControlSelect1"
                                                                     value={value.course} name='course' onChange={onhandleChange}>
-                                                                      <option value="">Select Course</option>
-                                                    {Course.map((item) => {
-                                                        return (
+                                                                    <option value="">Select Course</option>
+                                                                    {Course.map((item) => {
+                                                                        return (
 
-                                                            <option value={item.Course_Id}>{item.Course_Name}</option>
-                                                        )
-                                                    })}
+                                                                            <option value={item.Course_Id}>{item.Course_Name}</option>
+                                                                        )
+                                                                    })}
                                                                 </select>
+                                                                {<span className='text-danger'> {error.course} </span>}
                                                             </div>
 
                                                             <div class="form-group col-lg-3">
-                                                                <lable for="exampleFormControlSelect1">Batch Type</lable>
+                                                                <lable for="exampleFormControlSelect1">Batch Type<span className="text-danger">*</span></lable>
                                                                 <select class="form-control" id="exampleFormControlSelect1" value={value.batchtype}
                                                                     name='batchtype' onChange={onhandleChange}>
                                                                     <option>--Select Batch Type--</option>
-                                                                    <option>All</option>
-                                                                    <option>Corporate</option>
-                                                                    <option>Non-Corporate</option>
                                                                 </select>
+                                                                {<span className='text-danger'> {error.batchtype} </span>}
                                                             </div>
 
 
                                                             <div class="form-group col-lg-3">
-                                                                <lable for="exampleFormControlSelect1">Department</lable>
+                                                                <lable for="exampleFormControlSelect1">Department<span className="text-danger">*</span></lable>
                                                                 <select class="form-control" id="exampleFormCpntrolSelect1" value={value.department}
                                                                     name='department' onChange={onhandleChange}>
                                                                     <option>--Select Department--</option>
                                                                     {Department.map((item) => {
-                                                        return (
+                                                                        return (
 
-                                                            <option value={item.id }>{item.title}</option>
-                                                        )
-                                                    })}
+                                                                            <option value={item.id}>{item.title}</option>
+                                                                        )
+                                                                    })}
 
                                                                 </select>
+                                                                {<span className='text-danger'> {error.department} </span>}
                                                             </div>
 
                                                             <div class="form-group col-lg-3">
-                                                                <lable for="exampleFormControlSelect1">Nationality</lable>
+                                                                <lable for="exampleFormControlSelect1">Nationality<span className="text-danger">*</span></lable>
                                                                 <select class="form-control" id="exampleFormControlSelect1" value={value.nationality}
-                                                                name='nationality' on onChange={onhandleChange}>
+                                                                    name='nationality' on onChange={onhandleChange}>
                                                                     <option>--Select Nationality--</option>
-                                                                    <option>All</option>
-                                                                    <option>Indian</option>
-                                                                    <option>Non-Indian</option>
                                                                 </select>
+                                                                {<span className='text-danger'> {error.nationality} </span>}
                                                             </div>
 
 
                                                             <div class="form-group col-lg-3">
-                                                                <lable for="exampleInputUsername1">From Date</lable>
+                                                                <lable for="exampleInputUsername1">From Date<span className="text-danger">*</span></lable>
                                                                 <input type="date" class="form-control" id="exampleInputUsername1"
                                                                     value={value.fromdate} name='fromdate' onChange={onhandleChange} />
+                                                                    {<span className='text-danger'> {error.fromdate} </span>}
                                                             </div>
 
                                                             <div class="form-group col-lg-3">
-                                                                <lable for="exapmleInputUsername1">To Date</lable>
+                                                                <lable for="exapmleInputUsername1">To Date<span className="text-danger">*</span></lable>
                                                                 <input type="date" class="form-control" id="exampleInputUsername1"
                                                                     value={value.todate} name="todate" onchange={onhandleChange} />
+                                                                    {<span className='text-danger'> {error.todate} </span>}
                                                             </div>
 
                                                             <div class="form-group col-lg-3" className="d-flex align-items-center">

@@ -77,22 +77,22 @@ const UploadBanner = () => {
     }, [uid])
 
 
-    // const validateForm = () => {
-    //     let isValid = true
-    //     const newErrors = {}
+    const validateForm = () => {
+        let isValid = true
+        const newErrors = {}
 
 
-    //    if (!value.college) {
-    //     isValid = false;
-    //     newErrors.name = "Name is require"
-    //    }
-    //     if (!value.email) {
-    //         isValid = false;
-    //         newErrors.email = "Email is require"
-    //     }
-    //     setError(newErrors)
-    //     return isValid
-    // }
+       if (!value.titlename) {
+        isValid = false;
+        newErrors.titlename = "Title Name is Required"
+       }
+        if (!value.seqno) {
+            isValid = false;
+            newErrors.seqno = "Seq. No. is Required"
+        }
+        setError(newErrors)
+        return isValid
+    }
 
 
     async function getEmployeeData() {
@@ -186,15 +186,14 @@ const UploadBanner = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-    // if(validateForm()){
-        // const data = {
+    if(validateForm()){
+        const data = {
             
-        // startdate : value.startdate,
-        // enddate : value.enddate,
-        // file : value.file,
-        // description :value.description,
-        // uid : uid.id
-        // }
+        titlename : value.titlename,
+        seqno : value.seqno,
+        file : value.file,
+        uid : uid.id
+        }
 
          const formdata = new FormData()
 
@@ -211,7 +210,7 @@ const UploadBanner = () => {
             .catch((err) => {
                 console.log(err)
             })
-    // }
+    }
 
    
         
@@ -282,22 +281,26 @@ const UploadBanner = () => {
                                         <div class='row'>
 
                                             <div class="form-group col-lg-4">
-                                                <label for="exampleInputUsername1">Image Title Name</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.titlename} placeholder='Title' name='titlename' onChange={onhandleChange} />
+                                                <label for="exampleInputUsername1">Image Title Name<span className="text-danger">*</span></label>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" 
+                                                value={value.titlename} placeholder='Title' name='titlename' onChange={onhandleChange} />
+                                                {<span className='text-danger'> {error.titlename} </span>}
                                                 
                                             </div>
 
 
                                             <div class="form-group col-lg-4">
                                                 <label for="exampleInputUsername1"></label>
-                                                <input type="file" class="form-control" id="exampleInputUsername1" value={value.file} name='file' onChange={onhandleupload} />
+                                                <input type="file" class="form-control" id="exampleInputUsername1" 
+                                                value={value.file} name='file' onChange={onhandleupload} />
                                                 
                                             </div>
 
                                             <div class="form-group col-lg-4">
-                                                <label for="exampleInputUsername1">Seq. No.</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.seqno} placeholder='No.' name='seqno' onChange={onhandleChange} />
-                                                
+                                                <label for="exampleInputUsername1">Seq. No.<span className="text-danger">*</span></label>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" 
+                                                value={value.seqno} placeholder='No.' name='seqno' onChange={onhandleChange} />
+                                                {<span className='text-danger'> {error.seqno} </span>}
                                             </div>
 
                                             

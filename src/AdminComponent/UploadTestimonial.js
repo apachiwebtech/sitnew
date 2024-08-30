@@ -74,22 +74,22 @@ const UploadTestimonial = () => {
     }, [uid])
 
 
-    // const validateForm = () => {
-    //     let isValid = true
-    //     const newErrors = {}
+    const validateForm = () => {
+        let isValid = true
+        const newErrors = {}
 
 
-    //    if (!value.college) {
-    //     isValid = false;
-    //     newErrors.name = "Name is require"
-    //    }
-    //     if (!value.email) {
-    //         isValid = false;
-    //         newErrors.email = "Email is require"
-    //     }
-    //     setError(newErrors)
-    //     return isValid
-    // }
+       if (!value.course) {
+        isValid = false;
+        newErrors.course = "Course is Required"
+       }
+        if (!value.batch) {
+            isValid = false;
+            newErrors.batch = "Batch is Required"
+        }
+        setError(newErrors)
+        return isValid
+    }
 
 
     async function getEmployeeData() {
@@ -184,7 +184,7 @@ const UploadTestimonial = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        // if(validateForm()){
+        if(validateForm()){
         const data = {
 
             course: value.course,
@@ -202,7 +202,7 @@ const UploadTestimonial = () => {
             .catch((err) => {
                 console.log(err)
             })
-        // }
+        }
 
 
 
@@ -269,8 +269,9 @@ const UploadTestimonial = () => {
                                         <div class='row'>
 
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Course</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course} onChange={(e) => getbatch(e.target.value)} name='course'>
+                                                <label for="exampleFormControlSelect1">Course<span className="text-danger">*</span></label>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" 
+                                                value={value.course} onChange={(e) => getbatch(e.target.value)} name='course'>
                                                     <option>--Select Course--</option>
 
                                                     {course.map((item) => {
@@ -280,11 +281,13 @@ const UploadTestimonial = () => {
                                                     })}
 
                                                 </select>
+                                                {<span className='text-danger'> {error.course} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Batch</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batch} onChange={(e) => getstudentlisitng(e.target.value)} name='batch'>
+                                                <label for="exampleFormControlSelect1">Batch<span className="text-danger">*</span></label>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" 
+                                                value={value.batch} onChange={(e) => getstudentlisitng(e.target.value)} name='batch'>
                                                     <option></option>
 
                                                     {batch.map((item) => {
@@ -292,10 +295,11 @@ const UploadTestimonial = () => {
                                                             <option value={item.Batch_code}>{item.Batch_code}</option>
                                                         )
                                                     })}
-
                                                 </select>
+                                                {<span className='text-danger'> {error.batch} </span>}
                                             </div>
 
+                                            
 
 
 

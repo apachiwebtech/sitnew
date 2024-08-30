@@ -54,22 +54,32 @@ const MassSMS = () => {
     }, [uid])
 
 
-    // const validateForm = () => {
-    //     let isValid = true
-    //     const newErrors = {}
+    const validateForm = () => {
+        let isValid = true
+        const newErrors = {}
 
 
-    //    if (!value.college) {
-    //     isValid = false;
-    //     newErrors.name = "Name is require"
-    //    }
-    //     if (!value.email) {
-    //         isValid = false;
-    //         newErrors.email = "Email is require"
-    //     }
-    //     setError(newErrors)
-    //     return isValid
-    // }
+       if (!value.course) {
+        isValid = false;
+        newErrors.course = "Course is Required"
+       }
+        if (!value.batchtype) {
+            isValid = false;
+            newErrors.batchtype = "Batch Type is Required"
+        }
+
+        if (!value.department){
+            isValid = false;
+            newErrors.department = "Department is Required"
+        }
+
+        if (!value.nationality){
+            isValid = false;
+            newErrors.nationality = "Nationality is Required"
+        }
+        setError(newErrors)
+        return isValid
+    }
 
 
     async function getEmployeeData() {
@@ -163,7 +173,7 @@ const MassSMS = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        // if(validateForm()){
+        if(validateForm()){
         const data = {
 
             training: value.training,
@@ -184,7 +194,7 @@ const MassSMS = () => {
             .catch((err) => {
                 console.log(err)
             })
-        // }
+        }
 
 
 
@@ -235,7 +245,7 @@ const MassSMS = () => {
     ];
 
 
-    const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
+    //const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
 
 
     return (
@@ -283,25 +293,17 @@ const MassSMS = () => {
                                                                 <select class="form-control" id="exampleFormControlSelect1"
                                                                     value={value.course} name='course' onChange={onhandleChange}>
                                                                     <option>--Select Course--</option>
-                                                                    <option>Autocad- Piping</option>
-                                                                    <option>Basic AutoCAD - 2D</option>
-                                                                    <option>Health, Safety &amp; Environment in Construction</option>
-                                                                    <option>Masonry/Carpentry</option>
-                                                                    <option>Offshore Engineering</option>
-                                                                    <option>Other</option>
                                                                 </select>
                                                                 {<span className='text-danger'> {error.course} </span>}
                                                             </div>
 
                                                             <div class="form-group col-lg-3">
-                                                                <lable for="exampleFormControlSelect1">Batch Type</lable>
+                                                                <lable for="exampleFormControlSelect1">Batch Type<span className="text-danger">*</span></lable>
                                                                 <select class="form-control" id="exampleFormControlSelect1" value={value.batchtype}
                                                                     name='batchtype' onChange={onhandleChange}>
                                                                     <option>--Select Batch Type--</option>
-                                                                    <option>All</option>
-                                                                    <option>Corporate</option>
-                                                                    <option>Non-Corporate</option>
                                                                 </select>
+                                                                {<span className='text-danger'> {error.batchtype} </span>}
                                                             </div>
 
                                                             <div class="form-group col-lg-3">
@@ -317,35 +319,22 @@ const MassSMS = () => {
                                                             </div>
 
                                                             <div class="form-group col-lg-3">
-                                                                <lable for="exampleFormControlSelect1">Department</lable>
+                                                                <lable for="exampleFormControlSelect1">Department<span className="text-danger">*</span></lable>
                                                                 <select class="form-control" id="exampleFormCpntrolSelect1" value={value.department}
                                                                     name='department' onChange={onhandleChange}>
                                                                     <option>--Select Department--</option>
-                                                                    <option>Select</option>
-                                                                    <option>Administration</option>
-                                                                    <option>Business Development</option>
-                                                                    <option>Training &amp; Development</option>
-                                                                    <option>Account</option>
-                                                                    <option>Placement</option>
-                                                                    <option>Purchase</option>
-                                                                    <option>Leadership / DD</option>
-                                                                    <option>Quality Assurance</option>
-                                                                    <option>Human Resources</option>
-                                                                    <option>Corporate Training</option>
-                                                                    <option>Test User</option>
 
                                                                 </select>
+                                                                {<span className='text-danger'> {error.department} </span>}
                                                             </div>
 
                                                             <div class="form-group col-lg-3">
-                                                                <lable for="exampleFormControlSelect1">Nationality</lable>
+                                                                <lable for="exampleFormControlSelect1">Nationality<span className="text-danger">*</span></lable>
                                                                 <select class="form-control" id="exampleFormControlSelect1" value={value.nationality}
                                                                 name='nationality' on onChange={onhandleChange}>
                                                                     <option>--Select Nationality--</option>
-                                                                    <option>All</option>
-                                                                    <option>Indian</option>
-                                                                    <option>Non-Indian</option>
                                                                 </select>
+                                                                {<span className='text-danger'> {error.nationality} </span>}
                                                             </div>
 
                                                             <div class="form-group col-lg-12">

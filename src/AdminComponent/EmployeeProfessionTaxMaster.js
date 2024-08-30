@@ -8,7 +8,7 @@ import InnerHeader from './InnerHeader';
 import Loader from './Loader';
 
 
-const BatchCategory = () => {
+const EmployeeProfessionTaxMaster = () => {
 
     const [vendordata, setVendorData] = useState([])
     const [uid, setUid] = useState([])
@@ -41,10 +41,19 @@ const BatchCategory = () => {
         let isValid = true
         const newErrors = {}
 
-
-        if (!value.batchcat) {
+        if (!value.salaryfrom) {
             isValid = false;
-            newErrors.batchcat = "Name is require"
+            newErrors.salaryfrom = "Salary From is Required"
+        }
+
+        if (!value.salaryto) {
+        isValid = false;
+        newErrors.salaryto = "Salary To is Required"
+        }
+
+        if(!value.taxrate){
+        isValid = false;
+        newErrors.taxrate = "Tax Rate is Required"
         }
 
         setError(newErrors)
@@ -185,7 +194,8 @@ const BatchCategory = () => {
             flex: 1,
             filterable: false,
         },
-        { field: 'BatchCategory', headerName: 'Batch Category', flex: 2 },
+        { field: 'salaryfrom', headerName: 'From', flex: 2 },
+        { field: 'salaryto', headerName: 'To', flex: 2 },
         {
             field: 'actions',
             type: 'actions',
@@ -218,39 +228,49 @@ const BatchCategory = () => {
                         <div class="col-lg-5 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Batch Information</h4>
+                                    <h4 class="card-title">Add Employee Profession Tax Master</h4>
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
                                             <div class="form-group col-lg-12">
-                                                <label for="exampleInputUsername1">Batch Category<span className='text-danger'>*</span></label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.batchcat} placeholder="Batch Category*" name='batchcat' onChange={onhandleChange} />
-                                                {error.batchcat && <span className='text-danger'>{error.batchcat}</span>}
+                                                <label for="exampleInputUsername1">Salary From<span className='text-danger'>*</span></label>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" 
+                                                value={value.salaryfrom} placeholder="Salary From*" name='salaryfeom' onChange={onhandleChange} />
+                                                {<span className='text-danger'>{error.salaryfrom}</span>}
                                             </div>
                                             
                                             <div class="form-group col-lg-12">
-                                                <label for="exampleFormControlSelect1">Batch Type </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batchtype} onChange={onhandleChange} name='batchtype'>
-                                                    <option>Select Type</option>
-                                                    <option value="Inhouse">Inhouse</option>
-                                                    <option value="Corporate">Corporate</option>
-                                                    <option value="Transfer">Transfer</option>
-                                                </select>
+                                            <label for="exampleInputUsername1">Salary To <span className='text-danger'>*</span> </label>
+                                            <input type="text" class="form-control" id="exampleInputUsername1"
+                                            value={value.salaryto} placeholder="Salary To" name='salaryto' onChange={onhandleChange} />
+                                            {<span className='text-danger'> {error.salaryto} </span>}
                                             </div>
                                             <div class="form-group col-lg-12">
-                                                <label for="exampleInputUsername1">Prefix</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.prefix} placeholder="Course Code*" name='prefix' onChange={onhandleChange} />
+                                                <label for="exampleInputUsername1">Tax Rate<span className="text-danger">*</span></label>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" 
+                                                value={value.taxrate} placeholder="Tax Rate*" name='taxrate' onChange={onhandleChange} />
+                                                {<span className='text-danger'> {error.taxrate} </span>}
                                              
                                             </div>
 
                                             <div class="form-group col-lg-12">
-                                                <label for="exampleTextarea1">Description</label>
-                                                <textarea class="form-control" id="exampleTextarea1" name='description' value={value.description} placeholder="Description*" onChange={onhandleChange}></textarea>
-                                     
+                                                <label for="exampleFormControlSelect1">
+                                                    <input type="Checkbox" id="exampleCheckbox" name="exampleCheck" onClick="toggelSelect(_" />Separate Month
+                                                </label>
+                                                <select class="form-control" id="exampleFormControlSelect1" value={value.separatemonth}
+                                                placeholder="separatemonth" name='separatemonth' onChange={onhandleChange} disabled>
+                                                    <option>Select Months</option>
+                                                </select>
                                             </div>
 
-
-
+                                            <div class="form-group col-lg-12">
+                                                <label for="exampleInputUsername1">Separated Tax Rate</label>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.separatedtax}
+                                                placeholder="Separated Tax Rate" name='separatedtax' onChange={onhandleChange} disabled />
+                                            </div>
+                                            
+                                            <h4 class="text-title"><span class="text-danger">Notes: </span> Select Seperarted month only when there is a 
+                                            change in tax rate for any particular month.</h4>
                                         </div>
 
 
@@ -268,7 +288,7 @@ const BatchCategory = () => {
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
                                         <div>
-                                            <h4 class="card-title">View Batch Category</h4>
+                                            <h4 class="card-title">Employee Profession Tax Master</h4>
                                             
                                         </div>
 
@@ -318,4 +338,4 @@ const BatchCategory = () => {
     )
 }
 
-export default BatchCategory
+export default EmployeeProfessionTaxMaster

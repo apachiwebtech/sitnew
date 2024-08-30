@@ -2870,7 +2870,7 @@ app.post('/nodeapp/add_assets', (req, res) => {
 
 
 
-  let { startdate, vindername, assets, quantity, price, location, uid } = req.body
+  let { startdate, vindorname, assets, quantity, price, location, uid } = req.body
 
   let sql
   let param;
@@ -2878,14 +2878,14 @@ app.post('/nodeapp/add_assets', (req, res) => {
   // console.log(uid)
 
   if (uid == undefined) {
-    sql = "insert into awt_assets(`startdate`,`vindername`,`assets`,`quantity`,`price`,`location`) values(?,?,?,?,?,?)"
+    sql = "insert into awt_assets(`startdate`,`vindorname`,`assets`,`quantity`,`price`,`location`) values(?,?,?,?,?,?)"
 
-    param = [startdate, vindername, assets, quantity, price, location,]
+    param = [startdate, vindorname, assets, quantity, price, location,]
 
   } else {
-    sql = "update `awt_assets` set `startdate` =? , `vindername` =? , `assets` =? , `quantity` =? , `price` =? , `location` =? where id = ?"
+    sql = "update `awt_assets` set `startdate` =? , `vindorname` =? , `assets` =? , `quantity` =? , `price` =? , `location` =? where id = ?"
 
-    param = [startdate, vindername, assets, quantity, price, location, uid]
+    param = [startdate, vindorname, assets, quantity, price, location, uid]
 
   }
 

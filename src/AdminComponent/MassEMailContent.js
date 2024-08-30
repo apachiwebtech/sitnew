@@ -227,7 +227,7 @@ const MassEMailContent = () => {
     ];
 
 
-    const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
+    //const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
 
 
     return (

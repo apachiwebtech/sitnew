@@ -1,26 +1,12 @@
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
-import decryptedUserId from '../Utils/UserID';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { LibraryBooks } from '@mui/icons-material';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-//import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
-// import ImageList from '@mui/material/ImageList';
-// import { ImageSourcePropType } from 'react-native';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { param } from 'jquery';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
 const UploadEventPhoto = () => {
 
     const [brand, setBrand] = useState([])
@@ -32,30 +18,7 @@ const UploadEventPhoto = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
 
-    const handleChange1 = (event) => {
-        setChecked([event.target.checked, event.target.checked]);
-    };
 
-    const handleChange2 = (event) => {
-        setChecked([event.target.checked, checked[1]]);
-    };
-
-    const handleChange3 = (event) => {
-        setChecked([checked[0], event.target.checked]);
-    };
-
-    // const children = (
-    //     <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-    //       <FormControlLabel
-    //         label="Child 1"
-    //         control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
-    //       />
-    //       <FormControlLabel
-    //         label="Child 2"
-    //         control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
-    //       />
-    //     </Box>
-    //   );
 
     const [value, setValue] = useState({
         event: "" || uid.event,
@@ -278,26 +241,21 @@ const UploadEventPhoto = () => {
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
 
-                                            <div class="form-group col-lg-3">
+                                            <div class="form-group col-lg-4">
                                                 <label for="exampleFormControlSelect1">Select Event Type</label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.event} onChange={onhandleChange} name='event'>
                                                     <option>Select</option>
-                                                    <option>Convocation</option>
-                                                    <option>Seminar</option>
-                                                    <option>Exhibition</option>
-                                                    <option>Induction</option>
-                                                    <option>Testimonials</option>
 
                                                 </select>
                                             </div>
 
-                                            <div class="form-group col-lg-3">
+                                            <div class="form-group col-lg-4">
                                                 <label for="exampleInputUsername1">Event Header</label>
                                                 <input type="date" class="form-control" id="exampleInputUsername1" value={value.eventheader} name='eventheader' onChange={onhandleChange} />
 
                                             </div>
 
-                                            <div class="form-group col-lg-6">
+                                            <div class="form-group col-lg-12">
                                                 <label for="exampleTextarea1">Event Description</label>
                                                 <CKEditor
                                                     editor={ClassicEditor}
@@ -329,7 +287,8 @@ const UploadEventPhoto = () => {
                                         <button type="submit" class="btn btn-primary mr-2">Submit</button>
                                         <button type='button' onClick={() => {
                                             window.location.reload()
-                                        }} class="btn btn-light">Cancel</button>
+                                        }} class="btn btn-light">Cancel</button> <span className="text-danger"> *Save the event then upload the images</span>
+
 
                                     </form>
 

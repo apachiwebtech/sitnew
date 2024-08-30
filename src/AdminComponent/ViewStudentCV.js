@@ -1,15 +1,13 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { BASE_URL } from './BaseUrl';
-import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import InnerHeader from './InnerHeader';
-import decryptedUserId from '../Utils/UserID';
-import { DataGrid ,GridToolbar } from '@mui/x-data-grid';
+import EditIcon from "@mui/icons-material/Edit";
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { BASE_URL } from './BaseUrl';
+import InnerHeader from './InnerHeader';
 
 
 const ViewStudentCV = () => {
@@ -22,48 +20,13 @@ const ViewStudentCV = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
 
-    const handleChange1 = (event) => {
-      setChecked([event.target.checked, event.target.checked]);
-    };
-  
-    const handleChange2 = (event) => {
-      setChecked([event.target.checked, checked[1]]);
-    };
-  
-    const handleChange3 = (event) => {
-      setChecked([checked[0], event.target.checked]);
-    };
+    
 
-    const children = (
-        <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-          <FormControlLabel
-            label="Child 1"
-            control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
-          />
-          <FormControlLabel
-            label="Child 2"
-            control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
-          />
-        </Box>
-      );
+   
 
     const [value, setValue] = useState({
-        college_name : "" || uid.college_name,
-        university : "" || uid.university,
-        contact_person : "" || uid.contact_person,
-        designation : ""|| uid.designation,
-        address : ""|| uid.address,
-        city : ""|| uid.city,
-        pin : ""|| uid.pin,
-        state : ""|| uid.state,
-        country: ""|| uid.country,
-        telephone: ""|| uid.telephone,
-        mobile: ""|| uid.mobile,
-        email: ""|| uid.email,
-        website: ""|| uid.website,
-        remark: ""|| uid.remark,
-        purpose: ""|| uid.purpose,
-        course: ""|| uid.course
+        coursename : "" || uid.coursename,
+        batchcode : "" || uid.batchcode,
 
 
     })
@@ -71,44 +34,30 @@ const ViewStudentCV = () => {
     useEffect(() => {
         setValue({
 
-            college_name : uid.college_name,
-           university : uid.university,
-           contact_person : uid.contact_person,
-           designation : uid.designation,
-           address : uid.address,
-           city : uid.city,
-           pin : uid.pin,
-           country: uid.country,
-           state : uid.state,
-           telephone: uid.telephone,
-           mobile: uid.mobile,
-           email: uid.email,
-           website: uid.website,
-           remark: uid.remark,
-           purpose: uid.purpose,
-           course: uid.course
+            coursename : uid.coursename,
+           batchcode : uid.batchcode,
    
 
         })
     }, [uid])
 
 
-    // const validateForm = () => {
-    //     let isValid = true
-    //     const newErrors = {}
+    const validateForm = () => {
+        let isValid = true
+        const newErrors = {}
 
 
-    //    if (!value.college) {
-    //     isValid = false;
-    //     newErrors.name = "Name is require"
-    //    }
-    //     if (!value.email) {
-    //         isValid = false;
-    //         newErrors.email = "Email is require"
-    //     }
-    //     setError(newErrors)
-    //     return isValid
-    // }
+       if (!value.coursename) {
+        isValid = false;
+        newErrors.coursename = "CourseName is require"
+       }
+        if (!value.batchcode) {
+            isValid = false;
+            newErrors.batchcode = "BatchCode is require"
+        }
+        setError(newErrors)
+        return isValid
+    }
 
 
     async function getCollegeData() {
@@ -202,24 +151,10 @@ const ViewStudentCV = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-    // if(validateForm()){
+    if(validateForm()){
         const data = {
-            college_name : value.college_name,
-            university : value.university,
-            contact_person : value.contact_person,
-            designation : value.designation,
-            address : value.address,
-            city : value.city,
-            pin : value.pin,
-            country: value.country,
-            state : value.state,
-            telephone: value.telephone,
-            mobile: value.mobile,
-            email: value.email,
-            website: value.website,
-            remark: value.remark,
-            purpose: value.purpose,
-            course: value.course,
+            coursename : value.coursename,
+            batchcode : value.batchcode,
             uid:uid.id
         }
 
@@ -233,7 +168,7 @@ const ViewStudentCV = () => {
             .catch((err) => {
                 console.log(err)
             })
-    // }
+    }
 
    
         
@@ -261,12 +196,10 @@ const ViewStudentCV = () => {
             flex: 1,
             filterable: false,
         },
-        { field: 'college_name', headerName: 'College_Name', flex: 2 },
-        { field: 'university', headerName: 'University', flex: 2 },
-        { field: 'contact_person', headerName: 'Contact_Person', flex: 2},
-        { field: 'designation', headerName: 'Designation', flex: 2},
-        { field: 'address', headerName: 'Address', flex: 2},
-        { field: 'city', headerName: 'City', flex: 2},
+        { field: 'batchcode', headerName: 'Batch Code', flex: 2 },
+        { field: 'coursename', headerName: 'Course', flex: 2 },
+        { field: 'studentname', headerName: 'Student Name', flex: 2},
+        
         
         {
             field: 'actions',
@@ -303,16 +236,20 @@ const ViewStudentCV = () => {
                                         <div class='row'>
                                             
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Course</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.coursename} onChange={onhandleChange} name='coursename'>
+                                                <label for="exampleFormControlSelect1">Course<span className="text-danger">*</span></label>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1"
+                                                 value={value.coursename} onChange={onhandleChange} name='coursename'>
                                                     <option></option>
                                                 </select>
+                                                {<span className='text-danger'> {error.coursename} </span>}
                                             </div>
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Batch</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batchcode} onChange={onhandleChange} name='batchcode'>
+                                                <label for="exampleFormControlSelect1">Batch<span className="text-danger">*</span></label>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1"
+                                                 value={value.batchcode} onChange={onhandleChange} name='batchcode'>
                                                     <option></option>
                                                 </select>
+                                                {<span className='text-danger'> {error.batchcode} </span>}
                                             </div>
 
                                             
