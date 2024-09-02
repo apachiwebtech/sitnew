@@ -204,11 +204,8 @@ import ShortlistedBySIT from './AdminComponent/ShortlistedBySIT.js';
 import FeedBack1Listing from './AdminComponent/FeedBack1Listing.js';
 import FeedBack2 from './AdminComponent/FeedBack2.js';
 import FeedBack2Listing from './AdminComponent/FeedBack2Listing.js';
-<<<<<<< Updated upstream
 import FinalExamListing from './AdminComponent/FinalExamListing.js';
-=======
 import EmployeeProfessionTaxMaster from './AdminComponent/EmployeeProfessionTaxMaster.js';
->>>>>>> Stashed changes
 // import FacultyPayment from './AdminComponent/FacultyPayment.js';
 
 

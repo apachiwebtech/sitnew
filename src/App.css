@@ -401,4 +401,7 @@ li{
   background-color: #fff;
   border: 1px solid lightgray;
 }
-
+.label-select{
+  font-weight: 900;
+ border-color: lightblue;
+}
