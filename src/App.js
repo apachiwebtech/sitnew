@@ -204,11 +204,9 @@ import ShortlistedBySIT from './AdminComponent/ShortlistedBySIT.js';
 import FeedBack1Listing from './AdminComponent/FeedBack1Listing.js';
 import FeedBack2 from './AdminComponent/FeedBack2.js';
 import FeedBack2Listing from './AdminComponent/FeedBack2Listing.js';
-<<<<<<< Updated upstream
 import FinalExamListing from './AdminComponent/FinalExamListing.js';
-=======
 import EmployeeProfessionTaxMaster from './AdminComponent/EmployeeProfessionTaxMaster.js';
->>>>>>> Stashed changes
+import MyDocument3 from './AdminComponent/MyDocument3.js';
 // import FacultyPayment from './AdminComponent/FacultyPayment.js';
 
 
@@ -321,6 +319,10 @@ const Router = createBrowserRouter([
         path: '/location',
         element: <Location />
       },
+      // {
+      //   path: '/test',
+      //   element: <MyDocument3 />
+      // },
       {
         path: '/courselisting',
         element: <CourseListing />
