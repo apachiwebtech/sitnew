@@ -120,7 +120,7 @@ const FinalExamTaken = () => {
 
             axios.post(`${BASE_URL}/add_finalexamtaken`, data)
                 .then((res) => {
-                    console.log(res)
+                  alert("Data Added Successfully")
    
                     setUid([])
                     setValue({

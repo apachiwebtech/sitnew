@@ -12,7 +12,8 @@ const LectureTaken = () => {
     const [error, setError] = useState({})
     const { lecturetakenid } = useParams();
     const [course, SetCourse] = useState([])
-    const [courseid, SetCoursid] = useState([])
+    const [courseid, SetCoursid] = useState('')
+    const [batchid, setBatchid] = useState('')
     const [lecture, SetLecture] = useState([])
     const [faculty, setFacilty] = useState([])
     const [batch, setAnnulBatch] = useState([])
@@ -20,7 +21,6 @@ const LectureTaken = () => {
     const [unit, SetUnit] = useState([])
     const [unitid, SetUnitid] = useState('')
     const [assignid, Setassignid] = useState('')
-    const [batchid, setBatchid] = useState('')
     const [lectureid, setLectureid] = useState('')
     const [loading, setLoading] = useState(true)
     const [studentdata, setStudentdata] = useState([])

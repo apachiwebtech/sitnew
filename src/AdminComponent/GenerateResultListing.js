@@ -9,6 +9,9 @@ import InnerHeader from './InnerHeader';
 //import AssignmentsTaken from "./AssignmentsTaken";
 import GenerateResult from "./GenerateResult";
 import Loader from "./Loader";
+import toast, { Toaster } from 'react-hot-toast';
+
+
 
 const GenerateResultListing = () => {
 
@@ -33,11 +36,11 @@ const GenerateResultListing = () => {
 
     })
 
-
+   
 
 
     const getInquiryData = async () => {
-        const response = await fetch(`${BASE_URL}/setgenerateresultdata`, {
+        const response = await fetch(`${BASE_URL}/generateresultdata`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -94,13 +97,17 @@ const GenerateResultListing = () => {
 
     const handleDelete = (id) => {
         const data = {
-            cat_id: id,
-            tablename: "awt_generateresult"
+            delete_id: id,
+            tablename: "generate_final_result",
+            column_name: "Id"
         }
 
-        axios.post(`${BASE_URL}/delete_generateresult_data`, data)
+        axios.post(`${BASE_URL}/new_delete_data`, data)
             .then((res) => {
                 getInquiryData()
+                toast.success('Deleted', {
+                    position: "bottom-center"
+                  })
             })
             .catch((err) => {
                 console.log(err)
@@ -140,10 +147,10 @@ const GenerateResultListing = () => {
             filterable: false,
 
         },
-        { field: 'batchcode', headerName: 'Batch Code', flex: 2 },
-        { field: 'coursename', headerName: 'Course Name', flex: 2 },
-        { field: 'returndate', headerName: 'Result Date', flex: 2 },
-        { field: 'approved', headerName: 'Approved By', flex: 2 },
+        { field: 'Batch_code', headerName: 'Batch Code', flex: 2 },
+        { field: 'Course_Name', headerName: 'Course Name', flex: 2 },
+        { field: 'Result_date', headerName: 'Result Date', flex: 2 },
+        { field: 'Faculty_Name', headerName: 'Approved By', flex: 2 },
 
         {
             field: 'actions',
@@ -153,8 +160,8 @@ const GenerateResultListing = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <EditIcon style={{ cursor: "pointer" }} Link={() => handleUpdate(params.row.id)} />
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} Link={() => handleClick(params.row.id)} />
+                        <Link to={`/generateresult/${params.row.Id}`} > <EditIcon style={{ cursor: "pointer" }}  /></Link>
+                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.Id)} />
                     </>
                 )
             }
@@ -171,6 +178,7 @@ const GenerateResultListing = () => {
 
         <div className="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
+            <Toaster />
             {loading && <Loader />}
             <div className="main-panel" style={{display : loading ? "none" : "block"}} >
 
@@ -198,7 +206,7 @@ const GenerateResultListing = () => {
                                             disableColumnSelector
                                             disableDensitySelector
                                             rowHeight={35}
-                                            getRowId={(row) => row.id}
+                                            getRowId={(row) => row.Id}
                                             initialState={{
                                                 pagination: {
                                                     paginationModel: { pageSize: 10, page: 0 },

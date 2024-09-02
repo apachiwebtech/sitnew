@@ -2,29 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
+import axios from 'axios';
 //import FormControlLabel from '@mui/material/FormControlLabel';
 
 const GenerateResult = () => {
     const { generateresultid } = useParams();
-    const [brand, setBrand] = useState([])
-    const [vendordata, setVendorData] = useState([])
-    const [uid, setUid] = useState([])
-    const [cid, setCid] = useState("")
+    const [uid, setUid] = useState('')
+    const [faculty, setFacilty] = useState([])
+    const [batch, setAnnulBatch] = useState([])
     const [error, setError] = useState({})
-    const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
-
-    const handleChange1 = (event) => {
-        setChecked([event.target.checked, event.target.checked]);
-    };
-
-    const handleChange2 = (event) => {
-        setChecked([event.target.checked, checked[1]]);
-    };
-
-    const handleChange3 = (event) => {
-        setChecked([checked[0], event.target.checked]);
-    };
+    const [course, SetCourse] = useState([])
+    const [courseid, SetCoursid] = useState('')
+  
 
 
     const [value, setValue] = useState({
@@ -32,8 +21,10 @@ const GenerateResult = () => {
         batch: '',
         returndate: '',
         printdate: '',
-        prepared: '',
-        checked: '',
+        label1: '',
+        label2: '',
+        faculty1: '',
+        faculty2: '',
         approved: '',
         startdate: '',
         enddate: '',
@@ -46,41 +37,106 @@ const GenerateResult = () => {
         const newErrors = {}
 
 
-       if (!value.course){
-        isValid = false;
-        newErrors.course = "Course is Required"
-       }
+        if (!courseid) {
+            isValid = false;
+            newErrors.course = "Course is Required"
+        }
 
-       if(!value.batch){
-        isValid = false;
-        newErrors.batch = "Batch is Required"
-       }
+        if (!value.batch) {
+            isValid = false;
+            newErrors.batch = "Batch is Required"
+        }
 
-       if(!value.returndate){
-        isValid = false;
-        newErrors.returndate = "Return Date is Required"
-       }
+        if (!value.returndate) {
+            isValid = false;
+            newErrors.returndate = "Return Date is Required"
+        }
 
-       if(!value.printdate){
-        isValid = false;
-        newErrors.printdate = "Print Date is Required"
-       }
+        if (!value.printdate) {
+            isValid = false;
+            newErrors.printdate = "Print Date is Required"
+        }
 
-       if(!value.approved){
-        isValid = false;
-        newErrors.approved = "Approved is Required"
-       }
+        if (!value.approved) {
+            isValid = false;
+            newErrors.approved = "Approved is Required"
+        }
 
         setError(newErrors)
         return isValid
     }
 
 
-    async function getStudentDetail() {
-        const response = await fetch(`${BASE_URL}/studentDetail`, {
+    async function getCourseData() {
+
+        axios.get(`${BASE_URL}/getCourse`)
+            .then((res) => {
+                console.log(res.data)
+                SetCourse(res.data)
+
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+    const getbatch = async (id) => {
+
+        SetCoursid(id)
+
+        const data = {
+            courseid: id
+        }
+
+
+
+        if (id) {
+            try {
+                const res = await axios.post(`${BASE_URL}/getcoursewisebatch`, data);
+                setAnnulBatch(res.data);
+
+            } catch (err) {
+                console.error("Error fetching data:", err);
+            }
+        } else {
+            try {
+                const res = await axios.get(`${BASE_URL}/getbatch`, data);
+
+                setAnnulBatch(res.data);
+
+            } catch (err) {
+                console.error("Error fetching data:", err);
+            }
+        }
+
+
+
+
+
+    };
+
+
+
+
+    async function getfaculty() {
+
+        axios.get(`${BASE_URL}/getfaculty`)
+            .then((res) => {
+
+                setFacilty(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+
+
+    async function getUpdateDetails() {
+        const response = await fetch(`${BASE_URL}/new_update_data`, {
             method: 'POST',
             body: JSON.stringify({
-                id: generateresultid,
+                u_id: generateresultid,
+                uidname: "Id",
+                tablename: "Generate_final_result"
             }),
             headers: {
                 'Content-Type': 'application/json',
@@ -90,80 +146,69 @@ const GenerateResult = () => {
         const data = await response.json();
 
 
+        SetCoursid(data[0].Course_Id)
+
+        setUid(data[0].Id)
+
+   
         setValue(prevState => ({
             ...prevState,
-            course: data[0].course,
-            batch: data[0].batch,
-            returndate: data[0].returndate,
-            printdate: data[0].printdate,
-            prepared: data[0].prepared,
-            checked: data[0].checked,
-            approved: data[0].approved,
-            startdate: data[0].startdate,
-            enddate: data[0].enddate,
+            batch: data[0].Batch_Id,
+            returndate: data[0].Result_date,
+            printdate: data[0].Print_date,
+            label1: data[0].Label1,
+            label2: data[0].Label2,
+            faculty1: data[0].Faculty1,
+            faculty2: data[0].Faculty2,
+            approved: data[0].Approve,
+            startdate: data[0].Start_date,
+            enddate: data[0].End_date,
         }))
     }
+
+
+
     useEffect(() => {
-        if (':generateresultid' !== ":generateresultid") {
-            getStudentDetail()
+        if (generateresultid !== ":generateresultid") {
+            getUpdateDetails()
         }
 
         value.title = ""
+        getCourseData()
+        getbatch()
+        getfaculty()
         setError({})
         setUid([])
     }, [])
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        let response
+
         if (validateForm()) {
-            if (generateresultid == ":generateresultid") {
-                response = await fetch(`${BASE_URL}/add_generateresult`, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        course: value.course,
-                        batch: value.batch,
-                        returndate: value.returndate,
-                        printdate: value.printdate,
-                        prepared: value.prepared,
-                        checked: value.checked,
-                        approved: value.approved,
-                        startdate: value.startdate,
-                        enddate: value.enddate,
-                    }),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-            } else {
 
-                response = await fetch(`${BASE_URL}/updategenerateresult'`, {
-                    method: 'POST',
-                    body: JSON.stringify({
-
-                        course: value.course,
-                        batch: value.batch,
-                        returndate: value.returndate,
-                        printdate: value.printdate,
-                        prepared: value.prepared,
-                        checked: value.checked,
-                        approved: value.approved,
-                        startdate: value.startdate,
-                        enddate: value.enddate,
-
-
-
-
-                    }),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
+            const data = {
+                course: courseid,
+                batch: value.batch,
+                returndate: value.returndate,
+                printdate: value.printdate,
+                faculty1: value.faculty1,
+                faculty2: value.faculty2,
+                label1: value.label1,
+                label2: value.label2,
+                approved: value.approved,
+                startdate: value.startdate,
+                enddate: value.enddate,
+                uid:uid
             }
 
-
-
+            axios.post(`${BASE_URL}/add_generateresult`, data)
+                .then((res) => {
+                    alert("Data Added Successfully")
+                })
         }
+
+
+
     }
 
 
@@ -189,19 +234,15 @@ const GenerateResult = () => {
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Course<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course} onChange={onhandleChange} name='course'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={courseid} onChange={(e) => getbatch(e.target.value)} name='course'>
                                                     <option>Select</option>
-                                                    <option>Administration</option>
-                                                    <option>Business Development</option>
-                                                    <option>Training &amp; Development</option>
-                                                    <option>Account</option>
-                                                    <option>Placement</option>
-                                                    <option>Purchase</option>
-                                                    <option>Leadership / DD</option>
-                                                    <option>Quality Assurance</option>
-                                                    <option>Human Resources</option>
-                                                    <option>Corporate Training</option>
-                                                    <option>Test User</option>
+                                                    {course.map((item) => {
+                                                        return (
+
+                                                            <option value={item.Course_Id}>{item.Course_Name}</option>
+                                                        )
+                                                    })}
+
                                                 </select>
                                                 {<span className='text-danger'> {error.course} </span>}
                                             </div>
@@ -210,15 +251,12 @@ const GenerateResult = () => {
                                                 <label for="exampleFormControlSelect1">Batch<span className='text-danger'>*</span> </label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batch} onChange={onhandleChange} name='batch'>
                                                     <option>Select</option>
-                                                    <option>00001</option>
-                                                    <option>01002</option>
-                                                    <option>01003</option>
-                                                    <option>01004</option>
-                                                    <option>01005</option>
-                                                    <option>01006</option>
-                                                    <option>01007</option>
-                                                    <option>01008</option>
-                                                    <option>01009</option>
+                                                    {batch.map((item) => {
+                                                        return (
+
+                                                            <option value={item.Batch_Id}>{item.Batch_code}</option>
+                                                        )
+                                                    })}
                                                 </select>
                                                 {<span className='text-danger'> {error.batch} </span>}
                                             </div>
@@ -238,83 +276,90 @@ const GenerateResult = () => {
                                             </div>
 
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Prepared By </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.prepared} onChange={onhandleChange} name='prepared'>
+                                                <select className='label-select' value={value.label1} name='label1'  onChange={onhandleChange}>
                                                     <option>Select</option>
-                                                    <option>A. G. Belwalkar</option>
-                                                    <option>Aashay Dedhia</option>
-                                                    <option>A. G. Belwalkar</option>
-                                                    <option>Aashay Dedhia</option>
-                                                    <option>A. G. Belwalkar</option>
-                                                    <option>Aashay Dedhia</option>
-                                                    <option>A. G. Belwalkar</option>
-                                                    <option>Aashay Dedhia</option>
-                                                    <option>A. G. Belwalkar</option>
-                                                    <option>Aashay Dedhia</option>
+                                                    <option value="Prepared">Prepared By</option>
+                                                    <option value="Checked">Checked By</option>
+                                                    <option value="Training">Training Coordinator</option>
+                                                    <option value="Faculty">Faculty</option>
                                                 </select>
-                                            </div>
 
-                                            <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Checked By </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.checked} onChange={onhandleChange} name='checked'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.faculty1} onChange={onhandleChange} name='faculty1'>
                                                     <option>Select</option>
-                                                    <option>A. G. Belwalkar</option>
-                                                    <option>Aashay Dedhia</option>
-                                                    <option>A. G. Belwalkar</option>
-                                                    <option>Aashay Dedhia</option>
-                                                    <option>A. G. Belwalkar</option>
-                                                    <option>Aashay Dedhia</option>
-                                                    <option>A. G. Belwalkar</option>
-                                                    <option>Aashay Dedhia</option>
-                                                    <option>A. G. Belwalkar</option>
-                                                    <option>Aashay Dedhia</option>
-                                                    <option>A. G. Belwalkar</option>
-                                                    <option>Aashay Dedhia</option>
+                                                    {faculty.map((item) => {
+                                                        return (
+                                                            <option value={item.Faculty_Id}>{item.Faculty_Name}</option>
+                                                        )
+                                                    })}
                                                 </select>
-                                                
                                             </div>
 
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Approved By<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.approved} onChange={onhandleChange} name='approved'>
-                                                    <option>A. G. Belwalkar</option>
-                                                    <option>Aashay Dedhia</option>
-                                                    <option>A. G. Belwalkar</option>
-                                                    <option>Aashay Dedhia</option>
-                                                    <option>A. G. Belwalkar</option>
-                                                    <option>Aashay Dedhia</option>
-                                                    <option>A. G. Belwalkar</option>
-                                                    <option>Aashay Dedhia</option>
-                                                    <option>A. G. Belwalkar</option>
-                                                    <option>Aashay Dedhia</option>
-                                                    <option>A. G. Belwalkar</option>
-                                                    <option>Aashay Dedhia</option>
+                                                <select className='label-select' value={value.label2} name='label2'  onChange={onhandleChange}>
+                                                    <option>Select</option>
+                                                    <option value="Prepared">Prepared By</option>
+                                                    <option value="Checked">Checked By</option>
+                                                    <option value="Training">Training Coordinator</option>
+                                                    <option value="Faculty">Faculty</option>
                                                 </select>
-                                                {<span className='text-danger'> {error.approved} </span>}
+
+
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.faculty2} onChange={onhandleChange} name='faculty2'>
+                                                    <option>Select</option>
+                                                    {faculty.map((item) => {
+                                                        return (
+                                                            <option value={item.Faculty_Id}>{item.Faculty_Name}</option>
+                                                        )
+                                                    })}
+                                                </select>
+
                                             </div>
 
-                                            <div class="form-group col-lg-3">
-                                                <lable for="exampleInputUsername1">Period (Start Date)</lable>
-                                                <input type='date' class="form-control" id="exampleInputUsername1" value={value.startdate} 
-                                                name='startdate' onChange={onhandleChange} />
-                                                
+
+
+                                            <div className='col-lg-12 '>
+                                                <div className='row align-items-center'>
+
+                                                    <div class="form-group col-lg-3">
+                                                        <label for="exampleFormControlSelect1">Approved By<span className='text-danger'>*</span> </label>
+                                                        <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.approved} onChange={onhandleChange} name='approved'>
+                                                            <option>Select</option>
+                                                            {faculty.map((item) => {
+                                                                return (
+                                                                    <option value={item.Faculty_Id}>{item.Faculty_Name}</option>
+                                                                )
+                                                            })}
+                                                        </select>
+                                                        {<span className='text-danger'> {error.approved} </span>}
+                                                    </div>
+                                                    <div class="form-group col-lg-3">
+                                                        <label for="exampleInputUsername1">Period (Start Date)</label>
+                                                        <input type='date' class="form-control" id="exampleInputUsername1" value={value.startdate}
+                                                            name='startdate' onChange={onhandleChange} />
+
+                                                    </div>
+
+                                                    <div class="form-group col-lg-3">
+                                                        <label for="exampleInputUsername1">End Date</label>
+                                                        <input type="date" class="form-control" id="exampleInputUsername1" value={value.enddate}
+                                                            name='enddate' onChange={onhandleChange} />
+
+                                                    </div>
+
+                                                    <div className='col-lg-3'>
+
+                                                        <button type="submit" class="btn btn-primary mr-2">Generate</button>
+                                                    </div>
+                                                </div>
+
                                             </div>
 
-                                            <div class="form-group col-lg-3">
-                                                <lable for="exampleInputUsername1">End Date</lable>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.enddate}
-                                                name='enddate' onChange={onhandleChange} />
-                                                
-                                            </div>
-                                            
+
 
                                         </div>
 
 
-                                        <button type="submit" class="btn btn-primary mr-2">Generate</button>
-                                        <button type='button' onClick={() => {
-                                            window.location.reload()
-                                        }} class="btn btn-light">Cancel</button>
+
 
 
 
@@ -327,7 +372,9 @@ const GenerateResult = () => {
                                     <button type="submit" class="btn btn-primary mr-2">MarkSheet</button>
                                     <button type="submit" class="btn btn-primary mr-2">Certificate Print</button>
                                     <button type="submit" class="btn btn-primary mr-2">Print Sheet</button>
-
+                                    <button type='button' onClick={() => {
+                                        window.location.reload()
+                                    }} class="btn btn-light border">Cancel</button>
 
 
                                 </div>
