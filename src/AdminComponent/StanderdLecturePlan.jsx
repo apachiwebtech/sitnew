@@ -225,32 +225,10 @@ const StandardLecturePlan = () => {
 
   const columns = [
     {
-      field: "index",
-      headerName: "Id",
-      type: "number",
-      align: "center",
-      headerAlign: "center",
-      flex: 1,
-      filterable: false,
-    },
-    { field: "lecture_no", headerName: "Lecture No", flex: 2 },
-    { field: "subject", headerName: "Subject", flex: 2 },
-    { field: "subject_topic", headerName: "Subject Topics", flex: 2 },
-    { field: "date", headerName: "Date", flex: 2 },
-    { field: "starttime", headerName: "Start Time", flex: 2 },
-    { field: "endtime", headerName: "End Time", flex: 2 },
-    { field: "assignment", headerName: "Assignment", flex: 2 },
-    { field: "assignment_date", headerName: "Assignment Date", flex: 2 },
-    { field: "faculty_name", headerName: "Faculty Name", flex: 2 },
-    { field: "class_room", headerName: "Class Room", flex: 2 },
-    { field: "documents", headerName: "Documents", flex: 2 },
-    { field: "unit_test", headerName: "Unit Test", flex: 2 },
-    { field: "publish", headerName: "Publish", flex: 2 },
-    {
       field: 'actions',
       type: 'actions',
       headerName: 'Action',
-      flex: 1,
+      width: 100,
       renderCell: (params) => {
         return (
           <>
@@ -260,6 +238,29 @@ const StandardLecturePlan = () => {
         )
       }
     },
+    {
+      field: "index",
+      headerName: "Id",
+      type: "number",
+      align: "center",
+      headerAlign: "center",
+      width: 10,
+      filterable: false,
+    },
+    { field: "lecture_no", headerName: "Lecture No", width: 100 },
+    { field: "subject", headerName: "Subject", width: 150 },
+    { field: "subject_topic", headerName: "Subject Topics", width: 150 },
+    { field: "date", headerName: "Date", width: 100 },
+    { field: "starttime", headerName: "Start Time", width: 100 },
+    { field: "endtime", headerName: "End Time", width: 100 },
+    { field: "assignmentname", headerName: "Assignment", width: 150 },
+    { field: "assignment_date", headerName: "Assignment Date", width: 100 },
+    { field: "faculty_name", headerName: "Faculty Name", width: 100 },
+    { field: "class_room", headerName: "Class Room", width: 100 },
+    { field: "documents", headerName: "Documents", width: 150 },
+    { field: "unitname", headerName: "Unit Test", width: 150 },
+    { field: "publish", headerName: "Publish", width: 100 },
+ 
   ];
 
   const rowsWithIds = onlineAdmissions.map((row, index) => ({

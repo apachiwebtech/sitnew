@@ -25,10 +25,7 @@ const LectureTaken = () => {
     const [loading, setLoading] = useState(true)
     const [studentdata, setStudentdata] = useState([])
     const [hide, setHide] = useState(false)
-
-
-
-
+    const [lecturedata , setLecturedata] = useState([])
     const [value, setValue] = useState(
         {
             course: '',
@@ -64,63 +61,72 @@ const LectureTaken = () => {
 
         if (!courseid) {
             isValid = false;
-            newErrors.course = "Name is Require"
+            newErrors.course = "Name is Required"
         }
 
         if (!batchid) {
             isValid = false;
-            newErrors.batch = "Batch is Require"
+            newErrors.batch = "Batch is Required"
         }
 
-        if (!value.lecturedate) {
+        if(!lectureid){
             isValid = false;
-            newErrors.lecturedate = "Lecture Date is Require"
+            newErrors.lecture = "Lecture is Required"
+        }
+        if(!value.classroom){
+            isValid = false;
+            newErrors.classroom = "Classroom is Required"
         }
 
-        if (!value.faculty) {
-            isValid = false;
-            newErrors.faculty = "Faculty is Require"
-        }
+        // if (!value.lecturedate) {
+        //     isValid = false;
+        //     newErrors.lecturedate = "Lecture Date is Require"
+        // }
 
-        if (!value.assignmentadate) {
-            isValid = false;
-            newErrors.assignmentdate = "AssignmentDate is Require"
-        }
+        // if (!value.faculty) {
+        //     isValid = false;
+        //     newErrors.faculty = "Faculty is Require"
+        // }
 
-        if (!value.material) {
-            isValid = false;
-            newErrors.material = "Matrerial is Require"
-        }
+        // if (!value.assignmentadate) {
+        //     isValid = false;
+        //     newErrors.assignmentdate = "AssignmentDate is Require"
+        // }
 
-        if (!value.assignmentgive) {
-            isValid = false;
-            newErrors.assignmentgiven = "AssignmentGiven is Require"
-        }
+        // if (!value.material) {
+        //     isValid = false;
+        //     newErrors.material = "Matrerial is Require"
+        // }
 
-        if (!assignid) {
-            isValid = false;
-            newErrors.assignment = "Assignment is Require"
-        }
+        // if (!value.assignmentgive) {
+        //     isValid = false;
+        //     newErrors.assignmentgiven = "AssignmentGiven is Require"
+        // }
 
-        if (!value.testgiven) {
-            isValid = false;
-            newErrors.testgiven = "TestGiven is Require"
-        }
+        // if (!assignid) {
+        //     isValid = false;
+        //     newErrors.assignment = "Assignment is Require"
+        // }
 
-        if (!unitid) {
-            isValid = false;
-            newErrors.test = "Test is Require"
-        }
+        // if (!value.testgiven) {
+        //     isValid = false;
+        //     newErrors.testgiven = "TestGiven is Require"
+        // }
 
-        if (!value.topicdescuss) {
-            isValid = false;
-            newErrors.topicdescuss = "TopicDescuss is Require"
-        }
+        // if (!unitid) {
+        //     isValid = false;
+        //     newErrors.test = "Test is Require"
+        // }
 
-        if (!value.nextplanning) {
-            isValid = false;
-            newErrors.nextplanning = "NextPlanning is Require"
-        }
+        // if (!value.topicdescuss) {
+        //     isValid = false;
+        //     newErrors.topicdescuss = "TopicDescuss is Require"
+        // }
+
+        // if (!value.nextplanning) {
+        //     isValid = false;
+        //     newErrors.nextplanning = "NextPlanning is Require"
+        // }
 
         setError(newErrors)
         return isValid
@@ -291,6 +297,31 @@ const LectureTaken = () => {
     };
 
 
+    const onlectureselect = (id) =>{
+        setLectureid(id)
+
+        const data = {
+            lectureid : id
+        }
+
+        axios.post(`${BASE_URL}/getlecturedetails`,data)
+        .then((res) =>{
+            setLecturedata(res.data)
+             const data = res.data[0]
+            setValue({
+                lecturedate: data.date,
+                lecturefrom: data.starttime,
+                lectureto: data.endtime,
+                faculty: data.faculty_name,
+                assignmentadate: data.assignment_date,
+                assignment: data.assignment,
+                test: data.unit_test,
+        
+            })
+        })
+    }
+
+
 
 
 
@@ -365,7 +396,7 @@ const LectureTaken = () => {
             const data = {
                 course: courseid,
                 batch: batchid,
-                lecture: value.lecture,
+                lecture: lectureid,
                 classroom: value.classroom,
                 lecturedate: value.lecturedate,
                 lecturefrom: value.lecturefrom,
@@ -424,7 +455,7 @@ const LectureTaken = () => {
 
         try {
             const response = await axios.post(`${BASE_URL}/update_lecture_child`, studentdata);
-            
+
             alert("Data updated successfully")
         } catch (error) {
             console.error('Error saving data', error);
@@ -494,8 +525,8 @@ const LectureTaken = () => {
 
 
                                                         <div className="form-group col-lg-2 ">
-                                                            <label for="exampleexampleFormControlSelect1InputUsername1">Lecture</label>
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" name='lecture' value={lectureid} onChange={onhandleChange} >
+                                                            <label for="exampleexampleFormControlSelect1InputUsername1">Lecture<span className="text-danger">*</span></label>
+                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" name='lecture' value={lectureid} onChange={(e) =>onlectureselect(e.target.value)} >
 
                                                                 <option>Select Lecture</option>
                                                                 {lecture.map((item) => {
@@ -505,7 +536,7 @@ const LectureTaken = () => {
                                                                     )
                                                                 })}
 
-
+                                                                {<span className="text-danger">{error.lecture}</span>}
                                                             </select>
                                                         </div>
 
@@ -520,7 +551,7 @@ const LectureTaken = () => {
                                                             {<span className="text-danger"> {error.classroom} </span>}
                                                         </div>
                                                         <div className='form-group col-2'>
-                                                            <label for="exampleInputUsername1">Lecture Date<span className="text-danger">*</span></label>
+                                                            <label for="exampleInputUsername1">Lecture Date</label>
                                                             <input type="date" className="form-control" id="exampleInputUsername1" value={value.lecturedate} placeholder="Date" name='lecturedate' onChange={onhandleChange} />
                                                             {<span className="text-danger"> {error.lecturedate} </span>}
                                                         </div>
@@ -540,7 +571,7 @@ const LectureTaken = () => {
                                                         </div>
 
                                                         <div class="form-group col-lg-2">
-                                                            <lable for="exampleFormControlSelect1">Faculty<span className="text-danger">*</span></lable>
+                                                            <label for="exampleFormControlSelect1">Faculty</label>
                                                             <select class="form-control" id="exampleFormControlSelect1" value={value.faculty}
                                                                 name='faculty' onChange={onhandleChange}>
                                                                 <option>--Select Faculty--</option>
@@ -554,26 +585,26 @@ const LectureTaken = () => {
                                                         </div>
 
                                                         <div class="form-group col-lg-2">
-                                                            <lable for="exampleInputUsername1">Faculty - Time</lable>
+                                                            <label for="exampleInputUsername1">Faculty - Time</label>
                                                             <input type="time" class="form-control" id="exampleInputUsername1" value={value.facultytime}
                                                                 name='facultytime' onChange={onhandleChange} />
                                                         </div>
 
                                                         <div class="form-group col-lg-2">
-                                                            <lable for="exampleInputUsername1">Time - To</lable>
+                                                            <label for="exampleInputUsername1">Time - To</label>
                                                             <input type="time" class="form-control" id="exampleInputUsername1" value={value.timeto}
                                                                 name='timeto' onChange={onhandleChange} />
                                                         </div>
 
 
                                                         <div className="form-group col-lg-2 ">
-                                                            <label for="exampleInputUsername1">Assignment/Test Start Date<span className='text-danger'>*</span></label>
+                                                            <label for="exampleInputUsername1">Assignment/Test Start Date</label>
                                                             <input type="date" class="form-control" id="exampleInputUsername1" value={value.assignmentadate} placeholder="Assignment*" name='assignmentadate' onChange={onhandleChange} />
                                                             {<span className='text-danger'>{error.assignmentdate}</span>}
                                                         </div>
 
                                                         <div className="form-group col-lg-2 ">
-                                                            <label for="exampleInputUsername1">End Date<span className='text-danger'>*</span></label>
+                                                            <label for="exampleInputUsername1">End Date</label>
                                                             <input type="date" class="form-control" id="exampleInputUsername1" value={value.enddate} placeholder="End Date*" name='enddate' onChange={onhandleChange} />
                                                             {error.enddate && <span className='text-danger'>{error.enddate}</span>}
                                                         </div>
@@ -588,7 +619,7 @@ const LectureTaken = () => {
                                                             </select>
                                                         </div>
                                                         <div className="form-group col-lg-2 ">
-                                                            <label for="exampleFormControlSelect1">Material<span className="text-danger">*</span></label>
+                                                            <label for="exampleFormControlSelect1">Material</label>
                                                             <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.material} name='material' onChange={onhandleChange} >
                                                                 <option>Documents</option>
                                                                 <option>LCD</option>
@@ -600,7 +631,7 @@ const LectureTaken = () => {
                                                         </div>
 
                                                         <div className="form-group col-lg-2 ">
-                                                            <label for="exampleFormControlSelect1">Assignment Given<span className="text-danger">*</span></label>
+                                                            <label for="exampleFormControlSelect1">Assignment Given</label>
                                                             <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.assignmentgive} name='assignmentgive' onChange={onhandleChange} >
                                                                 <option value="">selelct option</option>
                                                                 <option value="No">No</option>
@@ -610,8 +641,8 @@ const LectureTaken = () => {
                                                         </div>
 
 
-                                                        <div className="form-group col-lg-2 ">
-                                                            <label for="exampleFormControlSelect1">Assignment<span className='text-danger'>*</span></label>
+                                                        <div className="form-group col-lg-2">
+                                                            <label for="exampleFormControlSelect1">Assignment</label>
                                                             <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={assignid} name='assignment' onChange={(e) => Setassignid(e.target.value)} >
 
                                                                 <option>select assignment</option>
@@ -626,7 +657,7 @@ const LectureTaken = () => {
                                                         </div>
 
                                                         <div className="form-group col-lg-2 ">
-                                                            <label for="exampleFormControlSelect1">Test Given<span className='text-danger'>*</span></label>
+                                                            <label for="exampleFormControlSelect1">Test Given</label>
                                                             <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.testgiven} name='testgiven' onChange={onhandleChange} >
                                                                 <option>select option</option>
                                                                 <option value="No">No</option>
@@ -635,7 +666,7 @@ const LectureTaken = () => {
                                                             {<span className='text-danger'> {error.testgiven} </span>}
                                                         </div>
                                                         <div className="form-group col-lg-2 ">
-                                                            <label for="exampleFormControlSelect1">Test<span className='text-danger'>*</span></label>
+                                                            <label for="exampleFormControlSelect1">Test</label>
                                                             <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={unitid} name='test' onChange={(e) => SetUnitid(e.target.value)} >
                                                                 <option>select test</option>
                                                                 {unit.map((item) => {
@@ -648,12 +679,12 @@ const LectureTaken = () => {
                                                         </div>
 
                                                         <div class="form-group col-lg-4">
-                                                            <label for="exampleTextarea1">Topic Descuss<span className='text-danger'>*</span></label>
+                                                            <label for="exampleTextarea1">Topic Descuss</label>
                                                             <textarea class="form-control" id="exampleTextarea1" name='topicdescuss' value={value.topicdescuss} placeholder="Topic Descuss*" onChange={onhandleChange}></textarea>
                                                             {<span className='text-danger'> {error.topicdescuss} </span>}
                                                         </div>
                                                         <div class="form-group col-lg-4">
-                                                            <label for="exampleTextarea1">Next Planning<span className='text-danger'>*</span></label>
+                                                            <label for="exampleTextarea1">Next Planning</label>
                                                             <textarea class="form-control" id="exampleTextarea1" name='nextplanning' value={value.nextplanning} placeholder="Next Panning*" onChange={onhandleChange}></textarea>
                                                             {<span className='text-danger'> {error.nextplanning} </span>}
                                                         </div>
@@ -666,7 +697,7 @@ const LectureTaken = () => {
 
 
                                             <div className='row p-2 justify-content-end'>
-                                                <button className='mr-2 btn btn-primary' style={{float :"right"}} onClick={handleSubmit}>Save</button>
+                                                <button className='mr-2 btn btn-primary' style={{ float: "right" }} onClick={handleSubmit}>Save</button>
                                                 {/* <button className='col-2'>close</button> */}
                                             </div>
 
@@ -683,7 +714,7 @@ const LectureTaken = () => {
                                                     </div>
                                                     <div>
 
-                                                   
+
 
 
                                                         <table class="table table-bordered">
@@ -732,7 +763,7 @@ const LectureTaken = () => {
 
                                                                             </td>
                                                                             <td>
-                                                                                <select class="form-control form-control-lg" name="Student_Reaction"  onChange={(e) => handleInputChange(index, e)}  value={item.Student_Reaction } id="exampleFromControlSelect1" >
+                                                                                <select class="form-control form-control-lg" name="Student_Reaction" onChange={(e) => handleInputChange(index, e)} value={item.Student_Reaction} id="exampleFromControlSelect1" >
 
                                                                                     <option>Select</option>
 
@@ -794,7 +825,7 @@ const LectureTaken = () => {
                                                         </table>
 
                                                     </div>
-                                                    <button type="button" onClick={handleSubmitTable} style={{float:"right"}} class="btn btn-primary m-2">Update Sheet</button>
+                                                    <button type="button" onClick={handleSubmitTable} style={{ float: "right" }} class="btn btn-primary m-2">Update Sheet</button>
 
 
 

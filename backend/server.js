@@ -1626,7 +1626,7 @@ app.post(`/nodeapp/batch_standardlecture`, (req, res) => {
   let { batch_id } = req.body;
 
 
-  const sql = "select * from Batch_SLecture_Master where deleted = 0 and batch_id = ? "
+  const sql = "select asm.* , au.subject as unitname , ast.assignmentname  from Batch_SLecture_Master as asm left JOIN awt_unittesttaken as au on asm.unit_test = au.id LEFT JOIN assignmentstaken as ast on ast.id = asm.assignment where asm.deleted = 0 and asm.batch_id = ?"
 
   con.query(sql, [batch_id], (err, data) => {
     if (err) {
@@ -1641,7 +1641,7 @@ app.post(`/nodeapp/batch_lecturetaken`, (req, res) => {
 
   let { batch_id } = req.body;
 
-  const sql = "select * from Batch_Lecture_Master where deleted = 0 and batch_id = ? "
+  const sql = "select asm.* , au.subject as unitname , ast.assignmentname  from Batch_Lecture_Master as asm left JOIN awt_unittesttaken as au on asm.unit_test = au.id LEFT JOIN assignmentstaken as ast on ast.id = asm.assignment where asm.deleted = 0 and asm.batch_id = ?"
 
   con.query(sql, [batch_id], (err, data) => {
 
@@ -1652,6 +1652,7 @@ app.post(`/nodeapp/batch_lecturetaken`, (req, res) => {
     }
   })
 })
+
 app.post(`/nodeapp/batch_convocation`, (req, res) => {
 
   let { batch_id } = req.body

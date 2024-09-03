@@ -7,13 +7,12 @@ import axios from 'axios';
 
 const GenerateResult = () => {
     const { generateresultid } = useParams();
-    const [uid, setUid] = useState('')
+    const [uid, setUid] = useState([])
     const [faculty, setFacilty] = useState([])
     const [batch, setAnnulBatch] = useState([])
     const [error, setError] = useState({})
     const [course, SetCourse] = useState([])
     const [courseid, SetCoursid] = useState('')
-  
 
 
     const [value, setValue] = useState({
@@ -148,9 +147,9 @@ const GenerateResult = () => {
 
         SetCoursid(data[0].Course_Id)
 
-        setUid(data[0].Id)
+        setUid(data[0])
 
-   
+
         setValue(prevState => ({
             ...prevState,
             batch: data[0].Batch_Id,
@@ -178,7 +177,7 @@ const GenerateResult = () => {
         getbatch()
         getfaculty()
         setError({})
-        setUid([])
+
     }, [])
 
     const handleSubmit = async (e) => {
@@ -198,7 +197,7 @@ const GenerateResult = () => {
                 approved: value.approved,
                 startdate: value.startdate,
                 enddate: value.enddate,
-                uid:uid
+                uid: uid.Id
             }
 
             axios.post(`${BASE_URL}/add_generateresult`, data)
@@ -276,7 +275,7 @@ const GenerateResult = () => {
                                             </div>
 
                                             <div class="form-group col-lg-3">
-                                                <select className='label-select' value={value.label1} name='label1'  onChange={onhandleChange}>
+                                                <select className='label-select' value={value.label1} name='label1' onChange={onhandleChange}>
                                                     <option>Select</option>
                                                     <option value="Prepared">Prepared By</option>
                                                     <option value="Checked">Checked By</option>
@@ -295,7 +294,7 @@ const GenerateResult = () => {
                                             </div>
 
                                             <div class="form-group col-lg-3">
-                                                <select className='label-select' value={value.label2} name='label2'  onChange={onhandleChange}>
+                                                <select className='label-select' value={value.label2} name='label2' onChange={onhandleChange}>
                                                     <option>Select</option>
                                                     <option value="Prepared">Prepared By</option>
                                                     <option value="Checked">Checked By</option>
@@ -379,6 +378,92 @@ const GenerateResult = () => {
 
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="col-lg-12 mt-3">
+                            <form class="card" >
+                                <div class="card-body">
+
+                                    <div>
+
+
+
+
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th width="10%">
+                                                        Id
+                                                    </th>
+                                                    <th width="10%">
+                                                        Student Code
+                                                    </th>
+
+                                                    <th width="10%">
+                                                        Student Name
+                                                    </th>
+                                                    <th width="10%">
+                                                        Marks
+                                                    </th>
+                                                    <th width="10%">
+                                                        Status
+                                                    </th>
+
+                                                </tr>
+                                            </thead>
+
+                                            <tbody>
+
+                                                <tr >
+                                                    <td>
+
+                                                    </td>
+                                                    <td>
+
+                                                    </td>
+                                                    <td>
+
+
+                                                    </td>
+                                                    <td>
+                                                        <div class="form-group ">
+                                                            <label for="exampleFormControlSelect1"></label>
+                                                            <input type="number" class="form-control" id="exampleInputUsername1" name='Marks_Given' value={``} />
+
+                                                        </div>
+                                                    </td>
+
+                                                    <td>
+                                                        <>
+                                                            <select class="form-control form-control-lg" value={``} name='Status' id="exampleFromControlSelect1" >
+
+                                                                <option>Select</option>
+
+                                                                <option value='Present'>Present</option>
+                                                                <option value='Absent'>Absent</option>
+
+
+
+                                                            </select>
+                                                        </>
+                                                    </td>
+
+
+
+
+                                                </tr>
+
+
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                    <button type="button" style={{ float: "right" }} class="btn btn-primary m-2">Update Sheet</button>
+
+
+
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
