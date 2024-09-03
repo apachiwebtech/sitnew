@@ -5,6 +5,8 @@ import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import Loader from "./Loader";
 import { error } from 'jquery';
+// import { Toast } from 'bootstrap';
+import toast, { Toaster } from 'react-hot-toast';
 //import FormControlLabel from '@mui/material/FormControlLabel';
 
 const RollNumberAllot = () => {
@@ -65,6 +67,29 @@ const RollNumberAllot = () => {
         })
     }, [uid])
 
+    const handleChange = (e) => {
+      setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+      if (e.target.name == 'rollnumberallot') {
+        getstudentlisitng(e.target.value)
+      }
+    }
+
+
+    function setrollno(){
+      const data = {
+        batch_code: value.rollnumberallot,
+    }
+      axios.post(`${BASE_URL}/allocatedrollno`,data)
+      .then((res)=>{
+        getstudentlisitng(value.rollnumberallot);
+        toast.success('Roll No Changes', {
+          position: "bottom-center"
+        })
+      })
+      .catch((err)=>{
+        console.log(err)
+        })
+    }
 
 
     const getstudentlisitng = (id) => {
@@ -104,14 +129,14 @@ const RollNumberAllot = () => {
 
                             <option value='part1'>Part 1</option>
                             <option value='part2'>Part 2</option>
-              
+
 
                 </select>
             </div>
             )
         }},
 
-     
+
     ];
 
 
@@ -121,10 +146,10 @@ const RollNumberAllot = () => {
 
         <div class="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
-
+            <Toaster />
             {loading && <Loader />}
 
-            
+
             <div class="main-panel" style={{display : loading ? "none" : "block"}}>
                 <div class="content-wrapper">
                     <div class="row">
@@ -138,7 +163,7 @@ const RollNumberAllot = () => {
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Select Course<span className="text-danger">*</span></label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" 
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1"
                                                 value={value.selectcourse} name='selectcourse' onChange={(e) => getbatch(e.target.value)}>
                                                     <option>Select Course</option>
 
@@ -153,8 +178,8 @@ const RollNumberAllot = () => {
                                             </div>
 
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1"></label>
-                                                <select class="form-control form-control-lg" id="exampleFromControlSelect1" value={value.rollnumberallot} name='rollnumberallot' onChange={(e) => getstudentlisitng(e.target.value)}>
+                                                <label for="exampleFormControlSelect1">Select Batch Code</label>
+                                                <select class="form-control form-control-lg" id="exampleFromControlSelect1" value={value.rollnumberallot} name='rollnumberallot' onChange={handleChange}>
 
                                                     <option>Select Batch</option>
 
@@ -175,7 +200,7 @@ const RollNumberAllot = () => {
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
@@ -205,7 +230,7 @@ const RollNumberAllot = () => {
                                         />
 
                                     </div>}
-                                    <button type="submit" class="btn btn-primary mr-2">Allot Roll Number</button>
+                                    <button type="submit" class="btn btn-primary mr-2" onClick={setrollno}  >Allot Roll Number</button>
 
                                     <button type='button' onClick={() => {
                                         window.location.reload()

@@ -41,53 +41,53 @@ app.use(session({
 
 
 const storage = multer.diskStorage({
-  destination: '../public_html/uploads/', // 
+  destination: '../public_html/uploads/', //
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
 
 const storage2 = multer.diskStorage({
-  destination: '../public_html/uploads/banner', // 
+  destination: '../public_html/uploads/banner', //
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
 const storage3 = multer.diskStorage({
-  destination: '../public_html/uploads/gallery', // 
+  destination: '../public_html/uploads/gallery', //
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
 const storage4 = multer.diskStorage({
-  destination: '../public_html/uploads/brand', // 
+  destination: '../public_html/uploads/brand', //
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
 
 const storage5 = multer.diskStorage({
-  destination: '../public_html/uploads/sizechart', // 
+  destination: '../public_html/uploads/sizechart', //
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
 
 const storage6 = multer.diskStorage({
-  destination: '../public_html/uploads/category', // 
+  destination: '../public_html/uploads/category', //
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
 const storage7 = multer.diskStorage({
-  destination: '../public_html/uploads/group', // 
+  destination: '../public_html/uploads/group', //
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
 
 const storage8 = multer.diskStorage({
-  destination: '../public_html/uploads/productimg', // 
+  destination: '../public_html/uploads/productimg', //
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
@@ -4798,7 +4798,7 @@ app.post('/nodeapp/update_lecture_child', async (req, res) => {
     const updateStudent = (student) => {
       return new Promise((resolve, reject) => {
         const { Student_Reaction, Student_Atten, In_Time, Out_Time, AssignmentReceived, ID } = student;
-        const updatedata = `UPDATE lecture_taken_child SET Student_Reaction = ?, Student_Atten = ?,  In_Time = ?,  Out_Time = ?, AssignmentReceived = ? 
+        const updatedata = `UPDATE lecture_taken_child SET Student_Reaction = ?, Student_Atten = ?,  In_Time = ?,  Out_Time = ?, AssignmentReceived = ?
                   WHERE ID = ?`;
 
         con.query(updatedata, [Student_Reaction, Student_Atten, In_Time, Out_Time, AssignmentReceived, ID], (err, result) => {
@@ -4972,6 +4972,17 @@ app.get('/nodeapp/generateresultdata', (req, res) => {
   })
 })
 
-
+app.get('/nodeapp/generateresultdata', (req, res) => {
+  const {batch_coed} = res.body;
+  const sql = "SELECT sm.Student_Id,sm.Student_Name , am.Admission_Date,am.Student_Code , am.Phase FROM `Student_Master` as sm left JOIN Admission_master as am on am.Student_Id = sm.Student_Id where sm.IsDelete = 0 AND am.IsDelete = 0 AND Admission = 1 AND Batch_Code = ? "
+  const param = [batch_coed]
+  con.query(sql, param ,(err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+})
 
 
