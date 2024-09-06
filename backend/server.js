@@ -1782,21 +1782,21 @@ app.post('/nodeapp/add_finalexam', (req, res) => {
 
 app.post('/nodeapp/add_assignmentstaken', (req, res) => {
 
-  let { coursename, batchcode, assignmentname, assignmentdate, returndate, uid, marks } = req.body
+  let { coursename, batchcode, assignmentname, assignmentdate, returndate, uid, marks, assignno } = req.body
 
   let sql
   let param;
 
 
   if (uid == undefined) {
-    sql = "insert into Assignment_taken(`Course_Id`,`Batch_Id`, `Assignment_Id`,`Assign_Dt`,`Return_Dt`,`Marks`) values(?,?,?,?,?,?)"
+    sql = "insert into Assignment_taken(`Course_Id`,`Batch_Id`, `Assignment_Id`,`Assign_Dt`,`Return_Dt`,`Marks`,`Assign_No`) values(?,?,?,?,?,?,?)"
 
-    param = [coursename, batchcode, assignmentname, assignmentdate, returndate, marks]
+    param = [coursename, batchcode, assignmentname, assignmentdate, returndate, marks, assignno]
 
   } else {
-    sql = "update `Assignment_taken` set `Course_Id` = ? , `Batch_Id` =? , `Assignment_Id` =? , `Assign_Dt` =? ,Return_Dt =?,Marks = ?  where Given_Id =?"
+    sql = "update `Assignment_taken` set `Course_Id` = ? , `Batch_Id` =? , `Assignment_Id` =? , `Assign_Dt` =? ,Return_Dt =?,Marks = ?,Assign_No = ?  where Given_Id =?"
 
-    param = [coursename, batchcode, assignmentname, assignmentdate, returndate, marks, uid]
+    param = [coursename, batchcode, assignmentname, assignmentdate, returndate, marks, assignno, uid]
 
   }
 
@@ -2299,7 +2299,7 @@ app.post('/nodeapp/add_finalexamtaken', (req, res) => {
 app.post('/nodeapp/add_generateresult', (req, res) => {
 
 
-  let {course,batch,returndate,printdate,faculty1,faculty2,label1,label2,approved,startdate,enddate,uid} = req.body
+  let { course, batch, returndate, printdate, faculty1, faculty2, label1, label2, approved, startdate, enddate, uid } = req.body
 
   let sql
   let param;
@@ -2308,12 +2308,12 @@ app.post('/nodeapp/add_generateresult', (req, res) => {
   if (uid == undefined) {
     sql = "insert into generate_final_result(`Course_Id`,`Batch_Id`,`Result_date`,`Print_date`,`Label1`,`Faculty1`,`Label2`,`Faculty2`,`Approve`,`Start_date`,`End_date`,`IsDelete`) values(?,?,?,?,?,?,?,?,?,?,?,?)"
 
-    param = [course,batch,returndate,printdate,label1,faculty1,label2,faculty2,approved,startdate,enddate,0]
+    param = [course, batch, returndate, printdate, label1, faculty1, label2, faculty2, approved, startdate, enddate, 0]
 
   } else {
     sql = "update `generate_final_result` set `Course_Id` =? , `Batch_Id` =? , `Result_date` =? , `Print_date` =? , `Label1` =? , `Faculty1` =? , `Label2` =? ,`Faculty2` = ?,`Approve` =? ,`Start_date` = ? ,`End_date` = ?  where id = ?"
 
-    param = [course,batch,returndate,printdate,label1,faculty1,label2,faculty2,approved,startdate,enddate,uid]
+    param = [course, batch, returndate, printdate, label1, faculty1, label2, faculty2, approved, startdate, enddate, uid]
 
   }
 
@@ -2323,7 +2323,85 @@ app.post('/nodeapp/add_generateresult', (req, res) => {
       return res.json(err)
     }
     else {
-      return res.json(data)
+      const GenID = data.insertId;
+
+      if (GenID) {
+        const getdata = `SELECT sm.Student_Id, sm.Student_Name ,at.* ,agc.*  
+                         FROM Batch_Mst as bm 
+                         LEFT JOIN Student_Master as sm ON bm.Batch_code = sm.Batch_code 
+                         LEFT JOIN Assignment_given_child as agc on agc.Student_Id = sm.Student_Id 
+                         LEFT JOIN Assignment_taken as at on at.Given_Id = agc.Given_Id 
+                         WHERE bm.Batch_Id = ? AND bm.isDelete = 0 AND sm.isDelete = 0`;
+
+        con.query(getdata, [batch], (err, result) => {
+          if (err) {
+            return res.json(err);
+          } else {
+            console.log(result);
+
+            const groupedData = result.reduce((acc, curr) => {
+              const { Student_Id, Student_Name, Assign_No, Marks_Given, Marks, Status } = curr;
+              if (!acc[Student_Id]) {
+                acc[Student_Id] = {
+                  Student_Id,
+                  Student_Name,
+                  assignments: {
+                    Ass1_Given: 0, Ass1_Max: 0, Ass1_Status: '',
+                    Ass2_Given: 0, Ass2_Max: 0, Ass2_Status: '',
+                    Ass3_Given: 0, Ass3_Max: 0, Ass3_Status: '',
+                    Ass4_Given: 0, Ass4_Max: 0, Ass4_Status: '',
+                    Ass5_Given: 0, Ass5_Max: 0, Ass5_Status: '',
+                    Ass6_Given: 0, Ass6_Max: 0, Ass6_Status: '',
+                    Ass7_Given: 0, Ass7_Max: 0, Ass7_Status: '',
+                    Ass8_Given: 0, Ass8_Max: 0, Ass8_Status: '',
+                    Ass9_Given: 0, Ass9_Max: 0, Ass9_Status: '',
+                    Ass10_Given: 0, Ass10_Max: 0, Ass10_Status: '',
+                  }
+                };
+              }
+              acc[Student_Id].assignments[`Ass${Assign_No}_Given`] = Marks_Given;
+              acc[Student_Id].assignments[`Ass${Assign_No}_Max`] = Marks;
+              acc[Student_Id].assignments[`Ass${Assign_No}_Status`] = Status;
+              return acc;
+            }, {});
+
+            let insertions = Object.values(groupedData).map((student) => {
+              const { Student_Id, Student_Name, assignments } = student;
+              const { Ass1_Given, Ass1_Max, Ass1_Status, Ass2_Given, Ass2_Max, Ass2_Status, Ass3_Given, Ass3_Max, Ass3_Status, Ass4_Given, Ass4_Max, Ass4_Status, Ass5_Given, Ass5_Max, Ass5_Status, Ass6_Given, Ass6_Max, Ass6_Status, Ass7_Given, Ass7_Max, Ass7_Status, Ass8_Given, Ass8_Max, Ass8_Status, Ass9_Given, Ass9_Max, Ass9_Status, Ass10_Given, Ass10_Max, Ass10_Status } = assignments;
+
+              const insertQuery = `INSERT INTO generate_final_child (Gen_id, Batch_Id, Student_Code, Student_Name, 
+Ass1_Given, Ass1_Max, Ass1_Status,Ass2_Given, Ass2_Max, Ass2_Status,Ass3_Given, Ass3_Max, Ass3_Status,Ass4_Given, Ass4_Max, Ass4_Status,Ass5_Given, Ass5_Max, Ass5_Status,Ass6_Given, Ass6_Max, Ass6_Status,Ass7_Given, Ass7_Max, Ass7_Status,Ass8_Given, Ass8_Max, Ass8_Status,Ass9_Given, Ass9_Max, Ass9_Status,Ass10_Given, Ass10_Max, Ass10_Status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?)`;
+
+              return new Promise((resolve, reject) => {
+                con.query(insertQuery, [GenID, batch, Student_Id, Student_Name,
+                  Ass1_Given, Ass1_Max, Ass1_Status,
+                  Ass2_Given, Ass2_Max, Ass2_Status,
+                  Ass3_Given, Ass3_Max, Ass3_Status,
+                  Ass4_Given, Ass4_Max, Ass4_Status,
+                  Ass5_Given, Ass5_Max, Ass5_Status,
+                  Ass6_Given, Ass6_Max, Ass6_Status,
+                  Ass7_Given, Ass7_Max, Ass7_Status,
+                  Ass8_Given, Ass8_Max, Ass8_Status,
+                  Ass9_Given, Ass9_Max, Ass9_Status,
+                  Ass10_Given, Ass10_Max, Ass10_Status], (err, data) => {
+                    if (err) {
+                      reject(err);
+                    } else {
+                      resolve("Data Inserted");
+                    }
+                  });
+              });
+            });
+
+            Promise.all(insertions)
+              .then((results) => res.json("Data Inserted"))
+              .catch((error) => res.json(error));
+          }
+        });
+      }
+      else {
+        return res.json("Main data inserted");
+      }
     }
   })
 })
@@ -4327,7 +4405,7 @@ app.post('/nodeapp/getbatchwiseunittest', (req, res) => {
 
 app.get('/nodeapp/getassignmentstakendata', (req, res) => {
 
-  const sql = 'SELECT ast.Given_Id ,ast.Assign_Dt,ast.Return_Dt, cm.Course_Name , bm.Batch_code FROM `Assignment_taken` as ast LEFT JOIN Course_Mst as cm on ast.Course_Id = cm.Course_Id LEFT JOIN Batch_Mst as bm on  ast.Batch_Id = bm.Batch_Id LEFT JOIN faculty_master as fm on ast.Faculty_Id = fm.Faculty_Id WHERE ast.IsDelete = 0 order by ast.Given_Id asc';
+  const sql = 'SELECT ast.Given_Id ,ast.Assign_Dt,ast.Return_Dt, cm.Course_Name , bm.Batch_code FROM `Assignment_taken` as ast LEFT JOIN Course_Mst as cm on ast.Course_Id = cm.Course_Id LEFT JOIN Batch_Mst as bm on  ast.Batch_Id = bm.Batch_Id LEFT JOIN faculty_master as fm on ast.Faculty_Id = fm.Faculty_Id WHERE ast.IsDelete = 0 order by ast.Given_Id desc';
 
   con.query(sql, (err, data) => {
     if (err) {
@@ -4974,16 +5052,33 @@ app.get('/nodeapp/generateresultdata', (req, res) => {
 })
 
 app.get('/nodeapp/generateresultdata', (req, res) => {
-  const {batch_coed} = res.body;
+  const { batch_coed } = res.body;
   const sql = "SELECT sm.Student_Id,sm.Student_Name , am.Admission_Date,am.Student_Code , am.Phase FROM `Student_Master` as sm left JOIN Admission_master as am on am.Student_Id = sm.Student_Id where sm.IsDelete = 0 AND am.IsDelete = 0 AND Admission = 1 AND Batch_Code = ? "
   const param = [batch_coed]
-  con.query(sql, param ,(err, data) => {
+  con.query(sql, param, (err, data) => {
     if (err) {
       return res.json(err)
     } else {
       return res.json(data)
     }
   })
+})
+
+app.post('/nodeapp/getresultchild', (req, res) => {
+
+  let Gen_id = req.body.Gen_id;
+
+  const sql = "select * from `generate_final_child` where Gen_id = ? "
+
+  con.query(sql, [Gen_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+
+
 })
 
 

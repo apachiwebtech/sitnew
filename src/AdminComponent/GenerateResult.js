@@ -13,7 +13,7 @@ const GenerateResult = () => {
     const [error, setError] = useState({})
     const [course, SetCourse] = useState([])
     const [courseid, SetCoursid] = useState('')
-
+    const [child, setChild] = useState([])
 
     const [value, setValue] = useState({
         course: '',
@@ -114,6 +114,19 @@ const GenerateResult = () => {
     };
 
 
+    async function getchilddata() {
+
+        const data = {
+            Gen_id: generateresultid
+        }
+        axios.post(`${BASE_URL}/getresultchild`, data)
+            .then((res) => {
+                console.log(res)
+                setChild(res.data)
+            })
+    }
+
+
 
 
     async function getfaculty() {
@@ -135,7 +148,7 @@ const GenerateResult = () => {
             body: JSON.stringify({
                 u_id: generateresultid,
                 uidname: "Id",
-                tablename: "Generate_final_result"
+                tablename: "generate_final_result"
             }),
             headers: {
                 'Content-Type': 'application/json',
@@ -170,6 +183,7 @@ const GenerateResult = () => {
     useEffect(() => {
         if (generateresultid !== ":generateresultid") {
             getUpdateDetails()
+            getchilddata()
         }
 
         value.title = ""
@@ -215,6 +229,25 @@ const GenerateResult = () => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
 
+    const excludeKeys = [
+        "id",
+        "Gen_id",
+        "Batch_Id",
+        "deleted",
+        "updated_date",
+        "updated_by",
+        "created_by",
+        "created_date",
+    ];
+
+
+
+    const headers = child.length > 0
+        ? Object.keys(child[0]).filter(key => !excludeKeys.includes(key))
+        : [];
+
+
+
     return (
 
         <div class="container-fluid page-body-wrapper col-lg-10">
@@ -259,8 +292,6 @@ const GenerateResult = () => {
                                                 </select>
                                                 {<span className='text-danger'> {error.batch} </span>}
                                             </div>
-
-
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">Result Date<span className='text-danger'>*</span></label>
@@ -384,76 +415,37 @@ const GenerateResult = () => {
                             <form class="card" >
                                 <div class="card-body">
 
-                                    <div>
-
-
+                                    <div className='table-responsive'>
 
 
                                         <table class="table table-bordered">
                                             <thead>
                                                 <tr>
-                                                    <th width="10%">
-                                                        Id
-                                                    </th>
-                                                    <th width="10%">
-                                                        Student Code
-                                                    </th>
 
-                                                    <th width="10%">
-                                                        Student Name
-                                                    </th>
-                                                    <th width="10%">
-                                                        Marks
-                                                    </th>
-                                                    <th width="10%">
-                                                        Status
-                                                    </th>
+                                                    {headers.map((item, index) => {
+                                                        return (
+                                                            <th width="10%" key={index}>
+                                                                {item}
+                                                            </th>
+                                                        )
+                                                    })}
+
 
                                                 </tr>
                                             </thead>
 
                                             <tbody>
-
-                                                <tr >
-                                                    <td>
-
-                                                    </td>
-                                                    <td>
-
-                                                    </td>
-                                                    <td>
-
-
-                                                    </td>
-                                                    <td>
-                                                        <div class="form-group ">
-                                                            <label for="exampleFormControlSelect1"></label>
-                                                            <input type="number" class="form-control" id="exampleInputUsername1" name='Marks_Given' value={``} />
-
-                                                        </div>
-                                                    </td>
-
-                                                    <td>
-                                                        <>
-                                                            <select class="form-control form-control-lg" value={``} name='Status' id="exampleFromControlSelect1" >
-
-                                                                <option>Select</option>
-
-                                                                <option value='Present'>Present</option>
-                                                                <option value='Absent'>Absent</option>
-
-
-
-                                                            </select>
-                                                        </>
-                                                    </td>
-
-
-
-
-                                                </tr>
-
-
+                                                {child.map((row, rowIndex) => (
+                                                    <tr key={rowIndex}>
+                                                        {headers.map((header, index) => (
+                                                            <td key={index}>
+                                                                {row[header]}
+                                                            </td>
+                                                        ))}
+                                                        {/* Additional <td> if needed */}
+                                                        <td></td>
+                                                    </tr>
+                                                ))}
                                             </tbody>
                                         </table>
 

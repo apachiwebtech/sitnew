@@ -30,6 +30,7 @@ const AssignmentsTaken = () => {
         maxmarks: '',
         assignmentdate: '',
         returndate: '',
+        assignno:""
     })
 
 
@@ -61,6 +62,10 @@ const AssignmentsTaken = () => {
         if (!value.returndate) {
             isValid = false;
             newErrors.returndate = "ReturnDate is Required"
+        }
+        if (!value.assignno) {
+            isValid = false;
+            newErrors.assignno = "Assignno is Required"
         }
 
 
@@ -200,7 +205,8 @@ const AssignmentsTaken = () => {
             coursename: data[0].Course_Id,
             assignmentdate: data[0].Assign_Dt,
             returndate: data[0].Return_Dt,
-            maxmarks:data[0].Marks
+            maxmarks:data[0].Marks,
+            assignno:data[0].Assign_No,
         }))
     }
 
@@ -245,6 +251,7 @@ const AssignmentsTaken = () => {
                 assignmentname: assignid,
                 assignmentdate: value.assignmentdate,
                 returndate: value.returndate,
+                assignno: value.assignno,
                 uid: uid.Given_Id
             }
 
@@ -373,6 +380,12 @@ const AssignmentsTaken = () => {
                                                 <label for="exampleInputUsername1">Return Date<span className='text-danger'>*</span></label>
                                                 <input type="date" class="form-control" id="exampleInputUsername1" value={value.returndate} name='returndate' onChange={onhandleChange} />
                                                 {<span className='text-danger'> {error.returndate} </span>}
+                                            </div>
+
+                                            <div class="form-group col-lg-3">
+                                                <label for="exampleInputUsername1">Assingment Number<span className='text-danger'>*</span></label>
+                                                <input type="number" class="form-control" id="exampleInputUsername1" value={value.assignno} name='assignno' onChange={onhandleChange}  disabled={value.assignno} />
+                                                {<span className='text-danger'> {error.assignno} </span>  }
                                             </div>
 
 
