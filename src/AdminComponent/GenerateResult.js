@@ -107,12 +107,9 @@ const GenerateResult = () => {
             }
         }
 
-
-
-
-
     };
 
+<<<<<<< Updated upstream
 
     async function getchilddata() {
 
@@ -129,6 +126,8 @@ const GenerateResult = () => {
 
 
 
+=======
+>>>>>>> Stashed changes
     async function getfaculty() {
 
         axios.get(`${BASE_URL}/getfaculty`)

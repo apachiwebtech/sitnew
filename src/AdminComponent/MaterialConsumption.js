@@ -24,32 +24,6 @@ const MaterialConsumption = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
 
-    console.log(specification)
-
-    const handleChange1 = (event) => {
-        setChecked([event.target.checked, event.target.checked]);
-    };
-
-    const handleChange2 = (event) => {
-        setChecked([event.target.checked, checked[1]]);
-    };
-
-    const handleChange3 = (event) => {
-        setChecked([checked[0], event.target.checked]);
-    };
-
-    // const children = (
-    //     <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-    //       <FormControlLabel
-    //         label="Child 1"
-    //         control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
-    //       />
-    //       <FormControlLabel
-    //         label="Child 2"
-    //         control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
-    //       />
-    //     </Box>
-    //   );
 
     const [value, setValue] = useState({
         isussed: "" || uid.isussed,
@@ -85,22 +59,46 @@ const MaterialConsumption = () => {
     }, [uid])
 
 
-    // const validateForm = () => {
-    //     let isValid = true
-    //     const newErrors = {}
+    const validateForm = () => {
+        let isValid = true
+        const newErrors = {}
 
 
-    //    if (!value.college) {
-    //     isValid = false;
-    //     newErrors.name = "Name is require"
-    //    }
-    //     if (!value.email) {
-    //         isValid = false;
-    //         newErrors.email = "Email is require"
-    //     }
-    //     setError(newErrors)
-    //     return isValid
-    // }
+       if (!value.isussed) {
+        isValid = false;
+        newErrors.isussed = "Isussed is Required"
+       }
+        if (!value.startdate) {
+            isValid = false;
+            newErrors.startdate = "Date is Required"
+        }
+        if (!value.course) {
+            isValid = false;
+            newErrors.course = "Course is Required"
+        }
+        if (!value.qtyinstock){
+            isValid = false;
+            newErrors.qtyinstock = "Stock is Required"
+        }
+        if (!value.batchno){
+            isValid = false;
+            newErrors.batchno = "Batch is Required"
+        }
+        if (!value.student){
+            isValid = false;
+            newErrors.student = "Student is Required"
+        }
+        if (!value.selectitem) {
+            isValid = false;
+            newErrors.selectitem = "Item is Required"
+        }
+        if (!value.qtyissue) {
+            isValid = false;
+            newErrors.qtyissue = "Qty Issue is Required"
+        }
+        setError(newErrors)
+        return isValid
+    }
 
 
     async function getEmployeeData() {
@@ -194,7 +192,7 @@ const MaterialConsumption = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        // if(validateForm()){
+        if(validateForm()){
         const data = {
 
 
@@ -223,7 +221,7 @@ const MaterialConsumption = () => {
             .catch((err) => {
                 console.log(err)
             })
-        // }
+        }
 
 
 
@@ -299,75 +297,78 @@ const MaterialConsumption = () => {
                                         <div class='row'>
 
                                             <div class="form-group col-lg-2">
-                                                <lable for="exampleFormControlSelect1">Isussed By</lable>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.isussed} name='isussed' onChange={onhandleChange}>
+                                                <lable for="exampleFormControlSelect1">Isussed By<span className="text-danger">*</span></lable>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" 
+                                                value={value.isussed} name='isussed' onChange={onhandleChange}>
                                                     <option>Select</option>
-                                                    <option> Vivek Vijay Meghade</option>
-                                                    <option>Aakash Vaijnath Shirsat</option>
-                                                    <option>Akanksha Anil Tambe</option>
-                                                    <option>Aniket Suryakant Parab</option>
-                                                    <option>Anisha Ajay Haryan</option>
                                                 </select>
+                                                {<span className='text-danger'> {error.isussed} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">Start Date</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.startdate} name='startdate' onChange={onhandleChange} />
-
+                                                <label for="exampleInputUsername1">Start Date<span className="text-danger">*</span></label>
+                                                <input type="date" class="form-control" id="exampleInputUsername1"
+                                                 value={value.startdate} name='startdate' onChange={onhandleChange} />
+                                                 {<span className='text-danger'> {error.startdate} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-2">
-                                                <lable for="exampleFormControlSelect1">Select Course</lable>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course} name='course' onChange={onhandleChange}>
+                                                <lable for="exampleFormControlSelect1">Select Course<span className="text-danger">*</span></lable>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1"
+                                                 value={value.course} name='course' onChange={onhandleChange}>
                                                     <option>Select Course</option>
-                                                    <option> Training in Process Plant System Modelling Using E3D</option>
-                                                    <option>Advance Pipe Stress Analysis </option>
-                                                    <option>Air Conditioning System Design (HVAC)</option>
-                                                    <option>Autocad - Piping</option>
                                                 </select>
+                                                {<span className='text-danger'> {error.course} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-2">
-                                                <lable for="exampleInputUsername1">Qty In Stock</lable>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.qtyinstock} placeholder='Qty In Stock' name='qtyinstock' onChange={onhandleChange} />
+                                                <lable for="exampleInputUsername1">Qty In Stock<span className="text-danger">*</span></lable>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" 
+                                                value={value.qtyinstock} placeholder='Qty In Stock' name='qtyinstock' 
+                                                onChange={onhandleChange} />
+                                                {<span className='text-danger'> {error.qtyinstock} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-2">
-                                                <label for="exampleFormControlSelect1">Select Batch</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batchno} name='batchno' onChange={onhandleChange}>
+                                                <label for="exampleFormControlSelect1">Select Batch<span className="text-danger">*</span></label>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1"
+                                                 value={value.batchno} name='batchno' onChange={onhandleChange}>
                                                     <option></option>
                                                 </select>
+                                                {<span className='text-danger'> {error.batchno} </span>}
                                             </div>
 
 
                                             <div class="form-group col-lg-2">
-                                                <label for="exampleFomrControlSelect1">Select Student</label>
-                                                <select className='form-control form-control-lg' id="exampleFormControlSelect1" value={value.student} name='student' onChange={onhandleChange}>
+                                                <label for="exampleFomrControlSelect1">Select Student<span className="text-danger">*</span></label>
+                                                <select className='form-control form-control-lg' id="exampleFormControlSelect1"
+                                                 value={value.student} name='student' onChange={onhandleChange}>
                                                     <option></option>
                                                 </select>
+                                                {<span className='text-danger'> {error.student} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-2">
-                                                <label for="exampleFomrControlSelect1">Select Item</label>
-                                                <select className='form-control form-control-lg' id="exampleFormControlSelect1" value={value.selectitem} name='selectitem' onChange={onhandleChange}>
+                                                <label for="exampleFomrControlSelect1">Select Item<span className="text-danger">*</span></label>
+                                                <select className='form-control form-control-lg' id="exampleFormControlSelect1"
+                                                 value={value.selectitem} name='selectitem' onChange={onhandleChange}>
                                                     <option>Select Material Type</option>
-                                                    <option>PEN</option>
-                                                    <option>Apsara Pencil</option>
-                                                    <option>Asignment front Pages</option>
-                                                    <option>A4 Papers</option>
-                                                    <option>A3 Papers</option>
                                                 </select>
+                                                {<span className='text-danger'> {error.selectitem} </span>}
                                             </div>
 
 
                                             <div class="form-group col-lg-2">
-                                                <lable for="exampleInputUsername1">Qty Issue</lable>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.qtyissue} placeholder='Quantity' name='qtyissue' onChange={onhandleChange} />
+                                                <lable for="exampleInputUsername1">Qty Issue<span className="text-danger">*</span></lable>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" 
+                                                value={value.qtyissue} placeholder='Quantity' name='qtyissue' onChange={onhandleChange} />
+                                                {<span className='text-danger'> {error.qtyissue} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-2">
                                                 <lable for="exmpaleInputUsername">Price</lable>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.price} placeholder='Price' name='price' onChange={onhandleChange} />
+                                                <input type="text" class="form-control" id="exampleInputUsername1" 
+                                                value={value.price} placeholder='Price' name='price' onChange={onhandleChange} />
                                             </div>
 
                                             <div class="form-group col-lg-2">

@@ -7,9 +7,8 @@ import { Link } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 //import AssignmentsTaken from "./AssignmentsTaken";
-import GenerateResult from "./GenerateResult";
-import Loader from "./Loader";
-import Faculty from "./Faculty";
+
+
 
 const FacultyListing = () => {
 
@@ -17,19 +16,34 @@ const FacultyListing = () => {
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
     const label = { inputProps: { 'aria-label': 'Color switch demo' } };
-    const [facultydata, setfacultydata] = useState([]);
+    const [faculty_masterdata, setfaculty_masterdata] = useState([]);
     const [value, setValue] = useState({
-        course: '',
-        batch: '',
-        returndate: '',
-        printdate: '',
-        prepared: '',
-        checked: '',
-        approved: '',
-        startdate: '',
-        enddate: '',
+        Faculty_Name: '',
+        Faculty_Code: '',
+        DOB: '',
+        Nationality: '',
+        discipline: '',
+        status: '',
+        invoicename: '',
+        Married: '',
+        joiningdate: '',
+        Faculty_Type: '',
+        software: '',
+        training: '',
+        Present_Address: '',
+        Permanent_City: '',
+        Present_Pin: '',
+        Present_State: '',
+        Present_Country: '',
+        Mobile: '',
+        EMail: '',
+        Permanent_Address: '',
+        Permanent_City: '',
+        Permanent_Pin: '',
+        Permanent_State: '',
+        Permanent_Country: '',
+        Permanent_Tel: '',
 
     })
 
@@ -37,7 +51,7 @@ const FacultyListing = () => {
 
 
     const getInquiryData = async () => {
-        const response = await fetch(`${BASE_URL}/setfacultydata`, {
+        const response = await fetch(`${BASE_URL}/getfaculty_masterdata`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -46,7 +60,7 @@ const FacultyListing = () => {
         const data = await response.json();
         
 
-        setfacultydata(data);
+        setfaculty_masterdata(data);
        
     }
 
@@ -78,7 +92,7 @@ const FacultyListing = () => {
     const handleUpdate = (id) => {
         const data = {
             u_id: id,
-            tablename: "awt_faculty"
+            tablename: "faculty_master"
 
         }
         axios.post(`${BASE_URL}/update_data`, data)
@@ -95,7 +109,7 @@ const FacultyListing = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename: "awt_faculty"
+            tablename: "faculty_master"
         }
 
         axios.post(`${BASE_URL}/delete_faculty_data`, data)
@@ -116,7 +130,7 @@ const FacultyListing = () => {
     const handleswitchchange = (value, Inquiry_Id) => {
         const newval = value == 0 ? 1 : 0
 
-        axios.post(`${BASE_URL}/data_status`, { status: newval, Inquiry_Id: Inquiry_Id, table_name: "awt_faculty" })
+        axios.post(`${BASE_URL}/data_status`, { status: newval, Inquiry_Id: Inquiry_Id, table_name: "faculty_master" })
             .then((res) => {
                 console.log(res)
                 getInquiryData()
@@ -139,7 +153,7 @@ const FacultyListing = () => {
             filterable: false,
 
         },
-        { field: 'facultyname', headerName: 'Faculty Name', flex: 2 },
+        { field: 'Faculty_Name', headerName: 'Faculty Name', flex: 2 },
 
         {
             field: 'actions',
@@ -149,8 +163,9 @@ const FacultyListing = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <EditIcon style={{ cursor: "pointer" }} Link={() => handleUpdate(params.row.id)} />
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} Link={() => handleClick(params.row.id)} />
+                    <Link to={`/faculty/${params.row.Faculty_Id}`}><EditIcon style={{cursor: "pointer"}} /></Link>
+                        {/* <EditIcon style={{ cursor: "pointer" }} Link={() => handleUpdate(params.row.id)} /> */}
+                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} Link={() => handleClick(params.row.Faculty_Id)} />
                     </>
                 )
             }
@@ -159,7 +174,7 @@ const FacultyListing = () => {
 
 
 
-    const rowsWithIds = facultydata.map((row, index) => ({ index: index + 1, ...row }));
+    const rowsWithIds = faculty_masterdata.map((row, index) => ({ index: index + 1, ...row }));
 
    
 
@@ -194,7 +209,7 @@ const FacultyListing = () => {
                                             disableColumnSelector
                                             disableDensitySelector
                                             rowHeight={35}
-                                            getRowId={(row) => row.id}
+                                            getRowId={(row) => row.Faculty_Id}
                                             initialState={{
                                                 pagination: {
                                                     paginationModel: { pageSize: 10, page: 0 },

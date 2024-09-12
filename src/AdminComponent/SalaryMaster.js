@@ -1,25 +1,13 @@
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
-import decryptedUserId from '../Utils/UserID';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { LibraryBooks } from '@mui/icons-material';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
 //import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
 // import ImageList from '@mui/material/ImageList';
 // import { ImageSourcePropType } from 'react-native';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 const SalaryMaster = () => {
 
@@ -30,34 +18,8 @@ const SalaryMaster = () => {
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
 
-    console.log(specification)
 
-    const handleChange1 = (event) => {
-        setChecked([event.target.checked, event.target.checked]);
-    };
-
-    const handleChange2 = (event) => {
-        setChecked([event.target.checked, checked[1]]);
-    };
-
-    const handleChange3 = (event) => {
-        setChecked([checked[0], event.target.checked]);
-    };
-
-    // const children = (
-    //     <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-    //       <FormControlLabel
-    //         label="Child 1"
-    //         control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
-    //       />
-    //       <FormControlLabel
-    //         label="Child 2"
-    //         control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
-    //       />
-    //     </Box>
-    //   );
 
     const [value, setValue] = useState({
         formdate: "" || uid.formdate,
@@ -85,24 +47,39 @@ const SalaryMaster = () => {
     }, [uid])
 
 
-    // const validateForm = () => {
-    //     let isValid = true
-    //     const newErrors = {}
+    const validateForm = () => {
+        let isValid = true
+        const newErrors = {}
 
 
-    //    if (!value.college) {
-    //     isValid = false;
-    //     newErrors.name = "Name is require"
-    //    }
-    //     if (!value.email) {
-    //         isValid = false;
-    //         newErrors.email = "Email is require"
-    //     }
-    //     setError(newErrors)
-    //     return isValid
-    // }
-
-
+        if (!value.formdate) {
+            isValid = false;
+            newErrors.formdate = "Date is Required"
+        }
+        if (!value.todate) {
+            isValid = false;
+            newErrors.todate = "Date is Required"
+        }
+        if (!value.service) {
+            isValid = false;
+            newErrors.service = "Service is Required"
+        }
+        if (!value.empcontri) {
+            isValid = false;
+            newErrors.empcontri = "Emp Contri is Required"
+        }
+        if (!value.salaryda) {
+            isValid = false;
+            newErrors.salaryda = "Salary is Required"
+        }
+        if (!value.minbasic) {
+            isValid = false;
+            newErrors.minbasic = "Min. Basic is Required"
+        }
+        setError(newErrors)
+        return isValid
+    }
+    
     async function getEmployeeData() {
 
         axios.post(`${BASE_URL}/vendor_details`)
@@ -194,29 +171,29 @@ const SalaryMaster = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        // if(validateForm()){
-        const data = {
+        if (validateForm()) {
+            const data = {
 
-            formdate: value.formdate,
-            todate: value.todate,
-            service: value.service,
-            empcontri: value.empcontri,
-            da: value.da,
-            minbasic: value.minbasic,
-            uid: uid.id
+                formdate: value.formdate,
+                todate: value.todate,
+                service: value.service,
+                empcontri: value.empcontri,
+                da: value.da,
+                minbasic: value.minbasic,
+                uid: uid.id
+            }
+
+
+            axios.post(`${BASE_URL}/add_salarymaster`, data)
+                .then((res) => {
+                    console.log(res)
+                    getEmployeeData()
+
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
         }
-
-
-        axios.post(`${BASE_URL}/add_salarymaster`, data)
-            .then((res) => {
-                console.log(res)
-                getEmployeeData()
-
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-        // }
 
 
 
@@ -292,35 +269,46 @@ const SalaryMaster = () => {
                                         <div class='row'>
 
                                             <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">Form Date</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.formdate} name='formdate' onChange={onhandleChange} />
+                                                <label for="exampleInputUsername1">Form Date<span className="text-danger">*</span></label>
+                                                <input type="date" class="form-control" id="exampleInputUsername1"
+                                                    value={value.formdate} name='formdate' onChange={onhandleChange} />
+                                                {<span className='text-danger'> {error.formdate} </span>}
+                                            </div>
+
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleInputUsername1">To Date<span className="text-danger">*</span></label>
+                                                <input type="date" class="form-control" id="exampleInputUsername1"
+                                                    value={value.todate} name='todate' onChange={onhandleChange} />
+                                                {<span className='text-danger'> {error.todate} </span>}
 
                                             </div>
 
                                             <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">To Date</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.todate} name='todate' onChange={onhandleChange} />
-
+                                                <lable for="exampleInputUsername">Service Charge(%)<span className="text-danger">*</span></lable>
+                                                <input type="text" class="form-control" id="exampleInputUsername1"
+                                                    value={value.service} placeholder='00.00' name='service' onChange={onhandleChange} />
+                                                {<span className="text-danger"> {error.service} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-2">
-                                                <lable for="exampleInputUsername">Service Charge(%)</lable>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.service} placeholder='0' name='service' onChange={onhandleChange} />
+                                                <lable for="exampleInputUsername">Emp Contri(%)<span className="text-danger">*</span></lable>
+                                                <input type="text" class="form-control" id="exampleInputUsername1"
+                                                    value={value.empcontri} placeholder='00.00' name='empcontri' onChange={onhandleChange} />
+                                                {<span className='text-danger'> {error.empcontri} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-2">
-                                                <lable for="exampleInputUsername">Emp Contri(%)</lable>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.empcontri} placeholder='0' name='empcontri' onChange={onhandleChange} />
+                                                <lable for="exampleInputUsername">DA <span className="text-danger">*</span></lable>
+                                                <input type="text" class="form-control" id="exampleInputUsername1"
+                                                    value={value.salaryda} placeholder='00.00' name='salaryda' onChange={onhandleChange} />
+                                                {<span className='text-danger'> {error.salaryda} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-2">
-                                                <lable for="exampleInputUsername">DA </lable>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.da} placeholder='0' name='da' onChange={onhandleChange} />
-                                            </div>
-
-                                            <div class="form-group col-lg-2">
-                                                <lable for="exampleInputUsername"> Min. Basic</lable>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.minbasic} placeholder='0' name='minbasic' onChange={onhandleChange} />
+                                                <lable for="exampleInputUsername"> Min. Basic<span className="text-danger">*</span></lable>
+                                                <input type="text" class="form-control" id="exampleInputUsername1"
+                                                    value={value.minbasic} placeholder='00.00' name='minbasic' onChange={onhandleChange} />
+                                                {<span className='text-danger'> {error.minbasic} </span>}
                                             </div>
 
 

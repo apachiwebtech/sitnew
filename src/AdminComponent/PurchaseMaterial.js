@@ -1,21 +1,10 @@
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
-import decryptedUserId from '../Utils/UserID';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { LibraryBooks } from '@mui/icons-material';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-//import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
 
 const PurchaseMaterial = () => {
 
@@ -35,79 +24,80 @@ const PurchaseMaterial = () => {
 
 
     const [brand, setBrand] = useState([])
-    const [vendordata, setVendorData] = useState([])
+    const [purchasematerialdata, setPurchaseMaterialData] = useState([])
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
 
-    const handleChange1 = (event) => {
-        setChecked([event.target.checked, event.target.checked]);
-    };
-
-    const handleChange2 = (event) => {
-        setChecked([event.target.checked, checked[1]]);
-    };
-
-    const handleChange3 = (event) => {
-        setChecked([checked[0], event.target.checked]);
-    };
-
-    // const children = (
-    //     <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-    //       <FormControlLabel
-    //         label="Child 1"
-    //         control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
-    //       />
-    //       <FormControlLabel
-    //         label="Child 2"
-    //         control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
-    //       />
-    //     </Box>
-    //   );
-
     const [value, setValue] = useState({
-        subject: "" || uid.subject,
-        internal: "" || uid.internal,
-        identified: "" || uid.identified,
 
-
-
+        company: "" || uid.company,
+        item: "" || uid.item,
+        date: "" || uid.date,
+        purchase: "" || uid.purchase,
+        vendor: "" || uid.vendor,
+        voucherno: "" || uid.voucherno,
+        purpose: "" || uid.purchase,
+        requireddate: "" || uid.requireddate,
+        price: "" || uid.price,
+        quantity: "" || uid.quantity,
+        totalamt: "" || uid.totalamt,
 
     })
 
     useEffect(() => {
         setValue({
-            subject: uid.subject,
-            internal: uid.internal,
-            identified: uid.identified,
+            company: uid.company,
+            item: uid.item,
+            date: uid.date,
+            purchase: uid.purchase,
+            vendor: uid.vendor,
+            voucherno: uid.voucherno,
+            purpose: uid.purchase,
+            requireddate: uid.requireddate,
+            price: uid.price,
+            quantity: uid.quantity,
+            totalamt: uid.totalamt,
 
         })
     }, [uid])
 
 
-    // const validateForm = () => {
-    //     let isValid = true
-    //     const newErrors = {}
+    const validateForm = () => {
+        let isValid = true
+        const newErrors = {}
 
 
-    //    if (!value.college) {
-    //     isValid = false;
-    //     newErrors.name = "Name is require"
-    //    }
-    //     if (!value.email) {
-    //         isValid = false;
-    //         newErrors.email = "Email is require"
-    //     }
-    //     setError(newErrors)
-    //     return isValid
-    // }
+       if (!value.item) {
+        isValid = false;
+        newErrors.item = "Item is Required"
+       }
+        if (!value.date) {
+            isValid = false;
+            newErrors.date = "Date is Required"
+        }
+        if (!value.requireddate) {
+            isValid = false;
+            newErrors.requireddate = "Date is Required"
+        }
+        if(!value.price) {
+            isValid = false;
+            newErrors.price = "Price is Required"
+        }
+        if(!value.quantity) {
+            isValid = false;
+            newErrors.quantity = "Quantity is Required"
+        }
+        setError(newErrors)
+        return isValid
+    }
 
 
     async function getEmployeeData() {
 
-        axios.post(`${BASE_URL}/vendor_details`)
+        axios.post(`${BASE_URL}/purchasematerial_details`)
             .then((res) => {
                 console.log(res.data)
                 setBrand(res.data)
@@ -126,7 +116,7 @@ const PurchaseMaterial = () => {
         axios.post(`${BASE_URL}/get_data`, data)
             .then((res) => {
                 console.log(res.data)
-                setVendorData(res.data)
+                setPurchaseMaterialData(res.data)
             })
             .catch((err) => {
                 console.log(err)
@@ -196,25 +186,33 @@ const PurchaseMaterial = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        // if(validateForm()){
-        const data = {
+        if (validateForm()) {
+            const data = {
 
-            subject: value.subject,
-            internal: value.internal,
-            identified: value.identified,
+                company: value.company,
+                item: value.item,
+                date: value.date,
+                purchase: value.purchase,
+                vendor: value.vendor,
+                voucherno: value.voucherno,
+                purpose: value.purchase,
+                requireddate: value.requireddate,
+                price: value.price,
+                quantity: value.quantity,
+                totalamt: value.totalamt,
+            }
+
+
+            axios.post(`${BASE_URL}/awt_employeetrainingplan`, data)
+                .then((res) => {
+                    console.log(res)
+                    getEmployeeData()
+
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
         }
-
-
-        axios.post(`${BASE_URL}/awt_employeetrainingplan`, data)
-            .then((res) => {
-                console.log(res)
-                getEmployeeData()
-
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-        // }
 
 
 
@@ -243,9 +241,17 @@ const PurchaseMaterial = () => {
             filterable: false,
 
         },
-        { field: 'subject', headerName: 'Subject', flex: 2 },
-        { field: 'internal', headerName: 'Internal/External', flex: 2 },
+        { field: 'subject', headerName: 'Company', flex: 2 },
+        { field: 'internal', headerName: 'Item', flex: 2 },
         { field: 'identified', headerName: 'Identified', flex: 2 },
+        { field: 'date', headerName: 'Purchase Date', flex: 2},
+        { field: 'vendor', headerName: 'Vender', flex: 2},
+        { field: 'purchase', headerName: 'Who Purchased', flex: 2},
+        { field: 'voucharno', headerName: 'Vouchar No.'},
+        { field: 'price', headerName: 'Price', flex: 2},
+        { field: 'quantity', headerName: 'Quantity', flex: 2},
+        { field: 'totalamt', headerName: 'Total Amt', flex: 2},
+
 
         {
             field: 'actions',
@@ -264,7 +270,7 @@ const PurchaseMaterial = () => {
     ];
 
 
-    const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
+    const rowsWithIds = purchasematerialdata.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
 
@@ -283,19 +289,22 @@ const PurchaseMaterial = () => {
 
                                             <div class="form-group col-lg-2">
                                                 <lable class="exampleFormControlSelect1">Company</lable>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.company} name='company' onChange={onhandleChange}>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1"
+                                                    value={value.company} name='company' onChange={onhandleChange}>
                                                     <option></option>
                                                 </select>
                                             </div>
                                             <div class="form-group col-lg-2">
-                                                <lable class="exampleFormControlSelect1">Item</lable>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.item} name='item' onChange={onhandleChange}>
+                                                <lable class="exampleFormControlSelect1">Item<span className="text-danger">*</span></lable>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1"
+                                                    value={value.item} name='item' onChange={onhandleChange}>
                                                     <option></option>
                                                 </select>
+                                                {<span className='text-danger'> {error.item} </span>}
                                             </div>
 
                                             <div className="form-group col-lg-2">
-                                                <label htmlFor="exampleInputUsername1">Purchase Date</label>
+                                                <label htmlFor="exampleInputUsername1">Purchase Date <span className="text-danger">*</span></label>
                                                 <input
                                                     type="date"
                                                     className="form-control"
@@ -305,16 +314,19 @@ const PurchaseMaterial = () => {
                                                     onChange={(e) => { }}
                                                     disabled
                                                 />
+                                                {<span className='text-danger'> {error.date} </span>}
                                             </div>
                                             <div class="form-group col-lg-2">
                                                 <label class="exampleFormControlSelect1">Who Purchase</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.puechase} name='puechase' onChange={onhandleChange}>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1"
+                                                    value={value.purchase} name='purchase' onChange={onhandleChange}>
                                                     <option></option>
                                                 </select>
                                             </div>
                                             <div class="form-group col-lg-2">
                                                 <label class="exampleFormControlSelect1">Vendor Name</label>
-                                                <select class="form-control form-control-lg" id="exampleFormCorntrolSelect1" value={value.vendor} name='vendor' onChange={onhandleChange}>
+                                                <select class="form-control form-control-lg" id="exampleFormCorntrolSelect1"
+                                                    value={value.vendor} name='vendor' onChange={onhandleChange}>
                                                     <option></option>
                                                 </select>
                                             </div>
@@ -322,36 +334,42 @@ const PurchaseMaterial = () => {
 
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleInputUsername1">Voucher No</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.voucherno} placeholder="Voucher No" name='voucherno' onChange={onhandleChange} />
+                                                <input type="text" class="form-control" id="exampleInputUsername1"
+                                                    value={value.voucherno} placeholder="Voucher No" name='voucherno' onChange={onhandleChange} />
 
                                             </div>
 
                                             <div class="form-group col-lg-2">
                                                 <lable class="exampleFormControlSelect1">Purpose</lable>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.purpose} name='purpose' onChange={onhandleChange}>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1"
+                                                    value={value.purpose} name='purpose' onChange={onhandleChange}>
                                                     <option></option>
                                                 </select>
                                             </div>
                                             <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">Required Date</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.required} placeholder="Required Date" name='required' onChange={onhandleChange} />
-
+                                                <label for="exampleInputUsername1">Required Date<span className="text-danger">*</span></label>
+                                                <input type="date" class="form-control" id="exampleInputUsername1"
+                                                    value={value.requireddate} placeholder="Required Date" name='requireddate' onChange={onhandleChange} />
+                                                {<span className='text-danger'> {error.requireddate} </span>}
                                             </div>
                                             <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">Price</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.price} placeholder="price" name='price' onChange={onhandleChange} />
-
+                                                <label for="exampleInputUsername1">Price<span className="text-danger">*</span></label>
+                                                <input type="text" class="form-control" id="exampleInputUsername1"
+                                                    value={value.price} placeholder="price" name='price' onChange={onhandleChange} />
+                                                {<span className='text-danger'> {error.price} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">Quantity</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.quantity} placeholder="Quantity" name='quantity' onChange={onhandleChange} />
-
+                                                <label for="exampleInputUsername1">Quantity<span className="text-danger">*</span></label>
+                                                <input type="text" class="form-control" id="exampleInputUsername1"
+                                                    value={value.quantity} placeholder="Quantity" name='quantity' onChange={onhandleChange} />
+                                                {<span className='text-danger'> {error.quantity} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleInputUsername1">Total Amt</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.totalamt} placeholder="Total Amt" name='totalamt' onChange={onhandleChange} />
+                                                <input type="text" class="form-control" id="exampleInputUsername1"
+                                                    value={value.totalamt} placeholder="Total Amt" name='totalamt' onChange={onhandleChange} />
 
                                             </div>
 

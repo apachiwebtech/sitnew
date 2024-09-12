@@ -19,43 +19,37 @@ const FacultyExperience = () => {
 
 
     const [value, setValue] = useState({
-        course: '',
-        batch: '',
-        returndate: '',
-        printdate: '',
-        prepared: '',
-        checked: '',
-        approved: '',
-        startdate: '',
-        enddate: '',
+        idproof: '',
+        addressproof: '',
+        facultycv: '',
 
     })
 
 
-    const validateForm = () => {
-        let isValid = true
-        const newErrors = {}
+    // const validateForm = () => {
+    //     let isValid = true
+    //     const newErrors = {}
 
 
-        if (!value.facultyname) {
-            isValid = false;
-            newErrors.facultyname = "Faculty Name is Required"
-        }
+    //     if (!value.facultyname) {
+    //         isValid = false;
+    //         newErrors.facultyname = "Faculty Name is Required"
+    //     }
 
-        if (!value.maritalstatus) {
-            isValid = false;
-            newErrors.maritalstatus = "Marital Status is Required"
-        }
+    //     if (!value.maritalstatus) {
+    //         isValid = false;
+    //         newErrors.maritalstatus = "Marital Status is Required"
+    //     }
 
-        if (!value.address) {
-            isValid = false;
-            newErrors.address = "Address is Required"
-        }
+    //     if (!value.address) {
+    //         isValid = false;
+    //         newErrors.address = "Address is Required"
+    //     }
 
 
-        setError(newErrors)
-        return isValid
-    }
+    //     setError(newErrors)
+    //     return isValid
+    // }
 
 
     async function getStudentDetail() {
@@ -74,15 +68,9 @@ const FacultyExperience = () => {
 
         setValue(prevState => ({
             ...prevState,
-            course: data[0].course,
-            batch: data[0].batch,
-            returndate: data[0].returndate,
-            printdate: data[0].printdate,
-            prepared: data[0].prepared,
-            checked: data[0].checked,
-            approved: data[0].approved,
-            startdate: data[0].startdate,
-            enddate: data[0].enddate,
+            idproof: data[0].idproof,
+            addressproof: data[0].addressproof,
+            facultycv: data[0].facultycv,
         }))
     }
     useEffect(() => {
@@ -98,54 +86,43 @@ const FacultyExperience = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         let response
-        if (validateForm()) {
-            if (facultyid == ":facultyid") {
-                response = await fetch(`${BASE_URL}/add_faculty`, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        course: value.course,
-                        batch: value.batch,
-                        returndate: value.returndate,
-                        printdate: value.printdate,
-                        prepared: value.prepared,
-                        checked: value.checked,
-                        approved: value.approved,
-                        startdate: value.startdate,
-                        enddate: value.enddate,
-                    }),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-            } else {
+        // if (validateForm()) {
+        if (facultyid == ":facultyid") {
+            response = await fetch(`${BASE_URL}/add_faculty_master`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    idproof: value.idproof,
+                    addressproof: value.addressproof,
+                    facultycv: value.facultycv,
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+        } else {
 
-                response = await fetch(`${BASE_URL}/updatefaculty`, {
-                    method: 'POST',
-                    body: JSON.stringify({
+            response = await fetch(`${BASE_URL}/updatefaculty`, {
+                method: 'POST',
+                body: JSON.stringify({
 
-                        course: value.course,
-                        batch: value.batch,
-                        returndate: value.returndate,
-                        printdate: value.printdate,
-                        prepared: value.prepared,
-                        checked: value.checked,
-                        approved: value.approved,
-                        startdate: value.startdate,
-                        enddate: value.enddate,
+                    idproof: value.idproof,
+                    addressproof: value.addressproof,
+                    facultycv: value.facultycv,
 
 
 
 
-                    }),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-            }
 
-
-
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
         }
+
+
+
+        // }
     }
 
 
@@ -163,10 +140,11 @@ const FacultyExperience = () => {
                         <div class="d-flex">
 
                             <div className='px-2 mx-2'><Link to="/faculty/:facultyid"><h4>Personal Information</h4></Link></div>
-                            <div className='px-2 mx-2'><Link to="/facademicqualification"><h4>Academic Qualification</h4></Link></div>
                             <div className='px-2 mx-2'><Link to="/addfacultymaster"><h4>Current Experience/Other Details</h4></Link></div>
+                            <div className='px-2 mx-2'><Link to="/facademicqualification"><h4>Academic Qualification</h4></Link></div>
                             <div className='px-2 mx-2'><Link to="/facultyexperience"><h4>Total Experience and Documents</h4></Link></div>
                             <div className='px-2 mx-2'><Link to="/facultydiscussion"><h4>Discussion</h4></Link></div>
+
                         </div>
                         <div class="col-lg-12 grid-margin">
 
@@ -180,19 +158,22 @@ const FacultyExperience = () => {
                                             <div className='row'>
                                                 <div class="form-group col-lg-3">
                                                     <label for="exampleInputUsername1" >ID Proof</label>
-                                                    <input type="file" class="form-control" id="exampleInputUsername1" value={value.idproof}
+                                                    <input type="file" class="form-control" id="exampleInputUsername1"
+                                                        value={value.idproof}
                                                         name='idproof' onChange={onhandleChange} />
 
                                                 </div>
                                                 <div class="form-group col-lg-3">
                                                     <label for="exampleInputUsername1"> Address Proof</label>
-                                                    <input type="file" class="form-control" id="exampleInputUsername1" value={value.addressproof}
+                                                    <input type="file" class="form-control" id="exampleInputUsername1"
+                                                        value={value.addressproof}
                                                         name='addressproof' onChange={onhandleChange} />
 
                                                 </div>
                                                 <div class="form-group col-lg-3">
                                                     <label for="exampleInputUsername1">CV</label>
-                                                    <input type="file" class="form-control" id="exampleInputUsername1" value={value.facultycv}
+                                                    <input type="file" class="form-control" id="exampleInputUsername1"
+                                                        value={value.facultycv}
                                                         name='facultycv' onChange={onhandleChange} />
 
                                                 </div>

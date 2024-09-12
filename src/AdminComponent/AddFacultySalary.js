@@ -236,29 +236,35 @@ const AddFacultySalary = () => {
                                                     </div>
                                                     <div className='row'>
                                                         <div className="form-group col-lg-4 ">
-                                                            <lable for="exampleFormControlSelect1">Months</lable>
-                                                            <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.months} name='months' onChange={onhandleChange} >
+                                                            <lable for="exampleFormControlSelect1">Months<span className="text-danger">*</span></lable>
+                                                            <select class="form-control form-control-lg" id="exampleFormControlSelect1" 
+                                                            value={value.months} name='months' onChange={onhandleChange} >
                                                                 <option>--Select Months--</option>
 
                                                             </select>
+                                                            {<span className='text-danger'> {error.months} </span>}
                                                         </div>
 
                                                         <div class="form-group col-lg-4">
-                                                            <lable for="exampleFormControlSelect1">Year</lable>
-                                                            <select class="form-control form-control-lg" id="exampleFormControlSelect" value={value.year} name='year' onChange={onhandleChange}>
+                                                            <lable for="exampleFormControlSelect1">Year<span className="text-danger">*</span></lable>
+                                                            <select class="form-control form-control-lg" id="exampleFormControlSelect"
+                                                             value={value.year} name='year' onChange={onhandleChange}>
                                                                 <option>--Select Year--</option>
                                                                 <option>2024</option>
 
                                                             </select>
+                                                            {<span className='text-danger'> {error.year} </span>}
                                                         </div>
 
                                                         <div class="form-group col-lg-4">
-                                                            <lable for="exampleFormControlSelect1">Faculty Name</lable>
-                                                            <select class="form-control Form-control-lg" id="exampleFormControlSelect1" value={value.facultyname} name='facultyname' onChange={onhandleChange}>
+                                                            <lable for="exampleFormControlSelect1">Faculty Name<span className="text-danger">*</span></lable>
+                                                            <select class="form-control Form-control-lg" id="exampleFormControlSelect1"
+                                                             value={value.facultyname} name='facultyname' onChange={onhandleChange}>
                                                                 <option>--Faculti Name--</option>
                                                                 <option>A. G. Belwalkar</option>
                                                                 <option>Aadhar Classes</option>
                                                             </select>
+                                                            {<span className='text-danger'> {error.facultyname} </span>}
                                                         </div>
 
                                                         <div class="form-group col-lg-4">

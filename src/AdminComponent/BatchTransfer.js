@@ -305,7 +305,7 @@ const BatchTransfer = () => {
                                             </div>
 
                                             <div class="form-group col-lg-2">
-                                                <label for="exampleFomrControlSelect1">New Batch Number<span className="text-danger"></span></label>
+                                                <label for="exampleFomrControlSelect1">New Batch Number<span className="text-danger">*</span></label>
                                                 <select className='form-control form-control-lg' id="exampleFormControlSelect1" 
                                                 value={value.newbatch} name='newbatch' onChange={onhandleChange}>
                                                     <option></option>
@@ -315,18 +315,20 @@ const BatchTransfer = () => {
 
 
                                             <div class="form-group col-lg-2">
-                                                <lable for="exampleInputUsername1">Transfer Ammount</lable>
+                                                <lable for="exampleInputUsername1">Transfer Ammount<span className="text-danger">*</span></lable>
                                                 <input text="text" class="form-control" id="exampleInputUsername1" 
                                                 value={value.transferammount} placeholder='00.00' name='transferammount' onChange={onhandleChange} />
+                                                {<span className='text-danger'> {error.transferammount} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-2">
-                                                <label for="exampleFomrControlSelect1">Payment Type</label>
+                                                <label for="exampleFomrControlSelect1">Payment Type<span className="text-danger">*</span></label>
                                                 <select className='form-control form-control-lg' id="exampleFormControlSelect1" 
                                                 value={value.paymenttype} name='paymenttype' onChange={onhandleChange}>
                                                     <option>Lumpsum</option>
                                                     <option>Installment</option>
                                                 </select>
+                                                {<span className='text-danger'> {error.paymenttype} </span>}
                                             </div>
 
                                         </div>

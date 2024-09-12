@@ -185,7 +185,6 @@ import AddConsultancyMaster from './AdminComponent/AddConsultancyMaster.js';
 import AddConsultancyMasterListing from './AdminComponent/AddConsultancyMasterListing.js';
 import AddCompanyRequirementListing from './AdminComponent/AddCompanyRequirementListing.js';
 import AddCompanyRequirement from './AdminComponent/AddCompanyRequirement.js';
-import FacultyPayment from './AdminComponent/FacultyPayment.js';
 import ServiceTaxReportonFees from './AdminComponent/ServiceTaxReportonFees.js';
 import ChequeNumber from './AdminComponent/ChequeNumber.js';
 import AddEmployeeAttendance from './AdminComponent/AddEmployeeAttendance.js';
@@ -207,9 +206,6 @@ import FeedBack2Listing from './AdminComponent/FeedBack2Listing.js';
 import FinalExamListing from './AdminComponent/FinalExamListing.js';
 import EmployeeProfessionTaxMaster from './AdminComponent/EmployeeProfessionTaxMaster.js';
 import MyDocument3 from './AdminComponent/MyDocument3.js';
-// import FacultyPayment from './AdminComponent/FacultyPayment.js';
-
-
 
 
 const Router = createBrowserRouter([

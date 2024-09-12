@@ -7,6 +7,8 @@ const multer = require('multer');
 var session = require('express-session')
 var cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
+const { data } = require('jquery');
+const { update } = require('js-md5');
 
 // Use CORS middleware before defining routes
 app.use(
@@ -605,10 +607,10 @@ app.post('/nodeapp/add_feedback', (req, res) => {
 
 
 
-app.post('/nodeapp/add_faculty', (req, res) => {
+app.post('/nodeapp/add_faculty_master', (req, res) => {
 
 
-  let { facultyname, facultycode, dob, nationality, discipline, status, invoicename, maritalstatus, joiningdate, employment, software, training, address, city, pin, state, country, mobile, email, full_address, city_name, pin_code, state_name, country_name, mobi, uid } = req.body
+  let { Faculty_Code, Faculty_Name, Married, DOB, Nationality, Faculty_Type, Office_Tel, Res_Tel, Mobile, EMail, Present_Address, Present_City, Present_State, Present_Country, Present_Pin, Present_Tel, Permanent_Address, Permanent_City, Permanent_State, Permanent_Country, Permanent_Pin, Permanent_Tel, Service_Offered,Specialization,Experience,Company_Name,Company_Address,Company_Phone,Interview_Date,Working_At,Qualified,Joining_Date,Comments,Interviewer,Sal_Struct,Salary,Date_added,TDS,PAN,Resigned,InvoiceName,IsActive,IsDelete,CourseId,DesignExp,KnowSw,Working_Status,TrainingCategory,Interview_Status,Reference_by, uid } = req.body
 
   let sql
   let param;
@@ -616,14 +618,14 @@ app.post('/nodeapp/add_faculty', (req, res) => {
   console.log(uid)
 
   if (uid == undefined) {
-    sql = "insert into awt_faculty(`facultyname`,`facultycode`,`dob`,`nationality`,`discipline`,`status`,`invoicename`,`maritalstatus`,`joiningdate`,`employment`,`software`,`training`,`address`,`city`,`pin`,`state`,`country`,`mobile`,`email`,`full_address`,`city_name`,`pin_code`,`state_name`,`country_name`,`mobi`) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+    sql = "insert into faculty_master(`Faculty_Code`, `Faculty_Name`, `Married`, `DOB`, `Nationality`, `Faculty_Type`, `Office_Tel`, `Res_Tel`, `Mobile`, `EMail`, `Present_Address`, `Present_City`, `Present_State`, `Present_Country`, `Present_Pin`, `Present_Tel`, `Permanent_Address`, `Permanent_City`, `Permanent_State`, `Permanent_Country`, `Permanent_Pin`, `Permanent_Tel`, `Service_Offered`, `Specialization`,`Experience`,`Company_Name`,`Company_Address`,`Company_Phone`,`Interview_Date`,`Working_At`,`Qualified`,`Joining_Date`,`Comments`,`Interviewer`,`Sal_Struct`,`Salary`,`Date_added`,`TDS`,`PAN`,`Resigned`,`InvoiceName`,`IsActive`,`IsDelete`,`CourseId`,`DesignExp`,`KnowSw`,`Working_Status`,`TrainingCategory`,`Interview_Status`,`Reference_by`) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
 
-    param = [facultyname, facultycode, dob, nationality, discipline, status, invoicename, maritalstatus, joiningdate, employment, software, training, address, city, pin, state, country, mobile, email, full_address, city_name, pin_code, state_name, country_name, mobi]
+    param = [Faculty_Code, Faculty_Name, Married, DOB, Nationality, Faculty_Type, Office_Tel, Res_Tel, Mobile, EMail, Present_Address, Present_City, Present_State, Present_Country, Present_Pin, Present_Tel, Permanent_Address, Permanent_City, Permanent_State, Permanent_Country, Permanent_Pin, Permanent_Tel, Service_Offered, Specialization,Experience,Company_Name,Company_Address,Company_Phone,Interview_Date,Working_At,Qualified,Joining_Date,Comments,Interviewer,Sal_Struct,Salary,Date_added,TDS,PAN,Resigned,InvoiceName,IsActive,IsDelete,CourseId,DesignExp,KnowSw,Working_Status,TrainingCategory,Interview_Status,Reference_by]
 
   } else {
-    sql = "update `awt_faculty` set `facultyname` =? , `facultycode` =? , `dob` =? , `nationality` =? , `discipline` =? , `status` =? , `invoicename` =? , `maritalstatus` =? , `joiningdate` =? , `employment` =? , `software` =? , `training` =? , `address` =? , `city` =? , `pin` =? , `state` =? , `country` =? , `mobile` =? , `email` =? , `full_address` =? , `city_name` =? , `pin_code` =? , `state_name` =? , `country_name` =? , `mobi` =? where id = ?"
+    sql = "update `faculty_master` set `Faculty_Code` =? , `Faculty_Name` =? , `Married` =? , `DOB` =? , `Nationality` =? , `Faculty_Type` =? , `Office_Tel` =? , `Res_Tel` =? , `Mobile` =? , `EMail` =? , `Present_Address` =? , `Present_City` =? , `Present_State` =? , `Present_Country` =? , `Present_Pin` =? , `Present_Tel` =? , `Permanent_Address` =? , `Permanent_City` =? , `Permanent_State` =? , `Permanent_Country` =? , `Permanent_Pin` =? , `Permanent_Tel` =? , `Service_Offered` =? , `Specialization` =? ,`Experience` =? ,`Company_Name` =? ,`Company_Address` =? ,`Company_Phone` =? ,`Interview_Date` =? ,`Working_At` =? ,`Qualified` =? ,`Joining_Date` =? ,`Comments` =? ,`Interviewer` =? ,`Sal_Struct` =? ,`Salary` =? ,`Date_added` =? ,`TDS` =? ,`PAN` =? ,`Resigned` =? ,`InvoiceName` =? ,`IsActive` =? ,`IsDelete` =? ,`CourseId` =? ,`DesignExp` =? ,`KnowSw` =? ,`Working_Status` =? ,`TrainingCategory` =? ,`Interview_Status` =? ,`Reference_by` =? where id = ?"
 
-    param = [facultyname, facultycode, dob, nationality, discipline, status, invoicename, maritalstatus, joiningdate, employment, software, training, address, city, pin, state, country, mobile, email, full_address, city_name, pin_code, state_name, country_name, mobi, uid]
+    param = [Faculty_Code, Faculty_Name, Married, DOB, Nationality, Faculty_Type, Office_Tel, Res_Tel, Mobile, EMail, Present_Address, Present_City, Present_State, Present_Country, Present_Pin, Present_Tel, Permanent_Address, Permanent_City, Permanent_State, Permanent_Country, Permanent_Pin, Permanent_Tel, Service_Offered, Specialization,Experience,Company_Name,Company_Address,Company_Phone,Interview_Date,Working_At,Qualified,Joining_Date,Comments,Interviewer,Sal_Struct,Salary,Date_added,TDS,PAN,Resigned,InvoiceName,IsActive,IsDelete,CourseId,DesignExp,KnowSw,Working_Status,TrainingCategory,Interview_Status,Reference_by, uid]
 
   }
 
@@ -990,6 +992,10 @@ app.get('/nodeapp/getCourses', (req, res, next) => {
     }
   })
 })
+
+
+
+
 app.get('/nodeapp/getCollege', (req, res, next) => {
   const sql = 'SELECT * FROM awt_college where deleted = 0';
 
@@ -1653,6 +1659,13 @@ app.post(`/nodeapp/batch_lecturetaken`, (req, res) => {
   })
 })
 
+<<<<<<< Updated upstream
+=======
+app.get('/nodeapp/getfaculty', (req, res, next) => {
+
+})
+
+>>>>>>> Stashed changes
 app.post(`/nodeapp/batch_convocation`, (req, res) => {
 
   let { batch_id } = req.body
@@ -3171,6 +3184,19 @@ app.get('/nodeapp/getstatus', (req, res) => {
     } else {
       return res.json(data)
     }
+  })
+})
+
+app.get('/nodeapp/getfaculty_masterdata', (req, res) => {
+  const sql = "select * from faculty_master where  IsDelete = 0"
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err)
+    }else {
+      return res.json(data)
+    }
+
   })
 })
 
@@ -4782,6 +4808,7 @@ app.post('/nodeapp/get_grade', (req, res) => {
 })
 
 
+
 app.post('/nodeapp/add_batch_result', (req, res) => {
 
   const { batchid, unit_test, assignment_wt, exam_wt, full_atten_wt, absent_wt, last_mark_limit, uid } = req.body
@@ -4828,8 +4855,6 @@ app.post('/nodeapp/add_vist_data', (req, res) => {
     param = [batchid, company, contact_person, designation, phone, visit_date, address, date, uid]
   }
 
-
-
   con.query(sql, param, (err, data) => {
     if (err) {
       return res.json(err)
@@ -4839,6 +4864,29 @@ app.post('/nodeapp/add_vist_data', (req, res) => {
   })
 })
 
+app.post('/nodeapp/add_sit_eptaxmaster', (req, res) => {
+  const { from_sal,	to_sal,	tax_price,	sep_mnth,	sep_tax_price, uid } = req.body
+
+  const date = new Date()
+  let sql
+  let param
+  if (uid == undefined) {
+    sql = "insert into sit_eptaxmaster (  `from_sal`,	`to_sal`,	`tax_price`,	`sep_mnth`,	`sep_tax_price` ) value (?,?,?,?,?)"
+    param = [ from_sal, to_sal, tax_price, sep_mnth, sep_tax_price ]
+  }else{
+    sql = "update sit_eptaxmaster set from_sal = ? , to_sal = ? , tax_price = ? , sep_mnth = ? , sep_tax_price = ? where id = ? "
+    param [from_sal, to_sal, tax_price, sep_mnth, sep_tax_price, uid] 
+
+  }
+
+  con.query(sql, param, (err, data) => {
+    if(err){
+      return res.json(err)
+    }else{
+      return res.json(data)
+    }
+  })
+})
 
 app.post('/nodeapp/add_exam_data', (req, res) => {
 
@@ -5080,5 +5128,7 @@ app.post('/nodeapp/getresultchild', (req, res) => {
 
 
 })
+
+
 
 

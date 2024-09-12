@@ -5,9 +5,6 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
-//import FormControlLabel from '@mui/material/FormControlLabel';
-// import ImageList from '@mui/material/ImageList';
-// import { ImageSourcePropType } from 'react-native';
 
 const BatchCancellation = () => {
 
@@ -33,34 +30,8 @@ const BatchCancellation = () => {
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
 
     console.log(specification)
-
-    const handleChange1 = (event) => {
-        setChecked([event.target.checked, event.target.checked]);
-    };
-
-    const handleChange2 = (event) => {
-        setChecked([event.target.checked, checked[1]]);
-    };
-
-    const handleChange3 = (event) => {
-        setChecked([checked[0], event.target.checked]);
-    };
-
-    // const children = (
-    //     <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-    //       <FormControlLabel
-    //         label="Child 1"
-    //         control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
-    //       />
-    //       <FormControlLabel
-    //         label="Child 2"
-    //         control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
-    //       />
-    //     </Box>
-    //   );
 
     const [value, setValue] = useState({
         course: "" || uid.courae,
@@ -68,9 +39,6 @@ const BatchCancellation = () => {
         student: "" || uid.student,
         cancellationammount: "" || uid.cancellationammount,
         date: "" || uid.date,
-
-
-
 
 
     })
@@ -87,23 +55,34 @@ const BatchCancellation = () => {
     }, [uid])
 
 
-    // const validateForm = () => {
-    //     let isValid = true
-    //     const newErrors = {}
+    const validateForm = () => {
+        let isValid = true
+        const newErrors = {}
 
 
-    //    if (!value.college) {
-    //     isValid = false;
-    //     newErrors.name = "Name is require"
-    //    }
-    //     if (!value.email) {
-    //         isValid = false;
-    //         newErrors.email = "Email is require"
-    //     }
-    //     setError(newErrors)
-    //     return isValid
-    // }
-
+        if (!value.course) {
+            isValid = false;
+            newErrors.course = "Course is Required"
+        }
+        if (!value.batchno) {
+            isValid = false;
+            newErrors.batchno = "Batch No is Required"
+        }
+        if (!value.student) {
+            isValid = false;
+            newErrors.student = "Student is Required"
+        }
+        if (!value.cancellationammount) {
+            isValid = false;
+            newErrors.cancellationammount = "Ammount is Required"
+        }
+        if (!value.date) {
+            isValid = false;
+            newErrors.date = "Date is Required"
+        }
+        setError(newErrors)
+        return isValid
+    }
 
     async function getEmployeeData() {
 
@@ -196,30 +175,28 @@ const BatchCancellation = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        // if(validateForm()){
-        const data = {
+        if (validateForm()) {
+            const data = {
+
+                course: value.course,
+                batchno: value.batchno,
+                student: value.student,
+                cancellationammount: value.cancellationammount,
+                date: value.date,
+                uid: uid.id
+            }
 
 
+            axios.post(`${BASE_URL}/add_batchcancellation`, data)
+                .then((res) => {
+                    console.log(res)
+                    getEmployeeData()
 
-            course: value.course,
-            batchno: value.batchno,
-            student: value.student,
-            cancellationammount: value.cancellationammount,
-            date: value.date,
-            uid: uid.id
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
         }
-
-
-        axios.post(`${BASE_URL}/add_batchcancellation`, data)
-            .then((res) => {
-                console.log(res)
-                getEmployeeData()
-
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-        // }
 
 
 
@@ -248,11 +225,10 @@ const BatchCancellation = () => {
             filterable: false,
 
         },
-        { field: 'course', headerName: 'Course Name', flex: 2 },
-        { field: 'batchno', headerName: 'Batch No.', flex: 2 },
-        { field: 'student', headerName: 'Student', flex: 2 },
-        { field: 'cancellationammount', headerName: 'Cancellation Ammount', flex: 2 },
+        { field: 'student', headerName: 'Student Name', flex: 2 },
+        { field: 'batchno', headerName: 'Batch Code', flex: 2 },
         { field: 'date', headerName: 'Date', flex: 2 },
+        { field: 'cancellationammount', headerName: 'Cancel Amount', flex: 2 },
 
         {
             field: 'actions',
@@ -289,39 +265,44 @@ const BatchCancellation = () => {
                                         <div class='row'>
 
                                             <div class="form-group col-lg-4">
-                                                <lable for="exampleFormControlSelect1">Course</lable>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course} name='course' onChange={onhandleChange}>
+                                                <lable for="exampleFormControlSelect1">Course<span className="text-danger">*</span></lable>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1"
+                                                    value={value.course} name='course' onChange={onhandleChange}>
                                                     <option>Select Course</option>
-                                                    <option> Training in Process Plant System Modelling Using E3D</option>
-                                                    <option>Advance Pipe Stress Analysis </option>
-                                                    <option>Air Conditioning System Design (HVAC)</option>
-                                                    <option>Autocad - Piping</option>
                                                 </select>
+                                                {<span className='text-danger'> {error.course} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-2">
-                                                <label for="exampleFormControlSelect1">Batch No.</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batchno} name='batchno' onChange={onhandleChange}>
+                                                <label for="exampleFormControlSelect1">Batch No.<span className="text-danger">*</span></label>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1"
+                                                    value={value.batchno} name='batchno' onChange={onhandleChange}>
                                                     <option></option>
                                                 </select>
+                                                {<span className='text-danger'> {error.batchno} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-2">
-                                                <label for="exampleFomrControlSelect1">Student</label>
-                                                <select className='form-control form-control-lg' id="exampleFormControlSelect1" value={value.student} name='student' onChange={onhandleChange}>
+                                                <label for="exampleFomrControlSelect1">Student<span className="text-danger">*</span></label>
+                                                <select className='form-control form-control-lg' id="exampleFormControlSelect1"
+                                                    value={value.student} name='student' onChange={onhandleChange}>
                                                     <option></option>
                                                 </select>
+                                                {<span className='text-danger'> {error.student} </span>}
                                             </div>
 
 
                                             <div class="form-group col-lg-2">
-                                                <lable for="exampleInputUsername1">Cancellation Ammount</lable>
-                                                <input text="text" class="form-control" id="exampleInputUsername1" value={value.cancellationammount} placeholder='00.00' name='cancellationammount' onChange={onhandleChange} />
+                                                <lable for="exampleInputUsername1">Cancellation Ammount<span className="text-danger">*</span></lable>
+                                                <input text="text" class="form-control" id="exampleInputUsername1"
+                                                    value={value.cancellationammount} placeholder='00.00' name='cancellationammount'
+                                                    onChange={onhandleChange} />
+                                                {<span className='text-danger'> {error.cancellationammount} </span>}
                                             </div>
 
 
                                             <div className="form-group col-lg-2">
-                                                <label htmlFor="exampleInputUsername1">Date</label>
+                                                <label htmlFor="exampleInputUsername1">Date<span className="text-danger">*</span> </label>
                                                 <input
                                                     type="date"
                                                     className="form-control"
@@ -331,6 +312,7 @@ const BatchCancellation = () => {
                                                     onChange={(e) => { }}
                                                     disabled
                                                 />
+                                                {<span className='text-danger'> {error.date} </span>}
                                             </div>
 
 

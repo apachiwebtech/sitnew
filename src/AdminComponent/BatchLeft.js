@@ -266,19 +266,18 @@ const BatchLeft = () => {
                                         <div class='row'>
 
                                             <div class="form-group col-lg-3">
-                                                <lable for="exampleFormControlSelect1">Course</lable>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course} name='course' onChange={onhandleChange}>
+                                                <lable for="exampleFormControlSelect1">Course<span className="text-danger">*</span></lable>
+                                                <select class="form-control" id="exampleFormControlSelect1" 
+                                                value={value.course} name='course' onChange={onhandleChange}>
                                                     <option>Select Course</option>
-                                                    <option> Training in Process Plant System Modelling Using E3D</option>
-                                                    <option>Advance Pipe Stress Analysis </option>
-                                                    <option>Air Conditioning System Design (HVAC)</option>
-                                                    <option>Autocad - Piping</option>
                                                 </select>
+                                                {<span className='text-danger'> {error.course} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleFormControlSelect1">Batch No.</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batchno} name='batchno' onChange={onhandleChange}>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" 
+                                                value={value.batchno} name='batchno' onChange={onhandleChange}>
                                                     <option></option>
                                                 </select>
                                             </div>
