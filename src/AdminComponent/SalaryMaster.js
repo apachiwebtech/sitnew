@@ -13,7 +13,6 @@ const SalaryMaster = () => {
 
     const [brand, setBrand] = useState([])
     const [vendordata, setVendorData] = useState([])
-    const [specification, setSpecification] = useState("")
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
@@ -25,9 +24,10 @@ const SalaryMaster = () => {
         formdate: "" || uid.formdate,
         todate: "" || uid.todate,
         service: "" || uid.service,
-        empcontri: uid.empcontri,
-        da: uid.da,
-        minbasic: uid.minbasic,
+        empcontri: "" || uid.empcontri,
+        salaryda: "" || uid.salaryda,
+        minbasic: "" || uid.minbasic,
+        created_date: "" || uid.created_date,
 
 
 
@@ -40,8 +40,9 @@ const SalaryMaster = () => {
             todate: uid.todate,
             service: uid.service,
             empcontri: uid.empcontri,
-            da: uid.da,
+            salaryda: uid.salaryda,
             minbasic: uid.minbasic,
+            created_date: uid.created_date,
 
         })
     }, [uid])
@@ -79,7 +80,7 @@ const SalaryMaster = () => {
         setError(newErrors)
         return isValid
     }
-    
+
     async function getEmployeeData() {
 
         axios.post(`${BASE_URL}/vendor_details`)
@@ -170,7 +171,6 @@ const SalaryMaster = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-
         if (validateForm()) {
             const data = {
 
@@ -178,13 +178,14 @@ const SalaryMaster = () => {
                 todate: value.todate,
                 service: value.service,
                 empcontri: value.empcontri,
-                da: value.da,
+                salaryda: value.salaryda,
                 minbasic: value.minbasic,
+                created_date: value.created_date,
                 uid: uid.id
             }
 
 
-            axios.post(`${BASE_URL}/add_salarymaster`, data)
+            axios.post(`${BASE_URL}/add_awt_salarymaster`, data)
                 .then((res) => {
                     console.log(res)
                     getEmployeeData()
@@ -195,21 +196,12 @@ const SalaryMaster = () => {
                 })
         }
 
-
-
-
-
     }
 
 
     const onhandleChange = (e) => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
-
-
-
-
-
 
     const columns = [
         {
@@ -222,17 +214,14 @@ const SalaryMaster = () => {
             filterable: false,
 
         },
-        { field: 'startdate', headerName: 'Start Date', flex: 2 },
-        { field: 'enddate', headerName: 'End Date', flex: 2 },
-        {
-            field: 'specification', headerName: 'Description', flex: 2, renderCell: (params) => {
-                return (
-                    <>
-                        <div dangerouslySetInnerHTML={{ __html: params.row.specification }}></div>
-                    </>
-                )
-            }
-        },
+        { field: 'formdate', headerName: 'Form Date', flex: 2 },
+        { field: 'todate', headerName: 'To Date', flex: 2 },
+        { field: 'service', headerName: 'Service', flex: 2 },
+        { field: 'empcontri', headerName: 'Empcontri', flex: 2 },
+        { field: 'salaryda', headerName: 'DA', flex: 2 },
+        { field: 'minbasic', headerName: 'Min. Basic', flex: 2 },
+        { field: 'created_date', headerName: 'Date', flex: 2 },
+        
 
         {
             field: 'actions',
@@ -268,14 +257,14 @@ const SalaryMaster = () => {
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
 
-                                            <div class="form-group col-lg-2">
+                                            <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">Form Date<span className="text-danger">*</span></label>
                                                 <input type="date" class="form-control" id="exampleInputUsername1"
                                                     value={value.formdate} name='formdate' onChange={onhandleChange} />
                                                 {<span className='text-danger'> {error.formdate} </span>}
                                             </div>
 
-                                            <div class="form-group col-lg-2">
+                                            <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">To Date<span className="text-danger">*</span></label>
                                                 <input type="date" class="form-control" id="exampleInputUsername1"
                                                     value={value.todate} name='todate' onChange={onhandleChange} />
@@ -283,28 +272,28 @@ const SalaryMaster = () => {
 
                                             </div>
 
-                                            <div class="form-group col-lg-2">
+                                            <div class="form-group col-lg-3">
                                                 <lable for="exampleInputUsername">Service Charge(%)<span className="text-danger">*</span></lable>
                                                 <input type="text" class="form-control" id="exampleInputUsername1"
                                                     value={value.service} placeholder='00.00' name='service' onChange={onhandleChange} />
                                                 {<span className="text-danger"> {error.service} </span>}
                                             </div>
 
-                                            <div class="form-group col-lg-2">
+                                            <div class="form-group col-lg-3">
                                                 <lable for="exampleInputUsername">Emp Contri(%)<span className="text-danger">*</span></lable>
                                                 <input type="text" class="form-control" id="exampleInputUsername1"
                                                     value={value.empcontri} placeholder='00.00' name='empcontri' onChange={onhandleChange} />
                                                 {<span className='text-danger'> {error.empcontri} </span>}
                                             </div>
 
-                                            <div class="form-group col-lg-2">
+                                            <div class="form-group col-lg-3">
                                                 <lable for="exampleInputUsername">DA <span className="text-danger">*</span></lable>
                                                 <input type="text" class="form-control" id="exampleInputUsername1"
                                                     value={value.salaryda} placeholder='00.00' name='salaryda' onChange={onhandleChange} />
                                                 {<span className='text-danger'> {error.salaryda} </span>}
                                             </div>
 
-                                            <div class="form-group col-lg-2">
+                                            <div class="form-group col-lg-3">
                                                 <lable for="exampleInputUsername"> Min. Basic<span className="text-danger">*</span></lable>
                                                 <input type="text" class="form-control" id="exampleInputUsername1"
                                                     value={value.minbasic} placeholder='00.00' name='minbasic' onChange={onhandleChange} />

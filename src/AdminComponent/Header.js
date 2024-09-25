@@ -569,10 +569,6 @@ const Header = ({click}) => {
               </Link>
             </li>
 
-
-
-
-
           </ul>
         </Collapse>
 

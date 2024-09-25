@@ -116,8 +116,7 @@ const BatchCategory = () => {
     const handleDelete = (id) => {
         const data = {
             delete_id: id,
-            tablename: "MST_BatchCategory",
-            column_name: 'id'
+            tablename: "MST_BatchCategory"
         }
 
         axios.post(`${BASE_URL}/new_delete_data`, data)

@@ -206,6 +206,7 @@ import FeedBack2Listing from './AdminComponent/FeedBack2Listing.js';
 import FinalExamListing from './AdminComponent/FinalExamListing.js';
 import EmployeeProfessionTaxMaster from './AdminComponent/EmployeeProfessionTaxMaster.js';
 import MyDocument3 from './AdminComponent/MyDocument3.js';
+import BatchTransferListing from './AdminComponent/BatchTransferListing.js';
 
 
 const Router = createBrowserRouter([
@@ -337,15 +338,15 @@ const Router = createBrowserRouter([
       },
       {
         path: '/addcollegemaster/:collegeid',
-        element: <AddCollegeMaster/>
+        element: <AddCollegeMaster />
       },
       {
         path: '/studentdetails/:collegeid',
-        element: <StudentDetails/>
+        element: <StudentDetails />
       },
       {
         path: '/followup/:collegeid',
-        element: <FollowUp/>
+        element: <FollowUp />
       },
       {
         path: '/collegelisting',
@@ -426,7 +427,7 @@ const Router = createBrowserRouter([
       },
       {
         path: '/faculty',
-        element: <FacultyListing/>
+        element: <FacultyListing />
       },
 
       {
@@ -435,19 +436,19 @@ const Router = createBrowserRouter([
       },
       {
         path: '/addfacultymaster',
-        element: <AddFacultyMaster/>
+        element: <AddFacultyMaster />
       },
       {
         path: '/facultyexperience',
-        element: <FacultyExperience/>
+        element: <FacultyExperience />
       },
       {
         path: '/facultydiscussion',
-        element: <FacultyDiscussion/>
+        element: <FacultyDiscussion />
       },
       {
         path: '/facademicqualification',
-        element: <FAcademicQualification/>
+        element: <FAcademicQualification />
       },
       {
         path: '/annualbatch/:batch_id',
@@ -481,7 +482,7 @@ const Router = createBrowserRouter([
         path: '/employeerecord/:employeerecordid',
         element: <EmployeeRecord />
       },
-//===================Report================
+      //===================Report================
       {
         path: '/rinquiry',
         element: <RInquiry />
@@ -521,7 +522,7 @@ const Router = createBrowserRouter([
       },
       {
         path: '/feesdetails',
-        element: <FeesDetails/>
+        element: <FeesDetails />
       },
       {
         path: '/batchrecord',
@@ -562,27 +563,27 @@ const Router = createBrowserRouter([
 
       {
         path: '/lecturereport',
-        element: <LectureReport/>
+        element: <LectureReport />
       },
       {
         path: '/facultymonthly',
-        element: <FacultyMonthlyStatement/>
+        element: <FacultyMonthlyStatement />
       },
       {
         path: '/facultysalary',
-        element: <FacultySalaryReport/>
+        element: <FacultySalaryReport />
       },
       {
-        path:'/paymentcollection',
-        element: <PaymentCollectionReport/>
+        path: '/paymentcollection',
+        element: <PaymentCollectionReport />
       },
       {
         path: '/servicetaxreportonfees',
-        element: <ServiceTaxReportonFees/>
+        element: <ServiceTaxReportonFees />
       },
       {
         path: '/chequenumber',
-        element: <ChequeNumber/>
+        element: <ChequeNumber />
       },
       // =====================Admission Activity===================
 
@@ -674,7 +675,7 @@ const Router = createBrowserRouter([
 
       {
         path: '/feedback1',
-        element: <FeedBack1Listing/>
+        element: <FeedBack1Listing />
       },
 
       {
@@ -683,12 +684,12 @@ const Router = createBrowserRouter([
       },
       {
         path: '/feedback2',
-        element: <FeedBack2Listing/>
+        element: <FeedBack2Listing />
       },
 
       {
         path: '/feedback2/:feedback2id',
-        element: <FeedBack2/>
+        element: <FeedBack2 />
       },
 
       //================Utility======================
@@ -790,7 +791,7 @@ const Router = createBrowserRouter([
       // },
       {
         path: '/shortlisted',
-        element: <ShortlistedBySIT/>
+        element: <ShortlistedBySIT />
       },
       {
         path: '/cvshortlisted',
@@ -822,15 +823,15 @@ const Router = createBrowserRouter([
       },
       {
         path: '/studentplacement',
-        element: <StudentPlacementReport/>
+        element: <StudentPlacementReport />
       },
       {
         path: '/consultancyreport',
-        element: <ConsultancyReport/>
+        element: <ConsultancyReport />
       },
       {
         path: '/shortlistedcompany',
-        element: <ShortlistedByCompany/>
+        element: <ShortlistedByCompany />
       },
 
       // ======================Inquiry form
@@ -851,7 +852,7 @@ const Router = createBrowserRouter([
 
       {
         path: '/employeeprofessiontaxmaster',
-        element: <EmployeeProfessionTaxMaster/>
+        element: <EmployeeProfessionTaxMaster />
       },
       {
         path: '/assets',
@@ -860,6 +861,11 @@ const Router = createBrowserRouter([
 
       {
         path: '/batchtransfer',
+        element: <BatchTransferListing />
+      },
+
+      {
+        path: '/batchtransfer/:batchtransferid',
         element: <BatchTransfer />
       },
 
@@ -891,11 +897,11 @@ const Router = createBrowserRouter([
       },
       {
         path: '/addfacultysalry',
-        element: <AddFacultySalaryListing/>
+        element: <AddFacultySalaryListing />
       },
       {
         path: '/addfacultysalary/:addfacultysalaryid',
-        element: <AddFacultySalary/>
+        element: <AddFacultySalary />
       },
 
       {
@@ -912,67 +918,67 @@ const Router = createBrowserRouter([
       },
       {
         path: '/addcashvoucher/:addcashvoucher',
-        element: <AddCashVoucher/>
+        element: <AddCashVoucher />
       },
       {
         path: '/cashvoucher',
-        element: <CashVoucher/>
+        element: <CashVoucher />
       },
       {
-        path:'/stockview',
-        element: <StockView/>
+        path: '/stockview',
+        element: <StockView />
       },
       {
         path: '/addfeesdetails',
-        element: <AddFeesDetailsListing/>
+        element: <AddFeesDetailsListing />
       },
       {
         path: '/addfeesdetails/:addfeesdetailsid',
-        element: <AddFeesDetails/>
+        element: <AddFeesDetails />
       },
       {
         path: '/employeesalary',
-        element: <AddEmployeeSalaryListing/>
+        element: <AddEmployeeSalaryListing />
       },
       {
         path: '/addemployeesalary/:addemployeesalaryid',
-        element: <AddEmployeeSalary/>
+        element: <AddEmployeeSalary />
       },
       {
         path: '/consultancymaster',
-        element: <AddConsultancyMasterListing/>
+        element: <AddConsultancyMasterListing />
       },
       {
         path: '/consultancymaster/:consultancymasterid',
-        element: <AddConsultancyMaster/>
+        element: <AddConsultancyMaster />
       },
       {
         path: '/consstudentdetails',
-        element: <ConsStudentDetails/>
+        element: <ConsStudentDetails />
       },
       {
         path: '/consultancymaster',
-        element: <ConsultancyMaster/>
+        element: <ConsultancyMaster />
       },
       {
         path: '/consultancybranches',
-        element: <ConsultancyBranches/>
+        element: <ConsultancyBranches />
       },
       {
         path: '/consultancyfollowup',
-        element: <ConsultancyFollowUp/>
+        element: <ConsultancyFollowUp />
       },
       {
         path: '/companyrequirment',
-        element: <AddCompanyRequirementListing/>
+        element: <AddCompanyRequirementListing />
       },
       {
         path: '/companyrequirment/:companyrequirmentid',
-        element: <AddCompanyRequirement/>
+        element: <AddCompanyRequirement />
       },
       {
         path: '/addemployeeattendance',
-        element: <AddEmployeeAttendance/>
+        element: <AddEmployeeAttendance />
       },
 
 
@@ -993,10 +999,10 @@ const Router = createBrowserRouter([
         element: <RoleAssignment />
       },
 
-//===============================
+      //===============================
       {
         path: '/addcollegeinfo',
-        element: <AddCollegeInfo/>
+        element: <AddCollegeInfo />
       }
 
 
@@ -1008,13 +1014,6 @@ const Router = createBrowserRouter([
     ]
   }
 ])
-
-
-
-
-
-
-
 
 function WebApp() {
 

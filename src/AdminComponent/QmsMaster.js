@@ -9,56 +9,23 @@ import InnerHeader from './InnerHeader';
 
 const QmsMaster = () => {
 
-
-
-
-
-    const [brand, setBrand] = useState([])
     const [vendordata, setVendorData] = useState([])
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
 
-    const handleChange1 = (event) => {
-        setChecked([event.target.checked, event.target.checked]);
-    };
-
-    const handleChange2 = (event) => {
-        setChecked([event.target.checked, checked[1]]);
-    };
-
-    const handleChange3 = (event) => {
-        setChecked([checked[0], event.target.checked]);
-    };
-
-    // const children = (
-    //     <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-    //       <FormControlLabel
-    //         label="Child 1"
-    //         control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
-    //       />
-    //       <FormControlLabel
-    //         label="Child 2"
-    //         control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
-    //       />
-    //     </Box>
-    //   );
 
     const [value, setValue] = useState({
-        qmsname: "" || uid.training,
-        description: "" || uid.attendee,
-
-
-
+        QMS_name: "" || uid.QMS_name,
+        QMS_Desc: "" || uid.QMS_Desc,
 
     })
 
     useEffect(() => {
         setValue({
-            qmsname: uid.qmsname,
-            description: uid.description,
+            QMS_name: uid.QMS_name,
+            QMS_Desc: uid.QMS_Desc,
 
         })
     }, [uid])
@@ -82,26 +49,13 @@ const QmsMaster = () => {
     // }
 
 
-    // async function getEmployeeData() {
 
-    //     axios.post(`${BASE_URL}/vendor_details`)
-    //         .then((res) => {
-    //             console.log(res.data)
-    //             setBrand(res.data)
-    //         })
-    //         .catch((err) => {
-    //             console.log(err)
-    //         })
-    // }
-
-
-
-    async function getEmployeeData() {
+    async function getqms_master() {
         const data = {
-            tablename: "QMS_master",
-            columnname: "*"
+            tablename: "qms_master",
+            // columnname: "*"
         }
-        axios.post(`${BASE_URL}/get_new_data`, data)
+        axios.post(`${BASE_URL}/getqms_master`, data)
             .then((res) => {
                 console.log(res.data)
                 setVendorData(res.data)
@@ -112,7 +66,7 @@ const QmsMaster = () => {
     }
 
     useEffect(() => {
-        getEmployeeData()
+        getqms_master()
         value.title = ""
         setError({})
         setUid([])
@@ -134,41 +88,70 @@ const QmsMaster = () => {
         }));
     };
 
-    const handleUpdate = (id) => {
-        const data = {
-            u_id: id,
-            tablename: "QMS_master"
-        }
-        axios.post(`${BASE_URL}/update_data`, data)
-            .then((res) => {
+    const handleUpdate = async (id) => {
+        try {
+            const data = {
+                u_id: id,
+                uidname: "id",
+                tablename: "qms_master"
+            }
+            axios.post(`${BASE_URL}/update_data`, data)
+            .then ((res) => {
                 setUid(res.data[0])
-
                 console.log(res.data, "update")
             })
             .catch((err) => {
                 console.log(err)
             })
-    }
+            
+        } catch (err) {
+            console.error(err);
+        }
+    };
 
-    const handleDelete = (id) => {
+    // const handleUpdate = async (id) => {
+    //     const data = {
+    //         u_id: id,
+    //         tablename: "qms_master"
+    //     };
+    //     try {
+    //         const res = await axios.post(`${BASE_URL}/update_data`, data);
+    //         setUid(res.data[0]);
+    //         console.log(res.data, "update");
+    //     } catch (err) {
+    //         console.error(err);
+    //     }
+    // };
+
+    // const handleDelete = async (id) => {
+    //     const data = {
+    //         delete_id: id,
+    //         tablename: "qms_master"
+    //     };
+    //     try {
+    //         const res = await axios.post(`${BASE_URL}/delete_data`, data);
+    //         console.log(res.data);
+    //         getQmsMasterData(); 
+    //     } catch (err) {
+    //         console.error(err);
+    //     }
+    // };
+
+    const handleDelete = async (id) => {
         const data = {
             cat_id: id,
-            tablename: "QMS_master"
-        }
-
+            tablename: "qms_master",
+        };
         axios.post(`${BASE_URL}/delete_data`, data)
             .then((res) => {
-                getEmployeeData()
 
-            })
-            .catch((err) => {
-                console.log(err)
-            })
+                getqms_master();
 
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
+                setConfirmationVisibleMap((prevMap) => ({
+                    ...prevMap,
+                    [id]: false,
+                }));
+            })
     }
 
     const handleSubmit = (e) => {
@@ -177,16 +160,16 @@ const QmsMaster = () => {
         // if(validateForm()){
         const data = {
 
-            qmsname: value.qmsname,
-            description: value.description,
+            QMS_name: value.QMS_name,
+            QMS_Desc: value.QMS_Desc,
             uid: uid.id
         }
 
 
-        axios.post(`${BASE_URL}/add_qmsmaster`, data)
+        axios.post(`${BASE_URL}/add_qms_master`, data)
             .then((res) => {
                 console.log(res)
-                getEmployeeData()
+                getqms_master()
 
             })
             .catch((err) => {
@@ -194,21 +177,12 @@ const QmsMaster = () => {
             })
         // }
 
-
-
-
-
     }
 
 
     const onhandleChange = (e) => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
-
-
-
-
-
 
     const columns = [
         {
@@ -230,8 +204,8 @@ const QmsMaster = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
+                        <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.Id)} />
+                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.Id)} />
                     </>
                 )
             }
@@ -259,12 +233,16 @@ const QmsMaster = () => {
 
                                             <div class="form-group col-lg-12">
                                                 <label for="exampleSelectUsername1">Qms Name</label>
-                                                <input type="text" class="form-control" id="exampleSelectUsername1" value={value.qmsname} placeholder='Qms Name' name='qmsname' onChange={onhandleChange} />
+                                                <input type="text" class="form-control" 
+                                                id="exampleSelectUsername1" value={value.QMS_name}
+                                                 placeholder='Qms Name' name='QMS_name' onChange={onhandleChange} />
                                             </div>
 
                                             <div class="form-group col-lg-12">
-                                                <lable for="exampleTextarea1">Description</lable>
-                                                <textarea class="form-control" rows={5} id="exampleTextarea1" value={value.description} placeholder='Description' name='description' onChange={onhandleChange} ></textarea>
+                                                <label for="exampleTextarea1">Description</label>
+                                                <textarea class="form-control" rows={5} 
+                                                id="exampleTextarea1" value={value.QMS_Desc}
+                                                 placeholder='Description' name='QMS_Desc' onChange={onhandleChange} ></textarea>
                                             </div>
 
 

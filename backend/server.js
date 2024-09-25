@@ -610,7 +610,7 @@ app.post('/nodeapp/add_feedback', (req, res) => {
 app.post('/nodeapp/add_faculty_master', (req, res) => {
 
 
-  let { Faculty_Code, Faculty_Name, Married, DOB, Nationality, Faculty_Type, Office_Tel, Res_Tel, Mobile, EMail, Present_Address, Present_City, Present_State, Present_Country, Present_Pin, Present_Tel, Permanent_Address, Permanent_City, Permanent_State, Permanent_Country, Permanent_Pin, Permanent_Tel, Service_Offered,Specialization,Experience,Company_Name,Company_Address,Company_Phone,Interview_Date,Working_At,Qualified,Joining_Date,Comments,Interviewer,Sal_Struct,Salary,Date_added,TDS,PAN,Resigned,InvoiceName,IsActive,IsDelete,CourseId,DesignExp,KnowSw,Working_Status,TrainingCategory,Interview_Status,Reference_by, uid } = req.body
+  let { Faculty_Code, Faculty_Name, Married, DOB, Nationality, Faculty_Type, Office_Tel, Res_Tel, Mobile, EMail, Present_Address, Present_City, Present_State, Present_Country, Present_Pin, Present_Tel, Permanent_Address, Permanent_City, Permanent_State, Permanent_Country, Permanent_Pin, Permanent_Tel, Service_Offered, Specialization, Experience, Company_Name, Company_Address, Company_Phone, Interview_Date, Working_At, Qualified, Joining_Date, Comments, Interviewer, Sal_Struct, Salary, Date_added, TDS, PAN, Resigned, InvoiceName, IsActive, IsDelete, CourseId, DesignExp, KnowSw, Working_Status, TrainingCategory, Interview_Status, Reference_by, uid } = req.body
 
   let sql
   let param;
@@ -620,12 +620,12 @@ app.post('/nodeapp/add_faculty_master', (req, res) => {
   if (uid == undefined) {
     sql = "insert into faculty_master(`Faculty_Code`, `Faculty_Name`, `Married`, `DOB`, `Nationality`, `Faculty_Type`, `Office_Tel`, `Res_Tel`, `Mobile`, `EMail`, `Present_Address`, `Present_City`, `Present_State`, `Present_Country`, `Present_Pin`, `Present_Tel`, `Permanent_Address`, `Permanent_City`, `Permanent_State`, `Permanent_Country`, `Permanent_Pin`, `Permanent_Tel`, `Service_Offered`, `Specialization`,`Experience`,`Company_Name`,`Company_Address`,`Company_Phone`,`Interview_Date`,`Working_At`,`Qualified`,`Joining_Date`,`Comments`,`Interviewer`,`Sal_Struct`,`Salary`,`Date_added`,`TDS`,`PAN`,`Resigned`,`InvoiceName`,`IsActive`,`IsDelete`,`CourseId`,`DesignExp`,`KnowSw`,`Working_Status`,`TrainingCategory`,`Interview_Status`,`Reference_by`) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
 
-    param = [Faculty_Code, Faculty_Name, Married, DOB, Nationality, Faculty_Type, Office_Tel, Res_Tel, Mobile, EMail, Present_Address, Present_City, Present_State, Present_Country, Present_Pin, Present_Tel, Permanent_Address, Permanent_City, Permanent_State, Permanent_Country, Permanent_Pin, Permanent_Tel, Service_Offered, Specialization,Experience,Company_Name,Company_Address,Company_Phone,Interview_Date,Working_At,Qualified,Joining_Date,Comments,Interviewer,Sal_Struct,Salary,Date_added,TDS,PAN,Resigned,InvoiceName,IsActive,IsDelete,CourseId,DesignExp,KnowSw,Working_Status,TrainingCategory,Interview_Status,Reference_by]
+    param = [Faculty_Code, Faculty_Name, Married, DOB, Nationality, Faculty_Type, Office_Tel, Res_Tel, Mobile, EMail, Present_Address, Present_City, Present_State, Present_Country, Present_Pin, Present_Tel, Permanent_Address, Permanent_City, Permanent_State, Permanent_Country, Permanent_Pin, Permanent_Tel, Service_Offered, Specialization, Experience, Company_Name, Company_Address, Company_Phone, Interview_Date, Working_At, Qualified, Joining_Date, Comments, Interviewer, Sal_Struct, Salary, Date_added, TDS, PAN, Resigned, InvoiceName, IsActive, IsDelete, CourseId, DesignExp, KnowSw, Working_Status, TrainingCategory, Interview_Status, Reference_by]
 
   } else {
     sql = "update `faculty_master` set `Faculty_Code` =? , `Faculty_Name` =? , `Married` =? , `DOB` =? , `Nationality` =? , `Faculty_Type` =? , `Office_Tel` =? , `Res_Tel` =? , `Mobile` =? , `EMail` =? , `Present_Address` =? , `Present_City` =? , `Present_State` =? , `Present_Country` =? , `Present_Pin` =? , `Present_Tel` =? , `Permanent_Address` =? , `Permanent_City` =? , `Permanent_State` =? , `Permanent_Country` =? , `Permanent_Pin` =? , `Permanent_Tel` =? , `Service_Offered` =? , `Specialization` =? ,`Experience` =? ,`Company_Name` =? ,`Company_Address` =? ,`Company_Phone` =? ,`Interview_Date` =? ,`Working_At` =? ,`Qualified` =? ,`Joining_Date` =? ,`Comments` =? ,`Interviewer` =? ,`Sal_Struct` =? ,`Salary` =? ,`Date_added` =? ,`TDS` =? ,`PAN` =? ,`Resigned` =? ,`InvoiceName` =? ,`IsActive` =? ,`IsDelete` =? ,`CourseId` =? ,`DesignExp` =? ,`KnowSw` =? ,`Working_Status` =? ,`TrainingCategory` =? ,`Interview_Status` =? ,`Reference_by` =? where id = ?"
 
-    param = [Faculty_Code, Faculty_Name, Married, DOB, Nationality, Faculty_Type, Office_Tel, Res_Tel, Mobile, EMail, Present_Address, Present_City, Present_State, Present_Country, Present_Pin, Present_Tel, Permanent_Address, Permanent_City, Permanent_State, Permanent_Country, Permanent_Pin, Permanent_Tel, Service_Offered, Specialization,Experience,Company_Name,Company_Address,Company_Phone,Interview_Date,Working_At,Qualified,Joining_Date,Comments,Interviewer,Sal_Struct,Salary,Date_added,TDS,PAN,Resigned,InvoiceName,IsActive,IsDelete,CourseId,DesignExp,KnowSw,Working_Status,TrainingCategory,Interview_Status,Reference_by, uid]
+    param = [Faculty_Code, Faculty_Name, Married, DOB, Nationality, Faculty_Type, Office_Tel, Res_Tel, Mobile, EMail, Present_Address, Present_City, Present_State, Present_Country, Present_Pin, Present_Tel, Permanent_Address, Permanent_City, Permanent_State, Permanent_Country, Permanent_Pin, Permanent_Tel, Service_Offered, Specialization, Experience, Company_Name, Company_Address, Company_Phone, Interview_Date, Working_At, Qualified, Joining_Date, Comments, Interviewer, Sal_Struct, Salary, Date_added, TDS, PAN, Resigned, InvoiceName, IsActive, IsDelete, CourseId, DesignExp, KnowSw, Working_Status, TrainingCategory, Interview_Status, Reference_by, uid]
 
   }
 
@@ -1659,13 +1659,10 @@ app.post(`/nodeapp/batch_lecturetaken`, (req, res) => {
   })
 })
 
-<<<<<<< Updated upstream
-=======
 app.get('/nodeapp/getfaculty', (req, res, next) => {
 
 })
 
->>>>>>> Stashed changes
 app.post(`/nodeapp/batch_convocation`, (req, res) => {
 
   let { batch_id } = req.body
@@ -2894,42 +2891,6 @@ app.post('/nodeapp/add_uploadbanner', upload8.single('image'), (req, res) => {
   })
 })
 
-
-app.post('/nodeapp/add_qmsdoes', upload8.single('image'), (req, res) => {
-
-  let image = req.file.filename
-
-  let { qmsname, department, file, uid } = req.body
-
-  let sql
-  let param;
-
-  console.log(uid)
-
-  if (uid == undefined) {
-    sql = "insert into awt_qmsdoes(`qmsname`,`department`,`file`) values(?,?,?)"
-
-    param = [qmsname, department, image]
-
-  } else {
-    sql = "update `awt_qmsdoes` set `qmsname` =? , `department` =? , `file` =? where id = ?"
-
-    param = [qmsname, department, image, uid]
-
-  }
-
-
-  con.query(sql, param, (err, data) => {
-    if (err) {
-      return res.json(err)
-    }
-    else {
-      return res.json(data)
-    }
-  })
-})
-
-
 app.post('/nodeapp/add_emailmaster', (req, res) => {
 
 
@@ -3001,11 +2962,9 @@ app.post('/nodeapp/add_assets', (req, res) => {
   })
 })
 
-app.post('/nodeapp/add_batchtransfer', (req, res) => {
+app.post('/nodeapp/add_batch_transfer', (req, res) => {
 
-
-
-  let { coursename, oldbatchno, student, newbatch, transferammount, paymenttype, uid } = req.body
+  let { Student_Id, Course_Id, Old_Batch_Id, New_Batch_Id, Transfer_Amt, Pay_Type, uid } = req.body
 
   let sql
   let param;
@@ -3013,23 +2972,35 @@ app.post('/nodeapp/add_batchtransfer', (req, res) => {
   // console.log(uid)
 
   if (uid == undefined) {
-    sql = "insert into awt_batchtransfer(`coursename`,`oldbatchno`,`student`,`newbatch`,`transferammount`,`paymenttype`) values(?,?,?,?,?,?)"
+    sql = "insert into batch_transfer(`coursename`,`oldbatchno`,`student`,`newbatch`,`transferammount`,`paymenttype`) values(?,?,?,?,?,?)"
 
-    param = [coursename, oldbatchno, student, newbatch, transferammount, paymenttype]
+    param = [Student_Id, Course_Id, Old_Batch_Id, New_Batch_Id, Transfer_Amt, Pay_Type]
 
   } else {
-    sql = "update `awt_batchtransfer` set `coursename` =? , `oldbatchno` =? , `student` =? , `newbatch` =? , `transferammount` =? , `paymenttype` =? where id = ?"
+    sql = "update `batch_transfer` set `coursename` =? , `oldbatchno` =? , `student` =? , `newbatch` =? , `transferammount` =? , `paymenttype` =? where id = ?"
 
-    param = [coursename, oldbatchno, student, newbatch, transferammount, paymenttype, uid]
+    param = [Student_Id, Course_Id, Old_Batch_Id, New_Batch_Id, Transfer_Amt, Pay_Type, uid]
 
   }
-
 
   con.query(sql, param, (err, data) => {
     if (err) {
       return res.json(err)
     }
     else {
+      return res.json(data)
+    }
+  })
+})
+
+app.get('/nodeapp/getbatch_transfer', (req, res) => {
+
+  const sql = "select * from `batch_transfer`"
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
       return res.json(data)
     }
   })
@@ -3105,29 +3076,23 @@ app.post('/nodeapp/add_materialconsumption', (req, res) => {
 })
 
 
-app.post('/nodeapp/nodeapp/add_salarymaster', (req, res) => {
+app.post('/nodeapp/add_awt_salarymaster', (req, res) => {
 
-
-
-  let { formdate, todate, service, empcontri, da, minbasic, uid } = req.body
+  let { formdate, todate, service, empcontri, salaryda, minbasic, uid } = req.body
 
   let sql
   let param;
 
-  // console.log(uid)
-
   if (uid == undefined) {
-    sql = "insert into awt_salarymaster(`formdate`,`todate`,`service`,`empcontri`,`da`,`minbasic`) values(?,?,?,?,?,?)"
+    sql = "insert into awt_salarymaster(`formdate`,`todate`,`service`,`empcontri`,`salaryda`,`minbasic`) values(?,?,?,?,?,?)"
 
-    param = [formdate, todate, service, empcontri, da, minbasic,]
-
+    param = [formdate, todate, service, empcontri, salaryda, minbasic,]
   } else {
-    sql = "update `awt_salarymaster` set `formdate` =? , `todate` =? , `service` =? , `empcontri` =? , `da` =? , `minbasic` =? where id = ?"
+    sql = "update `awt_salarymaster` set `formdate` =? , `todate` =? , `service` =? , `empcontri` =? , `salaryda` =? , `minbasic` =? where id = ?"
 
-    param = [formdate, todate, service, empcontri, da, minbasic, uid]
+    param = [formdate, todate, service, empcontri, salaryda, minbasic, uid]
 
   }
-
 
   con.query(sql, param, (err, data) => {
     if (err) {
@@ -3193,7 +3158,7 @@ app.get('/nodeapp/getfaculty_masterdata', (req, res) => {
   con.query(sql, (err, data) => {
     if (err) {
       return res.json(err)
-    }else {
+    } else {
       return res.json(data)
     }
 
@@ -3465,11 +3430,6 @@ app.post('/nodeapp/assign_role', (req, res) => {
 
     }
   })
-
-
-
-
-
 
 })
 
@@ -4329,6 +4289,8 @@ app.post('/nodeapp/getcoursewisebatch', (req, res) => {
     }
   })
 })
+
+
 app.post('/nodeapp/getbatchwisestudent', (req, res) => {
   const { batch_code } = req.body
 
@@ -4370,6 +4332,8 @@ app.post('/nodeapp/getbatchwisemoc', (req, res) => {
     }
   })
 })
+
+
 app.post('/nodeapp/getbatchwisefinalexam', (req, res) => {
 
   const { batch_id } = req.body;
@@ -4441,6 +4405,7 @@ app.get('/nodeapp/getassignmentstakendata', (req, res) => {
     }
   })
 })
+
 
 
 
@@ -4864,25 +4829,124 @@ app.post('/nodeapp/add_vist_data', (req, res) => {
   })
 })
 
-app.post('/nodeapp/add_sit_eptaxmaster', (req, res) => {
-  const { from_sal,	to_sal,	tax_price,	sep_mnth,	sep_tax_price, uid } = req.body
+app.post('/nodeapp/add_sit_employeeloan', (req, res) => {
 
-  const date = new Date()
+  const { employee,	loandate,	loanamt,	monthly,	totalmonths,	comments, uid } = req.body
+
   let sql
   let param
+
   if (uid == undefined) {
-    sql = "insert into sit_eptaxmaster (  `from_sal`,	`to_sal`,	`tax_price`,	`sep_mnth`,	`sep_tax_price` ) value (?,?,?,?,?)"
-    param = [ from_sal, to_sal, tax_price, sep_mnth, sep_tax_price ]
-  }else{
-    sql = "update sit_eptaxmaster set from_sal = ? , to_sal = ? , tax_price = ? , sep_mnth = ? , sep_tax_price = ? where id = ? "
-    param [from_sal, to_sal, tax_price, sep_mnth, sep_tax_price, uid] 
+    sql = "insert into sit_employeeloan (`employee`,	`loandate`,	`loanamt`,	`monthly`,	`totalmonths`,	`comments`) value (?,?,?,?,?,?)"
+    param = [employee,	loandate,	loanamt,	monthly,	totalmonths,	comments]
+  } else{
+    sql = "update `sit_employeeloan` set employee = ? , loandate = ? , loanamt = ? , monthly = ? , totalmonths = ? , comments = ? where = ?"
+    param = [employee, loandate, loanamt, monthly, totalmonths, comments, uid]
+  }
+  con.query(sql, param, (err, data) => {
+    if (err){
+      return res.json(err)
+    }else{
+      return res.json(data)
+    }
+  })
+})
+
+app.post('/nodeapp/add_sit_mlwfmaster', (req, res) => {
+
+  const { formdate, todate, grossupto, chargeswill, otherwise, uid} = req.body
+
+  let sql
+  let param
+
+  if (uid == undefined) {
+    sql = "insert into sit_mlwfmaster (`formdate`, `todate`, `grossupto`, `chargeswill`, `otherwise`) value (?,?,?,?,?)"
+    param = [formdate, todate, grossupto, chargeswill, otherwise]
+  }  else {
+    sql = "update `sit_mlwfmaster` set formdate = ? , todate = ? , grossupto = ? , chargeswill = ? , otherwise = ? where = ?"
+    param = [formdate, todate, grossupto, chargeswill, otherwise, uid]
+  }
+  con.query(sql, param, (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+
+})
+
+app.post('/nodeapp/add_qms_master', (req, res) => {
+
+  const { QMS_name, QMS_Desc, uid } = req.body
+
+  let sql
+  let param
+
+  if (uid == undefined) {
+    sql = "insert into qms_master (`QMS_name`, `QMS_Desc`) value (?,?)"
+    param = [QMS_name, QMS_Desc]
+  } else {
+    sql = "update qms_master set QMS_name = ? , QMS_Desc = ? where = ?"
+    param = [QMS_name, QMS_Desc, uid]
+  }
+
+  con.query(sql, param, (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+})
+
+app.post('/nodeapp/getqms_master', (req, res) => {
+
+  const sql = "select * from `qms_master` Where delete = 0"
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+})
+
+app.post('/nodeapp/add_sit_eptaxmaster', (req, res) => {
+  const { from_sal, to_sal, tax_price, sep_mnth, sep_tax_price, uid } = req.body
+
+  let sql
+  let param
+
+  if (uid == undefined) {
+    sql = "insert into sit_eptaxmaster (`from_sal`,	`to_sal`,	`tax_price`,	`sep_mnth`,	`sep_tax_price` ) value (?,?,?,?,?)"
+    param = [from_sal, to_sal, tax_price, sep_mnth, sep_tax_price]
+  } else {
+    sql = `update sit_eptaxmaster set from_sal = ? , to_sal = ? , tax_price = ? , sep_mnth = ? , sep_tax_price = ? where id = ?`
+    param = [from_sal, to_sal, tax_price, sep_mnth, sep_tax_price, uid]
 
   }
 
   con.query(sql, param, (err, data) => {
-    if(err){
+    if (err) {
       return res.json(err)
-    }else{
+    } else {
+      return res.json(data)
+    }
+  })
+})
+
+
+
+app.get('/nodeapp/getsit_eptaxmaster', (req, res) => {
+
+  const sql = "select * from `sit_eptaxmaster` Where delete = 0"
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
       return res.json(data)
     }
   })
@@ -5125,7 +5189,6 @@ app.post('/nodeapp/getresultchild', (req, res) => {
       return res.json(data)
     }
   })
-
 
 })
 

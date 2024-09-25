@@ -5,69 +5,32 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
-//import FormControlLabel from '@mui/material/FormControlLabel';
-// import ImageList from '@mui/material/ImageList';
-// import { ImageSourcePropType } from 'react-native';
 
 const MLWFMaster = () => {
 
     const [brand, setBrand] = useState([])
     const [vendordata, setVendorData] = useState([])
-    const [specification, setSpecification] = useState("")
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
-
-    console.log(specification)
-
-    const handleChange1 = (event) => {
-      setChecked([event.target.checked, event.target.checked]);
-    };
-  
-    const handleChange2 = (event) => {
-      setChecked([event.target.checked, checked[1]]);
-    };
-  
-    const handleChange3 = (event) => {
-      setChecked([checked[0], event.target.checked]);
-    };
-
-    // const children = (
-    //     <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-    //       <FormControlLabel
-    //         label="Child 1"
-    //         control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
-    //       />
-    //       <FormControlLabel
-    //         label="Child 2"
-    //         control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
-    //       />
-    //     </Box>
-    //   );
 
     const [value, setValue] = useState({
-        formdate : ""|| uid.formdate,
-        todate : ""|| uid.todate,
-        grossupto : ""|| uid.grossupto,
-        chargeswill : "" || uid.chargeswill, 
-        otherwise : "" || uid.otherwise
-
-
-
-        
-
+        formdate: "" || uid.formdate,
+        todate: "" || uid.todate,
+        grossupto: "" || uid.grossupto,
+        chargeswill: "" || uid.chargeswill,
+        otherwise: "" || uid.otherwise,
 
     })
 
     useEffect(() => {
         setValue({
-            formdate : uid.startdate,
-            todate : uid.todate,
-            grossupto : uid.grossupto,
-            chargeswill : uid.chargeswill,
-            otherwise : uid.otherwise
+            formdate: uid.formdate,
+            todate: uid.todate,
+            grossupto: uid.grossupto,
+            chargeswill: uid.chargeswill,
+            otherwise: uid.otherwise,
 
         })
     }, [uid])
@@ -78,18 +41,33 @@ const MLWFMaster = () => {
     //     const newErrors = {}
 
 
-    //    if (!value.college) {
-    //     isValid = false;
-    //     newErrors.name = "Name is require"
-    //    }
-    //     if (!value.email) {
+    //     if (!value.formdate) {
     //         isValid = false;
-    //         newErrors.email = "Email is require"
+    //         newErrors.formdate = "Date is Required"
+    //     }
+    //     if (!value.todate) {
+    //         isValid = false;
+    //         newErrors.todate = "Date is Required"
+    //     }
+    //     if (!value.service) {
+    //         isValid = false;
+    //         newErrors.service = "Service is Required"
+    //     }
+    //     if (!value.empcontri) {
+    //         isValid = false;
+    //         newErrors.empcontri = "Emp Contri is Required"
+    //     }
+    //     if (!value.salaryda) {
+    //         isValid = false;
+    //         newErrors.salaryda = "Salary is Required"
+    //     }
+    //     if (!value.minbasic) {
+    //         isValid = false;
+    //         newErrors.minbasic = "Min. Basic is Required"
     //     }
     //     setError(newErrors)
     //     return isValid
     // }
-
 
     async function getEmployeeData() {
 
@@ -104,12 +82,12 @@ const MLWFMaster = () => {
     }
 
 
-    
+
     async function getEmployeeData() {
         const data = {
-            tablename : "awt_mlwfmaster"
+            tablename: "sit_mlwfmaster"
         }
-        axios.post(`${BASE_URL}/get_data`,data)
+        axios.post(`${BASE_URL}/get_data`, data)
             .then((res) => {
                 console.log(res.data)
                 setVendorData(res.data)
@@ -144,14 +122,14 @@ const MLWFMaster = () => {
 
     const handleUpdate = (id) => {
         const data = {
-            u_id : id,
-            tablename : "awt_mlwfmaster"
+            u_id: id,
+            tablename: "sit_mlwfmaster"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
                 setUid(res.data[0])
 
-                console.log(res.data , "update")
+                
             })
             .catch((err) => {
                 console.log(err)
@@ -161,7 +139,7 @@ const MLWFMaster = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename : "awt_mlwfmaster"
+            tablename: "sit_mlwfmaster"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
@@ -181,35 +159,29 @@ const MLWFMaster = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
+        // if (validateForm()) {
+            const data = {
 
-    // if(validateForm()){
-        const data = {
-            
-            		
+                formdate: value.formdate,
+                todate: value.todate,
+                grossupto: value.grossupto,
+                chargeswill: value.chargeswill,
+                otherwise: value.otherwise,
+                uid: uid.id
+            }
 
-        formdate : value.formdate,
-        todate : value.todate,
-        grossupto: value.grossupto,
-        chargeswill: value.chargeswill,
-        otherwise: value.otherwise,
-        uid : uid.id
-        }
+            console.log(data);
 
+            axios.post(`${BASE_URL}/add_sit_mlwfmaster`, data)
+                .then((res) => {
+                    console.log(res)
+                    getEmployeeData()
 
-        axios.post(`${BASE_URL}/add_mlwfmaster`, data)
-            .then((res) => {
-               console.log(res)
-               getEmployeeData()
-
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    // }
-
-   
-        
-
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        // }
 
     }
 
@@ -217,11 +189,6 @@ const MLWFMaster = () => {
     const onhandleChange = (e) => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
-
- 
-    
-
-
 
     const columns = [
         {
@@ -232,18 +199,15 @@ const MLWFMaster = () => {
             headerAlign: 'center',
             flex: 1,
             filterable: false,
-                                              
+
         },
-        { field: 'startdate', headerName: 'Start Date', flex: 2},
-        { field: 'enddate', headerName: 'End Date', flex: 2},
-        { field: 'specification', headerName: 'Description', flex: 2, renderCell : (params) => {
-            return (
-                <>
-                 <div dangerouslySetInnerHTML={{ __html: params.row.specification }}></div>
-                </>
-            )
-        }},
+        { field: 'formdate', headerName: 'From Date', flex: 2 },
+        { field: 'todate', headerName: 'To Date', flex: 2 },
+        { field: 'grossupto', headerName: 'Gross', flex: 2 },
+        { field: 'chargeswill', headerName: 'Min Charge', flex: 2 },
+        { field: 'otherwise', headerName: 'Max Charge', flex: 2 },
         
+
         {
             field: 'actions',
             type: 'actions',
@@ -263,6 +227,7 @@ const MLWFMaster = () => {
 
     const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
 
+
     return (
 
         <div class="container-fluid page-body-wrapper col-lg-10">
@@ -280,29 +245,37 @@ const MLWFMaster = () => {
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">From Date</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.formdate} name='startdate' onChange={onhandleChange} />
+                                                <input type="date" class="form-control" id="exampleInputUsername1" 
+                                                value={value.formdate} name='formdate' onChange={onhandleChange} />
                                                 
                                             </div>
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">To Date</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.todate} name='enddate' onChange={onhandleChange} />
+                                                <input type="date" class="form-control" id="exampleInputUsername1" 
+                                                value={value.todate} name='todate' onChange={onhandleChange} />
                                                 
                                             </div>
 
                                             <div class="form-group col-lg-2">
                                                 <lable for="exampleInputUsername1">Total Gross Upto</lable>
-                                                <input type='text' class="form-control" id="exampleInputUsername1" value={value.grossupto} name='grossupto' placeholder='0' onChange={onhandleChange} />
+                                                <input type='text' class="form-control" id="exampleInputUsername1" 
+                                                value={value.grossupto} name='grossupto' placeholder='0' 
+                                                onChange={onhandleChange} />
                                             </div>
 
                                             <div class="form-group col-lg-2">
                                                 <lable for="exampleInputUsername1">Charges will be Rs.</lable>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.chargeswill} placeholder='0' name='chargeswill' onChange={onhandleChange} />
+                                                <input type="text" class="form-control" id="exampleInputUsername1" 
+                                                value={value.chargeswill} placeholder='0' name='chargeswill' 
+                                                onChange={onhandleChange} />
                                             </div>
 
                                             <div class="form-group col-lg-2">
                                                 <lable for="exampleInputUsername1"> Otherwise Rs.</lable>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.otherwise} placeholder='0' name='otherwise' onChange={onhandleChange} />
+                                                <input type="text" class="form-control" id="exampleInputUsername1" 
+                                                value={value.otherwise} placeholder='0' name='otherwise' 
+                                                onChange={onhandleChange} />
                                             </div>
                                         </div>
 

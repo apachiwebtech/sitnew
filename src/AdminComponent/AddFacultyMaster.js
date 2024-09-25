@@ -12,10 +12,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 const AddFacultyMaster = () => {
 
     const { facultyid } = useParams();
-    const [brand, setBrand] = useState([])
-    const [vendordata, setVendorData] = useState([])
     const [uid, setUid] = useState([])
-    const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);

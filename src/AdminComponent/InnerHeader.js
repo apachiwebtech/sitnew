@@ -1,13 +1,6 @@
-import React from 'react'
-import DesktopWindowsRoundedIcon from '@mui/icons-material/DesktopWindowsRounded';
-import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
-import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
-import NotificationsActiveTwoToneIcon from '@mui/icons-material/NotificationsActiveTwoTone';
-import { Link } from 'react-router-dom';
-import { useNavigate, useLocation } from 'react-router-dom';
-import img1 from "../assets/images/prof.png";
 import ArrowCircleLeftSharpIcon from "@mui/icons-material/ArrowCircleLeftSharp";
-import { CastTwoTone } from '@mui/icons-material';
+import React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 const InnerHeader = () => {
 
     const location = useLocation();

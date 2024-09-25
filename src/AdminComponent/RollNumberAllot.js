@@ -179,7 +179,8 @@ const RollNumberAllot = () => {
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Select Batch Code</label>
-                                                <select class="form-control form-control-lg" id="exampleFromControlSelect1" value={value.rollnumberallot} name='rollnumberallot' onChange={handleChange}>
+                                                <select class="form-control form-control-lg" id="exampleFromControlSelect1" 
+                                                value={value.rollnumberallot} name='rollnumberallot' onChange={handleChange}>
 
                                                     <option>Select Batch</option>
 

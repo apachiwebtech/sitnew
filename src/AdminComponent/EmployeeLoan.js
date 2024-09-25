@@ -10,51 +10,18 @@ import InnerHeader from './InnerHeader';
 // import { ImageSourcePropType } from 'react-native';
 
 const EmployeeLoan = () => {
-
-
-    const [date, setDate] = useState('');
-
-
-
+    
+    const [faculty, setFacultyData] = useState([])
     const [brand, setBrand] = useState([])
     const [vendordata, setVendorData] = useState([])
-    const [specification, setSpecification] = useState("")
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
-
-    console.log(specification)
-
-    const handleChange1 = (event) => {
-        setChecked([event.target.checked, event.target.checked]);
-    };
-
-    const handleChange2 = (event) => {
-        setChecked([event.target.checked, checked[1]]);
-    };
-
-    const handleChange3 = (event) => {
-        setChecked([checked[0], event.target.checked]);
-    };
-
-    // const children = (
-    //     <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-    //       <FormControlLabel
-    //         label="Child 1"
-    //         control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
-    //       />
-    //       <FormControlLabel
-    //         label="Child 2"
-    //         control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
-    //       />
-    //     </Box>
-    //   );
 
     const [value, setValue] = useState({
-        selectcourse: "" || uid.selectcourse,
-        date: "" || uid.date,
+        employee: "" || uid.employee,
+        loandate: "" || uid.loandate,
         loanamt: "" || uid.loanamt,
         monthly: "" || uid.monthly,
         totalmonths: "" || uid.totalmonths,
@@ -64,8 +31,8 @@ const EmployeeLoan = () => {
 
     useEffect(() => {
         setValue({
-            selectcourse: uid.selectcourse,
-            date: uid.date,
+            employee: uid.employee,
+            loandate: uid.loandate,
             loanamt: uid.loanamt,
             monthly: uid.monthly,
             totalmonths: uid.totalmonths,
@@ -109,7 +76,7 @@ const EmployeeLoan = () => {
 
     async function getEmployeeData() {
         const data = {
-            tablename: "awt_employeeloan"
+            tablename: "sit_employeeloan"
         }
         axios.post(`${BASE_URL}/get_data`, data)
             .then((res) => {
@@ -147,7 +114,7 @@ const EmployeeLoan = () => {
     const handleUpdate = (id) => {
         const data = {
             u_id: id,
-            tablename: "awt_employeeloan"
+            tablename: "sit_employeeloan"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
@@ -163,7 +130,7 @@ const EmployeeLoan = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename: "awt_employeeloan"
+            tablename: "sit_employeeloan"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
@@ -187,10 +154,8 @@ const EmployeeLoan = () => {
         // if(validateForm()){
         const data = {
 
-
-
-            selectcourse: value.selectcourse,
-            date: value.date,
+            employee: value.employee,
+            loandate: value.loandate,
             loanamt: value.loanamt,
             monthly: value.monthly,
             totalmonths: value.totalmonths,
@@ -199,9 +164,9 @@ const EmployeeLoan = () => {
         }
 
 
-        axios.post(`${BASE_URL}/add_employeeloan`, data)
+        axios.post(`${BASE_URL}/add_sit_employeeloan`, data)
             .then((res) => {
-                console.log(res)
+                //console.log(res)
                 getEmployeeData()
 
             })
@@ -210,21 +175,12 @@ const EmployeeLoan = () => {
             })
         // }
 
-
-
-
-
     }
 
 
     const onhandleChange = (e) => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
-
-
-
-
-
 
     const columns = [
         {
@@ -237,11 +193,11 @@ const EmployeeLoan = () => {
             filterable: false,
 
         },
-        { field: 'selectcourse', headerName: 'Select Course', flex: 2 },
-        { field: 'date', headerName: 'Date', flex: 2 },
+        { field: 'employee', headerName: 'Employee', flex: 2 },
+        { field: 'loandate', headerName: 'Loan Date', flex: 2 },
         { field: 'loanamt', headerName: 'Loan Amt.', flex: 2 },
-        { field: 'monthly', headerName: 'Monthly', flex: 2 },
-        { field: 'totalmonths', headerName: 'Total Months', flex: 2 },
+        { field: 'monthly', headerName: '	Total Months', flex: 2 },
+        { field: 'totalmonths', headerName: 'Monthly Installment', flex: 2 },
         { field: 'comments', headerName: 'Comments', flex: 2 },
 
         {
@@ -280,47 +236,50 @@ const EmployeeLoan = () => {
 
                                             <div class="form-group col-lg-3">
                                                 <lable for="exampleFormControlSelect1">Employee</lable>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.selectcourse} name='selectcourse' onChange={onhandleChange}>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" 
+                                                value={value.employee} name='employee' onChange={onhandleChange}>
                                                     <option>Select Employee</option>
-                                                    <option> Faizan   Ali Usman Sumbania </option>
-                                                    <option> Khalil  Ahmed Khwaja Shaikh </option>
-                                                    <option> Vivek Vijay Meghade</option>
-                                                    <option> Ziyauddin   Salahuddin Mohammad </option>
-                                                    <option>Aakash Vaijnath Shirsat</option>
+                                                    {faculty.map ((item) => {
+                                                        return (
+                                                            <option value={item.Faculty_Id}> {item.Faculty_Name} </option>
+                                                        )
+                                                    })}
                                                 </select>
                                             </div>
 
                                             <div class="form-group col-lg-3">
                                                 <lable for="exampleInputUsername1">Loan Date</lable>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.date} name='date' onChange={onhandleChange} />
+                                                <input type="date" class="form-control" id="exampleInputUsername1" 
+                                                value={value.loandate} name='loandate' onChange={onhandleChange} />
                                             </div>
 
                                             <div class="form-group col-lg-3">
                                                 <lable for="exampleInputUsername1">Loan Amt.</lable>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.loanamt} placeholder='Loan Amt.' name='loanamt' onChange={onhandleChange} />
+                                                <input type="text" class="form-control" id="exampleInputUsername1" 
+                                                value={value.loanamt} placeholder='Loan Amt.' name='loanamt' 
+                                                onChange={onhandleChange} />
                                             </div>
 
                                             <div class="form-group col-lg-3">
                                                 <lable for="exampleInputUsername1">Monthly Installment</lable>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.monthly} placeholder='Monthly Installment' name='monthly' onChange={onhandleChange} />
+                                                <input type="text" class="form-control" id="exampleInputUsername1" 
+                                                value={value.monthly} placeholder='Monthly Installment' name='monthly' 
+                                                onChange={onhandleChange} />
                                             </div>
 
                                             <div class="form-group col-lg-3">
                                                 <lable for="exampleInputUsername1">Total Months</lable>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.totalmonths} placeholder='Total Months' name='totalmonths' onChange={onhandleChange} />
+                                                <input type="text" class="form-control" id="exampleInputUsername1" 
+                                                value={value.totalmonths} placeholder='Total Months' name='totalmonths' 
+                                                onChange={onhandleChange} />
                                             </div>
 
-                                            <div className='form-group col-lg-6'>
+                                            <div className='form-group col-lg-9'>
                                                 <lable for="exampleTextarea1">Comments</lable>
-                                                <textarea className='form-control' id='exampleTeaxtarea1' value={value.comments} placeholder='Comments' name='comments' onChange={onhandleChange}></textarea>
+                                                <textarea className='form-control' id='exampleTeaxtarea1' 
+                                                value={value.comments} placeholder='Comments' name='comments' 
+                                                onChange={onhandleChange}></textarea>
                                             </div>
-
-
-
-
-
-
-
                                         </div>
 
 
