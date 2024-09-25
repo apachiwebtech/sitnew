@@ -4902,7 +4902,7 @@ app.post('/nodeapp/add_qms_master', (req, res) => {
 
 app.post('/nodeapp/getqms_master', (req, res) => {
 
-  const sql = "select * from `qms_master` Where delete = 0"
+  const sql = "select * from `qms_master` Where deleted = 0"
 
   con.query(sql, (err, data) => {
     if (err) {
