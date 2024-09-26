@@ -2,16 +2,14 @@ import axios from 'axios';
 import "bootstrap-icons/font/bootstrap-icons.css";
 import Cookies from 'js-cookie';
 import { useEffect, useState } from 'react';
-import { Outlet, createBrowserRouter, useNavigate } from 'react-router-dom';
+import { Outlet, createBrowserRouter, useLocation, useNavigate } from 'react-router-dom';
 import AdminDashBoard from './AdminComponent/AdminDashBoard';
 import { BASE_URL } from './AdminComponent/BaseUrl';
 import Header from './AdminComponent/Header';
 import OneFieldForm from './AdminComponent/OneFieldForm';
 import PageNotFound from './AdminComponent/PageNotFound';
-
 import WebLogin from './AdminComponent/WebLogin';
 import './App.css';
-
 import './Responsive.css';
 import './Style.css';
 import TwoFieldForm from './AdminComponent/TwoFieldForm';
@@ -85,7 +83,6 @@ import LectureTakenListing from './AdminComponent/LectureTakenListing.js';
 import FeedBack1 from './AdminComponent/FeedBack1.js';
 import UploadBanner from './AdminComponent/Uploadbanner.js';
 import InquiryReport from './AdminComponent/InquiryReport.js';
-import Assets from './AdminComponent/assets.js';
 import BatchTransfer from './AdminComponent/BatchTransfer.js';
 import BatchCancellation from './AdminComponent/BatchCancellation.js';
 import MaterialConsumption from './AdminComponent/MaterialConsumption.js';
@@ -207,6 +204,7 @@ import FinalExamListing from './AdminComponent/FinalExamListing.js';
 import EmployeeProfessionTaxMaster from './AdminComponent/EmployeeProfessionTaxMaster.js';
 import MyDocument3 from './AdminComponent/MyDocument3.js';
 import BatchTransferListing from './AdminComponent/BatchTransferListing.js';
+import AddAssets from './AdminComponent/AddAssets.js';
 
 
 const Router = createBrowserRouter([
@@ -856,7 +854,7 @@ const Router = createBrowserRouter([
       },
       {
         path: '/assets',
-        element: <Assets />
+        element: <AddAssets />
       },
 
       {
@@ -1018,7 +1016,7 @@ const Router = createBrowserRouter([
 function WebApp() {
 
   const [click, setClick] = useState(false)
-
+  const { pathname } = useLocation();
 
   async function accessSession(navigate) {
 
@@ -1050,6 +1048,11 @@ function WebApp() {
 
     };
   }, []);
+
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
 
 

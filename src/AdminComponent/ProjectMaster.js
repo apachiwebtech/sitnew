@@ -33,25 +33,7 @@ const ProjectMaster = () => {
     const [batch, setBatch] = useState([]);
     const [batchCategoty, setbatchCategory] = useState([]);
     const [value, setValue] = useState({
-        firstname: '',
-        gender: '',
-        dob: '',
-        mobile: '',
-        whatsapp: '',
-        email: '',
-        nationality: '',
-        discussion: '',
-        country: '',
-        InquiryDate: '',
-        modeEnquiry: '',
-        advert: '',
-        programmeEnquired: '',
-        selectedProgramme: '',
-        category: '',
-        batch: '',
-        qualification: '',
-        descipline: '',
-        percentage: '',
+    
     })
 
 
@@ -70,68 +52,7 @@ const ProjectMaster = () => {
     }
 
 
-    const getInquiryData = async () => {
-        const response = await fetch(`${BASE_URL}/getadmissionactivity`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-
-        setInquiryData(data);
-    }
-
-    const getDiscipline = async () => {
-        const response = await fetch(`${BASE_URL}/getDiscipline`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setDescipline(data);
-    }
-    const getCourse = async () => {
-        const response = await fetch(`${BASE_URL}/getCourses`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setCourse(data);
-    }
-    const getEducation = async () => {
-        const response = await fetch(`${BASE_URL}/getEducation`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setEducation(data);
-    }
-    const getBatch = async () => {
-        const response = await fetch(`${BASE_URL}/getBtach`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setBatch(data);
-    }
-    const getBtachCategory = async () => {
-        const response = await fetch(`${BASE_URL}/getBtachCategory`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setbatchCategory(data);
-    }
+  
 
     async function getStudentDetail() {
         const response = await fetch(`${BASE_URL}/studentDetail`, {
@@ -146,41 +67,18 @@ const ProjectMaster = () => {
 
         const data = await response.json();
 
-        console.log(data, "DATA A GAYA!");
+  
 
         setValue(prevState => ({
             ...prevState,
-            firstname: data[0].Student_Name,
-            gender: data[0].Sex,
-            dob: data[0].DOB,
-            mobile: data[0].present_mobile,
-            whatsapp: '',
-            email: data[0].Email,
-            nationality: data[0].Nationality,
-            discussion: data[0].discussion,
-            country: '',
-            InquiryDate: data[0].Inquiry_Dt,
-            modeEnquiry: data[0].Inquiry_Type,
-            advert: '',
-            programmeEnquired: '',
-            selectedProgramme: data[0].Course_Id,
-            category: '',
-            batch: '',
-            qualification: data[0].Qualification,
-            descipline: data[0].Discipline,
-            percentage: data[0].Percentage,
+ 
         }))
     }
     useEffect(() => {
         if (inquiryid !== ":inquiryid") {
             getStudentDetail()
         }
-        getInquiryData()
-        getDiscipline();
-        getEducation();
-        getCourse();
-        getBatch();
-        getBtachCategory();
+
         value.title = ""
         setError({})
         setUid([])

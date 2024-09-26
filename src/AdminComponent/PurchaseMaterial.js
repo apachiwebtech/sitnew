@@ -95,7 +95,7 @@ const PurchaseMaterial = () => {
     }
 
 
-    async function getEmployeeData() {
+    async function getPurchaseMaterial() {
 
         axios.post(`${BASE_URL}/purchasematerial_details`)
             .then((res) => {
@@ -109,22 +109,10 @@ const PurchaseMaterial = () => {
 
 
 
-    async function getEmployeeData() {
-        const data = {
-            tablename: "awt_employeetrainingplan"
-        }
-        axios.post(`${BASE_URL}/get_data`, data)
-            .then((res) => {
-                console.log(res.data)
-                setPurchaseMaterialData(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
+
 
     useEffect(() => {
-        getEmployeeData()
+   
         value.title = ""
         setError({})
         setUid([])
@@ -170,7 +158,7 @@ const PurchaseMaterial = () => {
 
         axios.post(`${BASE_URL}/delete_data`, data)
             .then((res) => {
-                getEmployeeData()
+          
 
             })
             .catch((err) => {
@@ -206,7 +194,7 @@ const PurchaseMaterial = () => {
             axios.post(`${BASE_URL}/awt_employeetrainingplan`, data)
                 .then((res) => {
                     console.log(res)
-                    getEmployeeData()
+              
 
                 })
                 .catch((err) => {

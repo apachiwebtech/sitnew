@@ -29,6 +29,7 @@ const UnitTestTaken = () => {
         utname: '',
         marks: '',
         utdate: '',
+        unitno:''
     })
 
 
@@ -55,6 +56,10 @@ const UnitTestTaken = () => {
         if (!value.utdate) {
             isValid = false;
             newErrors.utdate = "Unit Date is Required"
+        }
+        if (!value.unitno) {
+            isValid = false;
+            newErrors.unitno = "Unit No is Required"
         }
 
 
@@ -172,7 +177,7 @@ const UnitTestTaken = () => {
             ...prevState,
 
             utdate: data[0].Test_Dt,
-
+            unitno : data[0].Test_No
         }))
     }
 
@@ -219,7 +224,8 @@ const UnitTestTaken = () => {
                 utname: unitid,
                 utdate: value.utdate,
                 uid: uid.Take_Id,
-                marks:marks
+                marks:marks,
+                unit_no:value.unitno,
             }
 
 
@@ -320,7 +326,7 @@ const UnitTestTaken = () => {
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Batch Code<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={unitid} onChange={(e) => gettest(e.target.value)} name='batchcode'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={batchid} onChange={(e) => gettest(e.target.value)} name='batchcode'>
 
                                                     <option>Select Batch</option>
                                                     {batch.map((item) => {
@@ -351,6 +357,13 @@ const UnitTestTaken = () => {
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Unit Test Date<span className='text-danger'>*</span> </label>
                                                 <input type="date" class="form-control" id="exampleFormControlSelect1" value={value.utdate} name='utdate' onChange={onhandleChange} />
+                                                <option></option>
+
+
+                                            </div>
+                                            <div class="form-group col-lg-3">
+                                                <label for="exampleFormControlSelect1">Unit No<span className='text-danger'>*</span> </label>
+                                                <input type="number" class="form-control" id="exampleFormControlSelect1" value={value.unitno} name='unitno' onChange={onhandleChange} />
                                                 <option></option>
 
 

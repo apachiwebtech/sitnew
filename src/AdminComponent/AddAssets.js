@@ -6,37 +6,36 @@ import React, { useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 
-const Assets = () => {
+const AddAssets = () => {
 
-    const [brand, setBrand] = useState([])
+    const [vendor, SetVendor] = useState([])
     const [vendordata, setVendorData] = useState([])
-    const [specification, setSpecification] = useState("")
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
+    const [assetscat ,setAssetscat] = useState([])
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
+    const [location , setLocation] = useState([])
 
 
 
     const [value, setValue] = useState({
         startdate: "" || uid.startdate,
-        vindorname: "" || uid.vindorname,
-        assets: "" || uid.assets,
+        vendorname: "" || uid.venderid,
+        assets: "" || uid.assetsid,
         quantity: "" || uid.quantity,
         price: "" || uid.price,
-        location: "" || uid.location
-
+        location: "" || uid.locationid
     })
 
     useEffect(() => {
         setValue({
             startdate: uid.startdate,
-            vindorname: uid.vindorname,
-            assets: uid.assets,
+            vendorname: uid.venderid,
+            assets: uid.assetsid,
             quantity: uid.quantity,
             price: uid.price,
-            location: uid.location,
+            location: uid.locationid,
 
         })
     }, [uid])
@@ -49,9 +48,9 @@ const Assets = () => {
             isValid = false;
             newErrors.startdate = "Date id Required"
         }
-        if (!value.vindorname) {
+        if (!value.vendorname) {
             isValid = false;
-            newErrors.vindorname = "Name is Required"
+            newErrors.vendorname = "Name is Required"
         }
         if (!value.assets) {
             isValid = false;
@@ -64,25 +63,38 @@ const Assets = () => {
     }
 
 
-    async function getEmployeeData() {
+    async function getVendor() {
 
-        axios.post(`${BASE_URL}/vendor_details`)
+        axios.get(`${BASE_URL}/vendor_details`)
             .then((res) => {
-                console.log(res.data)
-                setBrand(res.data)
+                SetVendor(res.data)
             })
             .catch((err) => {
                 console.log(err)
             })
     }
 
+    async function getassets() {
+        
+        axios.get(`${BASE_URL}/getassetcat`)
+        .then((res) =>{
+            console.log(res.data)
+            setAssetscat(res.data)
+        })
+    }
+    async function getLocation() {
+        
+        axios.get(`${BASE_URL}/get_location`)
+        .then((res) =>{
+   
+            setLocation(res.data)
+        })
+    }
 
 
     async function getEmployeeData() {
-        const data = {
-            tablename: "awt_assets"
-        }
-        axios.post(`${BASE_URL}/get_data`, data)
+    
+        axios.get(`${BASE_URL}/get_assets`)
             .then((res) => {
                 console.log(res.data)
                 setVendorData(res.data)
@@ -93,6 +105,9 @@ const Assets = () => {
     }
 
     useEffect(() => {
+        getassets()
+        getVendor()
+        getLocation()
         getEmployeeData()
         value.title = ""
         setError({})
@@ -124,7 +139,7 @@ const Assets = () => {
             .then((res) => {
                 setUid(res.data[0])
 
-                console.log(res.data, "update")
+
             })
             .catch((err) => {
                 console.log(err)
@@ -159,7 +174,7 @@ const Assets = () => {
             const data = {
 
                 startdate: value.startdate,
-                vindorname: value.vindorname,
+                vendorname: value.vendorname,
                 assets: value.assets,
                 quantity: value.quantity,
                 price: value.price,
@@ -172,6 +187,16 @@ const Assets = () => {
                 .then((res) => {
                     console.log(res)
                     getEmployeeData()
+
+                    setValue({
+                        startdate:'',
+                        vendorname: '',
+                        assets: '',
+                        quantity: '',
+                        price: '',
+                        location: '',
+                    })
+                    setUid([])
 
                 })
                 .catch((err) => {
@@ -207,11 +232,11 @@ const Assets = () => {
 
         },
         { field: 'startdate', headerName: 'Start Date', flex: 2 },
-        { field: 'vindorname', headerName: 'Vindor Name', flex: 2 },
-        { field: 'assets', headerName: 'Assets', flex: 2 },
+        { field: 'vendorname', headerName: 'Vendor Name', flex: 2 },
+        { field: 'title', headerName: 'Assets', flex: 2 },
         { field: 'quantity', headerName: 'Quantity', flex: 2 },
         { field: 'price', headerName: 'Price', flex: 2 },
-        { field: 'location', headerName: 'Location', flex: 2 },
+        { field: 'LocationMaster', headerName: 'Location', flex: 2 },
 
         {
             field: 'actions',
@@ -256,14 +281,18 @@ const Assets = () => {
                                             </div>
 
                                             <div class="form-group col-lg-2">
-                                                <lable for="exampleFormControlSelect1">Vindor Name<span className="text-danger">*</span></lable>
+                                                <label for="exampleFormControlSelect1">Vendor Name<span className="text-danger">*</span></label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1"
-                                                    value={value.vindorname} name='vindorname' onChange={onhandleChange}>
+                                                    value={value.vendorname} name='vendorname' onChange={onhandleChange}>
                                                     <option>Select Vendor</option>
-                                                    <option>Anupam Stationery Mart</option>
-                                                    <option>Modern General Stores</option>
+                                                    {vendor.map((item) =>{
+                                                        return(
+                                                            <option value={item.id}>{item.vendorname}</option>
+                                                        )
+                                                    })}
+                                            
                                                 </select>
-                                                {<span className='text-danger'> {error.vindorname} </span>}
+                                                {<span className='text-danger'> {error.vendorname} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-2">
@@ -271,7 +300,13 @@ const Assets = () => {
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1"
                                                     value={value.assets} name='assets' onChange={onhandleChange}>
                                                     <option>Select Category</option>
-                                                    <option>AIR CONDITIONERS</option>
+                                                    {assetscat.map((item) =>{
+                                                        return (
+                                                            <option value={item.id}>{item.title}</option>
+                                                    
+                                                        )
+                                                    })}
+                                               
                                                 </select>
                                                 {<span className='text-danger'> {error.assets} </span>}
                                             </div>
@@ -285,7 +320,7 @@ const Assets = () => {
                                             </div>
 
                                             <div class="form-group col-lg-2">
-                                                <lable for="exampleInputUsername1">Price</lable>
+                                                <label for="exampleInputUsername1">Price</label>
                                                 <input text="text" class="form-control" id="exampleInputUsername1"
                                                     value={value.price} placeholder='Price' name='price' onChange={onhandleChange} />
                                             </div>
@@ -295,12 +330,11 @@ const Assets = () => {
                                                 <select className='form-control form-control-lg' id="exampleFormControlSelect1"
                                                     value={value.location} name='location' onChange={onhandleChange}>
                                                     <option>Select Location</option>
-                                                    <option>TR-001</option>
-                                                    <option>TR-002</option>
-                                                    <option>TR-003</option>
-                                                    <option>TR-004</option>
-                                                    <option>OFFICE</option>
-                                                    <option>OTHER</option>
+                                                {location.map((item) =>{
+                                                    return (
+                                                        <option value={item.id}>{item.LocationMaster}</option>
+                                                    )
+                                                })}
                                                 </select>
                                             </div>
 
@@ -346,12 +380,12 @@ const Assets = () => {
                                                     paginationModel: { pageSize: 10, page: 0 },
                                                 },
                                             }}
-                                            slots={{ toolbar: GridToolbar }}
-                                            slotProps={{
-                                                toolbar: {
-                                                    showQuickFilter: true,
-                                                },
-                                            }}
+                                            // slots={{ toolbar: GridToolbar }}
+                                            // slotProps={{
+                                            //     toolbar: {
+                                            //         showQuickFilter: true,
+                                            //     },
+                                            // }}
                                         />
 
                                         {confirmationVisibleMap[cid] && (
@@ -383,4 +417,4 @@ const Assets = () => {
     )
 }
 
-export default Assets
+export default AddAssets

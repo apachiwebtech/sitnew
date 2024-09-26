@@ -10,18 +10,11 @@ import InnerHeader from './InnerHeader';
 
 const AddFeesDetailsListing = () => {
 
-    const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
-    const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
     const label = { inputProps: { 'aria-label': 'Color switch demo' } };
-    const [inquiryData, setInquiryData] = useState([]);
-    const [Discipline, setDescipline] = useState([]);
-    const [Course, setCourse] = useState([]);
-    const [Education, setEducation] = useState([]);
-    const [batch, setBatch] = useState([]);
-    const [batchCategoty, setbatchCategory] = useState([]);
+    const [feesdetail, setFeesDetails] = useState([]);
     const [value, setValue] = useState({
         studentname: '',
         studentid: '',
@@ -33,7 +26,7 @@ const AddFeesDetailsListing = () => {
 
 
 
-    const getInquiryData = async () => {
+    const getdetails = async () => {
         const response = await fetch(`${BASE_URL}/getaddfeesdetailsdata`, {
             method: 'GET',
             headers: {
@@ -42,64 +35,14 @@ const AddFeesDetailsListing = () => {
         });
         const data = await response.json();
 
-        setInquiryData(data);
+        setFeesDetails(data);
     }
 
-    const getDiscipline = async () => {
-        const response = await fetch(`${BASE_URL}/getDiscipline`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setDescipline(data);
-    }
-    const getCourse = async () => {
-        const response = await fetch(`${BASE_URL}/getCourses`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setCourse(data);
-    }
-    const getEducation = async () => {
-        const response = await fetch(`${BASE_URL}/getEducation`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setEducation(data);
-    }
-    const getBatch = async () => {
-        const response = await fetch(`${BASE_URL}/getBtach`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setBatch(data);
-    }
-    const getBtachCategory = async () => {
-        const response = await fetch(`${BASE_URL}/getBtachCategory`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setbatchCategory(data);
-    }
-    useEffect(() => {
-        value.title = ""
-        setError({})
-        setUid([])
-    }, [])
+
+    useEffect(() =>{
+        getdetails()
+    },[])
+
 
     const handleClick = (id) => {
         setCid(id)
@@ -117,21 +60,7 @@ const AddFeesDetailsListing = () => {
         }));
     };
 
-    const handleUpdate = (id) => {
-        const data = {
-            u_id: id,
-            tablename: "awt_addfeesdetails"
-        }
-        axios.post(`${BASE_URL}/update_data`, data)
-            .then((res) => {
-                setUid(res.data[0])
 
-                console.log(res.data, "update")
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
 
     const handleDelete = (id) => {
         const data = {
@@ -141,7 +70,7 @@ const AddFeesDetailsListing = () => {
 
         axios.post(`${BASE_URL}/delete_inquiry_data`, data)
             .then((res) => {
-                getInquiryData()
+                getdetails()
             })
             .catch((err) => {
                 console.log(err)
@@ -160,11 +89,9 @@ const AddFeesDetailsListing = () => {
     axios.post(`${BASE_URL}/data_status` , {status : newval, Inquiry_Id : Inquiry_Id, table_name : "awt_addfeesdetails"})
     .then((res)=>{
         console.log(res)
-        getInquiryData()
+
     })
  }
-
-
 
 
 
@@ -181,14 +108,14 @@ const AddFeesDetailsListing = () => {
     },
 
     
-    { field: 'generatereceipt', headerName: 'Receipt No', flex: 2 },
-    { field: 'coursename', headerName: 'Course Name', flex: 2 },
-    { field: 'batchcode', headerName: 'Batch Code', flex: 2 },
-    { field: 'studentname', headerName: 'Student Name', flex: 2 },
-    { field: 'deudate', headerName: 'Date', flex: 2 },
-    { field: 'paymenttype', headerName: 'Payment Type', flex: 2 },
-    { field: 'amount', headerName: 'Amount', flex: 2 },
-    { field: 'particular', headerName: 'Particular', flex: 2 },
+    { field: 'Fees_Code', headerName: 'Receipt No', flex: 2 },
+    { field: 'Course_Name', headerName: 'Course Name', flex: 2 },
+    { field: 'Batch_code', headerName: 'Batch Code', flex: 2 },
+    { field: 'Student_Id', headerName: 'Student Name', flex: 2 },
+    { field: 'Date_Added', headerName: 'Date', flex: 2 },
+    { field: 'Payment_Type', headerName: 'Payment Type', flex: 2 },
+    { field: 'Amount', headerName: 'Amount', flex: 2 },
+    { field: 'Notes', headerName: 'Particular', flex: 2 },
     // { field: 'isActive', headerName: 'Options', flex: 2},
     {
         field: 'actions',
@@ -208,7 +135,7 @@ const AddFeesDetailsListing = () => {
 ];
 
 
-    const rowsWithIds = inquiryData.map((row, index) => ({ index: index + 1, ...row }));
+    const rowsWithIds = feesdetail.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
 
@@ -240,7 +167,7 @@ const AddFeesDetailsListing = () => {
                                             disableColumnSelector
                                             disableDensitySelector
                                             rowHeight={37}
-                                            getRowId={(row) => row.id}
+                                            getRowId={(row) => row.Fees_Id}
                                             initialState={{
                                                 pagination: {
                                                     paginationModel: { pageSize: 10, page: 0 },

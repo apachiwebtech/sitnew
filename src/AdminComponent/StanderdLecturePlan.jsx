@@ -14,6 +14,8 @@ import axios from "axios";
 import BatchEdit from "./BatchEdit";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import * as XLSX from "xlsx";
+import { Upload } from "@mui/icons-material";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -31,13 +33,13 @@ const StandardLecturePlan = () => {
   const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
   const [cid, setCid] = useState("")
   const [uid, setUid] = useState([])
-  const [faculty , setFaculty] = useState([])
+  const [faculty, setFaculty] = useState([])
   const [onlineAdmissions, setOnlineAdmissions] = useState([]);
- const [unit , setUnit] = useState([])
- const [assignment , setAssignment] = useState([])
+  const [unit, setUnit] = useState([])
+  const [assignment, setAssignment] = useState([])
+  const [time, setTime] = useState([])
 
-
-
+  const [excelData, setExcelData] = useState([]);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -66,45 +68,45 @@ const StandardLecturePlan = () => {
   };
 
 
-  async function getfaculty(){
+  async function getfaculty() {
 
     axios.get(`${BASE_URL}/getfaculty`)
-    .then((res) =>{
-      setFaculty(res.data)
-    })
+      .then((res) => {
+        setFaculty(res.data)
+      })
   }
-  async function getassignment(){
+  async function getassignment() {
 
-    const data ={
-      batch_id : batchid
-    } 
+    const data = {
+      batch_id: batchid
+    }
 
     axios.post(`${BASE_URL}/getbatchwiseassignment`, data)
-    .then((res) =>{
-      setAssignment(res.data)
-    })
+      .then((res) => {
+        setAssignment(res.data)
+      })
   }
 
-  async function getunittest(){
+  async function getunittest() {
 
-    const data ={
-      AnnulBatch : batchid
-    } 
+    const data = {
+      AnnulBatch: batchid
+    }
 
     axios.post(`${BASE_URL}/getbatchwiseunittest`, data)
-    .then((res) =>{
-      setUnit(res.data)
-    })
+      .then((res) => {
+        setUnit(res.data)
+      })
   }
 
 
   async function getstandardlecture() {
 
     const data = {
-      batch_id : batchid
+      batch_id: batchid
     }
 
-    axios.post(`${BASE_URL}/batch_standardlecture` , data)
+    axios.post(`${BASE_URL}/batch_standardlecture`, data)
 
       .then((res) => {
         setOnlineAdmissions(res.data)
@@ -112,7 +114,18 @@ const StandardLecturePlan = () => {
 
   }
 
+  async function gettime(params) {
+
+
+    axios.get(`${BASE_URL}/gettime`)
+
+      .then((res) => {
+        setTime(res.data)
+      })
+  }
+
   useEffect(() => {
+    gettime()
     getassignment()
     getfaculty()
     getunittest()
@@ -253,14 +266,14 @@ const StandardLecturePlan = () => {
     { field: "date", headerName: "Date", width: 100 },
     { field: "starttime", headerName: "Start Time", width: 100 },
     { field: "endtime", headerName: "End Time", width: 100 },
-    { field: "assignmentname", headerName: "Assignment", width: 150 },
-    { field: "assignment_date", headerName: "Assignment Date", width: 100 },
+    { field: "assignmentname", headerName: "Assignment", width: 100 },
+    { field: "assignment_date", headerName: "Assignment Date", width: 150 },
     { field: "faculty_name", headerName: "Faculty Name", width: 100 },
     { field: "class_room", headerName: "Class Room", width: 100 },
     { field: "documents", headerName: "Documents", width: 150 },
     { field: "unitname", headerName: "Unit Test", width: 150 },
     { field: "publish", headerName: "Publish", width: 100 },
- 
+
   ];
 
   const rowsWithIds = onlineAdmissions.map((row, index) => ({
@@ -288,7 +301,7 @@ const StandardLecturePlan = () => {
       duration: value.duration,
       publish: value.publish,
       uid: uid.id,
-      batch_id : batchid
+      batch_id: batchid
     }
 
     axios.post(`${BASE_URL}/add_batchstandardlecture`, data)
@@ -296,9 +309,58 @@ const StandardLecturePlan = () => {
 
         setOpen(false)
         getstandardlecture()
+        setValue({
+          lecture_no: "",
+          subject_topic: "",
+          starttime: "",
+          endtime: "",
+          assignment: "",
+          assignment_date: "",
+          faculty_name: "",
+          class_room: "",
+          documents: "",
+          unit_test: "",
+          subject: "",
+          date: "",
+          marks: "",
+          publish: "",
+          duration: ""
+        })
+
+        setUid([])
       })
 
   }
+
+  // excel file Upload 
+
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = (event) => {
+      const binaryStr = event.target.result;
+      const workbook = XLSX.read(binaryStr, { type: "binary" });
+      const sheetName = workbook.SheetNames[0]; // First sheet
+      const sheet = workbook.Sheets[sheetName];
+      const data = XLSX.utils.sheet_to_json(sheet);
+      setExcelData(data); // data is an array of objects
+    };
+
+    reader.readAsBinaryString(file);
+  };
+
+  const handleImport = () => {
+    axios
+      .post(`${BASE_URL}/upload-excel`, { data: excelData ,batch_id : batchid})
+      .then((response) => {
+        console.log("Data imported successfully!", response);
+        getstandardlecture()
+      })
+      .catch((error) => {
+        console.error("Error uploading data", error);
+      });
+  };
 
   return (
     <div className="container-fluid page-body-wrapper col-lg-10">
@@ -317,12 +379,24 @@ const StandardLecturePlan = () => {
                     <div>
                       <h4 class="card-title">Add Company Information</h4>
                     </div>
+                    <div>
+                      
                     <button
                       className="btn btn-success"
                       onClick={handleClickOpen}
                     >
                       Add +
                     </button>
+                
+                    <input className="mx-2" type="file" onChange={handleFileUpload}  />
+
+                    <button
+                      className="btn btn-success mx-2"
+                      onClick={handleImport}
+                    >
+                      Import 
+                    </button>
+                    </div>
                   </div>
 
                   <div>
@@ -336,7 +410,7 @@ const StandardLecturePlan = () => {
                       getRowId={(row) => row.id}
                       initialState={{
                         pagination: {
-                          paginationModel: { pageSize: 5, page: 0 },
+                          paginationModel: { pageSize: 20 , page: 0 },
                         },
                       }}
                       slots={{ toolbar: GridToolbar }}
@@ -449,7 +523,7 @@ const StandardLecturePlan = () => {
                     <label for="exampleInputUsername1">
                       Start Time
                     </label>
-                    <input
+                    {/* <input
                       type="time"
                       class="form-control"
                       id="exampleInputUsername1"
@@ -457,13 +531,24 @@ const StandardLecturePlan = () => {
                       value={value.starttime}
                       name="starttime"
                       onChange={handleChange}
-                    />
+                    /> */}
+                    <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.starttime} name="starttime" onChange={handleChange} >
+
+                      <option>Select Time</option>
+                      {time.map((item) => {
+                        return (
+                          <option value={item.Timing} >{item.Timing}</option>
+                        )
+                      })}
+
+                    </select>
+
                   </div>
                   <div className="form-group col-lg-4 ">
                     <label for="exampleInputUsername1">
                       End Time
                     </label>
-                    <input
+                    {/* <input
                       type="time"
                       class="form-control"
                       id="exampleInputUsername1"
@@ -471,27 +556,37 @@ const StandardLecturePlan = () => {
                       value={value.endtime}
                       name="endtime"
                       onChange={handleChange}
-                    />
+                    /> */}
+                    <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.endtime} name="endtime" onChange={handleChange} >
+
+                      <option>Select Time</option>
+                      {time.map((item) => {
+                        return (
+                          <option value={item.Timing} >{item.Timing}</option>
+                        )
+                      })}
+
+                    </select>
                   </div>
-             
+
                   <div class="form-group col-lg-4">
-                    <label for="exampleInputUsername1">Assignment</label>
+                    <label for="exampleInputUsername1">Assignment Test</label>
                     <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.assignment} name='assignment' onChange={handleChange} >
 
                       <option>Select Assignment</option>
-                      {assignment.map((item) =>{
+                      {assignment.map((item) => {
                         return (
 
                           <option value={item.id} >{item.assignmentname}</option>
                         )
                       })}
-                 
+
                     </select>
                   </div>
 
                   <div className="form-group col-lg-4 ">
                     <label for="exampleInputUsername1">
-                      Assignment Date
+                      Assignment Test Date
                     </label>
                     <input
                       type="date"
@@ -503,18 +598,18 @@ const StandardLecturePlan = () => {
                       onChange={handleChange}
                     />
                   </div>
-             
+
                   <div class="form-group col-lg-4">
                     <label for="exampleInputUsername1"> Faculty Name</label>
                     <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.faculty_name} name='faculty_name' onChange={handleChange} >
                       <option>Select Faculty</option>
-                      {faculty.map((item) =>{
+                      {faculty.map((item) => {
                         return (
 
                           <option value={item.Faculty_Id} >{item.Faculty_Name}</option>
                         )
                       })}
-                 
+
                     </select>
                   </div>
                   <div className="form-group col-lg-4 ">
@@ -560,22 +655,22 @@ const StandardLecturePlan = () => {
                     />
                   </div>
 
-          
+
                   <div class="form-group col-lg-4">
                     <label for="exampleInputUsername1">Unit Test</label>
                     <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.unit_test} name='unit_test' onChange={handleChange} >
 
                       <option>Select </option>
-                      {unit.map((item) =>{
+                      {unit.map((item) => {
                         return (
 
                           <option value={item.id} >{item.subject}</option>
                         )
                       })}
-                 
+
                     </select>
                   </div>
-                  
+
                   <div class="form-group col-lg-4">
                     <label for="exampleInputUsername1">Publish</label>
                     <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.publish} name='publish' onChange={handleChange} >
@@ -585,7 +680,7 @@ const StandardLecturePlan = () => {
                     </select>
                   </div>
 
-                  <div className="form-group col-lg-4 ">
+                  {/* <div className="form-group col-lg-4 ">
                     <label for="exampleInputUsername1">
                       Marks
                     </label>
@@ -598,7 +693,7 @@ const StandardLecturePlan = () => {
                       name="marks"
                       onChange={handleChange}
                     />
-                  </div>
+                  </div> */}
                   <div className="form-group col-lg-12 ">
                     <button className="btn btn-success" type="submit">Save</button>
                   </div>

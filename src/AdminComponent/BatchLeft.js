@@ -5,6 +5,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
+import { data } from "jquery";
 //import FormControlLabel from '@mui/material/FormControlLabel';
 // import ImageList from '@mui/material/ImageList';
 // import { ImageSourcePropType } from 'react-native';
@@ -12,7 +13,10 @@ import InnerHeader from './InnerHeader';
 const BatchLeft = () => {
 
 
-    const [date, setDate] = useState('');
+    const [currentdate, setDate] = useState('');
+    const [course , setCourse] = useState([])
+    const [batch , setBatch] = useState([])
+    const [student , setStudent] = useState([])
 
     useEffect(() => {
         const currentDate = new Date();
@@ -27,25 +31,23 @@ const BatchLeft = () => {
 
 
     const [brand, setBrand] = useState([])
-    const [vendordata, setVendorData] = useState([])
+    const [batchleftdata, setData] = useState([])
     const [specification, setSpecification] = useState("")
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
+    const [batchid , setBatchid] = useState('')
+    const [courseid , setCourseid] = useState('')
 
-    console.log(specification)
 
 
 
     const [value, setValue] = useState({
-        course: "" || uid.courae,
-        batchno: "" || uid.batchno,
+  
         student: "" || uid.student,
         date: "" || uid.date,
         reason: "" || uid.reason,
-
 
 
 
@@ -54,8 +56,7 @@ const BatchLeft = () => {
 
     useEffect(() => {
         setValue({
-            course: uid.course,
-            batchno: uid.batchno,
+      
             student: uid.student,
             date: uid.date,
             reason: uid.reason,
@@ -82,36 +83,105 @@ const BatchLeft = () => {
     // }
 
 
-    async function getEmployeeData() {
+    async function BatchLeft() {
 
-        axios.post(`${BASE_URL}/vendor_details`)
-            .then((res) => {
-                console.log(res.data)
-                setBrand(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
+
+        axios.get(`${BASE_URL}/getbatchleft` )
+        .then((res) => {
+            console.log(res.data)
+            setData(res.data)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
     }
 
 
+    const getcourse = () =>{
 
-    async function getEmployeeData() {
         const data = {
-            tablename: "awt_batchleft"
+            tablename : "Course_Mst",
+            columnname :"Course_Id,Course_Name"
         }
-        axios.post(`${BASE_URL}/get_data`, data)
+
+        axios.post(`${BASE_URL}/get_new_data` , data)
+        .then((res) => {
+            console.log(res.data)
+            setCourse(res.data)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+
+    }
+
+    const getBatch = async (id) =>{
+       setCourseid(id)
+        const data = {
+            courseid : id
+        }
+
+
+        if(id){
+            axios.post(`${BASE_URL}/getcoursewisebatch` , data)
             .then((res) => {
                 console.log(res.data)
-                setVendorData(res.data)
+                setBatch(res.data)
             })
             .catch((err) => {
                 console.log(err)
-            })
+            }) 
+        }else{
+            try {
+                const res = await axios.get(`${BASE_URL}/getbatch`, data);
+
+                setBatch(res.data);
+
+            } catch (err) {
+                console.error("Error fetching data:", err);
+            }
+        }
+      
+  
     }
+
+    const getStudent = async (code) =>{
+        setBatchid(code)
+        const data = {
+            batch_code : code
+        }
+        if(code){
+            axios.post(`${BASE_URL}/getbatchwisestudent` , data)
+            .then((res) => {
+            
+                setStudent(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            }) 
+        }else{
+            try {
+                const res = await axios.post(`${BASE_URL}/get_new_data`, {tablename : "Student_Master", columnname : "Student_Id,Student_Name"});
+
+                setStudent(res.data);
+
+            } catch (err) {
+                console.error("Error fetching data:", err);
+            }
+        }
+      
+
+    }
+
+
+
+
 
     useEffect(() => {
-        getEmployeeData()
+        getBatch()
+        getStudent()
+        getcourse()
+        BatchLeft()
         value.title = ""
         setError({})
         setUid([])
@@ -141,8 +211,9 @@ const BatchLeft = () => {
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
                 setUid(res.data[0])
-
-                console.log(res.data, "update")
+                setBatchid(res.data[0].batchno)
+                setCourseid(res.data[0].course)
+                setDate(res.data[0].date)
             })
             .catch((err) => {
                 console.log(err)
@@ -157,7 +228,7 @@ const BatchLeft = () => {
 
         axios.post(`${BASE_URL}/delete_data`, data)
             .then((res) => {
-                getEmployeeData()
+                BatchLeft()
 
             })
             .catch((err) => {
@@ -176,12 +247,10 @@ const BatchLeft = () => {
         // if(validateForm()){
         const data = {
 
-
-
-            course: value.course,
-            batchno: value.batchno,
+            course: courseid,
+            batchno: batchid,
             student: value.student,
-            date: value.date,
+            date: currentdate,
             reason: value.reason,
             uid: uid.id
         }
@@ -190,8 +259,8 @@ const BatchLeft = () => {
         axios.post(`${BASE_URL}/add_batchleft`, data)
             .then((res) => {
                 console.log(res)
-                getEmployeeData()
-
+                alert("Data added successfully")
+                BatchLeft()
             })
             .catch((err) => {
                 console.log(err)
@@ -225,9 +294,9 @@ const BatchLeft = () => {
             filterable: false,
 
         },
-        { field: 'course', headerName: 'Course Name', flex: 2 },
+        { field: 'Course_Name', headerName: 'Course Name', flex: 2 },
         { field: 'batchno', headerName: 'Batch No.', flex: 2 },
-        { field: 'student', headerName: 'Student', flex: 2 },
+        { field: 'Student_Name', headerName: 'Student', flex: 2 },
         { field: 'date', headerName: 'Date', flex: 2 },
         { field: 'reason', headerName: 'reason', flex: 2 },
 
@@ -248,7 +317,7 @@ const BatchLeft = () => {
     ];
 
 
-    const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
+    const rowsWithIds = batchleftdata.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
 
@@ -268,8 +337,14 @@ const BatchLeft = () => {
                                             <div class="form-group col-lg-3">
                                                 <lable for="exampleFormControlSelect1">Course<span className="text-danger">*</span></lable>
                                                 <select class="form-control" id="exampleFormControlSelect1" 
-                                                value={value.course} name='course' onChange={onhandleChange}>
+                                                value={courseid}  name='course' onChange={(e) =>getBatch(e.target.value)}>
                                                     <option>Select Course</option>
+                                                    {course.map((item) =>{
+                                                        return (
+                                                            <option value={item.Course_Id}>{item.Course_Name}</option>
+
+                                                        )
+                                                    })}
                                                 </select>
                                                 {<span className='text-danger'> {error.course} </span>}
                                             </div>
@@ -277,15 +352,27 @@ const BatchLeft = () => {
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleFormControlSelect1">Batch No.</label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1" 
-                                                value={value.batchno} name='batchno' onChange={onhandleChange}>
-                                                    <option></option>
+                                                value={batchid} name='batchno' onChange={(e) =>getStudent(e.target.value)}>
+                                                    <option>Select Batch</option>
+                                                    {batch.map((item) =>{
+                                                        return(
+                                                            <option value={item.Batch_code}>{item.Batch_code}</option>
+                                                            
+                                                        )
+                                                    })}
                                                 </select>
                                             </div>
 
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleFomrControlSelect1">Student</label>
                                                 <select className='form-control form-control-lg' id="exampleFormControlSelect1" value={value.student} name='student' onChange={onhandleChange}>
-                                                    <option></option>
+
+                                                    <option>Select Student</option>
+                                                    {student.map((item) =>{
+                                                        return (
+                                                            <option value={item.Student_Id}>{item.Student_Name}</option>
+                                                        )
+                                                    })}
                                                 </select>
                                             </div>
 
@@ -296,7 +383,7 @@ const BatchLeft = () => {
                                                     type="date"
                                                     className="form-control"
                                                     id="exampleInputUsername1"
-                                                    value={date}
+                                                    value={currentdate}
                                                     name="date"
                                                     onChange={(e) => { }}
                                                     disabled

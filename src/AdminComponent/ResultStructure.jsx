@@ -58,12 +58,12 @@ const ResultStructure = () => {
 
   useEffect(() => {
     setValue({
-      last_mark_limit:  result.late_limit,
-      absent_wt:  result.absent_wt,
+      last_mark_limit: result.late_limit,
+      absent_wt: result.absent_wt,
       full_atten_wt: result.full_atten_wt,
-      exam_wt:  result.exam_wt,
-      assignment_wt:  result.assignment_wt,
-      unit_test:  result.unit_test,
+      exam_wt: result.exam_wt,
+      assignment_wt: result.assignment_wt,
+      unit_test: result.unit_test,
     })
   }, [result])
 
@@ -77,8 +77,8 @@ const ResultStructure = () => {
     }
     axios.post(`${BASE_URL}/batch_result_Structure`, data)
       .then((res) => {
-        if(res.data[0]){
-          
+        if (res.data[0]) {
+
           setResult(res.data[0])
         }
       })
@@ -93,6 +93,19 @@ const ResultStructure = () => {
       .then((res) => {
 
         setGrade(res.data)
+      })
+  }
+
+
+
+  const importgrade = () => {
+    const data = {
+      batchid: batchid
+    }
+    axios.post(`${BASE_URL}/importgrade`, data)
+      .then((res) => {
+        alert(res.data)
+        getGrade()
       })
   }
 
@@ -114,27 +127,37 @@ const ResultStructure = () => {
 
 
   const handleGradeSubmit = (e) => {
+    // e.preventDefault();
 
-    e.preventDefault()
+    console.log("Submit button clicked"); // Debugging
+
     const data = {
       grade: value.grade,
       end_from: value.end_from,
       start_from: value.start_from,
       batchid: batchid,
-      id: value.id
-    }
+      id: value.id,
+    };
+
+    console.log("Data to be submitted: ", data); // Debugging
+
     axios.post(`${BASE_URL}/add_grade`, data)
       .then((res) => {
-        alert("Data Added successfully")
-        getGrade()
+        console.log("API response: ", res); // Debugging
+        alert("Data Added successfully");
+        getGrade();
         setValue({
           grade: '',
           end_from: '',
           start_from: '',
           id: '',
-        })
+        });
       })
-  }
+      .catch((err) => {
+        console.error("API error: ", err); // Handle and log errors
+      });
+  };
+
 
 
   const handleSubmit = (e) => {
@@ -148,7 +171,7 @@ const ResultStructure = () => {
       assignment_wt: value.assignment_wt,
       unit_test: value.unit_test,
       batchid: batchid,
-      uid:result.id
+      uid: result.id
     }
 
     axios.post(`${BASE_URL}/add_batch_result`, data)
@@ -252,17 +275,97 @@ const ResultStructure = () => {
 
 
                           <div className="form-group col-lg-12 ">
-                            <button className="btn btn-success mr-1" onClick={handleClickOpen} type="button">Add Grade</button>
+                            <button className="btn btn-success mr-1" onClick={importgrade} type="button" >Import Grade</button>
                             <button className="btn btn-success" type="submit">Save</button>
                           </div>
                         </div>
                       </div>
                     </div>
 
-                    <div className="row p-2 gap-2">
-                      {/* <button className='mr-2 btn btn-primary'>Save</button> */}
-                      {/* <button className='col-2'>close</button> */}
+                    <div >
+                      <table style={{ width: "70%", textAlign: "center" }} border={`1`}>
+                        <thead>
+                          <th style={{ width: "5%" }}>*</th>
+                          <th style={{ width: "20%" }}>Start From</th>
+                          <th style={{ width: "20%" }}>End To</th>
+                          <th style={{ width: "20%" }}>Garde</th>
+                          <th style={{ width: "20%" }}>Action</th>
+                        </thead>
+                        <tbody>
+                          {grade.map((item, index) => {
+                            return (
+                              <tr>
+                                <td>{index + 1}</td>
+                                <td>{item.start_from}</td>
+                                <td>{item.end_from}</td>
+                                <td>{item.grade}</td>
+                                <td><span style={{ cursor: "pointer" }} onClick={() => getupdatedata(item.id)} >Edit</span> / <span style={{ cursor: "pointer" }} onClick={() => handleDelete(item.id)} >Delete</span></td>
+
+                              </tr>
+
+                            )
+                          })}
+
+                          <tr>
+                            <td></td>
+                            <td>  <div className=" ">
+                              {/* <label for="exampleInputUsername1">Start From</label> */}
+                              <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Enter.." value={value.start_from} name="start_from" onChange={handleChange} />
+                            </div></td>
+                            <td> <div className="  ">
+                              {/* <label for="exampleInputUsername1">End From</label> */}
+                              <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Enter.." value={value.end_from} name="end_from" onChange={handleChange} />
+                            </div></td>
+                            <td>
+                              <div className="  ">
+                                {/* <label for="exampleInputUsername1">Grade</label> */}
+                                <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Enter.." value={value.grade} name="grade" onChange={handleChange} />
+                              </div>
+                            </td>
+                            <td>
+                              <div className="  d-flex align-items-end ">
+                                <button className="btn btn-success" type="button" onClick={() => handleGradeSubmit()}>Save</button>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
                     </div>
+
+                    {/* <div className="row p-2 gap-2">
+                      <div >
+                        <b className="d-flex justify-content-between"><p className="w-25 text-center ">Start From</p><p className="w-25 text-center ">End To</p><p className="w-25 text-center ">Grade</p><p className="w-25 text-center ">Action</p></b>
+                        {grade.map((item) => {
+                          return (
+                            <b className="d-flex justify-content-between"><p className="w-25 text-center ">{item.start_from}</p><p className="w-25 text-center ">{item.end_from}</p><p className="w-25 text-center ">{item.grade}</p><p className="w-25 text-center "><span style={{ cursor: "pointer" }} onClick={() => getupdatedata(item.id)} >Edit</span> / <span style={{ cursor: "pointer" }} onClick={() => handleDelete(item.id)} >Delete</span></p></b>
+                          )
+                        })}
+                      </div>
+                      <hr />
+                      <div>
+
+                        <form onSubmit={handleGradeSubmit}>
+                          <div className="row">
+                            <div className="form-group col-lg-3 ">
+                              <label for="exampleInputUsername1">Start From</label>
+                              <input type="text" class="form-control" id="exampleInputUsername1" value={value.start_from} name="start_from" onChange={handleChange} />
+                            </div>
+                            <div className="form-group col-lg-3 ">
+                              <label for="exampleInputUsername1">End From</label>
+                              <input type="text" class="form-control" id="exampleInputUsername1" value={value.end_from} name="end_from" onChange={handleChange} />
+                            </div>
+                            <div className="form-group col-lg-3 ">
+                              <label for="exampleInputUsername1">Grade</label>
+                              <input type="text" class="form-control" id="exampleInputUsername1" value={value.grade} name="grade" onChange={handleChange} />
+                            </div>
+                            <div className="form-group col-lg-3 d-flex align-items-end ">
+                              <button className="btn btn-success" type="submit">Save</button>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+
+                    </div> */}
                   </form>
                 </div>
               </div>
@@ -270,64 +373,7 @@ const ResultStructure = () => {
           </div>
         </div>
       </div>
-      <BootstrapDialog
-        onClose={handleClose}
-        aria-labelledby="customized-dialog-title"
-        open={open}
-      >
-        <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-          Add Company Information
-        </DialogTitle>
-        <IconButton
-          aria-label="close"
-          onClick={handleClose}
-          sx={{
-            position: "absolute",
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
-        <DialogContent dividers>
-          <div >
-            <b className="d-flex justify-content-between"><p className="w-25 text-center ">Start From</p><p className="w-25 text-center ">End To</p><p className="w-25 text-center ">Grade</p><p className="w-25 text-center ">Action</p></b>
-            {grade.map((item) => {
-              return (
-                <b className="d-flex justify-content-between"><p className="w-25 text-center ">{item.start_from}</p><p className="w-25 text-center ">{item.end_from}</p><p className="w-25 text-center ">{item.grade}</p><p className="w-25 text-center "><span style={{ cursor: "pointer" }} onClick={() => getupdatedata(item.id)} >Edit</span> / <span style={{ cursor: "pointer" }} onClick={() => handleDelete(item.id)} >Delete</span></p></b>
-              )
-            })}
-          </div>
-          <hr />
-          <div>
 
-            <form onSubmit={handleGradeSubmit}>
-              <div className="row">
-                <div className="form-group col-lg-3 ">
-                  <label for="exampleInputUsername1">Start From</label>
-                  <input type="text" class="form-control" id="exampleInputUsername1" value={value.start_from}  name="start_from" onChange={handleChange} />
-                </div>
-                <div className="form-group col-lg-3 ">
-                  <label for="exampleInputUsername1">End From</label>
-                  <input type="text" class="form-control" id="exampleInputUsername1" value={value.end_from} name="end_from" onChange={handleChange} />
-                </div>
-                <div className="form-group col-lg-3 ">
-                  <label for="exampleInputUsername1">Grade</label>
-                  <input type="text" class="form-control" id="exampleInputUsername1" value={value.grade} name="grade" onChange={handleChange} />
-                </div>
-                <div className="form-group col-lg-3 d-flex align-items-end ">
-                  <button className="btn btn-success" type="submit">Save</button>
-                </div>
-              </div>
-            </form>
-          </div>
-
-        </DialogContent>
-        <DialogActions>
-
-        </DialogActions>
-      </BootstrapDialog>
 
     </div>
   );

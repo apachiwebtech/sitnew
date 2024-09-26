@@ -1,4 +1,4 @@
-import { FormControl } from '@mui/material';
+import { FormControl, TextField } from '@mui/material';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
@@ -6,13 +6,16 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
+import Autocomplete from '@mui/material/Autocomplete';
+import axios from 'axios';
 
 
 const AddFeesDetails = () => {
 
 
     const [date, setDate] = useState('');
-
+    const [student , setStudent] = useState([])
+    const [selectedStudent , setSelected] = useState(null)
     useEffect(() => {
         const currentDate = new Date();
         const year = currentDate.getFullYear();
@@ -26,23 +29,13 @@ const AddFeesDetails = () => {
 
 
 
-
-
-    const [brand, setBrand] = useState([])
-    const [vendordata, setVendorData] = useState([])
+    const [studentid, setStudentid] = useState([])
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
-    const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
-
     const { addfeesdetailsid } = useParams();
-    const [inquiryData, setInquiryData] = useState([]);
-    const [Discipline, setDescipline] = useState([]);
-    const [Course, setCourse] = useState([]);
-    const [Education, setEducation] = useState([]);
-    const [batch, setBatch] = useState([]);
-    const [batchCategoty, setbatchCategory] = useState([]);
+    const [course , setCourse] = useState([])
+    const [batch , setBatch] = useState([])
     const [value, setValue] = useState({
 
         studentname: '',
@@ -97,14 +90,75 @@ const AddFeesDetails = () => {
     }
 
 
+    async function  getStudent(params) {
+        const data = {
+            tablename :"Student_Master",
+            columnname :"Student_Id,Student_Name"
+        }
+        axios.post(`${BASE_URL}/get_new_data`,data)
+        .then((res) =>{
+            console.log(res.data)
+            setStudent(res.data)
+        })
+    }
+
+    async function getCourse() {
+        const data = {
+            tablename :"Course_Mst",
+            columnname :"Course_Id,Course_Name"
+        }
+
+        axios.post(`${BASE_URL}/get_new_data` ,data)
+        .then((res) =>{
+            console.log(res.data)
+            setCourse(res.data)
+        })
+        
+    }
+    async function getBatch() {
+        const data = {
+            tablename :"Batch_Mst",
+            columnname :"Batch_Id,Batch_code"
+        }
+
+        axios.post(`${BASE_URL}/get_new_data` ,data)
+        .then((res) =>{
+            console.log(res.data)
+            setBatch(res.data)
+        })
+        
+    }
+
+   const handlechange = (newval) =>{
+    setSelected(newval)
+    setStudentid(newval.Student_Id)
+
+    axios.post(`${BASE_URL}/getstudent_details` , {Student_Id : newval.Student_Id})
+    .then((res) =>{
+  
+        setValue({
+            coursename : res.data[0].Course_Id,
+            studentid :res.data[0].Student_Id,
+            batchcode : res.data[0].Batch_code
+        })
+
+        
+    })
+   }
 
 
     useEffect(() => {
 
         value.title = ""
+        getStudent()
+        getBatch()
+        getCourse()
         setError({})
         setUid([])
     }, [])
+
+
+
 
 
 
@@ -214,10 +268,31 @@ const AddFeesDetails = () => {
                                                         <h3>Add Fees Details</h3>
                                                     </div><hr></hr>
                                                     <div className='row'>
-                                                        <div class="form-group col-lg-2">
+                                                        {/* <div class="form-group col-lg-2">
                                                             <lable for="exampleInputUsername1">Student Name</lable>
                                                             <input type="text" class="form-control" id="exampleInputUsername1" value={value.studentname} placeholder='Student Name' name='studentname' onChange={onhandleChange} />
+
+                                                        </div> */}
+                                                        <div className='form-group col-lg-2'>
+                                                        <label for="exampleInputUsername1">Student Id</label>
+                                                        <Autocomplete
+                                                            className='w-100'
+                                                            disablePortal
+                                                            options={student}
+                                                            size='small'
+                                                            sx={{ width: 300 }}
+                                                            getOptionLabel={(option) => option.Student_Name}  // Display student_name in the input
+                                                            renderOption={(props, option) => (
+                                                              <li {...props}>
+                                                                {option.Student_Name}
+                                                              </li>
+                                                            )}
+                                                            value={selectedStudent} // Set the selected student
+                                                            onChange={(e, newValue) => handlechange(newValue)}
+                                                            renderInput={(params) => <TextField {...params} />}
+                                                        />
                                                         </div>
+                                                      
 
                                                         <div className="form-group col-lg-2 ">
                                                             <label for="exampleInputUsername1">Student Id</label>
@@ -226,8 +301,13 @@ const AddFeesDetails = () => {
                                                         </div>
                                                         <div className="form-group col-lg-2 ">
                                                             <label for="exampleInputUsername1">Course Name</label>
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.coursename} name='coursename' onChange={onhandleChange} disabled>
+                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.coursename} name='coursename' onChange={onhandleChange} >
                                                                 <option>----Select Course Name----</option>
+                                                                {course.map((item) =>{
+                                                                    return(
+                                                                        <option value={item.Course_Id}>{item.Course_Name}</option>
+                                                                    )
+                                                                })}
                                                             </select>
                                                         </div>
 
@@ -236,6 +316,11 @@ const AddFeesDetails = () => {
                                                             <select className="form-control form-control-lg" id="exampleInputUsername1"
                                                                 value={value.batchcode} name='batchcode' onChange={onhandleChange} disabled>
                                                                 <option>---Select Batch Code---</option>
+                                                                {batch.map((item) =>{
+                                                                    return(
+                                                                        <option value={item.Batch_code}>{item.Batch_code}</option>
+                                                                    )
+                                                                })}
                                                             </select>
                                                             {<span className='text-danger'> {error.batchcode} </span>}
 

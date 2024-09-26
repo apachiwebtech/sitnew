@@ -32,9 +32,10 @@ const LecturePlan = () => {
   const [cid, setCid] = useState("")
   const [uid, setUid] = useState([])
   const [onlineAdmissions, setOnlineAdmissions] = useState([]);
-  const [unit , setUnit] = useState([])
-  const [assignment , setAssignment] = useState([])
-  const [faculty , setFaculty] = useState([])
+  const [unit, setUnit] = useState([])
+  const [assignment, setAssignment] = useState([])
+  const [faculty, setFaculty] = useState([])
+  const [time, setTime] = useState([])
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -68,9 +69,9 @@ const LecturePlan = () => {
 
 
     const data = {
-      batch_id : batchid
+      batch_id: batchid
     }
-    axios.post(`${BASE_URL}/batch_lecturetaken` , data)
+    axios.post(`${BASE_URL}/batch_lecturetaken`, data)
 
       .then((res) => {
         setOnlineAdmissions(res.data)
@@ -78,39 +79,51 @@ const LecturePlan = () => {
 
   }
 
-  
-  async function getfaculty(){
+
+  async function getfaculty() {
 
     axios.get(`${BASE_URL}/getfaculty`)
-    .then((res) =>{
-      setFaculty(res.data)
-    })
+      .then((res) => {
+        setFaculty(res.data)
+      })
   }
-  async function getassignment(){
+  async function getassignment() {
 
-    const data ={
-      batch_id : batchid
-    } 
+    const data = {
+      batch_id: batchid
+    }
 
     axios.post(`${BASE_URL}/getbatchwiseassignment`, data)
-    .then((res) =>{
-      setAssignment(res.data)
-    })
+      .then((res) => {
+        setAssignment(res.data)
+      })
   }
 
-  async function getunittest(){
+  async function getunittest() {
 
-    const data ={
-      AnnulBatch : batchid
-    } 
+    const data = {
+      AnnulBatch: batchid
+    }
 
     axios.post(`${BASE_URL}/getbatchwiseunittest`, data)
-    .then((res) =>{
-      setUnit(res.data)
-    })
+      .then((res) => {
+        setUnit(res.data)
+      })
+  }
+
+  
+  async function gettime(params) {
+
+
+    axios.get(`${BASE_URL}/gettime`)
+
+      .then((res) => {
+        setTime(res.data)
+      })
   }
 
   useEffect(() => {
+    gettime()
     getassignment()
     getfaculty()
     getunittest()
@@ -258,7 +271,7 @@ const LecturePlan = () => {
     { field: "documents", headerName: "Documents", width: 150 },
     { field: "unitname", headerName: "Unit Test", width: 150 },
     { field: "publish", headerName: "Publish", width: 100 },
- 
+
   ];
 
   const rowsWithIds = onlineAdmissions.map((row, index) => ({
@@ -286,7 +299,7 @@ const LecturePlan = () => {
       duration: value.duration,
       publish: value.publish,
       uid: uid.id,
-      batch_id : batchid
+      batch_id: batchid
     }
 
     axios.post(`${BASE_URL}/add_batchlecturetaken`, data)
@@ -447,7 +460,7 @@ const LecturePlan = () => {
                     <label for="exampleInputUsername1">
                       Start Time
                     </label>
-                    <input
+                    {/* <input
                       type="time"
                       class="form-control"
                       id="exampleInputUsername1"
@@ -455,13 +468,23 @@ const LecturePlan = () => {
                       value={value.starttime}
                       name="starttime"
                       onChange={handleChange}
-                    />
+                    /> */}
+                    <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.starttime} name="starttime" onChange={handleChange} >
+
+                      <option>Select Time</option>
+                      {time.map((item) => {
+                        return (
+                          <option value={item.Timing} >{item.Timing}</option>
+                        )
+                      })}
+
+                    </select>
                   </div>
                   <div className="form-group col-lg-4 ">
                     <label for="exampleInputUsername1">
                       End Time
                     </label>
-                    <input
+                    {/* <input
                       type="time"
                       class="form-control"
                       id="exampleInputUsername1"
@@ -469,20 +492,30 @@ const LecturePlan = () => {
                       value={value.endtime}
                       name="endtime"
                       onChange={handleChange}
-                    />
+                    /> */}
+                    <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.endtime} name="endtime" onChange={handleChange} >
+
+                      <option>Select Time</option>
+                      {time.map((item) => {
+                        return (
+                          <option value={item.Timing} >{item.Timing}</option>
+                        )
+                      })}
+
+                    </select>
                   </div>
                   <div class="form-group col-lg-4">
                     <label for="exampleInputUsername1">Assignment</label>
                     <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.assignment} name='assignment' onChange={handleChange} >
 
                       <option>Select Assignment</option>
-                      {assignment.map((item) =>{
+                      {assignment.map((item) => {
                         return (
 
                           <option value={item.id} >{item.assignmentname}</option>
                         )
                       })}
-                 
+
                     </select>
                   </div>
                   <div className="form-group col-lg-4 ">
@@ -499,17 +532,17 @@ const LecturePlan = () => {
                       onChange={handleChange}
                     />
                   </div>
-                      <div class="form-group col-lg-4">
+                  <div class="form-group col-lg-4">
                     <label for="exampleInputUsername1"> Faculty Name</label>
                     <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.faculty_name} name='faculty_name' onChange={handleChange} >
                       <option>Select Faculty</option>
-                      {faculty.map((item) =>{
+                      {faculty.map((item) => {
                         return (
 
                           <option value={item.Faculty_Id} >{item.Faculty_Name}</option>
                         )
                       })}
-                 
+
                     </select>
                   </div>
                   <div className="form-group col-lg-4 ">
@@ -560,13 +593,13 @@ const LecturePlan = () => {
                     <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.unit_test} name='unit_test' onChange={handleChange} >
 
                       <option>Select </option>
-                      {unit.map((item) =>{
+                      {unit.map((item) => {
                         return (
 
                           <option value={item.id} >{item.subject}</option>
                         )
                       })}
-                 
+
                     </select>
                   </div>
 

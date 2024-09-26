@@ -7,8 +7,7 @@ const multer = require('multer');
 var session = require('express-session')
 var cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
-const { data } = require('jquery');
-const { update } = require('js-md5');
+
 
 // Use CORS middleware before defining routes
 app.use(
@@ -43,53 +42,53 @@ app.use(session({
 
 
 const storage = multer.diskStorage({
-  destination: '../public_html/uploads/', //
+  destination: '../public_html/uploads/', // 
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
 
 const storage2 = multer.diskStorage({
-  destination: '../public_html/uploads/banner', //
+  destination: '../public_html/uploads/banner', // 
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
 const storage3 = multer.diskStorage({
-  destination: '../public_html/uploads/gallery', //
+  destination: '../public_html/uploads/gallery', // 
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
 const storage4 = multer.diskStorage({
-  destination: '../public_html/uploads/brand', //
+  destination: '../public_html/uploads/brand', // 
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
 
 const storage5 = multer.diskStorage({
-  destination: '../public_html/uploads/sizechart', //
+  destination: '../public_html/uploads/sizechart', // 
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
 
 const storage6 = multer.diskStorage({
-  destination: '../public_html/uploads/category', //
+  destination: '../public_html/uploads/category', // 
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
 const storage7 = multer.diskStorage({
-  destination: '../public_html/uploads/group', //
+  destination: '../public_html/uploads/group', // 
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
 
 const storage8 = multer.diskStorage({
-  destination: '../public_html/uploads/productimg', //
+  destination: '../public_html/uploads/productimg', // 
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
@@ -108,8 +107,6 @@ const upload8 = multer({ storage: storage8 });
 
 
 // Create a connection pool with the required details
-
-
 // const con = mysql.createPool({
 //   host: 'localhost',   // Replace with your host name
 //   user: 'zhnvcvmy_sit',        // Replace with your database username
@@ -367,6 +364,22 @@ app.get('/nodeapp/vendor_details', (req, res) => {
 
 
   const sql = `select * from awt_vendor_master where deleted = 0 `
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
+})
+app.get('/nodeapp/getassetcat', (req, res) => {
+
+
+
+  const sql = `select * from awt_asset_category where deleted = 0`
 
   con.query(sql, (err, data) => {
     if (err) {
@@ -737,7 +750,25 @@ app.post('/nodeapp/update_batchdetails', (req, res) => {
       return res.json(err)
     }
     else {
-      return res.json(data)
+      // return res.json(data)
+
+      const batch_id = data.insertId;
+
+      if (uid == undefined) {
+
+        const insertsql = "insert into batch_result_structure(`batch_id`,`unit_test`,`assignment_wt`,`exam_wt`) values(?,?,?,?)"
+
+        con.query(insertsql, [batch_id, 35, 15, 50], (err, data) => {
+          if (err) {
+            return res.json(err)
+          } else {
+            return res.json(data)
+          }
+        })
+
+      } else {
+        return res.json(data)
+      }
     }
   })
 })
@@ -1464,10 +1495,10 @@ app.post('/nodeapp/add_lecturetaken', (req, res) => {
             let insertions = result.map((item) => {
 
               const { Student_Id, Student_Name } = item;
-              const insert = `INSERT INTO Lecture_taken_child (Take_Id, Student_Id, Student_Name, isDelete) VALUES (?, ?, ?, ?)`;
+              const insert = `INSERT INTO Lecture_taken_child (Take_Id, Student_Id, Student_Name, isDelete,Student_Reaction) VALUES (?, ?, ?, ?,?)`;
 
               return new Promise((resolve, reject) => {
-                con.query(insert, [TakeId, Student_Id, Student_Name, 0], (err, data) => {
+                con.query(insert, [TakeId, Student_Id, Student_Name, 0, "excellent"], (err, data) => {
                   if (err) {
                     reject(err);
                   } else {
@@ -1496,9 +1527,14 @@ app.post('/nodeapp/add_lecturetaken', (req, res) => {
 })
 
 
+app.post(`/nodeapp/add_lecturechild`, (req, res) => {
+  let batch_id = req.body.batch_id
+})
+
+
 app.get(`/nodeapp/getlecturetakendata`, (req, res) => {
 
-  const sql = "select Take_Id,Lecture_Name,Take_Dt,Batch_Id,Topic,Faculty_Id from lecture_taken_master where IsDelete = 0 "
+  const sql = "select Take_Id,Lecture_Name,Take_Dt,Batch_Id,Topic,Faculty_Id from lecture_taken_master where IsDelete = 0 order by Take_Id desc"
 
   con.query(sql, (err, data) => {
     if (err) {
@@ -1659,9 +1695,8 @@ app.post(`/nodeapp/batch_lecturetaken`, (req, res) => {
   })
 })
 
-app.get('/nodeapp/getfaculty', (req, res, next) => {
 
-})
+
 
 app.post(`/nodeapp/batch_convocation`, (req, res) => {
 
@@ -2336,82 +2371,202 @@ app.post('/nodeapp/add_generateresult', (req, res) => {
       const GenID = data.insertId;
 
       if (GenID) {
-        const getdata = `SELECT sm.Student_Id, sm.Student_Name ,at.* ,agc.*  
-                         FROM Batch_Mst as bm 
-                         LEFT JOIN Student_Master as sm ON bm.Batch_code = sm.Batch_code 
-                         LEFT JOIN Assignment_given_child as agc on agc.Student_Id = sm.Student_Id 
-                         LEFT JOIN Assignment_taken as at on at.Given_Id = agc.Given_Id 
-                         WHERE bm.Batch_Id = ? AND bm.isDelete = 0 AND sm.isDelete = 0`;
+        // Function to insert data into 'generate_final_child'
+        const insertData = (groupedData) => {
+          let insertions = Object.values(groupedData).map((student) => {
+            const { Student_Id, Student_Name, assignmentData, testData, assignmentAverage, testAverage } = student;
+
+            // Build the query fields and values for both assignment and test at once
+            const queryFields = `
+      Ass1_Given, Ass1_Max, Ass1_Status, Ass2_Given, Ass2_Max, Ass2_Status,
+      Ass3_Given, Ass3_Max, Ass3_Status, Ass4_Given, Ass4_Max, Ass4_Status,
+      Ass5_Given, Ass5_Max, Ass5_Status, Ass6_Given, Ass6_Max, Ass6_Status,
+      Ass7_Given, Ass7_Max, Ass7_Status, Ass8_Given, Ass8_Max, Ass8_Status,
+      Ass9_Given, Ass9_Max, Ass9_Status, Ass10_Given, Ass10_Max, Ass10_Status,
+      Test1_Given, Test1_Max, Test1_Status, Test2_Given, Test2_Max, Test2_Status,
+      Test3_Given, Test3_Max, Test3_Status, Test4_Given, Test4_Max, Test4_Status,
+      Test5_Given, Test5_Max, Test5_Status, Test6_Given, Test6_Max, Test6_Status,
+      Test7_Given, Test7_Max, Test7_Status, Test8_Given, Test8_Max, Test8_Status,
+      Test9_Given, Test9_Max, Test9_Status, Test10_Given, Test10_Max, Test10_Status,Ass_Percent,Test_Percent
+    `;
+
+            // Combine both assignment and test data into the same query values array
+            const queryValues = [
+              assignmentData.Ass1_Given, assignmentData.Ass1_Max, assignmentData.Ass1_Status,
+              assignmentData.Ass2_Given, assignmentData.Ass2_Max, assignmentData.Ass2_Status,
+              assignmentData.Ass3_Given, assignmentData.Ass3_Max, assignmentData.Ass3_Status,
+              assignmentData.Ass4_Given, assignmentData.Ass4_Max, assignmentData.Ass4_Status,
+              assignmentData.Ass5_Given, assignmentData.Ass5_Max, assignmentData.Ass5_Status,
+              assignmentData.Ass6_Given, assignmentData.Ass6_Max, assignmentData.Ass6_Status,
+              assignmentData.Ass7_Given, assignmentData.Ass7_Max, assignmentData.Ass7_Status,
+              assignmentData.Ass8_Given, assignmentData.Ass8_Max, assignmentData.Ass8_Status,
+              assignmentData.Ass9_Given, assignmentData.Ass9_Max, assignmentData.Ass9_Status,
+              assignmentData.Ass10_Given, assignmentData.Ass10_Max, assignmentData.Ass10_Status,
+              testData.Test1_Given, testData.Test1_Max, testData.Test1_Status,
+              testData.Test2_Given, testData.Test2_Max, testData.Test2_Status,
+              testData.Test3_Given, testData.Test3_Max, testData.Test3_Status,
+              testData.Test4_Given, testData.Test4_Max, testData.Test4_Status,
+              testData.Test5_Given, testData.Test5_Max, testData.Test5_Status,
+              testData.Test6_Given, testData.Test6_Max, testData.Test6_Status,
+              testData.Test7_Given, testData.Test7_Max, testData.Test7_Status,
+              testData.Test8_Given, testData.Test8_Max, testData.Test8_Status,
+              testData.Test9_Given, testData.Test9_Max, testData.Test9_Status,
+              testData.Test10_Given, testData.Test10_Max, testData.Test10_Status, assignmentAverage, testAverage
+            ];
+
+            // Prepare insert query
+            const insertQuery = `INSERT INTO generate_final_child (Gen_id, Batch_Id, Student_Code, Student_Name, ${queryFields})
+                         VALUES (?, ?, ?, ?, ${queryValues.map(() => '?').join(', ')})`;
+
+            return new Promise((resolve, reject) => {
+              con.query(insertQuery, [GenID, batch, Student_Id, Student_Name, ...queryValues], (err, data) => {
+                if (err) {
+                  console.error("Error inserting data:", err);
+
+                  reject(err);
+                } else {
+                  resolve("Data Inserted");
+
+                }
+              });
+            });
+          });
+
+          return insertions;
+        };
+
+        // Fetch data and call insertData for both assignment and test data together
+
+
+        const getdata = `
+    SELECT sm.Student_Id, sm.Student_Name ,at.* ,agc.*,ttc.Marks_Given as Test_Marks_Given,ttm.Marks as Test_Marks,ttm.Test_No 
+        FROM Batch_Mst as bm 
+        LEFT JOIN Student_Master as sm ON bm.Batch_code = sm.Batch_code 
+        LEFT JOIN Assignment_given_child as agc on agc.Student_Id = sm.Student_Id 
+        LEFT JOIN Assignment_taken as at on at.Given_Id = agc.Given_Id 
+        LEFT JOIN test_taken_child as ttc on ttc.Student_Id = sm.Student_Id
+        LEFT JOIN test_taken_master as ttm on ttm.Take_Id = ttc.Take_Id
+        WHERE bm.Batch_Id = ? AND bm.isDelete = 0 AND sm.isDelete = 0;`;
+
 
         con.query(getdata, [batch], (err, result) => {
           if (err) {
             return res.json(err);
-          } else {
-            console.log(result);
-
-            const groupedData = result.reduce((acc, curr) => {
-              const { Student_Id, Student_Name, Assign_No, Marks_Given, Marks, Status } = curr;
-              if (!acc[Student_Id]) {
-                acc[Student_Id] = {
-                  Student_Id,
-                  Student_Name,
-                  assignments: {
-                    Ass1_Given: 0, Ass1_Max: 0, Ass1_Status: '',
-                    Ass2_Given: 0, Ass2_Max: 0, Ass2_Status: '',
-                    Ass3_Given: 0, Ass3_Max: 0, Ass3_Status: '',
-                    Ass4_Given: 0, Ass4_Max: 0, Ass4_Status: '',
-                    Ass5_Given: 0, Ass5_Max: 0, Ass5_Status: '',
-                    Ass6_Given: 0, Ass6_Max: 0, Ass6_Status: '',
-                    Ass7_Given: 0, Ass7_Max: 0, Ass7_Status: '',
-                    Ass8_Given: 0, Ass8_Max: 0, Ass8_Status: '',
-                    Ass9_Given: 0, Ass9_Max: 0, Ass9_Status: '',
-                    Ass10_Given: 0, Ass10_Max: 0, Ass10_Status: '',
-                  }
-                };
-              }
-              acc[Student_Id].assignments[`Ass${Assign_No}_Given`] = Marks_Given;
-              acc[Student_Id].assignments[`Ass${Assign_No}_Max`] = Marks;
-              acc[Student_Id].assignments[`Ass${Assign_No}_Status`] = Status;
-              return acc;
-            }, {});
-
-            let insertions = Object.values(groupedData).map((student) => {
-              const { Student_Id, Student_Name, assignments } = student;
-              const { Ass1_Given, Ass1_Max, Ass1_Status, Ass2_Given, Ass2_Max, Ass2_Status, Ass3_Given, Ass3_Max, Ass3_Status, Ass4_Given, Ass4_Max, Ass4_Status, Ass5_Given, Ass5_Max, Ass5_Status, Ass6_Given, Ass6_Max, Ass6_Status, Ass7_Given, Ass7_Max, Ass7_Status, Ass8_Given, Ass8_Max, Ass8_Status, Ass9_Given, Ass9_Max, Ass9_Status, Ass10_Given, Ass10_Max, Ass10_Status } = assignments;
-
-              const insertQuery = `INSERT INTO generate_final_child (Gen_id, Batch_Id, Student_Code, Student_Name, 
-Ass1_Given, Ass1_Max, Ass1_Status,Ass2_Given, Ass2_Max, Ass2_Status,Ass3_Given, Ass3_Max, Ass3_Status,Ass4_Given, Ass4_Max, Ass4_Status,Ass5_Given, Ass5_Max, Ass5_Status,Ass6_Given, Ass6_Max, Ass6_Status,Ass7_Given, Ass7_Max, Ass7_Status,Ass8_Given, Ass8_Max, Ass8_Status,Ass9_Given, Ass9_Max, Ass9_Status,Ass10_Given, Ass10_Max, Ass10_Status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?)`;
-
-              return new Promise((resolve, reject) => {
-                con.query(insertQuery, [GenID, batch, Student_Id, Student_Name,
-                  Ass1_Given, Ass1_Max, Ass1_Status,
-                  Ass2_Given, Ass2_Max, Ass2_Status,
-                  Ass3_Given, Ass3_Max, Ass3_Status,
-                  Ass4_Given, Ass4_Max, Ass4_Status,
-                  Ass5_Given, Ass5_Max, Ass5_Status,
-                  Ass6_Given, Ass6_Max, Ass6_Status,
-                  Ass7_Given, Ass7_Max, Ass7_Status,
-                  Ass8_Given, Ass8_Max, Ass8_Status,
-                  Ass9_Given, Ass9_Max, Ass9_Status,
-                  Ass10_Given, Ass10_Max, Ass10_Status], (err, data) => {
-                    if (err) {
-                      reject(err);
-                    } else {
-                      resolve("Data Inserted");
-                    }
-                  });
-              });
-            });
-
-            Promise.all(insertions)
-              .then((results) => res.json("Data Inserted"))
-              .catch((error) => res.json(error));
           }
+
+          // Combine assignment and test data for each student
+          const combinedData = result.reduce((acc, curr) => {
+            const { Student_Id, Student_Name, Assign_No, Marks_Given, Marks, Status, Test_No, Test_Marks_Given, Test_Marks, Test_Status } = curr;
+
+            if (!acc[Student_Id]) {
+              acc[Student_Id] = {
+                Student_Id,
+                Student_Name,
+                assignmentData: {
+                  Ass1_Given: 0, Ass1_Max: 0, Ass1_Status: '',
+                  Ass2_Given: 0, Ass2_Max: 0, Ass2_Status: '',
+                  Ass3_Given: 0, Ass3_Max: 0, Ass3_Status: '',
+                  Ass4_Given: 0, Ass4_Max: 0, Ass4_Status: '',
+                  Ass5_Given: 0, Ass5_Max: 0, Ass5_Status: '',
+                  Ass6_Given: 0, Ass6_Max: 0, Ass6_Status: '',
+                  Ass7_Given: 0, Ass7_Max: 0, Ass7_Status: '',
+                  Ass8_Given: 0, Ass8_Max: 0, Ass8_Status: '',
+                  Ass9_Given: 0, Ass9_Max: 0, Ass9_Status: '',
+                  Ass10_Given: 0, Ass10_Max: 0, Ass10_Status: ''
+                },
+                testData: {
+                  Test1_Given: 0, Test1_Max: 0, Test1_Status: '',
+                  Test2_Given: 0, Test2_Max: 0, Test2_Status: '',
+                  Test3_Given: 0, Test3_Max: 0, Test3_Status: '',
+                  Test4_Given: 0, Test4_Max: 0, Test4_Status: '',
+                  Test5_Given: 0, Test5_Max: 0, Test5_Status: '',
+                  Test6_Given: 0, Test6_Max: 0, Test6_Status: '',
+                  Test7_Given: 0, Test7_Max: 0, Test7_Status: '',
+                  Test8_Given: 0, Test8_Max: 0, Test8_Status: '',
+                  Test9_Given: 0, Test9_Max: 0, Test9_Status: '',
+                  Test10_Given: 0, Test10_Max: 0, Test10_Status: ''
+                }
+              };
+            }
+
+            // Assign assignment data
+            acc[Student_Id].assignmentData[`Ass${Assign_No}_Given`] = Marks_Given;
+            acc[Student_Id].assignmentData[`Ass${Assign_No}_Max`] = Marks;
+            acc[Student_Id].assignmentData[`Ass${Assign_No}_Status`] = Status;
+
+            // Assign test data
+            acc[Student_Id].testData[`Test${Test_No}_Given`] = Test_Marks_Given;
+            acc[Student_Id].testData[`Test${Test_No}_Max`] = Test_Marks;
+            acc[Student_Id].testData[`Test${Test_No}_Status`] = Test_Status;
+
+            return acc;
+          }, {});
+
+
+          Object.keys(combinedData).forEach(studentId => {
+            const assignmentData = combinedData[studentId].assignmentData;
+            let totalGivenMarks = 0;
+            let totalMaxMarks = 0;
+            let assignmentsCompleted = 0;
+
+            for (let i = 1; i <= 10; i++) {
+              const given = assignmentData[`Ass${i}_Given`];
+              const max = assignmentData[`Ass${i}_Max`];
+
+              if (given > 0 && max > 0) {
+                totalGivenMarks += given;
+                totalMaxMarks += max;
+                assignmentsCompleted++;
+              }
+            }
+
+            // Calculate the average marks if there are any completed assignments
+            combinedData[studentId].assignmentAverage = assignmentsCompleted > 0
+              ? (totalGivenMarks / totalMaxMarks) * 100
+              : 0;
+          });
+
+          Object.keys(combinedData).forEach(studentId => {
+            const testData = combinedData[studentId].testData;
+            let totalGivenMarks = 0;
+            let totalMaxMarks = 0;
+            let testCompleted = 0;
+
+            for (let i = 1; i <= 10; i++) {
+              const given = testData[`Test${i}_Given`];
+              const max = testData[`Test${i}_Max`];
+
+              if (given > 0 && max > 0) {
+                totalGivenMarks += given;
+                totalMaxMarks += max;
+                testCompleted++;
+              }
+            }
+
+            // Calculate the average marks if there are any completed assignments
+            combinedData[studentId].testAverage = testCompleted > 0
+              ? (totalGivenMarks / totalMaxMarks) * 100
+              : 0;
+          });
+
+
+
+          // Insert both assignment and test data in one go
+          const insertions = insertData(combinedData);
+
+
+          Promise.all(insertions)
+            .then(() => res.json("Data Inserted Successfully"))
+            .catch((error) => res.json(error));
         });
+
       }
       else {
         return res.json("Main data inserted");
       }
+
+
+
     }
   })
 })
@@ -2928,26 +3083,39 @@ app.post('/nodeapp/add_emailmaster', (req, res) => {
 
 // ================================Accounts Masters
 
+app.get('/nodeapp/get_assets', (req, res) => {
+
+  const sql = 'select aa.id, avm.vendorname,aa.startdate,aa.quantity,aa.price,lm.LocationMaster,aac.title from awt_assets as aa left join awt_vendor_master as avm on aa.venderid = avm.id LEFT JOIN Location_master as lm on lm.id = aa.locationid LEFT JOIN awt_asset_category as aac on aac.id = aa.assetsid where aa.deleted = 0';
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+})
+
 app.post('/nodeapp/add_assets', (req, res) => {
 
 
 
-  let { startdate, vindername, assets, quantity, price, location, uid } = req.body
+  let { startdate, vendorname, assets, quantity, price, location, uid } = req.body
 
   let sql
   let param;
 
-  // console.log(uid)
+
 
   if (uid == undefined) {
-    sql = "insert into awt_assets(`startdate`,`vindername`,`assets`,`quantity`,`price`,`location`) values(?,?,?,?,?,?)"
+    sql = "insert into awt_assets(`startdate`,`venderid`,`assetsid`,`quantity`,`price`,`locationid`) values(?,?,?,?,?,?)"
 
-    param = [startdate, vindername, assets, quantity, price, location,]
+    param = [startdate, vendorname, assets, quantity, price, location,]
 
   } else {
-    sql = "update `awt_assets` set `startdate` =? , `vindername` =? , `assets` =? , `quantity` =? , `price` =? , `location` =? where id = ?"
+    sql = "update `awt_assets` set `startdate` =? , `venderid` =? , `assetsid` =? , `quantity` =? , `price` =? , `locationid` =? where id = ?"
 
-    param = [startdate, vindername, assets, quantity, price, location, uid]
+    param = [startdate, vendorname, assets, quantity, price, location, uid]
 
   }
 
@@ -3114,7 +3282,6 @@ app.post('/nodeapp/add_batchleft', (req, res) => {
   let sql
   let param;
 
-  // console.log(uid)
 
   if (uid == undefined) {
     sql = "insert into awt_batchleft(`course`,`batchno`,`student`,`date`,`reason`) values(?,?,?,?,?)"
@@ -4150,7 +4317,7 @@ app.post('/nodeapp/add_hoilday', (req, res) => {
 })
 
 app.get('/nodeapp/get_location', (req, res) => {
-  const sql = 'select id,LocationMaster from `Location_master` where IsDelete = 0 '
+  const sql = 'select id,LocationMaster from `Location_master` where IsDelete = 0'
 
   con.query(sql, (err, data) => {
     if (err) {
@@ -4829,9 +4996,8 @@ app.post('/nodeapp/add_vist_data', (req, res) => {
   })
 })
 
-app.post('/nodeapp/add_sit_employeeloan', (req, res) => {
-
-  const { employee,	loandate,	loanamt,	monthly,	totalmonths,	comments, uid } = req.body
+app.post('/nodeapp/add_sit_eptaxmaster', (req, res) => {
+  const { from_sal, to_sal, tax_price, sep_mnth, sep_tax_price, uid } = req.body
 
   let sql
   let param
@@ -4902,7 +5068,7 @@ app.post('/nodeapp/add_qms_master', (req, res) => {
 
 app.post('/nodeapp/getqms_master', (req, res) => {
 
-  const sql = "select * from `qms_master` Where delete = 0"
+  const sql = "select * from `qms_master` Where IsDelete = 0"
 
   con.query(sql, (err, data) => {
     if (err) {
@@ -4922,11 +5088,10 @@ app.post('/nodeapp/add_sit_eptaxmaster', (req, res) => {
   if (uid == undefined) {
     sql = "insert into sit_eptaxmaster (`from_sal`,	`to_sal`,	`tax_price`,	`sep_mnth`,	`sep_tax_price` ) value (?,?,?,?,?)"
     param = [from_sal, to_sal, tax_price, sep_mnth, sep_tax_price]
-  } else {
+  } else  {
     sql = `update sit_eptaxmaster set from_sal = ? , to_sal = ? , tax_price = ? , sep_mnth = ? , sep_tax_price = ? where id = ?`
     param = [from_sal, to_sal, tax_price, sep_mnth, sep_tax_price, uid]
-
-  }
+  } 
 
   con.query(sql, param, (err, data) => {
     if (err) {
@@ -4941,7 +5106,7 @@ app.post('/nodeapp/add_sit_eptaxmaster', (req, res) => {
 
 app.get('/nodeapp/getsit_eptaxmaster', (req, res) => {
 
-  const sql = "select * from `sit_eptaxmaster` Where delete = 0"
+  const sql = "select * from `sit_eptaxmaster` Where deleted = 0"
 
   con.query(sql, (err, data) => {
     if (err) {
@@ -4989,7 +5154,7 @@ app.post('/nodeapp/update_lecture_child', async (req, res) => {
     const updateStudent = (student) => {
       return new Promise((resolve, reject) => {
         const { Student_Reaction, Student_Atten, In_Time, Out_Time, AssignmentReceived, ID } = student;
-        const updatedata = `UPDATE lecture_taken_child SET Student_Reaction = ?, Student_Atten = ?,  In_Time = ?,  Out_Time = ?, AssignmentReceived = ?
+        const updatedata = `UPDATE Lecture_taken_child SET Student_Reaction = ?, Student_Atten = ?,  In_Time = ?,  Out_Time = ?, AssignmentReceived = ? 
                   WHERE ID = ?`;
 
         con.query(updatedata, [Student_Reaction, Student_Atten, In_Time, Out_Time, AssignmentReceived, ID], (err, result) => {
@@ -5150,9 +5315,60 @@ app.post('/nodeapp/update_fexamtaken_child', async (req, res) => {
 });
 
 
+
+app.post('/nodeapp/allocatedrollno', (req, res) => {
+  const { batch_code } = req.body; // Access batch_code from the request body
+
+  const sqlSelect = `SELECT sm.Student_Id,sm.Student_Name , am.Admission_Date,am.Student_Code , am.Phase FROM Student_Master as sm left JOIN Admission_master as am on am.Student_Id = sm.Student_Id where sm.IsDelete = 0 AND am.IsDelete = 0 AND Admission = 1 AND Batch_Code = ?`;
+
+  const param = [batch_code];
+
+  con.query(sqlSelect, param, (err, students) => {
+    if (err) {
+      return res.json(err);
+    }
+
+    // Sort students by Student_Name in ascending order
+    students.sort((a, b) => a.Student_Name.localeCompare(b.Student_Name));
+
+    // Extract and sort Student_Code in ascending order
+    const sortedCodes = students.map(student => student.Student_Code).sort();
+
+    // Reassign sorted Student_Code back to sorted students
+    const updatedStudents = students.map((student, index) => ({
+      Student_Id: student.Student_Id,
+      Student_Code: sortedCodes[index] // Assign sorted codes in order
+    }));
+
+    // Prepare promises to update each student's Student_Code in the database
+    const updatePromises = updatedStudents.map(student => {
+      return new Promise((resolve, reject) => {
+        const sqlUpdate = "UPDATE Admission_master SET Student_Code = ? WHERE Student_Id = ?";
+        con.query(sqlUpdate, [student.Student_Code, student.Student_Id], (err, result) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(result);
+          }
+        });
+      });
+    });
+
+    // Execute all update promises concurrently
+    Promise.all(updatePromises)
+      .then(results => {
+        res.json({ message: 'Student codes reassigned successfully', results });
+      })
+      .catch(error => {
+        res.json({ error: 'Error updating student codes', details: error });
+      });
+  });
+});
+
+
 app.get('/nodeapp/generateresultdata', (req, res) => {
 
-  const sql = "select gf.Id , bm.Batch_code ,cm.Course_Name , gf.Result_date ,fm.Faculty_Name from generate_final_result as gf left join Batch_Mst as bm on bm.Batch_Id = gf.Batch_Id left JOIN Course_Mst as cm on cm.Course_Id = gf.Course_Id left JOIN Faculty_Master as fm on fm.Faculty_Id = gf.Approve where gf.isDelete = 0"
+  const sql = "select gf.Id , bm.Batch_code ,cm.Course_Name , gf.Result_date ,fm.Faculty_Name from generate_final_result as gf left join Batch_Mst as bm on bm.Batch_Id = gf.Batch_Id left JOIN Course_Mst as cm on cm.Course_Id = gf.Course_Id left JOIN faculty_master as fm on fm.Faculty_Id = gf.Approve where gf.isDelete = 0 order by gf.Id desc"
 
   con.query(sql, (err, data) => {
     if (err) {
@@ -5163,11 +5379,14 @@ app.get('/nodeapp/generateresultdata', (req, res) => {
   })
 })
 
-app.get('/nodeapp/generateresultdata', (req, res) => {
-  const { batch_coed } = res.body;
-  const sql = "SELECT sm.Student_Id,sm.Student_Name , am.Admission_Date,am.Student_Code , am.Phase FROM `Student_Master` as sm left JOIN Admission_master as am on am.Student_Id = sm.Student_Id where sm.IsDelete = 0 AND am.IsDelete = 0 AND Admission = 1 AND Batch_Code = ? "
-  const param = [batch_coed]
-  con.query(sql, param, (err, data) => {
+
+app.post(`/nodeapp/getlecturedetails`, (req, res) => {
+
+  let lectureid = req.body.lectureid
+
+  let sql = "select * from `Batch_Lecture_Master` where id = ?"
+
+  con.query(sql, [lectureid], (err, data) => {
     if (err) {
       return res.json(err)
     } else {
@@ -5192,6 +5411,135 @@ app.post('/nodeapp/getresultchild', (req, res) => {
 
 })
 
+
+app.get('/nodeapp/getaddfeesdetailsdata', (req, res) => {
+
+  const sql = "select fd.* , cm.Course_Name , bm.Batch_code from fees_details as fd left JOIN Course_Mst as cm on fd.Course_Id = cm.Course_Id LEFT JOIN Batch_Mst as bm on bm.Batch_Id = fd.Batch_Id where fd.isDelete = 0;";
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+})
+
+app.post('/nodeapp/getstudent_details', (req, res) => {
+  let { Student_Id } = req.body;
+
+  const sql = "select sm.Student_Name, sm.Student_Id ,sm.Present_Mobile,sm.Email,cm.Course_Name , sm.Course_Id,sm.Batch_code from Student_Master as sm left JOIN Course_Mst as cm on sm.Course_Id = cm.Course_Id  where Student_Id = ?"
+
+  con.query(sql, [Student_Id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+})
+
+app.get('/nodeapp/gettime', (req, res) => {
+
+  const sql = "select * from Timining_org"
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+})
+
+app.post('/nodeapp/importgrade', (req, res) => {
+  let { batchid } = req.body;
+
+  const sql = "SELECT * FROM standard_grades";
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json({ success: false, message: 'Error fetching standard grades', error: err });
+    } else {
+      // Iterate over the fetched grades and insert them into the `grades` table
+      data.forEach((item) => {
+        let { start_from, end_from, grade } = item;
+
+        const insert = 'INSERT INTO grades(`batch_id`, `start_from`, `end_from`, `grade`, `deleted`) VALUES (?, ?, ?, ?, ?)';
+
+        // Perform the insert query
+        con.query(insert, [batchid, start_from, end_from, grade, 0], (err, result) => {
+          if (err) {
+            console.error('Error inserting grade:', err);
+            return res.json({ success: false, message: 'Error inserting grade', error: err });
+          }
+        });
+      });
+
+      // Send a response once all queries have been executed
+      res.json({ success: true, message: 'Grades imported successfully' });
+    }
+  });
+});
+
+
+// Convert Excel date serial to JavaScript Date
+function excelDateToJSDate(serial) {
+  const excelStartDate = new Date(1899, 11, 30);
+  const jsDate = new Date(excelStartDate.getTime() + serial * 86400000);
+  return jsDate.toISOString().split('T')[0]; // Returns only the date in 'YYYY-MM-DD' format
+}
+
+
+app.post("/nodeapp/upload-excel", (req, res) => {
+
+  const excelData = req.body.data;
+  const batch_id = req.body.batch_id;
+  const date = new Date();
+
+  if (!excelData || excelData.length === 0) {
+    return res.status(400).json({ message: "No data to import" });
+  }
+
+  const sqlQuery = "INSERT INTO batch_slecture_master (assignment, assignment_date, class_room,date,documents,duration,endtime,faculty_name,lecture_no,marks,publish,starttime,subject,subject_topic,unit_test,batch_id,created_date) VALUES ?";
+
+  const values = excelData.map((row) => [row.Assignment, excelDateToJSDate(row.Assignment_date), row.Class_room, excelDateToJSDate(row.Date), row.Documents, row.Duration, row.Endtime, row.Faculty_name, row.Lecture_no, row.Marks, row.Publish, row.Starttime, row.Subject, row.Subject_topic, row.Unit_test, batch_id, date]);
+
+  con.query(sqlQuery, [values], (err, result) => {
+    if (err) {
+      return res.status(500).json({ error: err });
+    } else {
+
+      const insertlecture = 'INSERT INTO batch_lecture_master (assignment, assignment_date, class_room,date,documents,duration,endtime,faculty_name,lecture_no,marks,publish,starttime,subject,subject_topic,unit_test,batch_id,created_date) VALUES ?';
+
+      const values = excelData.map((row) => [row.Assignment, excelDateToJSDate(row.Assignment_date), row.Class_room, excelDateToJSDate(row.Date), row.Documents, row.Duration, row.Endtime, row.Faculty_name, row.Lecture_no, row.Marks, row.Publish, row.Starttime, row.Subject, row.Subject_topic, row.Unit_test, batch_id, date]);
+
+      con.query(insertlecture, [values], (err, result) => {
+        if (err) {
+          return res.json(err)
+        }else{
+          return res.status(200).json(result)
+        }
+      })
+
+    }
+
+  });
+});
+
+
+app.get('/nodeapp/getbatchleft', (req, res) => {
+
+  const sql = "select ab.id , ab.batchno , ab.date,ab.reason, cm.Course_Name , sm.Student_Name from awt_batchleft as ab left join Course_Mst as cm on cm.Course_Id = ab.course LEFT JOIN Student_Master as sm on sm.Student_Id = ab.student  where ab.deleted = 0"
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+})
 
 
 
