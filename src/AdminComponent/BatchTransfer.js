@@ -41,32 +41,6 @@ const BatchTransfer = () => {
             newErrors.Course_Id = "Course Id is Required"
         }
 
-        if (!value.Old_Batch_Id) {
-            isValid = false;
-            newErrors.Old_Batch_Id = "Batch Id is Required"
-        }
-
-        if (!value.Student_Id) {
-            isValid = false;
-            newErrors.Student_Id = "Student Id is Required"
-        }
-
-        if (!value.New_Batch_Id) {
-            isValid = false;
-            newErrors.New_Batch_Id = "New Batch is Required"
-        }
-
-        if (!value.Transfer_Amt) {
-            isValid = false;
-            newErrors.Transfer_Amt = "Transfer Amt is Required"
-        }
-        if (!value.Pay_Type) {
-            isValid = false;
-            newErrors.Pay_Type = "Pay Type is Required"
-        }
-
-
-
         setError(newErrors)
         return isValid
     }
@@ -119,7 +93,7 @@ const BatchTransfer = () => {
         SetStudentid(id)
 
         const data = {
-            studentid: id,
+            batch_code: id,
             
         };
 
@@ -130,12 +104,12 @@ const BatchTransfer = () => {
 
             } else {
 
-                const res = await axios.post(`${BASE_URL}/get_data`,
+                const res = await axios.post(`${BASE_URL}/getbatch_code`,
                     {
                         tablename: "getbatchwisestudent",
                         columnname: "id_batchwisestudent"
                     });
-                batch_code(res.data);
+                    batch_code(res.data);
             }
         } catch (err) {
             console.error("Error fetaching data:", err);
@@ -177,7 +151,7 @@ const BatchTransfer = () => {
 
 
     async function getUpdate() {
-        const response = await fetch(`${BASE_URL}/new_update_data`, {
+        const response = await fetch(`${BASE_URL}/update_data`, {
             method: 'POST',
             body: JSON.stringify({
                 u_id: batchtransferid,
@@ -336,11 +310,12 @@ const BatchTransfer = () => {
                                                     value={value.Batch_code} onChange={(e) => {
                                                         getassign(e.target.value)
 
+
                                                     }}>
                                                     <option>Select Batch</option>
                                                     {batch.map((item) => {
                                                         return (
-                                                            <option value={item.Batch_Id}>{item.Batch_code}</option>
+                                                            <option value={item.Batch_code}>{item.Batch_code}</option>
                                                         )
                                                     })}
 

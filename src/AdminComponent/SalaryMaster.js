@@ -273,28 +273,28 @@ const SalaryMaster = () => {
                                             </div>
 
                                             <div class="form-group col-lg-3">
-                                                <lable for="exampleInputUsername">Service Charge(%)<span className="text-danger">*</span></lable>
+                                                <label for="exampleInputUsername">Service Charge(%)<span className="text-danger">*</span></label>
                                                 <input type="text" class="form-control" id="exampleInputUsername1"
                                                     value={value.service} placeholder='00.00' name='service' onChange={onhandleChange} />
                                                 {<span className="text-danger"> {error.service} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-3">
-                                                <lable for="exampleInputUsername">Emp Contri(%)<span className="text-danger">*</span></lable>
+                                                <label for="exampleInputUsername">Emp Contri(%)<span className="text-danger">*</span></label>
                                                 <input type="text" class="form-control" id="exampleInputUsername1"
                                                     value={value.empcontri} placeholder='00.00' name='empcontri' onChange={onhandleChange} />
                                                 {<span className='text-danger'> {error.empcontri} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-3">
-                                                <lable for="exampleInputUsername">DA <span className="text-danger">*</span></lable>
+                                                <label for="exampleInputUsername">DA <span className="text-danger">*</span></label>
                                                 <input type="text" class="form-control" id="exampleInputUsername1"
                                                     value={value.salaryda} placeholder='00.00' name='salaryda' onChange={onhandleChange} />
                                                 {<span className='text-danger'> {error.salaryda} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-3">
-                                                <lable for="exampleInputUsername"> Min. Basic<span className="text-danger">*</span></lable>
+                                                <label for="exampleInputUsername"> Min. Basic<span className="text-danger">*</span></label>
                                                 <input type="text" class="form-control" id="exampleInputUsername1"
                                                     value={value.minbasic} placeholder='00.00' name='minbasic' onChange={onhandleChange} />
                                                 {<span className='text-danger'> {error.minbasic} </span>}

@@ -1,18 +1,7 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
-import decryptedUserId from '../Utils/UserID';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { Button, Card, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import IconButton from '@mui/material/IconButton';
-import AddBoxIcon from '@mui/icons-material/AddBox';
 
 
 const ProjectMaster = () => {
@@ -71,7 +60,25 @@ const ProjectMaster = () => {
 
         setValue(prevState => ({
             ...prevState,
- 
+            firstname: data[0].firstname,
+            gender: data[0].Sex,
+            dob: data[0].DOB,
+            mobile: data[0].present_mobile,
+            whatsapp: '',
+            email: data[0].Email,
+            nationality: data[0].Nationality,
+            discussion: data[0].discussion,
+            country: '',
+            InquiryDate: data[0].Inquiry_Dt,
+            modeEnquiry: data[0].Inquiry_Type,
+            advert: '',
+            programmeEnquired: '',
+            selectedProgramme: data[0].Course_Id,
+            category: '',
+            batch: '',
+            qualification: data[0].Qualification,
+            descipline: data[0].Discipline,
+            percentage: data[0].Percentage,
         }))
     }
     useEffect(() => {
@@ -197,13 +204,17 @@ const ProjectMaster = () => {
                                                     <div className='row'>
                                                         <div className="form-group col-lg-8 ">
                                                             <label for="exampleInputUsername1">Name<span className='text-danger'>*</span></label>
-                                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.firstname} placeholder="Name*" name='firstname' onChange={onhandleChange} />
-                                                            {error.facultyname && <span className='text-danger'>{error.name}</span>}
+                                                            <input type="text" class="form-control" id="exampleInputUsername1" 
+                                                            value={value.firstname} placeholder="Name*" name='firstname'
+                                                             onChange={onhandleChange} />
+                                                            {<span className='text-danger'>{error.firstname}</span>}
                                                         </div>
 
                                                         <div className="form-group col-lg-4 ">
                                                             <label for="exampleInputUsername1">Gender</label>
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.gender} name='gender' onChange={onhandleChange} >
+                                                            <select className="form-control form-control-lg" 
+                                                            id="exampleFormControlSelect1" value={value.gender} 
+                                                            name='gender' onChange={onhandleChange} >
                                                                 <option>Male</option>
                                                                 <option>Female</option>
                                                                 <option>Other</option>

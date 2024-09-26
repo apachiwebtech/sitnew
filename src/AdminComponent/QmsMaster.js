@@ -108,35 +108,6 @@ const QmsMaster = () => {
             console.error(err);
         }
     };
-
-    // const handleUpdate = async (id) => {
-    //     const data = {
-    //         u_id: id,
-    //         tablename: "qms_master"
-    //     };
-    //     try {
-    //         const res = await axios.post(`${BASE_URL}/update_data`, data);
-    //         setUid(res.data[0]);
-    //         console.log(res.data, "update");
-    //     } catch (err) {
-    //         console.error(err);
-    //     }
-    // };
-
-    // const handleDelete = async (id) => {
-    //     const data = {
-    //         delete_id: id,
-    //         tablename: "qms_master"
-    //     };
-    //     try {
-    //         const res = await axios.post(`${BASE_URL}/delete_data`, data);
-    //         console.log(res.data);
-    //         getQmsMasterData(); 
-    //     } catch (err) {
-    //         console.error(err);
-    //     }
-    // };
-
     const handleDelete = async (id) => {
         const data = {
             cat_id: id,

@@ -29,7 +29,7 @@ const BatchTransferListing = () => {
     })
 
     const getInquiryData = async () => {
-        const response = await fetch(`${BASE_URL}/batchtransferdata`, {
+        const response = await fetch(`${BASE_URL}/setbatchtransferdata`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
