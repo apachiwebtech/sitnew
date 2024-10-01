@@ -12,17 +12,16 @@ import InnerHeader from './InnerHeader';
 const MaterialConsumption = () => {
 
 
-   
+
 
 
     const [brand, setBrand] = useState([])
     const [vendordata, setVendorData] = useState([])
-    const [specification, setSpecification] = useState("")
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
+    const [faculty, setFacilty] = useState([])
 
 
     const [value, setValue] = useState({
@@ -64,10 +63,10 @@ const MaterialConsumption = () => {
         const newErrors = {}
 
 
-       if (!value.isussed) {
-        isValid = false;
-        newErrors.isussed = "Isussed is Required"
-       }
+        if (!value.isussed) {
+            isValid = false;
+            newErrors.isussed = "Isussed is Required"
+        }
         if (!value.startdate) {
             isValid = false;
             newErrors.startdate = "Date is Required"
@@ -76,15 +75,15 @@ const MaterialConsumption = () => {
             isValid = false;
             newErrors.course = "Course is Required"
         }
-        if (!value.qtyinstock){
+        if (!value.qtyinstock) {
             isValid = false;
             newErrors.qtyinstock = "Stock is Required"
         }
-        if (!value.batchno){
+        if (!value.batchno) {
             isValid = false;
             newErrors.batchno = "Batch is Required"
         }
-        if (!value.student){
+        if (!value.student) {
             isValid = false;
             newErrors.student = "Student is Required"
         }
@@ -129,10 +128,23 @@ const MaterialConsumption = () => {
             })
     }
 
+    async function getfaculty() {
+
+        axios.get(`${BASE_URL}/getfaculty`)
+            .then((res) => {
+
+                setFacilty(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+
     useEffect(() => {
         getEmployeeData()
         value.title = ""
         setError({})
+        getfaculty()
         setUid([])
     }, [])
 
@@ -192,35 +204,35 @@ const MaterialConsumption = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        if(validateForm()){
-        const data = {
+        if (validateForm()) {
+            const data = {
 
 
 
-            isussed: value.isussed,
-            startdate: value.startdate,
-            course: value.course,
-            qtyinstock: value.qtyinstock,
-            batchno: value.batchno,
-            student: value.student,
-            selectitem: value.selectitem,
-            qtyissue: value.qtyissue,
-            price: value.price,
-            ammounts: value.ammounts,
-            purpose: value.purpose,
-            uid: uid.id
-        }
+                isussed: value.isussed,
+                startdate: value.startdate,
+                course: value.course,
+                qtyinstock: value.qtyinstock,
+                batchno: value.batchno,
+                student: value.student,
+                selectitem: value.selectitem,
+                qtyissue: value.qtyissue,
+                price: value.price,
+                ammounts: value.ammounts,
+                purpose: value.purpose,
+                uid: uid.id
+            }
 
 
-        axios.post(`${BASE_URL}/add_materialconsumption`, data)
-            .then((res) => {
-                console.log(res)
-                getEmployeeData()
+            axios.post(`${BASE_URL}/add_materialconsumption`, data)
+                .then((res) => {
+                    console.log(res)
+                    getEmployeeData()
 
-            })
-            .catch((err) => {
-                console.log(err)
-            })
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
         }
 
 
@@ -260,7 +272,7 @@ const MaterialConsumption = () => {
         { field: 'qtyissue', headerName: 'QTY Issue', flex: 2 },
         { field: 'price', headerName: 'Price', flex: 2 },
         { field: 'ammounts', headerName: 'Ammounts', flex: 2 },
-        { field: 'purpose', headerName: 'Purpose', flex: 2 }, 
+        { field: 'purpose', headerName: 'Purpose', flex: 2 },
 
         {
             field: 'actions',
@@ -295,27 +307,32 @@ const MaterialConsumption = () => {
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
-
+                                            
                                             <div class="form-group col-lg-2">
-                                                <lable for="exampleFormControlSelect1">Isussed By<span className="text-danger">*</span></lable>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" 
-                                                value={value.isussed} name='isussed' onChange={onhandleChange}>
-                                                    <option>Select</option>
+                                                <label for="exampleFormControlSelect1">Isussed By</label>
+                                                <select class="form-control" id="exampleFormControlSelect1" value={value.faculty}
+                                                    name='faculty' onChange={onhandleChange}>
+                                                    <option>--Select Faculty--</option>
+                                                    {faculty.map((item) => {
+                                                        return (
+                                                            <option value={item.Faculty_Id}>{item.Faculty_Name}</option>
+                                                        )
+                                                    })}
                                                 </select>
-                                                {<span className='text-danger'> {error.isussed} </span>}
+                                                {<span className="text-danger"> {error.faculty} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleInputUsername1">Start Date<span className="text-danger">*</span></label>
                                                 <input type="date" class="form-control" id="exampleInputUsername1"
-                                                 value={value.startdate} name='startdate' onChange={onhandleChange} />
-                                                 {<span className='text-danger'> {error.startdate} </span>}
+                                                    value={value.startdate} name='startdate' onChange={onhandleChange} />
+                                                {<span className='text-danger'> {error.startdate} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-2">
                                                 <lable for="exampleFormControlSelect1">Select Course<span className="text-danger">*</span></lable>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1"
-                                                 value={value.course} name='course' onChange={onhandleChange}>
+                                                    value={value.course} name='course' onChange={onhandleChange}>
                                                     <option>Select Course</option>
                                                 </select>
                                                 {<span className='text-danger'> {error.course} </span>}
@@ -323,16 +340,16 @@ const MaterialConsumption = () => {
 
                                             <div class="form-group col-lg-2">
                                                 <lable for="exampleInputUsername1">Qty In Stock<span className="text-danger">*</span></lable>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" 
-                                                value={value.qtyinstock} placeholder='Qty In Stock' name='qtyinstock' 
-                                                onChange={onhandleChange} />
+                                                <input type="text" class="form-control" id="exampleInputUsername1"
+                                                    value={value.qtyinstock} placeholder='Qty In Stock' name='qtyinstock'
+                                                    onChange={onhandleChange} />
                                                 {<span className='text-danger'> {error.qtyinstock} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleFormControlSelect1">Select Batch<span className="text-danger">*</span></label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1"
-                                                 value={value.batchno} name='batchno' onChange={onhandleChange}>
+                                                    value={value.batchno} name='batchno' onChange={onhandleChange}>
                                                     <option></option>
                                                 </select>
                                                 {<span className='text-danger'> {error.batchno} </span>}
@@ -342,7 +359,7 @@ const MaterialConsumption = () => {
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleFomrControlSelect1">Select Student<span className="text-danger">*</span></label>
                                                 <select className='form-control form-control-lg' id="exampleFormControlSelect1"
-                                                 value={value.student} name='student' onChange={onhandleChange}>
+                                                    value={value.student} name='student' onChange={onhandleChange}>
                                                     <option></option>
                                                 </select>
                                                 {<span className='text-danger'> {error.student} </span>}
@@ -351,7 +368,7 @@ const MaterialConsumption = () => {
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleFomrControlSelect1">Select Item<span className="text-danger">*</span></label>
                                                 <select className='form-control form-control-lg' id="exampleFormControlSelect1"
-                                                 value={value.selectitem} name='selectitem' onChange={onhandleChange}>
+                                                    value={value.selectitem} name='selectitem' onChange={onhandleChange}>
                                                     <option>Select Material Type</option>
                                                 </select>
                                                 {<span className='text-danger'> {error.selectitem} </span>}
@@ -360,15 +377,15 @@ const MaterialConsumption = () => {
 
                                             <div class="form-group col-lg-2">
                                                 <lable for="exampleInputUsername1">Qty Issue<span className="text-danger">*</span></lable>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" 
-                                                value={value.qtyissue} placeholder='Quantity' name='qtyissue' onChange={onhandleChange} />
+                                                <input type="text" class="form-control" id="exampleInputUsername1"
+                                                    value={value.qtyissue} placeholder='Quantity' name='qtyissue' onChange={onhandleChange} />
                                                 {<span className='text-danger'> {error.qtyissue} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-2">
                                                 <lable for="exmpaleInputUsername">Price</lable>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" 
-                                                value={value.price} placeholder='Price' name='price' onChange={onhandleChange} />
+                                                <input type="text" class="form-control" id="exampleInputUsername1"
+                                                    value={value.price} placeholder='Price' name='price' onChange={onhandleChange} />
                                             </div>
 
                                             <div class="form-group col-lg-2">

@@ -5,11 +5,15 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
+import { data } from "jquery";
 
 const BatchCancellation = () => {
 
 
-    const [date, setDate] = useState('');
+    const [currentdate, setDate] = useState('');
+    const [course, setCourse] = useState([])
+    const [batch, setBatch] = useState([])
+    const [student, setStudent] = useState([])
 
     useEffect(() => {
         const currentDate = new Date();
@@ -21,93 +25,170 @@ const BatchCancellation = () => {
         const formattedDate = `${year}-${month}-${day}`;
         setDate(formattedDate);
     }, []);
-    const [course, SetCourse] = useState([])
-    const [batch, setAnnulBatch] = useState([])
-    const [vendordata, setVendorData] = useState([]);
-    const [uid, setUid] = useState(null); // Set initial state to null
-    const [cid, setCid] = useState(null); // Set initial state to null
-    const [error, setError] = useState({});
+
+
+    const [batchleftdata, setData] = useState([])
+    const [uid, setUid] = useState([])
+    const [cid, setCid] = useState("")
+    const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [loading, setLoading] = useState(true);
+    const [batchid, setBatchid] = useState('')
+    const [courseid, setCourseid] = useState('')
+
+
+
 
     const [value, setValue] = useState({
-        selectcourse: '',
-        batchno: '',
-        student: '',
-        cancellationammount: '',
-        date: '',
-    });
+
+        course: "" || uid.course,
+        batchno: "" || uid.batchno,
+        student: "" || uid.student,
+        cancellationammount: "" || uid.cancellationammount,
+        date: "" || uid.data,
+
+    })
 
     useEffect(() => {
-        if (uid) {
-            setValue({
-                selectcourse: uid.selectcourse || "",
-                batchno: uid.batchno || "",
-                student: uid.student || "",
-                cancellationammount: uid.cancellationammount || "",
-                date: uid.date || ""
-            });
-        }
-    }, [uid]);
+        setValue({
 
-    const validateForm = () => {
-        let isValid = true;
-        const newErrors = {};
+            course: uid.course,
+            batchno: uid.batchno,
+            student: uid.student,
+            cancellationammount: uid.cancellationammount,
+            date: uid.data,
 
-        if (!value.from_sal) {
-            isValid = false;
-            newErrors.from_sal = "Salary From is Required";
-        }
-
-        if (!value.to_sal) {
-            isValid = false;
-            newErrors.to_sal = "Salary To is Required";
-        }
-
-        if (!value.tax_price) {
-            isValid = false;
-            newErrors.tax_price = "Tax Rate is Required";
-        }
-
-        setError(newErrors);
-        return isValid;
-    };
-
-    const getbatch = async (id) => {
-
-        const data = {
-            courseid: "id"
-        }
-
-        try {
-            const res = await axios.post(`${BASE_URL}/getcoursewisebatch`, data);
-            setAnnulBatch(res.data);
-
-        } catch (err) {
-            console.error("Error fetching data:", err);
-        }
-    };
+        })
+    }, [uid])
 
 
-    async function getsit_eptaxmaster() {
-        try {
-            const res = await axios.get(`${BASE_URL}/getsit_eptaxmaster`);
-            setVendorData(res.data);
-            SetCourse(res.data)
-            setLoading(false);
-        } catch (err) {
-            console.error(err);
-        }
+    // const validateForm = () => {
+    //     let isValid = true
+    //     const newErrors = {}
+
+
+    //    if (!value.college) {
+    //     isValid = false;
+    //     newErrors.name = "Name is require"
+    //    }
+    //     if (!value.email) {
+    //         isValid = false;
+    //         newErrors.email = "Email is require"
+    //     }
+    //     setError(newErrors)
+    //     return isValid
+    // }
+
+
+    async function BatchLeft() {
+
+
+        axios.get(`${BASE_URL}/getbatchleft`)
+            .then((res) => {
+                console.log(res.data)
+                setData(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
     }
 
+
+    const getcourse = () => {
+
+        const data = {
+            tablename: "Course_Mst",
+            columnname: "Course_Id,Course_Name"
+        }
+
+        axios.post(`${BASE_URL}/get_new_data`, data)
+            .then((res) => {
+                console.log(res.data)
+                setCourse(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+
+    }
+
+    const getBatch = async (id) => {
+        setCourseid(id)
+        const data = {
+            courseid: id
+        }
+
+
+        if (id) {
+            axios.post(`${BASE_URL}/getcoursewisebatch`, data)
+                .then((res) => {
+                    console.log(res.data)
+                    setBatch(res.data)
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        } else {
+            try {
+                const res = await axios.get(`${BASE_URL}/getbatch`, data);
+
+                setBatch(res.data);
+
+            } catch (err) {
+                console.error("Error fetching data:", err);
+            }
+        }
+
+
+    }
+
+    const getStudent = async (code) => {
+        setBatchid(code)
+        const data = {
+            batch_code: code
+        }
+        if (code) {
+            axios.post(`${BASE_URL}/getbatchwisestudent`, data)
+                .then((res) => {
+
+                    setStudent(res.data)
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        } else {
+            try {
+                const res = await axios.post(`${BASE_URL}/get_new_data`,
+                    {
+                        tablename: "Student_Master",
+                        columnname: "Student_Id,Student_Name"
+                    });
+
+                setStudent(res.data);
+
+            } catch (err) {
+                console.error("Error fetching data:", err);
+            }
+        }
+
+
+    }
+
+
+
+
+
     useEffect(() => {
-        getsit_eptaxmaster();
-        setError({});
-        setUid(null);
-    }, []);
+        getBatch()
+        getStudent()
+        getcourse()
+        BatchLeft()
+        value.title = ""
+        setError({})
+        setUid([])
+    }, [])
 
     const handleClick = (id) => {
-        setCid(id);
+        setCid(id)
         setConfirmationVisibleMap((prevMap) => ({
             ...prevMap,
             [id]: true,
@@ -115,100 +196,122 @@ const BatchCancellation = () => {
     };
 
     const handleCancel = (id) => {
+        // Hide the confirmation dialog without performing the delete action
         setConfirmationVisibleMap((prevMap) => ({
             ...prevMap,
             [id]: false,
         }));
     };
 
-    const handleUpdate = async (id) => {
-        try {
-            const data = {
-                u_id: id,
-                uidname: "id",
-                tablename: "sit_eptaxmaster"
-            }
-            axios.post(`${BASE_URL}/update_data`, data)
-                .then((res) => {
-                    setUid(res.data[0])
-                    console.log(res.data, "update")
-                })
-                .catch((err) => {
-                    console.log(err)
-                })
-
-        } catch (err) {
-            console.error(err);
+    const handleUpdate = (id) => {
+        const data = {
+            u_id: id,
+            tablename: "sit_batchcancellation"
         }
-    };
+        axios.post(`${BASE_URL}/update_data`, data)
+            .then((res) => {
+                setUid(res.data[0])
+                setBatchid(res.data[0].batchno)
+                setCourseid(res.data[0].course)
+                setDate(res.data[0].date)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
 
-
-
-    const handleDelete = async (id) => {
-        try {
-            const data = {
-                delete_id: id,
-                tablename: "sit_eptaxmaster",
-                column_name: 'id'
-            };
-            axios.post(`${BASE_URL}/delete_data`, data);
-            getsit_eptaxmaster();
-        } catch (err) {
-            console.error(err);
+    const handleDelete = (id) => {
+        const data = {
+            cat_id: id,
+            tablename: "sit_batchcancellation"
         }
+
+        axios.post(`${BASE_URL}/delete_data`, data)
+            .then((res) => {
+                BatchLeft()
+
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+
         setConfirmationVisibleMap((prevMap) => ({
             ...prevMap,
             [id]: false,
         }));
+    }
 
+    const handleSubmit = (e) => {
+        e.preventDefault()
 
-    };
+        // if(validateForm()){
+        const data = {
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        if (validateForm()) {
-            const data = {
-                selectcourse: value.selectcourse,
-                batchno: value.batchno,
-                student: value.student,
-                cancellationammount: value.cancellationammount,
-                date: value.date,
-                uid: uid ? uid.id : null
-            };
-
-            try {
-                await axios.post(`${BASE_URL}/add_sit_eptaxmaster`, data);
-                getsit_eptaxmaster();
-                alert("Data Submitted Successfully");
-            } catch (err) {
-                console.error(err);
-            }
+            course: value.course,
+            batchno: value.batchno,
+            student: value.student,
+            cancellationammount: value.cancellationammount,
+            date: value.data,
+            uid: uid.id
         }
-    };
+
+
+        axios.post(`${BASE_URL}/add_sit_batchcancellation`, data)
+            .then((res) => {
+                console.log(res)
+                alert("Data added successfully")
+                BatchLeft()
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+        // }
+
+
+
+
+
+    }
+
 
     const onhandleChange = (e) => {
-        setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-    };
+        setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+    }
 
     const columns = [
-        { field: 'from_sal', headerName: 'From', flex: 2 },
-        { field: 'to_sal', headerName: 'To', flex: 2 },
+        {
+            field: 'index',
+            headerName: 'Id',
+            type: 'number',
+            align: 'center',
+            headerAlign: 'center',
+            flex: 1,
+            filterable: false,
+
+        },
+        { field: 'student', headerName: 'Student Name', flex: 2 },
+        { field: 'batchno', headerName: 'Batch Code', flex: 2 },
+        { field: 'date', headerName: 'Date', flex: 2 },
+        { field: 'cancellationammount', headerName: 'Cancel Amount', flex: 2 },
+
         {
             field: 'actions',
             type: 'actions',
             headerName: 'Action',
             flex: 1,
-            renderCell: (params) => (
-                <>
-                    <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />
-                    <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
-                </>
-            )
+            renderCell: (params) => {
+                return (
+                    <>
+                        <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />
+                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
+                    </>
+                )
+            }
         },
     ];
 
-    const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
+
+    const rowsWithIds = batchleftdata.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
 
@@ -226,45 +329,47 @@ const BatchCancellation = () => {
                                         <div class='row'>
 
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Select Course<span className="text-danger">*</span></label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1"
-                                                    value={value.selectcourse} name='selectcourse' onChange={(e) => getbatch(e.target.value)}>
-                                                    <option>--Select Course--</option>
-
+                                                <lable for="exampleFormControlSelect1">Course<span className="text-danger">*</span></lable>
+                                                <select class="form-control" id="exampleFormControlSelect1"
+                                                    value={value.course} name='course' onChange={(e) => getBatch(e.target.value)}>
+                                                    <option>Select Course</option>
                                                     {course.map((item) => {
                                                         return (
                                                             <option value={item.Course_Id}>{item.Course_Name}</option>
+
                                                         )
                                                     })}
-
                                                 </select>
-                                                {<span className='text-danger'> {error.selectcourse} </span>}
+                                                {<span className='text-danger'> {error.course} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Batch No.<span className="text-danger">*</span></label>
+                                                <label for="exampleFormControlSelect1">Batch No.</label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1"
-                                                    value={value.batchno} name='batchno' onChange={onhandleChange}>
-                                                    <option>--Select Batch--</option>
-
+                                                    value={value.batchno} name='batchno' onChange={(e) => getStudent(e.target.value)}>
+                                                    <option>Select Batch</option>
                                                     {batch.map((item) => {
                                                         return (
                                                             <option value={item.Batch_code}>{item.Batch_code}</option>
+
                                                         )
                                                     })}
                                                 </select>
-                                                {<span className='text-danger'> {error.batchno} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleFomrControlSelect1">Student<span className="text-danger">*</span></label>
+                                                <label for="exampleFomrControlSelect1">Student</label>
                                                 <select className='form-control form-control-lg' id="exampleFormControlSelect1"
                                                     value={value.student} name='student' onChange={onhandleChange}>
-                                                    <option></option>
-                                                </select>
-                                                {<span className='text-danger'> {error.student} </span>}
-                                            </div>
 
+                                                    <option>Select Student</option>
+                                                    {student.map((item) => {
+                                                        return (
+                                                            <option value={item.Student_Id}>{item.Student_Name}</option>
+                                                        )
+                                                    })}
+                                                </select>
+                                            </div>
 
                                             <div class="form-group col-lg-3">
                                                 <lable for="exampleInputUsername1">Cancellation Ammount<span className="text-danger">*</span></lable>
@@ -276,17 +381,16 @@ const BatchCancellation = () => {
 
 
                                             <div className="form-group col-lg-3">
-                                                <label htmlFor="exampleInputUsername1">Date<span className="text-danger">*</span> </label>
+                                                <label htmlFor="exampleInputUsername1">Date</label>
                                                 <input
                                                     type="date"
                                                     className="form-control"
                                                     id="exampleInputUsername1"
-                                                    value={date}
+                                                    value={currentdate}
                                                     name="date"
                                                     onChange={(e) => { }}
                                                     disabled
                                                 />
-                                                {<span className='text-danger'> {error.date} </span>}
                                             </div>
 
 

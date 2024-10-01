@@ -7,6 +7,7 @@ const multer = require('multer');
 var session = require('express-session')
 var cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
+const { param } = require('jquery');
 
 
 // Use CORS middleware before defining routes
@@ -3130,9 +3131,9 @@ app.post('/nodeapp/add_assets', (req, res) => {
   })
 })
 
-app.post('/nodeapp/add_batch_transfer', (req, res) => {
+app.post('/nodeapp/add_awt_batchtransfer', (req, res) => {
 
-  let { Student_Id, Course_Id, Old_Batch_Id, New_Batch_Id, Transfer_Amt, Pay_Type, uid } = req.body
+  let { coursename, oldbatchno, student, newbatch, transferammount, paymenttype, uid } = req.body
 
   let sql
   let param;
@@ -3140,14 +3141,14 @@ app.post('/nodeapp/add_batch_transfer', (req, res) => {
   // console.log(uid)
 
   if (uid == undefined) {
-    sql = "insert into batch_transfer(`coursename`,`oldbatchno`,`student`,`newbatch`,`transferammount`,`paymenttype`) values(?,?,?,?,?,?)"
+    sql = "insert into batch_transfer(`coursename`, `oldbatchno`, `student`, `newbatch`, `transferammount`, `paymenttype`) values(?,?,?,?,?,?)"
 
-    param = [Student_Id, Course_Id, Old_Batch_Id, New_Batch_Id, Transfer_Amt, Pay_Type]
+    param = [coursename, oldbatchno, student, newbatch, transferammount, paymenttype,]
 
   } else {
-    sql = "update `batch_transfer` set `coursename` =? , `oldbatchno` =? , `student` =? , `newbatch` =? , `transferammount` =? , `paymenttype` =? where id = ?"
+    sql = "update `batch_transfer` set `coursename` = ? , `oldbatchno` = ? , `student` = ? , `newbatch` = ? , `transferammount` = ? , `paymenttype` = ? where id = ?"
 
-    param = [Student_Id, Course_Id, Old_Batch_Id, New_Batch_Id, Transfer_Amt, Pay_Type, uid]
+    param = [coursename, oldbatchno, student, newbatch, transferammount, paymenttype, uid]
 
   }
 
@@ -3174,29 +3175,21 @@ app.get('/nodeapp/getbatch_transfer', (req, res) => {
   })
 })
 
-app.post('/nodeapp/add_batchcancellation', (req, res) => {
+app.post('/nodeapp/add_sit_projectmaster', (req, res) => {
 
-
-
-  let { course, batchno, student, cancellationammount, date, uid } = req.body
+  let {projectno,	projectname,	description,	quotation,	qtndate,	qtnamount,	wodetails,	wodate,	woamount,	invoiceno,	invoicedate,	invoiamount, uid} = req.body
 
   let sql
   let param;
 
-  // console.log(uid)
-
-  if (uid == undefined) {
-    sql = "insert into awt_batchcancellation(`course`,`batchno`,`student`,`cancellationammount`,`date`) values(?,?,?,?,?)"
-
-    param = [course, batchno, student, cancellationammount, date,]
-
-  } else {
-    sql = "update `awt_batchcancellation` set `course` =? , `batchno` =? , `student` =? , `cancellationammount` =? , `date` =? where id = ?"
-
-    param = [course, batchno, student, cancellationammount, date, uid]
-
+  if(uid == undefined) {
+    sql = "insert into sit_projectmaster(`projectno`,	`projectname`,	`description`,	`quotation`,	`qtndate`,	`qtnamount`,	`wodetails`,	`wodate`,	`woamount`,	`invoiceno`,	`invoicedate`,	`invoiamount`) values (?,?,?,?,?,?,?,?,?,?,?,?)"
+    param = [projectno,	projectname,	description,	quotation,	qtndate,	qtnamount,	wodetails,	wodate,	woamount,	invoiceno,	invoicedate,	invoiamount, uid]
+  
+  }else {
+    sql = "update `sit_projectmaster` set `projectno` = ? ,	`projectname` = ? ,	`description` = ? ,	`quotation` = ? ,	`qtndate` = ? ,	`qtnamount` = ? ,	`wodetails` = ? ,	`wodate` = ? ,	`woamount` = ? ,	`invoiceno` = ? ,	`invoicedate` = ? ,	`invoiamount` = ? where id = ?"
+    param = [projectno,	projectname,	description,	quotation,	qtndate,	qtnamount,	wodetails,	wodate,	woamount,	invoiceno,	invoicedate,	invoiamount, uid]
   }
-
 
   con.query(sql, param, (err, data) => {
     if (err) {
@@ -3206,7 +3199,50 @@ app.post('/nodeapp/add_batchcancellation', (req, res) => {
       return res.json(data)
     }
   })
+  
 })
+
+app.post('/nodeapp/add_sit_batchcancellation', (req, res) => {
+
+  let { course, batchno, student, cancellationammount, date, uid } = req.body
+
+  let sql
+  let param;
+  // console.log(uid)
+  if (uid == undefined) {
+    sql = "insert into sit_batchcancellation(`course`, `batchno`, `student`, `cancellationammount`, `date`) values(?,?,?,?,?)"
+
+    param = [course, batchno, student, cancellationammount, date,]
+
+  } else {
+    sql = "update `sit_batchcancellation` set `course` = ? , `batchno` = ? , `student` = ? , `cancellationammount` = ? , `date` = ? where id = ?" 
+
+    param = [course, batchno, student, cancellationammount, date, uid]
+
+  }
+  con.query(sql, param, (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+})
+
+// app.post('/nodeapp/getsit_batchcancellation', (req, res) => {
+
+//   const sql = "select * from `sit_batchcancellation`"
+
+//   con.query(sql, (err, data) => {
+//     if (err) {
+//       return res.json(err)
+//     } else {
+//       return res.json(data)
+//     }
+//   })
+// })
+
 
 
 app.post('/nodeapp/add_materialconsumption', (req, res) => {

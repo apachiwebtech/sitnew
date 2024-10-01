@@ -203,7 +203,7 @@ import FeedBack2Listing from './AdminComponent/FeedBack2Listing.js';
 import FinalExamListing from './AdminComponent/FinalExamListing.js';
 import EmployeeProfessionTaxMaster from './AdminComponent/EmployeeProfessionTaxMaster.js';
 import MyDocument3 from './AdminComponent/MyDocument3.js';
-import BatchTransferListing from './AdminComponent/BatchTransferListing.js';
+//import BatchTransferListing from './AdminComponent/BatchTransferListing.js';
 import AddAssets from './AdminComponent/AddAssets.js';
 
 
@@ -857,13 +857,13 @@ const Router = createBrowserRouter([
         element: <AddAssets />
       },
 
-      {
-        path: '/batchtransfer',
-        element: <BatchTransferListing />
-      },
+      // {
+      //   path: '/batchtransfer',
+      //   element: <BatchTransferListing />
+      // },
 
       {
-        path: '/batchtransfer/:batchtransferid',
+        path: '/batchtransfer',
         element: <BatchTransfer />
       },
 

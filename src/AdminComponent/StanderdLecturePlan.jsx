@@ -14,7 +14,7 @@ import axios from "axios";
 import BatchEdit from "./BatchEdit";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import * as XLSX from "xlsx";
+//import * as XLSX from "xlsx";
 import { Upload } from "@mui/icons-material";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -340,10 +340,10 @@ const StandardLecturePlan = () => {
 
     reader.onload = (event) => {
       const binaryStr = event.target.result;
-      const workbook = XLSX.read(binaryStr, { type: "binary" });
+     // const workbook = XLSX.read(binaryStr, { type: "binary" });
       const sheetName = workbook.SheetNames[0]; // First sheet
       const sheet = workbook.Sheets[sheetName];
-      const data = XLSX.utils.sheet_to_json(sheet);
+     // const data = XLSX.utils.sheet_to_json(sheet);
       setExcelData(data); // data is an array of objects
     };
 
