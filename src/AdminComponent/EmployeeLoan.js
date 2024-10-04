@@ -11,7 +11,7 @@ import InnerHeader from './InnerHeader';
 
 const EmployeeLoan = () => {
     
-    const [faculty, setFacultyData] = useState([])
+    const [faculty, setFacilty] = useState([])
     const [brand, setBrand] = useState([])
     const [vendordata, setVendorData] = useState([])
     const [uid, setUid] = useState([])
@@ -88,10 +88,21 @@ const EmployeeLoan = () => {
             })
     }
 
+    async function getfaculty() {
+        axios.get(`${BASE_URL}/getfaculty`)
+        .then((res) => {
+            setFacilty(res.data)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+    }
+
     useEffect(() => {
         getEmployeeData()
         value.title = ""
         setError({})
+        getfaculty()
         setUid([])
     }, [])
 

@@ -38,26 +38,6 @@ const UploadEventPhoto = () => {
 
         })
     }, [uid])
-
-
-    // const validateForm = () => {
-    //     let isValid = true
-    //     const newErrors = {}
-
-
-    //    if (!value.college) {
-    //     isValid = false;
-    //     newErrors.name = "Name is require"
-    //    }
-    //     if (!value.email) {
-    //         isValid = false;
-    //         newErrors.email = "Email is require"
-    //     }
-    //     setError(newErrors)
-    //     return isValid
-    // }
-
-
     async function getEmployeeData() {
 
         axios.post(`${BASE_URL}/vendor_details`)
@@ -148,8 +128,6 @@ const UploadEventPhoto = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-
-        // if(validateForm()){
         const data = {
 
             event: value.event,
@@ -168,12 +146,6 @@ const UploadEventPhoto = () => {
             .catch((err) => {
                 console.log(err)
             })
-        // }
-
-
-
-
-
     }
 
 

@@ -26,7 +26,8 @@ const RollNumberAllot = () => {
         }
 
         try {
-            const res = await axios.post(`${BASE_URL}/getcoursewisebatch`, data);
+            const res = await 
+            axios.post(`${BASE_URL}/getcoursewisebatch`, data);
             setAnnulBatch(res.data);
 
         } catch (err) {

@@ -39,20 +39,24 @@ const ContactExport = () => {
         })
     }, [uid])
 
+
     const getbatch = async (id) => {
+
         const data = {
             courseid: id
         }
 
-        try{
-            const res = await axios.post(`${BASE_URL}/getcoursewisebatch`, data);
-            setAnnulBatch(res.data)
+        try {
+            const res = await
+                axios.post(`${BASE_URL}/getcoursewisebatch`, data);
+            setAnnulBatch(res.data);
 
-        }catch (err) {
+        } catch (err) {
             console.error("Error fetching data:", err);
         }
-
     };
+
+
 
     async function getCourseData() {
 
@@ -66,52 +70,11 @@ const ContactExport = () => {
             })
     }
 
+    useEffect(() => {
+        getCourseData()
 
-    const getstudentlisitng = (id) => {
-        setHide(true)
-        const data = {
-            batch_code: id
-        }
-
-        axios.post(`${BASE_URL}/getbatchwisestudent`, data)
-            .then((res) => {
-                setStudent(res.data)
-            })
-    }
-
-
-    const validateForm = () => {
-        let isValid = true
-        const newErrors = {}
-
-        if (!value.selectcourse){
-            isValid = false;
-            newErrors.selectcourse = "Course is Required"
-        }
-
-        if (!value.selectbatch){
-            isValid = false;
-            newErrors.selectbatch = "Batch is Required"
-        }
-
-
-        setError(newErrors)
-        return isValid
-    }
-
-
-    async function getEmployeeData() {
-
-        axios.post(`${BASE_URL}/vendor_details`)
-            .then((res) => {
-                console.log(res.data)
-                setBrand(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
-
+        setUid([])
+    }, [])
 
 
     async function getEmployeeData() {
@@ -192,33 +155,26 @@ const ContactExport = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        if(validateForm()){
-        const data = {
+            const data = {
 
 
 
-            startdate: value.startdate,
-            enddate: value.enddate,
-            specification: specification,
-            uid: uid.id
-        }
+                startdate: value.startdate,
+                enddate: value.enddate,
+                specification: specification,
+                uid: uid.id
+            }
 
 
-        axios.post(`${BASE_URL}/add_noticeboard`, data)
-            .then((res) => {
-                console.log(res)
-                getEmployeeData()
+            axios.post(`${BASE_URL}/add_noticeboard`, data)
+                .then((res) => {
+                    console.log(res)
+                    getEmployeeData()
 
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-        }
-
-
-
-
-
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
     }
 
 
@@ -281,46 +237,45 @@ const ContactExport = () => {
                                     <h4 class="card-title">Student Contact Details</h4>
 
                                     <hr></hr>
-                                    <form class="forms-sample py-3" onSubmit={handleSubmit}>
+                                    <form class="forms-sample py-3" >
                                         <div class='row'>
+
                                             <div class="form-group col-lg-12">
-                                                <lable for="exampleFormControlSelect1">Select Course <span className="text-danger">*</span></lable>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.selectcourse} name='selectcourse' onChange={(e) => getbatch(e.target.value)}>
-                                                    <option>--Select Course--</option>
+                                                <label for="exampleFormControlSelect1">Select Course<span className="text-danger">*</span></label>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1"
+                                                    value={value.selectcourse} name='selectcourse' onChange={(e) => getbatch(e.target.value)}>
+                                                    <option>Select Course</option>
 
                                                     {course.map((item) => {
                                                         return (
                                                             <option value={item.Course_Id}>{item.Course_Name}</option>
-
                                                         )
                                                     })}
 
-
                                                 </select>
-                                                {<span className="text-danger">{error.selectcourse}</span>}
+                                                {<span className='text-danger'> {error.selectcourse} </span>}
                                             </div>
+
                                             <div class="form-group col-lg-12">
-                                                <lable for="exampleFormControlSelect1">Select Batch<span className="text-danger">*</span></lable>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.selectbatch} name='selectbatch' onChange={(e) => getstudentlisitng(e.target.value) }>
-                                                    <option>--Select Batch--</option>
+                                                <label for="exampleFormControlSelect1">Select Batch Code</label>
+                                                <select class="form-control form-control-lg" id="exampleFromControlSelect1"
+                                                    value={value.rollnumberallot} name='rollnumberallot' onChange={onhandleChange}>
+
+                                                    <option>Select Batch</option>
 
                                                     {batch.map((item) => {
                                                         return (
-                                                            <option value={item.Batch_code}> {item.Batch_code} </option>
+                                                            <option value={item.Batch_code}>{item.Batch_code}</option>
                                                         )
                                                     })}
-
-
                                                 </select>
-                                                {<span className="text-danger"> {error.selectbatch} </span>}
                                             </div>
 
-
                                         </div>
-
                                         <div className='row p-2 gap-2'>
                                             <button className='mr-2 btn btn-primary' onClick={handleSubmit}>Go</button>
                                         </div>
+
 
                                     </form>
                                 </div>

@@ -316,7 +316,7 @@ const NoticeBoard = () => {
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
                                         <div>
-                                            <h4 class="card-title">Notice Board</h4>
+                                            <h4 class="card-title">View Notice Board</h4>
                                         </div>
 
                                     </div>

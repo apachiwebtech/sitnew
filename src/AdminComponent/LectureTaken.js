@@ -469,7 +469,9 @@ const LectureTaken = () => {
                                                     <div className='row'>
                                                         <div className="form-group col-lg-6 ">
                                                             <label for="exampleFormControlSelect1">Course<span className="text-danger">*</span></label>
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" name='course' value={courseid} onChange={(e) => getbatch(e.target.value)} >
+                                                            <select className="form-control form-control-lg" 
+                                                            id="exampleFormControlSelect1" name='course' 
+                                                            value={courseid} onChange={(e) => getbatch(e.target.value)} >
 
                                                                 <option >Select Course</option>
 

@@ -407,7 +407,7 @@ const ProjectMaster = () => {
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
                                         <div>
-                                            <h4 class="card-title">View Library Book Details</h4>
+                                            <h4 class="card-title">View Project Master</h4>
                                         </div>
 
                                     </div>

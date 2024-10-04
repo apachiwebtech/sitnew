@@ -12,22 +12,18 @@ import InnerHeader from './InnerHeader';
 
 const ViewStudentCV = () => {
 
+    const [course, SetCourse] = useState([])
+    const [batch, setAnnulBatch] = useState([])
     const [brand, setBrand] = useState([])
     const [vendordata, setVendorData] = useState([])
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
-
-    
-
-   
 
     const [value, setValue] = useState({
         coursename : "" || uid.coursename,
         batchcode : "" || uid.batchcode,
-
 
     })
 
@@ -37,7 +33,6 @@ const ViewStudentCV = () => {
             coursename : uid.coursename,
            batchcode : uid.batchcode,
    
-
         })
     }, [uid])
 
@@ -59,24 +54,57 @@ const ViewStudentCV = () => {
         return isValid
     }
 
+    const getbatch = async (id) => {
 
-    async function getCollegeData() {
+        const data = {
+            courseid: id
+        }
 
-        axios.post(`${BASE_URL}/vendor_details`)
+        try {
+            const res = await 
+            axios.post(`${BASE_URL}/getcoursewisebatch`, data);
+            setAnnulBatch(res.data);
+
+        } catch (err) {
+            console.error("Error fetching data:", err);
+        }
+    };
+
+
+
+    async function getCourseData() {
+
+        axios.get(`${BASE_URL}/getCourse`)
             .then((res) => {
                 console.log(res.data)
-                setBrand(res.data)
+                SetCourse(res.data)
             })
             .catch((err) => {
                 console.log(err)
             })
     }
 
+    useEffect(() => {
+        getCourseData()
 
-    
-    async function getCollegeData() {
+        setUid([])
+    }, [])
+
+
+    // async function getCollegeData() {
+
+    //     axios.post(`${BASE_URL}/vendor_details`)
+    //         .then((res) => {
+    //             console.log(res.data)
+    //             setBrand(res.data)
+    //         })
+    //         .catch((err) => {
+    //             console.log(err)
+    //         })
+    // }
+    async function getStudentCVData() {
         const data = {
-            tablename : "awt_college"
+            tablename : "viewstudent"
         }
         axios.post(`${BASE_URL}/get_data`,data)
             .then((res) => {
@@ -89,7 +117,7 @@ const ViewStudentCV = () => {
     }
 
     useEffect(() => {
-        getCollegeData()
+        getStudentCVData()
         value.title = ""
         setError({})
         setUid([])
@@ -114,7 +142,7 @@ const ViewStudentCV = () => {
     const handleUpdate = (id) => {
         const data = {
             u_id : id,
-            tablename : "awt_college"
+            tablename : "viewstudent"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
@@ -130,12 +158,12 @@ const ViewStudentCV = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename : "awt_college"
+            tablename : "viewstudent"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
             .then((res) => {
-                getCollegeData()
+                getStudentCVData()
 
             })
             .catch((err) => {
@@ -159,33 +187,23 @@ const ViewStudentCV = () => {
         }
 
 
-        axios.post(`${BASE_URL}/add_college`, data)
+        axios.post(`${BASE_URL}/add_viewstudent`, data)
             .then((res) => {
                console.log(res)
-               getCollegeData()
+               getStudentCVData()
 
             })
             .catch((err) => {
                 console.log(err)
             })
     }
-
-   
-        
-
-
     }
 
 
     const onhandleChange = (e) => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
-
- 
     
-
-
-
     const columns = [
         {
             field: 'index',
@@ -222,7 +240,7 @@ const ViewStudentCV = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper">
+        <div class="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -235,49 +253,39 @@ const ViewStudentCV = () => {
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
                                             
-                                            <div class="form-group col-lg-3">
+                                        <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Course<span className="text-danger">*</span></label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1"
-                                                 value={value.coursename} onChange={onhandleChange} name='coursename'>
-                                                    <option></option>
+                                                value={value.course} name='course' onChange={(e) => getbatch(e.target.value)}>
+                                                    <option>Select Course</option>
+
+                                                    {course.map((item) => {
+                                                        return (
+                                                            <option value={item.Course_Id}>{item.Course_Name}</option>
+                                                        )
+                                                    })}
+
                                                 </select>
-                                                {<span className='text-danger'> {error.coursename} </span>}
+                                                {<span className='text-danger'> {error.selectcourse} </span>}
                                             </div>
+
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Batch<span className="text-danger">*</span></label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1"
-                                                 value={value.batchcode} onChange={onhandleChange} name='batchcode'>
-                                                    <option></option>
+                                                <label for="exampleFormControlSelect1">Batch</label>
+                                                <select class="form-control form-control-lg" id="exampleFromControlSelect1" 
+                                                value={value.batch} name='batch' onChange={onhandleChange}>
+
+                                                    <option>Select Batch</option>
+
+                                                    {batch.map((item) => {
+                                                        return (
+                                                            <option value={item.Batch_code}>{item.Batch_code}</option>
+                                                        )
+                                                    })}
                                                 </select>
-                                                {<span className='text-danger'> {error.batchcode} </span>}
                                             </div>
-
-                                            
-
-                                                {/* <div>
-                                            <FormControlLabel
-                                                label="Parent"
-                                                control={
-                                                <Checkbox
-                                                    checked={checked[0] && checked[1]}
-                                                    indeterminate={checked[0] !== checked[1]}
-                                                    onChange={handleChange1}
-                                                />
-                                                }
-                                            />
-                                            {children}
-                                            </div> */}
-
-                                            
 
                                         </div>
                                             
-
-                                          
-                          
-                                        
-
-
                                         <button type="submit" class="btn btn-primary mr-2">Submit</button>
                                         <button type='button' onClick={() => {
                                             window.location.reload()

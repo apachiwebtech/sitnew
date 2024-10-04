@@ -2948,9 +2948,6 @@ app.post('/nodeapp/add_uploadeventphoto', (req, res) => {
 
 
 app.post('/nodeapp/add_uploadtestimonial', (req, res) => {
-
-
-
   let { course, batch, uid } = req.body
 
   let sql
@@ -2994,7 +2991,7 @@ app.post('/nodeapp/add_uploadbanner', upload.single('image'), (req, res) => {
   console.log(uid)
 
   if (uid == undefined) {
-    sql = "insert into awt_uploadbanner(`titlename`,`file`,`seqno`) values(?,?,?)"
+    sql = "insert into awt_uploadbanner(`titlename`,`file`,`seqno`) values (?,?,?)"
 
     param = [titlename, image, seqno,]
 
@@ -3016,9 +3013,31 @@ app.post('/nodeapp/add_uploadbanner', upload.single('image'), (req, res) => {
   })
 })
 
-app.post('/nodeapp/add_emailmaster', (req, res) => {
+app.post('/nodeapp/add_viewstudent', (req, res) => {
+  let {course, batch, uid} = req.body
+  
+  let sql
+  let params;
 
+  console.log(uid)
 
+  if (uid == undefined) {
+    sql = "insert into viewstudent(`course`,`batch`) values (?,?)"
+    param = [course, batch]
+  } else{
+    sql = "update `viewstudent` set `course` =? , `batch` =? where id =?"
+    param = [cousr, batch, uid]
+  }
+  con.query(sql, param, (err, data) => {
+    if (err){
+      return res.json(err)
+    }else{
+      return res.json(data)
+    }
+  })
+})
+
+app.post('/nodeapp/add_awt_emailmaster', (req, res) => {
 
   let { emailpurpose, department, emailsubject, cc, bcc, specification, uid } = req.body
 
@@ -3038,7 +3057,6 @@ app.post('/nodeapp/add_emailmaster', (req, res) => {
     param = [emailpurpose, department, emailsubject, cc, bcc, specification, uid]
 
   }
-
 
   con.query(sql, param, (err, data) => {
     if (err) {
@@ -3212,11 +3230,11 @@ app.post('/nodeapp/add_sit_batchcancellation', (req, res) => {
 
 
 
-app.post('/nodeapp/add_materialconsumption', (req, res) => {
+app.post('/nodeapp/add_material_consumption', (req, res) => {
 
 
 
-  let { isussed, startdate, course, qtyinstock, batchno, student, selectitem, qtyissue, price, ammounts, purpose, uid } = req.body
+  let { faculty,	startdate,	course,	qtyinstock,	batchno,	student,	selectitem,	qtyissue,	price,	ammounts,	purpose, uid } = req.body
 
   let sql
   let param;
@@ -3224,14 +3242,14 @@ app.post('/nodeapp/add_materialconsumption', (req, res) => {
   // console.log(uid)
 
   if (uid == undefined) {
-    sql = "insert into awt_materialconsumption(`isussed`,`startdate`,`course`,`qtyinstock`,`batchno`,`student`,`selectitem`,`qtyissue`,`price`,`ammounts`,`purpose`) values(?,?,?,?,?,?,?,?,?,?,?)"
+    sql = "insert into material_consumption(`faculty`,	`startdate`,	`course`,	`qtyinstock`,	`batchno`,	`student`,	`selectitem`,	`qtyissue`,	`price`,	`ammounts`,	`purpose`) values(?,?,?,?,?,?,?,?,?,?,?)"
 
-    param = [isussed, startdate, course, qtyinstock, batchno, student, selectitem, qtyissue, price, ammounts, purpose,]
+    param = [faculty,	startdate,	course,	qtyinstock,	batchno,	student,	selectitem,	qtyissue,	price,	ammounts,	purpose,]
 
   } else {
-    sql = "update `awt_materialconsumption` set `isussed` =? , `startdate` =? , `course` =? , `qtyinstock` =? , `batchno` =? , `student` =? , `selectitem` =? , `qtyissue` =? , `price` =? , `ammounts` =? , `purpose` =? where id = ?"
+    sql = "update `material_consumption` set `faculty` =? ,	`startdate` =? ,	`course` =? ,	`qtyinstock` =? ,	`batchno` =? , `student` =? ,	`selectitem` =? ,	`qtyissue` =? ,	`price` =? ,	`ammounts` =? ,	`purpose` =? where id = ?"
 
-    param = [isussed, startdate, course, qtyinstock, batchno, student, selectitem, qtyissue, price, ammounts, purpose, uid]
+    param = [faculty,	startdate,	course,	qtyinstock,	batchno,	student,	selectitem,	qtyissue,	price,	ammounts,	purpose, uid]
 
   }
 
@@ -4532,6 +4550,8 @@ app.get('/nodeapp/getfaculty', (req, res) => {
   })
 
 })
+
+
 
 app.post('/nodeapp/getbatchwiseassignment', (req, res) => {
 

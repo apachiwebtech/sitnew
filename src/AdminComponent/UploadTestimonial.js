@@ -13,11 +13,12 @@ const UploadTestimonial = () => {
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
     const [course, SetCourse] = useState([])
     const [batch, setAnnulBatch] = useState([])
     const [hide, setHide] = useState([])
     const [vindordata, setStudent] = useState([])
+    const [courseid, setCourseid] = useState([])
+    const [batchid, setBatch] = useState('')
 
     const [value, setValue] = useState({
         course: "" || uid.course,
@@ -40,30 +41,19 @@ const UploadTestimonial = () => {
             })
     }
 
-    const getbatch = async (id) => {
+    const getBatch = async (id) => {
         const data = {
             courseid: id
         }
 
-        try{
-            const res = await axios.post(`${BASE_URL}/getcoursewisebatch`, data);
+        try {
+            const res = await 
+            axios.post(`${BASE_URL}/getcoursewisebatch`, data);
             setAnnulBatch(res.data);
-        }catch (err) {
+        } catch (err) {
             console.error("Error fetching data:", err);
         }
     };
-
-    const getstudentlisitng = (id) => {
-        setHide(true)
-        const data = {
-            batch_code: id
-        }
-
-        axios.post(`${BASE_URL}/getbatchwisestudent`, data)
-            .then((res) => {
-                setStudent(res.data)
-            })
-    }
 
     useEffect(() => {
         setValue({
@@ -72,24 +62,6 @@ const UploadTestimonial = () => {
 
         })
     }, [uid])
-
-
-    const validateForm = () => {
-        let isValid = true
-        const newErrors = {}
-
-
-       if (!value.course) {
-        isValid = false;
-        newErrors.course = "Course is Required"
-       }
-        if (!value.batch) {
-            isValid = false;
-            newErrors.batch = "Batch is Required"
-        }
-        setError(newErrors)
-        return isValid
-    }
 
 
     async function getEmployeeData() {
@@ -123,6 +95,7 @@ const UploadTestimonial = () => {
     useEffect(() => {
         getEmployeeData()
         getCourseData()
+        getBatch()
         value.title = ""
         setError({})
         setUid([])
@@ -184,29 +157,23 @@ const UploadTestimonial = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        if(validateForm()){
-        const data = {
+            const data = {
 
-            course: value.course,
-            batch: value.batch,
-            uid: uid.id
-        }
-
-
-        axios.post(`${BASE_URL}/add_uploadtestimonial`, data)
-            .then((res) => {
-                console.log(res)
-                getEmployeeData()
-
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-        }
+                course: value.course,
+                batch: value.batch,
+                uid: uid.id
+            }
 
 
+            axios.post(`${BASE_URL}/add_uploadtestimonial`, data)
+                .then((res) => {
+                    console.log(res)
+                    getEmployeeData()
 
-
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
 
     }
 
@@ -269,40 +236,33 @@ const UploadTestimonial = () => {
                                         <div class='row'>
 
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Course<span className="text-danger">*</span></label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" 
-                                                value={value.course} onChange={(e) => getbatch(e.target.value)} name='course'>
-                                                    <option>--Select Course--</option>
-
+                                                <lable for="exampleFormControlSelect1">Course<span className="text-danger">*</span></lable>
+                                                <select class="form-control" id="exampleFormControlSelect1"
+                                                    value={value.course} name='course' onChange={(e) => getBatch(e.target.value)}>
+                                                    <option>Select Course</option>
                                                     {course.map((item) => {
-                                                        return(
+                                                        return (
                                                             <option value={item.Course_Id}>{item.Course_Name}</option>
+
                                                         )
                                                     })}
-
                                                 </select>
                                                 {<span className='text-danger'> {error.course} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Batch<span className="text-danger">*</span></label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" 
-                                                value={value.batch} onChange={(e) => getstudentlisitng(e.target.value)} name='batch'>
-                                                    <option></option>
-
+                                                <label for="exampleFormControlSelect1">Batch</label>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1"
+                                                    value={value.batch} name='batch' onChange={onhandleChange}>
+                                                    <option>Select Batch</option>
                                                     {batch.map((item) => {
-                                                        return(
+                                                        return (
                                                             <option value={item.Batch_code}>{item.Batch_code}</option>
+
                                                         )
                                                     })}
                                                 </select>
-                                                {<span className='text-danger'> {error.batch} </span>}
                                             </div>
-
-                                            
-
-
-
 
                                         </div>
 

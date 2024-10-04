@@ -13,7 +13,6 @@ const EmailMasterListing = () => {
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
     const label = { inputProps: { 'aria-label': 'Color switch demo' } };
 
     const [emailmasterdata, setemailmasterdata] = useState ([]);
@@ -67,11 +66,27 @@ const EmailMasterListing = () => {
         }));
     };
 
+    const handleUpdate = (id) => {
+        const data = {
+            u_id: id,
+            tablename: "awt_emailmaster"
+        }
+        axios.post(`${BASE_URL}/update_data`, data)
+        .then((res) => {
+            setUid(res.data[0])
+
+            console.log(res.data, "update")
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+    }
+
 
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename: "emailmaster"
+            tablename: "awt_emailmaster"
         }
 
         axios.post(`${BASE_URL}/delete_emailmaster_data`, data)
@@ -92,7 +107,7 @@ const EmailMasterListing = () => {
     const handleswitchchange = (value, Inquiry_Id) => {
         const newval = value == 0 ? 1 : 0
 
-        axios.post(`${BASE_URL}/data_status`, { status: newval, Inquiry_Id: Inquiry_Id, table_name: "emailmaster" })
+        axios.post(`${BASE_URL}/data_status`, { status: newval, Inquiry_Id: Inquiry_Id, table_name: "awt_emailmaster" })
             .then((res) => {
                 console.log(res)
                 getInquiryData()
@@ -112,10 +127,9 @@ const EmailMasterListing = () => {
             filterable: false,
 
         },
-        { field: 'Course_Name', headerName: 'Course Name', flex: 2 },
-        { field: 'Batch_code', headerName: 'Batch Code', flex: 2 },
-        { field: 'Assign_Dt', headerName: 'Assignment Name', flex: 2 },
-        { field: 'Return_Dt', headerName: 'Assignment Date', flex: 2 },
+        { field: 'emailpurpose', headerName: 'Email Purpose', flex: 2 },
+        { field: 'department', headerName: 'Department', flex: 2 },
+        { field: 'emailsubject', headerName: 'Subject', flex: 2 },
 
         {
             field: 'actions',

@@ -5,34 +5,39 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
+import { data } from "jquery";
 //import FormControlLabel from '@mui/material/FormControlLabel';
 // import ImageList from '@mui/material/ImageList';
 // import { ImageSourcePropType } from 'react-native';
 
 const MaterialConsumption = () => {
 
-
-
-
-
+    const [item, setItem] = useState([])
+    const [faculty, setFacilty] = useState([])
+    const [currentdate, setDate] = useState('');
+    const [course, setCourse] = useState([])
+    const [batch, setBatch] = useState([])
+    const [student, setStudent] = useState([])
     const [brand, setBrand] = useState([])
-    const [vendordata, setVendorData] = useState([])
+    const [materialconsumptiondata, setData] = useState([])
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [faculty, setFacilty] = useState([])
+    const [batchid, setBatchid] = useState('')
+    const [courseid, setCourseid] = useState('')
 
 
     const [value, setValue] = useState({
-        isussed: "" || uid.isussed,
+
+        faculty: "" || uid.faculty,
         startdate: "" || uid.startdate,
         course: "" || uid.course,
         qtyinstock: "" || uid.qtyinstock,
         batchno: "" || uid.batchno,
         student: "" || uid.student,
         selectitem: "" || uid.selectitem,
-        qtyissue: "" || uid.qtyissue,
+        qtyissue: "" || uid.qtyinstock,
         price: "" || uid.price,
         ammounts: "" || uid.ammounts,
         purpose: "" || uid.purpose,
@@ -42,14 +47,14 @@ const MaterialConsumption = () => {
     useEffect(() => {
         setValue({
 
-            isussed: uid.isussed,
+            faculty: uid.faculty,
             startdate: uid.startdate,
             course: uid.course,
             qtyinstock: uid.qtyinstock,
-            batchno: uid.student,
+            batchno: uid.batchno,
             student: uid.student,
             selectitem: uid.selectitem,
-            qtyissue: uid.qtyissue,
+            qtyissue: uid.qtyinstock,
             price: uid.price,
             ammounts: uid.ammounts,
             purpose: uid.purpose,
@@ -58,54 +63,31 @@ const MaterialConsumption = () => {
     }, [uid])
 
 
-    const validateForm = () => {
-        let isValid = true
-        const newErrors = {}
+    // const validateForm = () => {
+    //     let isValid = true
+    //     const newErrors = {}
 
 
-        if (!value.isussed) {
-            isValid = false;
-            newErrors.isussed = "Isussed is Required"
-        }
-        if (!value.startdate) {
-            isValid = false;
-            newErrors.startdate = "Date is Required"
-        }
-        if (!value.course) {
-            isValid = false;
-            newErrors.course = "Course is Required"
-        }
-        if (!value.qtyinstock) {
-            isValid = false;
-            newErrors.qtyinstock = "Stock is Required"
-        }
-        if (!value.batchno) {
-            isValid = false;
-            newErrors.batchno = "Batch is Required"
-        }
-        if (!value.student) {
-            isValid = false;
-            newErrors.student = "Student is Required"
-        }
-        if (!value.selectitem) {
-            isValid = false;
-            newErrors.selectitem = "Item is Required"
-        }
-        if (!value.qtyissue) {
-            isValid = false;
-            newErrors.qtyissue = "Qty Issue is Required"
-        }
-        setError(newErrors)
-        return isValid
-    }
+    //    if (!value.college) {
+    //     isValid = false;
+    //     newErrors.name = "Name is require"
+    //    }
+    //     if (!value.email) {
+    //         isValid = false;
+    //         newErrors.email = "Email is require"
+    //     }
+    //     setError(newErrors)
+    //     return isValid
+    // }
 
 
-    async function getEmployeeData() {
+    async function MaterialConsumption() {
 
-        axios.post(`${BASE_URL}/vendor_details`)
+
+        axios.get(`${BASE_URL}/getmaterialconsumption`)
             .then((res) => {
                 console.log(res.data)
-                setBrand(res.data)
+                setData(res.data)
             })
             .catch((err) => {
                 console.log(err)
@@ -113,19 +95,81 @@ const MaterialConsumption = () => {
     }
 
 
+    const getcourse = () => {
 
-    async function getEmployeeData() {
         const data = {
-            tablename: "awt_materialconsumption"
+            tablename: "Course_Mst",
+            columnname: "Course_Id,Course_Name"
         }
-        axios.post(`${BASE_URL}/get_data`, data)
+
+        axios.post(`${BASE_URL}/get_new_data`, data)
             .then((res) => {
                 console.log(res.data)
-                setVendorData(res.data)
+                setCourse(res.data)
             })
             .catch((err) => {
                 console.log(err)
             })
+
+    }
+
+    const getBatch = async (id) => {
+        setCourseid(id)
+        const data = {
+            courseid: id
+        }
+
+
+        if (id) {
+            axios.post(`${BASE_URL}/getcoursewisebatch`, data)
+                .then((res) => {
+                    console.log(res.data)
+                    setBatch(res.data)
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        } else {
+            try {
+                const res = await axios.get(`${BASE_URL}/getbatch`, data);
+
+                setBatch(res.data);
+
+            } catch (err) {
+                console.error("Error fetching data:", err);
+            }
+        }
+
+
+    }
+
+    const getStudent = async (code) => {
+        setBatchid(code)
+        const data = {
+            batch_code: code
+        }
+        if (code) {
+            axios.post(`${BASE_URL}/getbatchwisestudent`, data)
+                .then((res) => {
+
+                    setStudent(res.data)
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        } else {
+            try {
+                const res = await axios.post(`${BASE_URL}/get_new_data`, 
+                    { tablename: "Student_Master", columnname: "Student_Id,Student_Name" });
+
+                setStudent(res.data);
+
+            } catch (err) {
+                console.error("Error fetching data:", err);
+            }
+        }
+
+
     }
 
     async function getfaculty() {
@@ -140,11 +184,26 @@ const MaterialConsumption = () => {
             })
     }
 
+    async function getitem() {
+        
+        axios.get(`${BASE_URL}/getitem`)
+        .then((res) => {
+            setItem(res.data)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+    }
+
     useEffect(() => {
-        getEmployeeData()
+        getBatch()
+        getStudent()
+        getcourse()
+        MaterialConsumption()
+        getfaculty()
+        getitem()
         value.title = ""
         setError({})
-        getfaculty()
         setUid([])
     }, [])
 
@@ -167,13 +226,14 @@ const MaterialConsumption = () => {
     const handleUpdate = (id) => {
         const data = {
             u_id: id,
-            tablename: "awt_materialconsumption"
+            tablename: "material_consumption"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
                 setUid(res.data[0])
-
-                console.log(res.data, "update")
+                setBatchid(res.data[0].batchno)
+                setCourseid(res.data[0].course)
+                setDate(res.data[0].date)
             })
             .catch((err) => {
                 console.log(err)
@@ -183,12 +243,12 @@ const MaterialConsumption = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename: "awt_materialconsumption"
+            tablename: "material_consumption"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
             .then((res) => {
-                getEmployeeData()
+                MaterialConsumption()
 
             })
             .catch((err) => {
@@ -204,36 +264,34 @@ const MaterialConsumption = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        if (validateForm()) {
-            const data = {
+        // if(validateForm()){
+        const data = {
 
-
-
-                isussed: value.isussed,
-                startdate: value.startdate,
-                course: value.course,
-                qtyinstock: value.qtyinstock,
-                batchno: value.batchno,
-                student: value.student,
-                selectitem: value.selectitem,
-                qtyissue: value.qtyissue,
-                price: value.price,
-                ammounts: value.ammounts,
-                purpose: value.purpose,
-                uid: uid.id
-            }
-
-
-            axios.post(`${BASE_URL}/add_materialconsumption`, data)
-                .then((res) => {
-                    console.log(res)
-                    getEmployeeData()
-
-                })
-                .catch((err) => {
-                    console.log(err)
-                })
+            faculty: value.faculty,
+            startdate: value.startdate,
+            course: value.course,
+            qtyinstock: value.qtyinstock,
+            batchno: value.batchno,
+            student: value.student,
+            selectitem: value.selectitem,
+            qtyissue: value.qtyinstock,
+            price: value.price,
+            ammounts: value.ammounts,
+            purpose: value.purpose,
+            uid: uid.id
         }
+
+
+        axios.post(`${BASE_URL}/add_material_consumption`, data)
+            .then((res) => {
+                console.log(res)
+                alert("Data added successfully")
+                MaterialConsumption()
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+        // }
 
 
 
@@ -262,17 +320,13 @@ const MaterialConsumption = () => {
             filterable: false,
 
         },
-        { field: 'isussed', headerName: 'Isussed', flex: 2 },
-        { field: 'startdate', headerName: 'Start Date', flex: 2 },
+        { field: 'startdate', headerName: 'Issue Date', flex: 2 },
+        { field: 'batchno', headerName: 'Batch Code', flex: 2 },
         { field: 'course', headerName: 'Course', flex: 2 },
-        { field: 'qtyinstock', headerName: 'QTY Instock', flex: 2 },
-        { field: 'batchno', headerName: 'Batch No.', flex: 2 },
-        { field: 'student', headerName: 'Student', flex: 2 },
-        { field: 'selectitem', headerName: 'Select Item', flex: 2 },
-        { field: 'qtyissue', headerName: 'QTY Issue', flex: 2 },
-        { field: 'price', headerName: 'Price', flex: 2 },
-        { field: 'ammounts', headerName: 'Ammounts', flex: 2 },
-        { field: 'purpose', headerName: 'Purpose', flex: 2 },
+        { field: 'student', headerName: 'Student Name', flex: 2 },
+        { field: 'faculty', headerName: 'Isussed By', flex: 2 },
+        { field: 'selectitem', headerName: 'Item', flex: 2 },
+        { field: 'qtyissue', headerName: 'Qty Issue', flex: 2 },
 
         {
             field: 'actions',
@@ -291,7 +345,7 @@ const MaterialConsumption = () => {
     ];
 
 
-    const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
+    const rowsWithIds = materialconsumptiondata.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
 
@@ -307,7 +361,7 @@ const MaterialConsumption = () => {
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
-                                            
+
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleFormControlSelect1">Isussed By</label>
                                                 <select class="form-control" id="exampleFormControlSelect1" value={value.faculty}
@@ -330,10 +384,16 @@ const MaterialConsumption = () => {
                                             </div>
 
                                             <div class="form-group col-lg-2">
-                                                <lable for="exampleFormControlSelect1">Select Course<span className="text-danger">*</span></lable>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1"
-                                                    value={value.course} name='course' onChange={onhandleChange}>
+                                                <lable for="exampleFormControlSelect1">Course<span className="text-danger">*</span></lable>
+                                                <select class="form-control" id="exampleFormControlSelect1"
+                                                    value={value.course} name='course' onChange={(e) => getBatch(e.target.value)}>
                                                     <option>Select Course</option>
+                                                    {course.map((item) => {
+                                                        return (
+                                                            <option value={item.Course_Id}>{item.Course_Name}</option>
+
+                                                        )
+                                                    })}
                                                 </select>
                                                 {<span className='text-danger'> {error.course} </span>}
                                             </div>
@@ -341,36 +401,54 @@ const MaterialConsumption = () => {
                                             <div class="form-group col-lg-2">
                                                 <lable for="exampleInputUsername1">Qty In Stock<span className="text-danger">*</span></lable>
                                                 <input type="text" class="form-control" id="exampleInputUsername1"
-                                                    value={value.qtyinstock} placeholder='Qty In Stock' name='qtyinstock'
-                                                    onChange={onhandleChange} />
+                                                    value={value.qtyinstock} name='qtyinstock'
+                                                    onChange={onhandleChange} disabled />
                                                 {<span className='text-danger'> {error.qtyinstock} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-2">
-                                                <label for="exampleFormControlSelect1">Select Batch<span className="text-danger">*</span></label>
+                                                <label for="exampleFormControlSelect1">Batch No.</label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1"
-                                                    value={value.batchno} name='batchno' onChange={onhandleChange}>
-                                                    <option></option>
-                                                </select>
-                                                {<span className='text-danger'> {error.batchno} </span>}
-                                            </div>
+                                                    value={value.batchno} name='batchno' onChange={(e) => getStudent(e.target.value)}>
+                                                    <option>Select Batch</option>
+                                                    {batch.map((item) => {
+                                                        return (
+                                                            <option value={item.Batch_code}>{item.Batch_code}</option>
 
+                                                        )
+                                                    })}
+                                                </select>
+                                            </div>
 
                                             <div class="form-group col-lg-2">
-                                                <label for="exampleFomrControlSelect1">Select Student<span className="text-danger">*</span></label>
-                                                <select className='form-control form-control-lg' id="exampleFormControlSelect1"
-                                                    value={value.student} name='student' onChange={onhandleChange}>
-                                                    <option></option>
+                                                <label for="exampleFomrControlSelect1">Student</label>
+                                                <select className='form-control form-control-lg'
+                                                    id="exampleFormControlSelect1" value={value.student}
+                                                    name='student' onChange={onhandleChange}>
+
+                                                    <option>Select Student</option>
+                                                    {student.map((item) => {
+                                                        return (
+                                                            <option value={item.Student_Id}>{item.Student_Name}</option>
+                                                        )
+                                                    })}
                                                 </select>
-                                                {<span className='text-danger'> {error.student} </span>}
                                             </div>
+
 
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleFomrControlSelect1">Select Item<span className="text-danger">*</span></label>
                                                 <select className='form-control form-control-lg' id="exampleFormControlSelect1"
                                                     value={value.selectitem} name='selectitem' onChange={onhandleChange}>
                                                     <option>Select Material Type</option>
+
+                                                    {item.map((item) => {
+                                                        return(
+                                                            <option value={item.Item_Id}>{item.Item_Name}</option>
+                                                        )
+                                                    })}
                                                 </select>
+
                                                 {<span className='text-danger'> {error.selectitem} </span>}
                                             </div>
 
@@ -390,19 +468,21 @@ const MaterialConsumption = () => {
 
                                             <div class="form-group col-lg-2">
                                                 <lable for="exampleInputUsernamae">Total Ammounts</lable>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.ammounts} placeholder='Total Ammount' name='ammounts' onChange={onhandleChange} />
+                                                <input type="text" class="form-control"
+                                                    id="exampleInputUsername1"
+                                                    value={value.ammounts}
+                                                    placeholder='Total Ammount'
+                                                    name='ammounts' onChange={onhandleChange} />
                                             </div>
 
                                             <div class="form-group col-lg-4">
                                                 <label for="exampleTextarea1">Purpose</label>
-                                                <textarea class="form-control" id="exampleTextarea1" name='purpose' value={value.purpose} placeholder="Purpose" onChange={onhandleChange}></textarea>
+                                                <textarea class="form-control" id="exampleTextarea1"
+                                                    name='purpose' value={value.purpose}
+                                                    placeholder="Purpose"
+                                                    onChange={onhandleChange}></textarea>
 
                                             </div>
-
-
-
-
-
 
 
 
@@ -424,7 +504,7 @@ const MaterialConsumption = () => {
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
                                         <div>
-                                            <h4 class="card-title">View Material Consumption</h4>
+                                            <h4 class="card-title">View Material Cosumption</h4>
                                         </div>
 
                                     </div>

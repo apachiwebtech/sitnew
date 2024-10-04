@@ -54,6 +54,7 @@ const BatchCancellation = () => {
         }
     }, [uid]);
 
+<<<<<<< Updated upstream
 
       const validateForm = () =>{
 
@@ -88,6 +89,12 @@ const BatchCancellation = () => {
 
 
         axios.get(`${BASE_URL}/getbatchcancellation`)
+=======
+    async function BatchLeft() {
+
+
+        axios.get(`${BASE_URL}/getbatchleft`)
+>>>>>>> Stashed changes
             .then((res) => {
 
                 setData(res.data)
@@ -318,10 +325,16 @@ const BatchCancellation = () => {
 
 
 
+<<<<<<< Updated upstream
+=======
+      
+        const data = {
+>>>>>>> Stashed changes
 
         }
 
 
+<<<<<<< Updated upstream
         const onhandleChange = (e) => {
             setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
         }
@@ -444,6 +457,125 @@ const BatchCancellation = () => {
 
 
 
+=======
+        axios.post(`${BASE_URL}/add_sit_batchcancellation`, data)
+            .then((res) => {
+                console.log(res)
+                alert("Data added successfully")
+                BatchLeft()
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+
+    }
+
+
+    const onhandleChange = (e) => {
+        setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+    }
+
+    const columns = [
+        {
+            field: 'index',
+            headerName: 'Id',
+            type: 'number',
+            align: 'center',
+            headerAlign: 'center',
+            flex: 1,
+            filterable: false,
+
+        },
+        { field: 'student', headerName: 'Student Name', flex: 2 },
+        { field: 'batchno', headerName: 'Batch Code', flex: 2 },
+        { field: 'date', headerName: 'Date', flex: 2 },
+        { field: 'cancellationammount', headerName: 'Cancel Amount', flex: 2 },
+
+        {
+            field: 'actions',
+            type: 'actions',
+            headerName: 'Action',
+            flex: 1,
+            renderCell: (params) => {
+                return (
+                    <>
+                        <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />
+                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
+                    </>
+                )
+            }
+        },
+    ];
+
+
+    const rowsWithIds = batchleftdata.map((row, index) => ({ index: index + 1, ...row }));
+
+    return (
+
+        <div class="container-fluid page-body-wrapper col-lg-10">
+            <InnerHeader />
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <div class="row">
+                        <div class="col-lg-12 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">Batch Cancellation</h4>
+                                    <hr></hr>
+                                    <form class="forms-sample py-3" onSubmit={handleSubmit}>
+                                        <div class='row'>
+
+                                            <div class="form-group col-lg-3">
+                                                <lable for="exampleFormControlSelect1">Course<span className="text-danger">*</span></lable>
+                                                <select class="form-control" id="exampleFormControlSelect1"
+                                                    value={value.course} name='course' 
+                                                    onChange={(e) => getBatch(e.target.value)}>
+                                                    <option>Select Course</option>
+                                                    {course.map((item) => {
+                                                        return (
+                                                            <option value={item.Course_Id}>{item.Course_Name}</option>
+
+                                                        )
+                                                    })}
+                                                </select>
+                                                {<span className='text-danger'> {error.course} </span>}
+                                            </div>
+
+                                            <div class="form-group col-lg-3">
+                                                <label for="exampleFormControlSelect1">Batch No.</label>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1"
+                                                    value={value.batchno} name='batchno' onChange={(e) => getStudent(e.target.value)}>
+                                                    <option>Select Batch</option>
+                                                    {batch.map((item) => {
+                                                        return (
+                                                            <option value={item.Batch_code}>{item.Batch_code}</option>
+
+                                                        )
+                                                    })}
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group col-lg-3">
+                                                <label for="exampleFomrControlSelect1">Student</label>
+                                                <select className='form-control form-control-lg' id="exampleFormControlSelect1"
+                                                    value={value.student} name='student' onChange={onhandleChange}>
+
+                                                    <option>Select Student</option>
+                                                    {student.map((item) => {
+                                                        return (
+                                                            <option value={item.Student_Id}>{item.Student_Name}</option>
+                                                        )
+                                                    })}
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group col-lg-3">
+                                                <lable for="exampleInputUsername1">Cancellation Ammount<span className="text-danger">*</span></lable>
+                                                <input text="text" class="form-control" id="exampleInputUsername1"
+                                                    value={value.cancellationammount} placeholder='00.00' name='cancellationammount'
+                                                    onChange={onhandleChange} />
+                                                {<span className='text-danger'> {error.cancellationammount} </span>}
+>>>>>>> Stashed changes
                                             </div>
 
 

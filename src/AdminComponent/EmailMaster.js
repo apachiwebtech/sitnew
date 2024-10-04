@@ -9,10 +9,7 @@ const EmailMaster = () => {
 
     const { emailmasterid } = useParams();
     const [specification, setSpecification] = useState([])
-    const [brand, setBrand] = useState([])
-    const [vendordata, setVendorData] = useState([])
     const [uid, setUid] = useState([])
-    const [cid, setCid] = useState("")
     const [error, setError] = useState({})
 
 
@@ -109,7 +106,7 @@ const EmailMaster = () => {
         let response
         if (validateForm()) {
             if (emailmasterid == ":emailmasterid") {
-                response = await fetch(`${BASE_URL}/add_employerecord`, {
+                response = await fetch(`${BASE_URL}/add_awt_emailmaster`, {
                     method: 'POST',
                     body: JSON.stringify({
                         emailpurpose: value.emailpurpose,
@@ -125,7 +122,7 @@ const EmailMaster = () => {
                 })
             } else {
 
-                response = await fetch(`${BASE_URL}/updateemployeerecord'`, {
+                response = await fetch(`${BASE_URL}/updateemailmaster'`, {
                     method: 'POST',
                     body: JSON.stringify({
 
