@@ -60,11 +60,12 @@ const FinalExamListing = () => {
 
     const handleDelete = (id) => {
         const data = {
-            cat_id: id,
-            tablename: "awt_finalexamtaken"
+            delete_id: id,
+            tablename: "Final_exam_master",
+            column_name : "Take_Id"
         }
 
-        axios.post(`${BASE_URL}/delete_data`, data)
+        axios.post(`${BASE_URL}/new_delete_data`, data)
             .then((res) => {
                 getEmployeeData()
 
@@ -105,7 +106,7 @@ const FinalExamListing = () => {
                 return (
                     <>
                         <Link to={`/finalexamtaken/${params.row.Take_Id}`}><EditIcon style={{ cursor: "pointer" }}  /></Link>
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
+                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.Take_Id)} />
                     </>
                 )
             }

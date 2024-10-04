@@ -74,11 +74,12 @@ const UnitTestTakenListing = () => {
 
     const handleDelete = (id) => {
         const data = {
-            cat_id: id,
-            tablename: "awt_unittesttaken"
+            delete_id: id,
+            tablename: "Test_taken_master",
+            column_name : "Take_Id"
         }
 
-        axios.post(`${BASE_URL}/delete_unittesttaken_data`, data)
+        axios.post(`${BASE_URL}/new_delete_data`, data)
             .then((res) => {
                 getInquiryData()
             })
@@ -122,9 +123,8 @@ const UnitTestTakenListing = () => {
         },
         { field: 'Batch_code', headerName: 'Batch Code', flex: 2 },
         { field: 'Course_Name', headerName: 'Course Name', flex: 2 },
-        { field: 'utname', headerName: 'Test Name', flex: 2 },
+        { field: 'subject', headerName: 'Test Name', flex: 2 },
         { field: 'Test_Dt', headerName: 'Date', flex: 2 },
-
         {
             field: 'actions',
             type: 'actions',

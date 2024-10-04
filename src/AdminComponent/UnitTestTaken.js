@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import axios from 'axios';
@@ -22,6 +22,7 @@ const UnitTestTaken = () => {
     const [studentdata, setStudentdata] = useState([])
     const [hide, setHide] = useState(false)
     const [marks, setMarks] = useState('')
+    const [updateloading, setupdateLoding] = useState(false)
     
     const [value, setValue] = useState({
         coursename: '',
@@ -32,7 +33,7 @@ const UnitTestTaken = () => {
         unitno:''
     })
 
-
+    const Navigate = useNavigate()
 
     const validateForm = () => {
         let isValid = true
@@ -234,6 +235,7 @@ const UnitTestTaken = () => {
                 .then((res) => {
                     console.log(res)
                     alert("Data added successfully")
+                    Navigate('/unittesttaken')
                 })
 
 
@@ -261,14 +263,20 @@ const UnitTestTaken = () => {
     
     const handleSubmitTable = async (e) => {
 
-
+        setupdateLoding(true)
 
         try {
             const response = await axios.post(`${BASE_URL}/update_unittest_child`, studentdata);
 
-            alert("Data updated successfully")
+            if(response){
+                setupdateLoding(false)
+                alert("Data updated successfully")
+                Navigate('/unittesttaken')
+            }
+
         } catch (error) {
             console.error('Error saving data', error);
+            alert("Error while saving")
             // Handle the error
         }
     };
@@ -467,8 +475,7 @@ const UnitTestTaken = () => {
                                             </table>
 
                                         </div>
-                                        <button type="button" onClick={handleSubmitTable} style={{ float: "right" }} class="btn btn-primary m-2">Update Sheet</button>
-
+                                        <button type="button" onClick={handleSubmitTable} style={{ float: "right" }} class="btn btn-primary m-2">{updateloading ?  "processing.." : "Update Sheet"}</button>
 
 
                                     </div>

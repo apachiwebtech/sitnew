@@ -11,9 +11,7 @@ const BatchCancellation = () => {
 
 
     const [currentdate, setDate] = useState('');
-    const [course, setCourse] = useState([])
-    const [batch, setBatch] = useState([])
-    const [student, setStudent] = useState([])
+    const [batchcancel, setData] = useState([])
 
     useEffect(() => {
         const currentDate = new Date();
@@ -26,65 +24,72 @@ const BatchCancellation = () => {
         setDate(formattedDate);
     }, []);
 
-
-    const [batchleftdata, setData] = useState([])
-    const [uid, setUid] = useState([])
-    const [cid, setCid] = useState("")
-    const [error, setError] = useState({})
+    const [vendordata, setVendorData] = useState([]);
+    const [uid, setUid] = useState(null); // Set initial state to null
+    const [cid, setCid] = useState(null); // Set initial state to null
+    const [error, setError] = useState({});
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
+    const [loading, setLoading] = useState(true);
     const [batchid, setBatchid] = useState('')
     const [courseid, setCourseid] = useState('')
-
-
-
+    const [course, setCourse] = useState([])
+    const [batch, setBatch] = useState([])
+    const [student, setStudent] = useState([])
 
     const [value, setValue] = useState({
 
-        course: "" || uid.course,
-        batchno: "" || uid.batchno,
-        student: "" || uid.student,
-        cancellationammount: "" || uid.cancellationammount,
-        date: "" || uid.data,
-
-    })
+        student: '',
+        cancellationammount: '',
+        date: '',
+    });
 
     useEffect(() => {
-        setValue({
+        if (uid) {
+            setValue({
 
-            course: uid.course,
-            batchno: uid.batchno,
-            student: uid.student,
-            cancellationammount: uid.cancellationammount,
-            date: uid.data,
-
-        })
-    }, [uid])
-
-
-    // const validateForm = () => {
-    //     let isValid = true
-    //     const newErrors = {}
+                student: uid.student || "",
+                cancellationammount: uid.cancellationammount || "",
+                date: uid.date || ""
+            });
+        }
+    }, [uid]);
 
 
-    //    if (!value.college) {
-    //     isValid = false;
-    //     newErrors.name = "Name is require"
-    //    }
-    //     if (!value.email) {
-    //         isValid = false;
-    //         newErrors.email = "Email is require"
-    //     }
-    //     setError(newErrors)
-    //     return isValid
-    // }
+      const validateForm = () =>{
+
+        let isValid = true
+        const newErrors = {}
+
+        if (!courseid) {
+            isValid = false;
+            newErrors.selectcourse = "Course is Required";
+        }
+
+        if (!batchid) {
+            isValid = false;
+            newErrors.batchno = "Batchcode  is Required";
+        }
+        if (!value.student) {
+            isValid = false;
+            newErrors.student = "Student  is Required";
+        }
+
+        if (!value.cancellationammount) {
+            isValid = false;
+            newErrors.cancellationammount = "Cancellationammount is Required";
+        }
+
+        setError(newErrors);
+        return isValid;
+    };
+
+    async function BatchCancellation() {
 
 
-    async function BatchLeft() {
 
-
-        axios.get(`${BASE_URL}/getbatchleft`)
+        axios.get(`${BASE_URL}/getbatchcancellation`)
             .then((res) => {
-                console.log(res.data)
+
                 setData(res.data)
             })
             .catch((err) => {
@@ -102,7 +107,7 @@ const BatchCancellation = () => {
 
         axios.post(`${BASE_URL}/get_new_data`, data)
             .then((res) => {
-                console.log(res.data)
+
                 setCourse(res.data)
             })
             .catch((err) => {
@@ -121,7 +126,7 @@ const BatchCancellation = () => {
         if (id) {
             axios.post(`${BASE_URL}/getcoursewisebatch`, data)
                 .then((res) => {
-                    console.log(res.data)
+
                     setBatch(res.data)
                 })
                 .catch((err) => {
@@ -157,11 +162,7 @@ const BatchCancellation = () => {
                 })
         } else {
             try {
-                const res = await axios.post(`${BASE_URL}/get_new_data`,
-                    {
-                        tablename: "Student_Master",
-                        columnname: "Student_Id,Student_Name"
-                    });
+                const res = await axios.post(`${BASE_URL}/get_new_data`, { tablename: "Student_Master", columnname: "Student_Id,Student_Name" });
 
                 setStudent(res.data);
 
@@ -177,15 +178,16 @@ const BatchCancellation = () => {
 
 
 
+
+
     useEffect(() => {
-        getBatch()
-        getStudent()
         getcourse()
-        BatchLeft()
-        value.title = ""
-        setError({})
-        setUid([])
-    }, [])
+        getStudent()
+        getBatch()
+        BatchCancellation()
+        setError({});
+        setUid(null);
+    }, []);
 
     const handleClick = (id) => {
         setCid(id)
@@ -203,254 +205,293 @@ const BatchCancellation = () => {
         }));
     };
 
-    const handleUpdate = (id) => {
-        const data = {
-            u_id: id,
-            tablename: "sit_batchcancellation"
+    const handleUpdate = async (id) => {
+
+        setValue({
+
+            student: "",
+            cancellationammount: "",
+            date: ""
+        });
+        setCourseid('')
+        setBatchid('')
+
+        try {
+            const data = {
+                u_id: id,
+                uidname: "id",
+                tablename: "awt_batchcancellation"
+            }
+            axios.post(`${BASE_URL}/update_data`, data)
+                .then((res) => {
+                    setUid(res.data[0])
+                    setBatchid(res.data[0].batchno)
+                    setCourseid(res.data[0].course)
+                    setDate(res.data[0].date)
+
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+
+        } catch (err) {
+            console.error(err);
         }
-        axios.post(`${BASE_URL}/update_data`, data)
-            .then((res) => {
-                setUid(res.data[0])
-                setBatchid(res.data[0].batchno)
-                setCourseid(res.data[0].course)
-                setDate(res.data[0].date)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
+        // axios.post(`${BASE_URL}/update_data`, data)
+        //     .then((res) => {
+        //         setUid(res.data[0])
+        //         setBatchid(res.data[0].batchno)
+        //         setCourseid(res.data[0].course)
+        //         setDate(res.data[0].date)
+        //     })
+        //     .catch((err) => {
+        //         console.log(err)
+        //     })
     }
 
-    const handleDelete = (id) => {
+
+
+    const handleDelete = async (id) => {
         const data = {
             cat_id: id,
-            tablename: "sit_batchcancellation"
-        }
+            tablename: "awt_batchcancellation",
+        };
 
         axios.post(`${BASE_URL}/delete_data`, data)
             .then((res) => {
-                BatchLeft()
 
+                BatchCancellation()
             })
-            .catch((err) => {
-                console.log(err)
-            })
+
 
         setConfirmationVisibleMap((prevMap) => ({
             ...prevMap,
             [id]: false,
         }));
+
+
+
     }
+        const handleSubmit = async (e) => {
+            e.preventDefault();
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
+            if (validateForm()) {
+                const data = {
+                    selectcourse: courseid,
+                    batchno: batchid,
+                    student: value.student,
+                    cancellationammount: value.cancellationammount,
+                    date: currentdate,
+                    uid: uid ? uid.id : null
+                };
 
-        // if(validateForm()){
-        const data = {
+                try {
+                    await axios.post(`${BASE_URL}/add_batchcancellation`, data);
+                    BatchCancellation()
+                    alert("Data Submitted Successfully");
+                    setValue({
 
-            course: value.course,
-            batchno: value.batchno,
-            student: value.student,
-            cancellationammount: value.cancellationammount,
-            date: value.data,
-            uid: uid.id
+                        student: "",
+                        cancellationammount: "",
+                        date: ""
+                    });
+                    setCourseid('')
+                    setBatchid('')
+
+                } catch (err) {
+                    console.error(err);
+                }
+            }
+
+
+            axios.post(`${BASE_URL}/add_sit_batchcancellation`, data)
+                .then((res) => {
+                    console.log(res)
+                    alert("Data added successfully")
+                    // BatchLeft()
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+            // }
+
+
+
+
+
         }
 
 
-        axios.post(`${BASE_URL}/add_sit_batchcancellation`, data)
-            .then((res) => {
-                console.log(res)
-                alert("Data added successfully")
-                BatchLeft()
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-        // }
+        const onhandleChange = (e) => {
+            setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+        }
+
+        const columns = [
+            { field: 'Student_Name', headerName: 'To', flex: 2 },
+            { field: 'batchno', headerName: 'Batch No', flex: 2 },
+            { field: 'date', headerName: 'Date', flex: 2 },
+            { field: 'cancellationammount', headerName: 'Cancel Amount', flex: 2 },
+            {
+                field: 'actions',
+                type: 'actions',
+                headerName: 'Action',
+                flex: 1,
+                renderCell: (params) => {
+                    return (
+                        <>
+                            <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />
+                            <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
+                        </>
+                    )
+                }
+            },
+        ];
+
+        const rowsWithIds = batchcancel.map((row, index) => ({ index: index + 1, ...row }));
+
+        return (
+
+            <div class="container-fluid page-body-wrapper col-lg-10">
+                <InnerHeader />
+                <div class="main-panel">
+                    <div class="content-wrapper">
+                        <div class="row">
+                            <div class="col-lg-12 grid-margin stretch-card">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title">Batch Cancellation</h4>
+                                        <hr></hr>
+                                        <form class="forms-sample py-3" onSubmit={handleSubmit}>
+                                            <div class='row'>
+
+                                                <div class="form-group col-lg-3">
+                                                    <label for="exampleFormControlSelect1">Select Course<span className="text-danger">*</span></label>
+                                                    <select class="form-control form-control-lg" id="exampleFormControlSelect1"
+                                                        value={courseid} name='selectcourse' onChange={(e) => getBatch(e.target.value)}>
+                                                        <option>--Select Course--</option>
+
+                                                        {course.map((item) => {
+                                                            return (
+                                                                <option value={item.Course_Id}>{item.Course_Name}</option>
+
+                                                            )
+                                                        })}
+                                                    </select>
+                                                    {<span className='text-danger'> {error.course} </span>}
+                                                </div>
+
+                                                <div class="form-group col-lg-3">
+                                                    <label for="exampleFormControlSelect1">Batch No.</label>
+                                                    <select class="form-control form-control-lg" id="exampleFormControlSelect1"
+                                                        value={batchid} name='batchno' onChange={(e) => getStudent(e.target.value)}>
+                                                        <option>--Select Batch--</option>
+
+                                                        {batch.map((item) => {
+                                                            return (
+                                                                <option value={item.Batch_code}>{item.Batch_code}</option>
+
+                                                            )
+                                                        })}
+                                                    </select>
+                                                </div>
+
+                                                <div class="form-group col-lg-3">
+                                                    <label for="exampleFomrControlSelect1">Student</label>
+                                                    <select className='form-control form-control-lg' id="exampleFormControlSelect1"
+                                                        value={value.student} name='student' onChange={onhandleChange}>
+                                                        <option>Select Student</option>
+                                                        {student.map((item) => {
+                                                            return (
+                                                                <option value={item.Student_Id}>{item.Student_Name}</option>
+                                                            )
+                                                        })}
+                                                    </select>
+                                                    {<span className='text-danger'> {error.student} </span>}
+                                                </div>
+                                                <div>
+                                                    <select>
+
+                                                        <option>Select Student</option>
+                                                        {student.map((item) => {
+                                                            return (
+                                                                <option value={item.Student_Id}>{item.Student_Name}</option>
+                                                            )
+                                                        })}
+                                                    </select>
+                                                </div>
+
+                                                <div class="form-group col-lg-3">
+                                                    <lable for="exampleInputUsername1">Cancellation Ammount<span className="text-danger">*</span></lable>
+                                                    <input text="text" class="form-control" id="exampleInputUsername1"
+                                                        value={value.cancellationammount} placeholder='00.00' name='cancellationammount'
+                                                        onChange={onhandleChange} />
+                                                    {<span className='text-danger'> {error.cancellationammount} </span>}
+                                                </div>
+
+
+                                                <div className="form-group col-lg-3">
+                                                    <label htmlFor="exampleInputUsername1">Date</label>
+                                                    <input
+                                                        type="date"
+                                                        className="form-control"
+                                                        id="exampleInputUsername1"
+                                                        value={currentdate}
+                                                        name="date"
+                                                        onChange={(e) => { }}
+                                                        disabled
+                                                    />
+                                                </div>
 
 
 
-
-
-    }
-
-
-    const onhandleChange = (e) => {
-        setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
-    }
-
-    const columns = [
-        {
-            field: 'index',
-            headerName: 'Id',
-            type: 'number',
-            align: 'center',
-            headerAlign: 'center',
-            flex: 1,
-            filterable: false,
-
-        },
-        { field: 'student', headerName: 'Student Name', flex: 2 },
-        { field: 'batchno', headerName: 'Batch Code', flex: 2 },
-        { field: 'date', headerName: 'Date', flex: 2 },
-        { field: 'cancellationammount', headerName: 'Cancel Amount', flex: 2 },
-
-        {
-            field: 'actions',
-            type: 'actions',
-            headerName: 'Action',
-            flex: 1,
-            renderCell: (params) => {
-                return (
-                    <>
-                        <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
-                    </>
-                )
-            }
-        },
-    ];
-
-
-    const rowsWithIds = batchleftdata.map((row, index) => ({ index: index + 1, ...row }));
-
-    return (
-
-        <div class="container-fluid page-body-wrapper col-lg-10">
-            <InnerHeader />
-            <div class="main-panel">
-                <div class="content-wrapper">
-                    <div class="row">
-                        <div class="col-lg-12 grid-margin stretch-card">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h4 class="card-title">Batch Cancellation</h4>
-                                    <hr></hr>
-                                    <form class="forms-sample py-3" onSubmit={handleSubmit}>
-                                        <div class='row'>
-
-                                            <div class="form-group col-lg-3">
-                                                <lable for="exampleFormControlSelect1">Course<span className="text-danger">*</span></lable>
-                                                <select class="form-control" id="exampleFormControlSelect1"
-                                                    value={value.course} name='course' onChange={(e) => getBatch(e.target.value)}>
-                                                    <option>Select Course</option>
-                                                    {course.map((item) => {
-                                                        return (
-                                                            <option value={item.Course_Id}>{item.Course_Name}</option>
-
-                                                        )
-                                                    })}
-                                                </select>
-                                                {<span className='text-danger'> {error.course} </span>}
-                                            </div>
-
-                                            <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Batch No.</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1"
-                                                    value={value.batchno} name='batchno' onChange={(e) => getStudent(e.target.value)}>
-                                                    <option>Select Batch</option>
-                                                    {batch.map((item) => {
-                                                        return (
-                                                            <option value={item.Batch_code}>{item.Batch_code}</option>
-
-                                                        )
-                                                    })}
-                                                </select>
-                                            </div>
-
-                                            <div class="form-group col-lg-3">
-                                                <label for="exampleFomrControlSelect1">Student</label>
-                                                <select className='form-control form-control-lg' id="exampleFormControlSelect1"
-                                                    value={value.student} name='student' onChange={onhandleChange}>
-
-                                                    <option>Select Student</option>
-                                                    {student.map((item) => {
-                                                        return (
-                                                            <option value={item.Student_Id}>{item.Student_Name}</option>
-                                                        )
-                                                    })}
-                                                </select>
-                                            </div>
-
-                                            <div class="form-group col-lg-3">
-                                                <lable for="exampleInputUsername1">Cancellation Ammount<span className="text-danger">*</span></lable>
-                                                <input text="text" class="form-control" id="exampleInputUsername1"
-                                                    value={value.cancellationammount} placeholder='00.00' name='cancellationammount'
-                                                    onChange={onhandleChange} />
-                                                {<span className='text-danger'> {error.cancellationammount} </span>}
-                                            </div>
-
-
-                                            <div className="form-group col-lg-3">
-                                                <label htmlFor="exampleInputUsername1">Date</label>
-                                                <input
-                                                    type="date"
-                                                    className="form-control"
-                                                    id="exampleInputUsername1"
-                                                    value={currentdate}
-                                                    name="date"
-                                                    onChange={(e) => { }}
-                                                    disabled
-                                                />
                                             </div>
 
 
+                                            <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                                            <button type='button' onClick={() => {
+                                                window.location.reload()
+                                            }} class="btn btn-light">Cancel</button>
 
-                                        </div>
+                                        </form>
 
-
-                                        <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                        <button type='button' onClick={() => {
-                                            window.location.reload()
-                                        }} class="btn btn-light">Cancel</button>
-
-                                    </form>
-
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-lg-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div className='d-flex justify-content-between'>
-                                        <div>
-                                            <h4 class="card-title">View Batch Cancellation</h4>
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div className='d-flex justify-content-between'>
+                                            <div>
+                                                <h4 class="card-title">View Batch Cancellation</h4>
+                                            </div>
+
                                         </div>
 
-                                    </div>
+                                        <div>
+                                            <DataGrid
+                                                rows={rowsWithIds}
+                                                columns={columns}
+                                                rowHeight={35}
+                                                getRowId={(row) => row.id}
+                                                initialState={{
+                                                    pagination: {
+                                                        paginationModel: { pageSize: 10, page: 0 },
+                                                    },
+                                                }}
 
-                                    <div>
-                                        <DataGrid
-                                            rows={rowsWithIds}
-                                            columns={columns}
-                                            disableColumnFilter
-                                            disableColumnSelector
-                                            disableDensitySelector
-                                            rowHeight={35}
-                                            getRowId={(row) => row.id}
-                                            initialState={{
-                                                pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
-                                                },
-                                            }}
-                                            slots={{ toolbar: GridToolbar }}
-                                            slotProps={{
-                                                toolbar: {
-                                                    showQuickFilter: true,
-                                                },
-                                            }}
-                                        />
+                                            />
 
-                                        {confirmationVisibleMap[cid] && (
-                                            <div className='confirm-delete'>
-                                                <p>Are you sure you want to delete?</p>
-                                                <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
-                                                <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
-                                            </div>
-                                        )}
-                                    </div>
+                                            {confirmationVisibleMap[cid] && (
+                                                <div className='confirm-delete'>
+                                                    <p>Are you sure you want to delete?</p>
+                                                    <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
+                                                    <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
+                                                </div>
+                                            )}
+                                        </div>
 
 
-                                    {/* <div>
+                                        {/* <div>
                                       <button type='button' onClick={() => {
                                             window.location.reload()
                                         }} class="btn btn-primary mr-2">Excel</button>
@@ -458,15 +499,15 @@ const BatchCancellation = () => {
 
 
 
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </div >
             </div >
-        </div >
 
-    )
-}
+        )
+    }
 
-export default BatchCancellation
+    export default BatchCancellation

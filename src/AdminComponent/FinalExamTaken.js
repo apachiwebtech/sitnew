@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import Loader from "./Loader";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 //import FormControlLabel from '@mui/material/FormControlLabel';
 
 const FinalExamTaken = () => {
@@ -24,18 +24,21 @@ const FinalExamTaken = () => {
     const [courseid, setCourseid] = useState("")
     const [loading, setLoading] = useState(true)
     const [batchid, setBatchid] = useState('')
-    const {finalexamtakenid} = useParams()
+    const { finalexamtakenid } = useParams()
     const [marks, setMarks] = useState('')
+    const [updateloading, setupdateLoding] = useState(false)
     const [hide, setHide] = useState(false)
     const [studentdata, setStudentdata] = useState([])
     const [value, setValue] = useState({
-        coursename: "" ,
-        batchcode: "" ,
-        examtestname: "" ,
-        date: "" ,
+        coursename: "",
+        batchcode: "",
+        examtestname: "",
+        date: "",
+        Test_No:""
     })
 
 
+const Navigate = useNavigate()
 
     const validateForm = () => {
         let isValid = true
@@ -98,36 +101,41 @@ const FinalExamTaken = () => {
         setValue(prevState => ({
             ...prevState,
             date: data[0].Test_Dt,
+            Test_No:data[0].Test_No
         }))
     }
 
-  
+
 
     const handleSubmit = (e) => {
         e.preventDefault()
 
         if (validateForm()) {
-            
+
             const data = {
                 course_id: courseid,
                 batch_id: batchid,
                 testid: TestNameid,
                 date: value.date,
-                marks:marks,
-                uid: uid.id
+                marks: marks,
+                Test_No: value.Test_No,
+                uid: uid.Take_Id
             }
 
 
             axios.post(`${BASE_URL}/add_finalexamtaken`, data)
                 .then((res) => {
-                  alert("Data Added Successfully")
-   
+                    alert("Data Added Successfully")
+
                     setUid([])
                     setValue({
-                        setTestNameid : '',
-                        setAnnulBatchid : '',
-                        setCourseid : '',
+                        setTestNameid: '',
+                        setAnnulBatchid: '',
+                        setCourseid: '',
+                        Test_No:''
                     })
+
+                    Navigate('/finalexamtakenlisting')
 
                 })
                 .catch((err) => {
@@ -178,7 +186,7 @@ const FinalExamTaken = () => {
             }
             axios.post(`${BASE_URL}/get_new_data`, data)
                 .then((res) => {
-                   
+
                     setAnnulBatch(res.data)
                 })
                 .catch((err) => {
@@ -232,7 +240,7 @@ const FinalExamTaken = () => {
 
 
     useEffect(() => {
-        if(finalexamtakenid !== ":finalexamtakenid" ){
+        if (finalexamtakenid !== ":finalexamtakenid") {
             getMocDetail()
             setHide(true)
             gettakedata()
@@ -248,7 +256,7 @@ const FinalExamTaken = () => {
 
     const onhandleChange = (e) => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-   
+
     }
 
 
@@ -259,7 +267,7 @@ const FinalExamTaken = () => {
         setMarks('')
 
         const Marks = TestName.filter((item) => (item.id == id)).map((item) => item.max_marks)
-        
+
         const ExamDate = TestName.filter((item) => (item.id == id)).map((item) => item.exam_date)
 
         setMarks(Marks[0])
@@ -277,15 +285,19 @@ const FinalExamTaken = () => {
         setStudentdata(updatedStudents);
     };
 
-    
-    const handleSubmitTable = async (e) => {
 
+    const handleSubmitTable = async (e) => {
+        setupdateLoding(true)
 
 
         try {
             const response = await axios.post(`${BASE_URL}/update_fexamtaken_child`, studentdata);
+            if(response){
+                setupdateLoding(true)
+                alert("Data updated successfully")
+                Navigate('/finalexamtakenlisting')
+            }
 
-            alert("Data updated successfully")
         } catch (error) {
             console.error('Error saving data', error);
             // Handle the error
@@ -297,7 +309,7 @@ const FinalExamTaken = () => {
 
         <div class="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
-       
+
             <div class="main-panel" >
                 <div class="content-wrapper">
                     <div class="row">
@@ -369,6 +381,11 @@ const FinalExamTaken = () => {
                                                 <input type="date" class="form-control" id="exampleInputUsername1" value={value.date} name='date' onChange={onhandleChange} />
                                                 {<span className="text-danger"> {error.date} </span>}
                                             </div>
+                                            <div class="form-group col-lg-3">
+                                                <label for="exampleInputUsername1">Test No<span className="text-danger"></span></label>
+                                                <input type="number" class="form-control" id="exampleInputUsername1" value={value.Test_No} name='Test_No' onChange={onhandleChange} />
+                                               
+                                            </div>
 
 
 
@@ -386,97 +403,97 @@ const FinalExamTaken = () => {
                             </div>
                         </div>
                         {hide && <div class="col-lg-12 mt-3">
-                                <form class="card" >
-                                    <div class="card-body">
-                                        <div className='d-flex justify-content-between'>
-                                            {/* <div>
+                            <form class="card" >
+                                <div class="card-body">
+                                    <div className='d-flex justify-content-between'>
+                                        {/* <div>
                     <h4 class="card-title">Allot Roll Number List</h4>
                 </div> */}
 
-                                        </div>
-                                        <div>
+                                    </div>
+                                    <div>
 
 
 
 
-                                            <table class="table table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <th>
-                                                            Id
-                                                        </th>
-                                                        <th>
-                                                            Student Code
-                                                        </th>
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        Id
+                                                    </th>
+                                                    <th>
+                                                        Student Code
+                                                    </th>
 
-                                                        <th>
-                                                            Student Name
-                                                        </th>
-                                                        <th>
-                                                            Marks
-                                                        </th>
-                                                        <th>
-                                                            Status
-                                                        </th>
-                                                       
-                                                    </tr>
-                                                </thead>
+                                                    <th>
+                                                        Student Name
+                                                    </th>
+                                                    <th>
+                                                        Marks
+                                                    </th>
+                                                    <th>
+                                                        Status
+                                                    </th>
 
-                                                <tbody>
-                                                    {studentdata.map((item, index) => {
-                                                        return (
-                                                            <tr key={index}>
-                                                                <td>
-                                                                    {index + 1}
-                                                                </td>
-                                                                <td>
-                                                                    {item.Student_Code}
-                                                                </td>
-                                                                <td>
-                                                                    {item.Student_Name}
+                                                </tr>
+                                            </thead>
 
-                                                                </td>
-                                                                <td>
-                                                                    <div class="form-group ">
-                                                                        <label for="exampleFormControlSelect1"></label>
-                                                                        <input type="number" class="form-control" id="exampleInputUsername1" name='Marks_Given' onChange={(e) => handleInputChange(index, e)} value={item.Marks_Given} />
+                                            <tbody>
+                                                {studentdata.map((item, index) => {
+                                                    return (
+                                                        <tr key={index}>
+                                                            <td>
+                                                                {index + 1}
+                                                            </td>
+                                                            <td>
+                                                                {item.Student_Code}
+                                                            </td>
+                                                            <td>
+                                                                {item.Student_Name}
 
-                                                                    </div>
-                                                                </td>
-                                                              
-                                                                <td>
-                                                                    <>
-                                                                        <select class="form-control form-control-lg" value={item.Status} onChange={(e) => handleInputChange(index, e)} name='Status' id="exampleFromControlSelect1" >
+                                                            </td>
+                                                            <td>
+                                                                <div class="form-group ">
+                                                                    <label for="exampleFormControlSelect1"></label>
+                                                                    <input type="number" class="form-control" id="exampleInputUsername1" name='Marks_Given' onChange={(e) => handleInputChange(index, e)} value={item.Marks_Given} />
 
-                                                                            <option>Select</option>
+                                                                </div>
+                                                            </td>
 
-                                                                            <option value='Present'>Present</option>
-                                                                            <option value='Absent'>Absent</option>
+                                                            <td>
+                                                                <>
+                                                                    <select class="form-control form-control-lg" value={item.Status} onChange={(e) => handleInputChange(index, e)} name='Status' id="exampleFromControlSelect1" >
 
+                                                                        <option>Select</option>
 
-
-                                                                        </select>
-                                                                    </>
-                                                                </td>
-                                                             
-                                                            
-                                                            
-
-                                                            </tr>
-                                                        )
-                                                    })}
-                                                </tbody>
-                                            </table>
-
-                                        </div>
-                                        <button type="button" onClick={handleSubmitTable} style={{ float: "right" }} class="btn btn-primary m-2">Update Sheet</button>
+                                                                        <option value='Present'>Present</option>
+                                                                        <option value='Absent'>Absent</option>
 
 
+
+                                                                    </select>
+                                                                </>
+                                                            </td>
+
+
+
+
+                                                        </tr>
+                                                    )
+                                                })}
+                                            </tbody>
+                                        </table>
 
                                     </div>
-                                </form>
-                            </div>}
-                      
+                                    <button type="button" onClick={handleSubmitTable} style={{ float: "right" }} class="btn btn-primary m-2">{updateloading ?  "processing.." : "Update Sheet"}</button>
+
+
+
+                                </div>
+                            </form>
+                        </div>}
+
                     </div>
                 </div>
             </div >

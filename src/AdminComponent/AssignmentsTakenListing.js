@@ -72,11 +72,12 @@ const AssignmentsTakenListing = () => {
 
     const handleDelete = (id) => {
         const data = {
-            cat_id: id,
-            tablename: "assignmentstaken"
+            delete_id: id,
+            tablename: "Assignment_taken",
+            column_name : "Given_Id"
         }
 
-        axios.post(`${BASE_URL}/delete_assignmentstaken_data`, data)
+        axios.post(`${BASE_URL}/new_delete_data`, data)
             .then((res) => {
                 getInquiryData()
             })
@@ -118,7 +119,6 @@ const AssignmentsTakenListing = () => {
         { field: 'Batch_code', headerName: 'Batch Code', flex: 2 },
         { field: 'Assign_Dt', headerName: 'Assignment Name', flex: 2 },
         { field: 'Return_Dt', headerName: 'Assignment Date', flex: 2 },
-
         {
             field: 'actions',
             type: 'actions',
@@ -128,7 +128,7 @@ const AssignmentsTakenListing = () => {
                 return (
                     <>
                         <Link to={`/assignmentstaken/${params.row.Given_Id}`} ><EditIcon style={{ cursor: "pointer" }}  /></Link>
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} Link={() => handleClick(params.row.Given_Id)} />
+                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.Given_Id)} />
                     </>
                 )
             }

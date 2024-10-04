@@ -49,9 +49,6 @@ const BatchLeft = () => {
         date: "" || uid.date,
         reason: "" || uid.reason,
 
-
-
-
     })
 
     useEffect(() => {

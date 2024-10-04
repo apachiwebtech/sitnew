@@ -7,7 +7,6 @@ const multer = require('multer');
 const jwt = require('jsonwebtoken');
 
 
-
 // Use CORS middleware before defining routes
 app.use(
   cors({
@@ -43,19 +42,19 @@ const upload = multer({ storage: storage });
 
 
 // Create a connection pool with the required details
-// const con = mysql.createPool({
-//   host: 'localhost',   // Replace with your host name
-//   user: 'zhnvcvmy_sit',        // Replace with your database username
-//   password: 'ePO}os92-f&7', // Replace with your database password
-//   database: 'zhnvcvmy_sit'  // Replace with your database name
-// });
-
 const con = mysql.createPool({
   host: 'localhost',   // Replace with your host name
-  user: 'root',        // Replace with your database username
-  password: '', // Replace with your database password
-  database: 'sit'  // Replace with your database name
+  user: 'zhnvcvmy_sit',        // Replace with your database username
+  password: 'ePO}os92-f&7', // Replace with your database password
+  database: 'zhnvcvmy_sit'  // Replace with your database name
 });
+
+// const con = mysql.createPool({
+//   host: 'localhost',   // Replace with your host name
+//   user: 'root',        // Replace with your database username
+//   password: '', // Replace with your database password
+//   database: 'sit'  // Replace with your database name
+// });
 
 con.getConnection((err, connection) => {
   if (err) {
@@ -3100,9 +3099,9 @@ app.post('/nodeapp/add_assets', (req, res) => {
   })
 })
 
-app.post('/nodeapp/add_awt_batchtransfer', (req, res) => {
+app.post('/nodeapp/add_batch_transfer', (req, res) => {
 
-  let { coursename, oldbatchno, student, newbatch, transferammount, paymenttype, uid } = req.body
+  let { Student_Id, Course_Id, Old_Batch_Id, New_Batch_Id, Transfer_Amt, Pay_Type, uid } = req.body
 
   let sql
   let param;
@@ -3110,14 +3109,14 @@ app.post('/nodeapp/add_awt_batchtransfer', (req, res) => {
   // console.log(uid)
 
   if (uid == undefined) {
-    sql = "insert into batch_transfer(`coursename`, `oldbatchno`, `student`, `newbatch`, `transferammount`, `paymenttype`) values(?,?,?,?,?,?)"
+    sql = "insert into batch_transfer(`coursename`,`oldbatchno`,`student`,`newbatch`,`transferammount`,`paymenttype`) values(?,?,?,?,?,?)"
 
-    param = [coursename, oldbatchno, student, newbatch, transferammount, paymenttype,]
+    param = [Student_Id, Course_Id, Old_Batch_Id, New_Batch_Id, Transfer_Amt, Pay_Type]
 
   } else {
-    sql = "update `batch_transfer` set `coursename` = ? , `oldbatchno` = ? , `student` = ? , `newbatch` = ? , `transferammount` = ? , `paymenttype` = ? where id = ?"
+    sql = "update `batch_transfer` set `coursename` =? , `oldbatchno` =? , `student` =? , `newbatch` =? , `transferammount` =? , `paymenttype` =? where id = ?"
 
-    param = [coursename, oldbatchno, student, newbatch, transferammount, paymenttype, uid]
+    param = [Student_Id, Course_Id, Old_Batch_Id, New_Batch_Id, Transfer_Amt, Pay_Type, uid]
 
   }
 
@@ -3144,49 +3143,30 @@ app.get('/nodeapp/getbatch_transfer', (req, res) => {
   })
 })
 
-app.post('/nodeapp/add_sit_projectmaster', (req, res) => {
-  let { projectno, projectname, description, quotation, qtndate, qtnamount, wodetails, wodate, woamount, invoiceno, invoicedate, invoiamount, uid } = req.body;
-
-  let sql;
-  let param;
-
-  if (uid == undefined) {
-    sql = "insert into sit_projectmaster(`projectno`, `projectname`, `description`, `quotation`, `qtndate`, `qtnamount`, `wodetails`, `wodate`, `woamount`, `invoiceno`, `invoicedate`, `invoiamount`) values (?,?,?,?,?,?,?,?,?,?,?,?)";
-    param = [projectno, projectname, description, quotation, qtndate, qtnamount, wodetails, wodate, woamount, invoiceno, invoicedate, invoiamount];
-  } else {
-    sql = "update `sit_projectmaster` set `projectno` = ?, `projectname` = ?, `description` = ?, `quotation` = ?, `qtndate` = ?, `qtnamount` = ?, `wodetails` = ?, `wodate` = ?, `woamount` = ?, `invoiceno` = ?, `invoicedate` = ?, `invoiamount` = ? where id = ?";
-    param = [projectno, projectname, description, quotation, qtndate, qtnamount, wodetails, wodate, woamount, invoiceno, invoicedate, invoiamount, uid];
-  }
-
-  // Run the query
-  con.query(sql, param, (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json(data);
-    }
-  });
-});
+app.post('/nodeapp/add_batchcancellation', (req, res) => {
 
 
-app.post('/nodeapp/add_sit_batchcancellation', (req, res) => {
 
-  let { course, batchno, student, cancellationammount, date, uid } = req.body
+  let { selectcourse, batchno, student, cancellationammount, date, uid } = req.body
 
   let sql
   let param;
-  // console.log(uid)
-  if (uid == undefined) {
-    sql = "insert into sit_batchcancellation(`course`, `batchno`, `student`, `cancellationammount`, `date`) values(?,?,?,?,?)"
 
-    param = [course, batchno, student, cancellationammount, date,]
+  // console.log(uid)
+
+  if (uid == undefined) {
+    sql = "insert into awt_batchcancellation(`course`,`batchno`,`student`,`cancellationammount`,`date`) values(?,?,?,?,?)"
+
+    param = [selectcourse, batchno, student, cancellationammount, date,]
 
   } else {
-    sql = "update `sit_batchcancellation` set `course` = ? , `batchno` = ? , `student` = ? , `cancellationammount` = ? , `date` = ? where id = ?" 
+    sql = "update `awt_batchcancellation` set `course` =? , `batchno` =? , `student` =? , `cancellationammount` =? , `date` =? where id = ?"
 
-    param = [course, batchno, student, cancellationammount, date, uid]
+    param = [selectcourse, batchno, student, cancellationammount, date, uid]
 
   }
+
+
   con.query(sql, param, (err, data) => {
     if (err) {
       return res.json(err)
@@ -3196,20 +3176,6 @@ app.post('/nodeapp/add_sit_batchcancellation', (req, res) => {
     }
   })
 })
-
-// app.post('/nodeapp/getsit_batchcancellation', (req, res) => {
-
-//   const sql = "select * from `sit_batchcancellation`"
-
-//   con.query(sql, (err, data) => {
-//     if (err) {
-//       return res.json(err)
-//     } else {
-//       return res.json(data)
-//     }
-//   })
-// })
-
 
 
 app.post('/nodeapp/add_materialconsumption', (req, res) => {
@@ -5476,12 +5442,11 @@ app.post('/nodeapp/importgrade', (req, res) => {
 
 
 // Convert Excel date serial to JavaScript Date
-const excelDateToJSDate = (excelDate) => {
-  const dateOffset = (excelDate - (25567 + 1)) * 86400 * 1000; // Days since 01-01-1970 in milliseconds
-  const date = new Date(dateOffset);
-  return date.toISOString().split('T')[0]; // Returns 'YYYY-MM-DD'
-};
-
+function excelDateToJSDate(serial) {
+  const excelStartDate = new Date(1899, 11, 30);
+  const jsDate = new Date(excelStartDate.getTime() + serial * 86400000);
+  return jsDate.toISOString().split('T')[0]; // Returns only the date in 'YYYY-MM-DD' format
+}
 
 
 app.post("/nodeapp/upload-excel", (req, res) => {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import axios from 'axios';
@@ -21,6 +21,7 @@ const AssignmentsTaken = () => {
     const [marks, setMarks] = useState('')
     const { assignmentstakenid } = useParams();
     const [hide, setHide] = useState(false)
+    const [updateloading, setupdateLoding] = useState(false)
     const [studentdata, setStudentdata] = useState([])
     const [value, setValue] = useState({
 
@@ -32,6 +33,8 @@ const AssignmentsTaken = () => {
         returndate: '',
         assignno:""
     })
+
+    const Navigate = useNavigate()
 
 
     const validateForm = () => {
@@ -261,6 +264,7 @@ const AssignmentsTaken = () => {
                 .then((res) => {
                     console.log(res)
                     alert("Data added successfully")
+                    Navigate('/assignmentstaken')
                 })
 
 
@@ -285,12 +289,17 @@ const AssignmentsTaken = () => {
 
     const handleSubmitTable = async (e) => {
 
-
+        setupdateLoding(true)
 
         try {
             const response = await axios.post(`${BASE_URL}/update_assignment_child`, studentdata);
+            if(response){
+                alert("Data updated successfully")
+                setupdateLoding(false)
+                Navigate('/assignmentstaken')
 
-            alert("Data updated successfully")
+            }
+
         } catch (error) {
             console.error('Error saving data', error);
             // Handle the error
@@ -385,7 +394,7 @@ const AssignmentsTaken = () => {
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">Assingment Number<span className='text-danger'>*</span></label>
-                                                <input type="number" class="form-control" id="exampleInputUsername1" value={value.assignno} name='assignno' onChange={onhandleChange}  disabled={value.assignno} />
+                                                <input type="number" class="form-control" id="exampleInputUsername1" value={value.assignno} name='assignno' onChange={onhandleChange} />
                                                 {<span className='text-danger'> {error.assignno} </span>  }
                                             </div>
 
@@ -488,7 +497,7 @@ const AssignmentsTaken = () => {
                                             </table>
 
                                         </div>
-                                        <button type="button" onClick={handleSubmitTable} style={{ float: "right" }} class="btn btn-primary m-2">Update Sheet</button>
+                                        <button type="button" onClick={handleSubmitTable} style={{ float: "right" }} class="btn btn-primary m-2">{updateloading ?  "Processing" : "Update Sheet"}</button>
 
 
 

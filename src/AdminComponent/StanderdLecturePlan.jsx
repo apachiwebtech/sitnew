@@ -14,7 +14,7 @@ import axios from "axios";
 import BatchEdit from "./BatchEdit";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-//import * as XLSX from "xlsx";
+import * as XLSX from "xlsx";
 import { Upload } from "@mui/icons-material";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -61,7 +61,14 @@ const StandardLecturePlan = () => {
         duration: "",
         date: "",
         marks: "",
-        publish: ""
+        publish: "",
+        day:"",
+        module:"",
+        planned:"",
+        department:"",
+        practicetest :"",
+        lecturecontent :"",
+        status :"",
       }
     )
     setUid([])
@@ -147,7 +154,14 @@ const StandardLecturePlan = () => {
     date: "" || uid.date,
     marks: "" || uid.marks,
     publish: "" || uid.publish,
-    duration: "" || uid.duration
+    duration: "" || uid.duration,
+    day: ""|| uid.lectureday,
+    module: "" || uid.lectureday,
+    planned: "" || uid.planned,
+    department:"" || uid.department,
+    practicetest :"" || uid.practicetest,
+    lecturecontent :"" || uid.lecturecontent,
+    status :"" || uid.status,
   })
 
   useEffect(() => {
@@ -166,6 +180,13 @@ const StandardLecturePlan = () => {
       subject: uid.subject,
       date: uid.date,
       marks: uid.marks,
+      day:uid.lectureday,
+      module:uid.lectureday,
+      planned:uid.planned,
+      department:uid.department,
+      practicetest :uid.practicetest,
+      lecturecontent :uid.lecturecontent,
+      status :uid.status,
     })
   }, [uid])
 
@@ -300,8 +321,15 @@ const StandardLecturePlan = () => {
       marks: value.marks,
       duration: value.duration,
       publish: value.publish,
-      uid: uid.id,
-      batch_id: batchid
+      uid: uid.id,  
+      batch_id: batchid,
+      day:value.day,
+      module:value.module,
+      planned:value.planned,
+      department:value.department,
+      practicetest :value.practicetest,
+      lecturecontent :value.lecturecontent,
+      status :value.status,
     }
 
     axios.post(`${BASE_URL}/add_batchstandardlecture`, data)
@@ -324,7 +352,14 @@ const StandardLecturePlan = () => {
           date: "",
           marks: "",
           publish: "",
-          duration: ""
+          duration: "",
+          day:"",
+          module:"",
+          planned:"",
+          department:"",
+          practicetest :"",
+          lecturecontent :"",
+          status :"",
         })
 
         setUid([])
@@ -337,18 +372,29 @@ const StandardLecturePlan = () => {
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     const reader = new FileReader();
-
+  
     reader.onload = (event) => {
       const binaryStr = event.target.result;
-     // const workbook = XLSX.read(binaryStr, { type: "binary" });
-      const sheetName = workbook.SheetNames[0]; // First sheet
+  
+      // Parse the binary string to create a workbook object
+      const workbook = XLSX.read(binaryStr, { type: "binary" });
+  
+      // Get the first sheet name
+      const sheetName = workbook.SheetNames[0];
+  
+      // Get the worksheet from the workbook
       const sheet = workbook.Sheets[sheetName];
-     // const data = XLSX.utils.sheet_to_json(sheet);
-      setExcelData(data); // data is an array of objects
+  
+      // Convert the worksheet to JSON format
+      const data = XLSX.utils.sheet_to_json(sheet);
+  
+      // Set the parsed Excel data (array of objects)
+      setExcelData(data);
     };
-
+  
     reader.readAsBinaryString(file);
   };
+  
 
   const handleImport = () => {
     axios
@@ -507,6 +553,34 @@ const StandardLecturePlan = () => {
                   </div>
                   <div className="form-group col-lg-4 ">
                     <label for="exampleInputUsername1">
+                      Module
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="exampleInputUsername1"
+                      value={value.module}
+                      placeholder="Enter.."
+                      name="module"
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div className="form-group col-lg-4 ">
+                    <label for="exampleInputUsername1">
+                      Day
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="exampleInputUsername1"
+                      placeholder="Enter.."
+                      value={value.day}
+                      name="day"
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div className="form-group col-lg-4 ">
+                    <label for="exampleInputUsername1">
                       Date
                     </label>
                     <input
@@ -516,6 +590,20 @@ const StandardLecturePlan = () => {
                       placeholder="Enter.."
                       value={value.date}
                       name="date"
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div className="form-group col-lg-4 ">
+                    <label for="exampleInputUsername1">
+                     Planned Date
+                    </label>
+                    <input
+                      type="date"
+                      class="form-control"
+                      id="exampleInputUsername1"
+                      placeholder="Enter.."
+                      value={value.planned}
+                      name="planned"
                       onChange={handleChange}
                     />
                   </div>
@@ -598,6 +686,20 @@ const StandardLecturePlan = () => {
                       onChange={handleChange}
                     />
                   </div>
+                  <div className="form-group col-lg-4 ">
+                    <label for="exampleInputUsername1">
+                      Department
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="exampleInputUsername1"
+                      placeholder="Enter.."
+                      value={value.department}
+                      name="department"
+                      onChange={handleChange}
+                    />
+                  </div>
 
                   <div class="form-group col-lg-4">
                     <label for="exampleInputUsername1"> Faculty Name</label>
@@ -654,6 +756,21 @@ const StandardLecturePlan = () => {
                       onChange={handleChange}
                     />
                   </div>
+                  <div className="form-group col-lg-4 ">
+                    <label for="exampleInputUsername1">
+                      Practice Test
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="exampleInputUsername1"
+                      placeholder="Enter.."
+                      value={value.practicetest}
+                      name="practicetest"
+                      onChange={handleChange}
+                    />
+                  </div>
+             
 
 
                   <div class="form-group col-lg-4">
@@ -668,6 +785,27 @@ const StandardLecturePlan = () => {
                         )
                       })}
 
+                    </select>
+                  </div>
+                  <div className="form-group col-lg-8 ">
+                    <label for="exampleInputUsername1">
+                      Lecture Content
+                    </label>
+                    <textarea
+                      class="form-control"
+                      id="exampleInputUsername1"
+                      placeholder="Enter.."
+                      value={value.lecturecontent}
+                      name="lecturecontent"
+                      onChange={handleChange}
+                    ></textarea>
+                  </div>
+                  <div class="form-group col-lg-4">
+                    <label for="exampleInputUsername1">Status</label>
+                    <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.status} name='status' onChange={handleChange} >
+                      <option>Select</option>
+                      <option value={`Completed`}>Completed</option>
+                      <option value={`NotCompleted`}>Not Completed</option>
                     </select>
                   </div>
 

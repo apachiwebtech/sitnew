@@ -27,6 +27,7 @@ const LectureTaken = () => {
     const [hide, setHide] = useState(false)
     const [lecturedata, setLecturedata] = useState([])
     const [time, setTime] = useState([])
+    const [updateloading, setupdateLoding] = useState()
     const [value, setValue] = useState(
         {
             course: '',
@@ -79,55 +80,7 @@ const LectureTaken = () => {
             newErrors.classroom = "Classroom is Required"
         }
 
-        // if (!value.lecturedate) {
-        //     isValid = false;
-        //     newErrors.lecturedate = "Lecture Date is Require"
-        // }
 
-        // if (!value.faculty) {
-        //     isValid = false;
-        //     newErrors.faculty = "Faculty is Require"
-        // }
-
-        // if (!value.assignmentadate) {
-        //     isValid = false;
-        //     newErrors.assignmentdate = "AssignmentDate is Require"
-        // }
-
-        // if (!value.material) {
-        //     isValid = false;
-        //     newErrors.material = "Matrerial is Require"
-        // }
-
-        // if (!value.assignmentgive) {
-        //     isValid = false;
-        //     newErrors.assignmentgiven = "AssignmentGiven is Require"
-        // }
-
-        // if (!assignid) {
-        //     isValid = false;
-        //     newErrors.assignment = "Assignment is Require"
-        // }
-
-        // if (!value.testgiven) {
-        //     isValid = false;
-        //     newErrors.testgiven = "TestGiven is Require"
-        // }
-
-        // if (!unitid) {
-        //     isValid = false;
-        //     newErrors.test = "Test is Require"
-        // }
-
-        // if (!value.topicdescuss) {
-        //     isValid = false;
-        //     newErrors.topicdescuss = "TopicDescuss is Require"
-        // }
-
-        // if (!value.nextplanning) {
-        //     isValid = false;
-        //     newErrors.nextplanning = "NextPlanning is Require"
-        // }
 
         setError(newErrors)
         return isValid
@@ -185,7 +138,7 @@ const LectureTaken = () => {
         }
 
 
-
+ 
 
         if (id) {
             try {
@@ -470,12 +423,18 @@ const LectureTaken = () => {
 
     const handleSubmitTable = async (e) => {
 
+      setupdateLoding(true)
 
 
         try {
             const response = await axios.post(`${BASE_URL}/update_lecture_child`, studentdata);
+            if(response){
+                setupdateLoding(false)
+                alert("Data updated successfully")
+                Navigate('/lecturetaken')
+            }
+         
 
-            alert("Data updated successfully")
         } catch (error) {
             console.error('Error saving data', error);
             // Handle the error
@@ -907,7 +866,7 @@ const LectureTaken = () => {
                                                         </table>
 
                                                     </div>
-                                                    <button type="button" onClick={handleSubmitTable} style={{ float: "right" }} class="btn btn-primary m-2">Update Sheet</button>
+                                                    <button type="button" onClick={handleSubmitTable} style={{ float: "right" }} class="btn btn-primary m-2">{updateloading ? "Processing.." : "Update Sheet"}</button>
 
 
 

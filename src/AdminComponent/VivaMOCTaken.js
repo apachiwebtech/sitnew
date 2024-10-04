@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 //import FormControlLabel from '@mui/material/FormControlLabel';
@@ -19,7 +19,8 @@ const VivaMOCTaken = () => {
     const [studentdata, setStudentdata] = useState([])
     const [hide, setHide] = useState(false)
     const [marks, setMarks] = useState('')
-
+    const [updateloading, setupdateLoding] = useState(false)
+    const Navigate = useNavigate()
     const [value, setValue] = useState({
         coursename: '',
         batchcode: '',
@@ -82,8 +83,8 @@ const VivaMOCTaken = () => {
         setBatchid(data[0].Batch_Id)
         SetMocid(data[0].Viva_Id)
         setMarks(data[0].Marks)
-        
-        
+
+
         setValue(prevState => ({
             ...prevState,
             date: data[0].Take_Dt,
@@ -96,7 +97,7 @@ const VivaMOCTaken = () => {
 
         axios.get(`${BASE_URL}/getCourse`)
             .then((res) => {
-  
+
                 SetCourse(res.data)
             })
             .catch((err) => {
@@ -112,30 +113,30 @@ const VivaMOCTaken = () => {
             courseid: id
         }
 
-        if(id){
+        if (id) {
 
             try {
                 const res = await axios.post(`${BASE_URL}/getcoursewisebatch`, data);
                 setAnnulBatch(res.data);
-    
+
             } catch (err) {
                 console.error("Error fetching data:", err);
             }
-        }else{
+        } else {
 
             try {
-                  const res = await axios.get(`${BASE_URL}/getbatch`, data);
-    
-                  setAnnulBatch(res.data);
-    
-              } catch (err) {
-                  console.error("Error fetching data:", err);
-              }
+                const res = await axios.get(`${BASE_URL}/getbatch`, data);
+
+                setAnnulBatch(res.data);
+
+            } catch (err) {
+                console.error("Error fetching data:", err);
+            }
         }
 
 
 
-   
+
 
     };
 
@@ -143,24 +144,24 @@ const VivaMOCTaken = () => {
         setBatchid(id)
 
 
-    
+
 
         const data = {
             batch_id: id,
         }
 
 
-        if(id){
+        if (id) {
 
             try {
                 const res = await axios.post(`${BASE_URL}/getbatchwisemoc`, data);
-    
+
                 SetMoc(res.data);
-                
+
             } catch (err) {
                 console.error("Error fetching data:", err);
             }
-        }else{
+        } else {
             try {
                 const res = await axios.post(`${BASE_URL}/get_data`, { tablename: "Batch_Moc_Master", columnname: "id,subject" });
                 if (res.data[0].id) {
@@ -193,7 +194,7 @@ const VivaMOCTaken = () => {
             getbatch()
             getmoc()
         }
-        
+
         gettakedata()
         getCourseData()
         setError({})
@@ -226,6 +227,7 @@ const VivaMOCTaken = () => {
                 .then((res) => {
                     console.log(res)
                     alert("Data added successfully")
+                    Navigate('/vivamoctaken')
                 })
 
         }
@@ -240,7 +242,7 @@ const VivaMOCTaken = () => {
     }
 
 
-    
+
     const handleInputChange = (index, event) => {
         const { name, value } = event.target;
         const updatedStudents = [...studentdata];
@@ -248,15 +250,18 @@ const VivaMOCTaken = () => {
         setStudentdata(updatedStudents);
     };
 
-    
+
     const handleSubmitTable = async (e) => {
 
-
+        setupdateLoding(true)
 
         try {
             const response = await axios.post(`${BASE_URL}/update_vivataken_child`, studentdata);
-
-            alert("Data updated successfully")
+            if (response) {
+                 setupdateLoding(false)
+                alert("Data updated successfully")
+                Navigate('/vivamoctaken')
+            }
         } catch (error) {
             console.error('Error saving data', error);
             // Handle the error
@@ -271,7 +276,7 @@ const VivaMOCTaken = () => {
         setMarks('')
 
         const Marks = moc.filter((item) => (item.id == id)).map((item) => item.marks)
-        
+
         const MocDate = moc.filter((item) => (item.id == id)).map((item) => item.date)
 
         setMarks(Marks[0])
@@ -314,7 +319,7 @@ const VivaMOCTaken = () => {
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Batch Code<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={batchid} onChange={(e) => getmoc(e.target.value)}  name='batchcode'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={batchid} onChange={(e) => getmoc(e.target.value)} name='batchcode'>
                                                     <option>-Select Batch Code-</option>
                                                     {batch.map((item) => {
                                                         return (
@@ -367,96 +372,96 @@ const VivaMOCTaken = () => {
                             </div>
                         </div>
                         {hide && <div class="col-lg-12 mt-3">
-                                <form class="card" >
-                                    <div class="card-body">
-                                        <div className='d-flex justify-content-between'>
-                                            {/* <div>
+                            <form class="card" >
+                                <div class="card-body">
+                                    <div className='d-flex justify-content-between'>
+                                        {/* <div>
                     <h4 class="card-title">Allot Roll Number List</h4>
                 </div> */}
 
-                                        </div>
-                                        <div>
+                                    </div>
+                                    <div>
 
 
 
 
-                                            <table class="table table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <th>
-                                                            Id
-                                                        </th>
-                                                        <th>
-                                                            Student Code
-                                                        </th>
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        Id
+                                                    </th>
+                                                    <th>
+                                                        Student Code
+                                                    </th>
 
-                                                        <th>
-                                                            Student Name
-                                                        </th>
-                                                        <th>
-                                                            Marks
-                                                        </th>
-                                                        <th>
-                                                            Status
-                                                        </th>
-                                                       
-                                                    </tr>
-                                                </thead>
+                                                    <th>
+                                                        Student Name
+                                                    </th>
+                                                    <th>
+                                                        Marks
+                                                    </th>
+                                                    <th>
+                                                        Status
+                                                    </th>
 
-                                                <tbody>
-                                                    {studentdata.map((item, index) => {
-                                                        return (
-                                                            <tr key={index}>
-                                                                <td>
-                                                                    {index + 1}
-                                                                </td>
-                                                                <td>
-                                                                    {item.Student_Code}
-                                                                </td>
-                                                                <td>
-                                                                    {item.Student_Name}
+                                                </tr>
+                                            </thead>
 
-                                                                </td>
-                                                                <td>
-                                                                    <div class="form-group ">
-                                                                        <label for="exampleFormControlSelect1"></label>
-                                                                        <input type="number" class="form-control" id="exampleInputUsername1" name='Marks_Given' onChange={(e) => handleInputChange(index, e)} value={item.Marks_Given} />
+                                            <tbody>
+                                                {studentdata.map((item, index) => {
+                                                    return (
+                                                        <tr key={index}>
+                                                            <td>
+                                                                {index + 1}
+                                                            </td>
+                                                            <td>
+                                                                {item.Student_Code}
+                                                            </td>
+                                                            <td>
+                                                                {item.Student_Name}
 
-                                                                    </div>
-                                                                </td>
-                                                              
-                                                                <td>
-                                                                    <>
-                                                                        <select class="form-control form-control-lg" value={item.Status} onChange={(e) => handleInputChange(index, e)} name='Status' id="exampleFromControlSelect1" >
+                                                            </td>
+                                                            <td>
+                                                                <div class="form-group ">
+                                                                    <label for="exampleFormControlSelect1"></label>
+                                                                    <input type="number" class="form-control" id="exampleInputUsername1" name='Marks_Given' onChange={(e) => handleInputChange(index, e)} value={item.Marks_Given} />
 
-                                                                            <option>Select</option>
+                                                                </div>
+                                                            </td>
 
-                                                                            <option value='Present'>Present</option>
-                                                                            <option value='Absent'>Absent</option>
+                                                            <td>
+                                                                <>
+                                                                    <select class="form-control form-control-lg" value={item.Status} onChange={(e) => handleInputChange(index, e)} name='Status' id="exampleFromControlSelect1" >
 
+                                                                        <option>Select</option>
 
-
-                                                                        </select>
-                                                                    </>
-                                                                </td>
-                                                             
-                                                            
-                                                            
-
-                                                            </tr>
-                                                        )
-                                                    })}
-                                                </tbody>
-                                            </table>
-
-                                        </div>
-                                        <button type="button" onClick={handleSubmitTable} style={{ float: "right" }} class="btn btn-primary m-2">Update Sheet</button>
+                                                                        <option value='Present'>Present</option>
+                                                                        <option value='Absent'>Absent</option>
 
 
+
+                                                                    </select>
+                                                                </>
+                                                            </td>
+
+
+
+
+                                                        </tr>
+                                                    )
+                                                })}
+                                            </tbody>
+                                        </table>
 
                                     </div>
-                                </form>
-                            </div>}
+                                    <button type="button" onClick={handleSubmitTable} style={{ float: "right" }} class="btn btn-primary m-2">{updateloading ?  "processing.." : "Update Sheet"}</button>
+
+
+
+                                </div>
+                            </form>
+                        </div>}
                     </div>
                 </div>
             </div >
