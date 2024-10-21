@@ -3,7 +3,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { BASE_URL } from './BaseUrl';
+import { BASE_URL, IMG_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 
 const FestivalPhoto = () => {
@@ -153,16 +153,15 @@ const FestivalPhoto = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-
     if(validateForm()){
-        const data = {
+        // const data = {
             
-        startdate : value.startdate,
-        enddate : value.enddate,
-        file : value.file,
-        description :value.description,
-        uid : uid.id
-        }
+        // startdate : value.startdate,
+        // enddate : value.enddate,
+        // file : value.file,
+        // description :value.description,
+        // uid : uid.id
+        // }
 
          const formdata = new FormData()
 
@@ -170,6 +169,8 @@ const FestivalPhoto = () => {
          formdata.append('startdate' , value.startdate)
          formdata.append('enddate', value.enddate)
          formdata.append('description', value.description)
+         formdata.append('uid', uid.id)
+     
 
         axios.post(`${BASE_URL}/add_festival_photo`, formdata)
             .then((res) => {
@@ -211,7 +212,18 @@ const FestivalPhoto = () => {
         { field: 'startdate', headerName: 'Start Date', flex: 2},
         { field: 'enddate', headerName: 'End Date', flex: 2},
         { field: 'description', headerName: 'Description', flex: 2},
-        
+        {
+            field: 'file',
+            headerName: 'Image',
+            flex: 2,
+            renderCell: (params) => (
+                <img 
+                    src={`${IMG_URL}/${params.row.file}`} 
+                    alt="Festival photo" 
+                    style={{ width: '50px',padding:'5px', objectFit: 'cover' }}
+                />
+            ),
+        },
         {
             field: 'actions',
             type: 'actions',
@@ -263,7 +275,7 @@ const FestivalPhoto = () => {
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleInputUsername1"></label>
                                                 <input type="file" class="form-control" id="exampleInputUsername1"
-                                                 value={value.file} name='file' onChange={onhandleupload} />
+                                                 value={value.image} name='file' onChange={onhandleupload} />
                                                 
                                             </div>
 

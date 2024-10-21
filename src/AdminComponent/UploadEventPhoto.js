@@ -217,13 +217,18 @@ const UploadEventPhoto = () => {
                                                 <label for="exampleFormControlSelect1">Select Event Type</label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.event} onChange={onhandleChange} name='event'>
                                                     <option>Select</option>
+                                                    <option>Convocation</option>
+                                                    <option>Seminar</option>
+                                                    <option>Exhibition</option>
+                                                    <option>Induction</option>
+                                                    <option>Testimonials</option>
 
                                                 </select>
                                             </div>
 
                                             <div class="form-group col-lg-4">
                                                 <label for="exampleInputUsername1">Event Header</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.eventheader} name='eventheader' onChange={onhandleChange} />
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.eventheader} name='eventheader' onChange={onhandleChange} />
 
                                             </div>
 
@@ -232,12 +237,16 @@ const UploadEventPhoto = () => {
                                                 <CKEditor
                                                     editor={ClassicEditor}
                                                     data={uid.specification}
+                                                    
 
                                                     // data={uid.specification}
-                                                    onReady={editor => {
-                                                        // Allows you to store the editor instance and use it later.
-                                                        // console.log('Editor is ready to use!', editor);
-                                                    }}
+                                                    // onReady={editor => {
+                                                    //     // Allows you to store the editor instance and use it later.
+                                                    //     // console.log('Editor is ready to use!', editor);
+                                                    // }}
+                                                    onReady={(editor) => {
+                                                        editor.ui.view.editable.element.style.minHeight = "300px";
+                                                     }}
                                                     onChange={(event, editor) => {
                                                         const data = editor.getData();
                                                         setSpecification(data)
