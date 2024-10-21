@@ -51,10 +51,7 @@ const GenerateResult = () => {
             newErrors.returndate = "Return Date is Required"
         }
 
-        if (!value.printdate) {
-            isValid = false;
-            newErrors.printdate = "Print Date is Required"
-        }
+ 
 
         if (!value.approved) {
             isValid = false;
@@ -296,9 +293,9 @@ const GenerateResult = () => {
                                             </div>
 
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">Print Date<span className='text-danger'>*</span></label>
+                                                <label for="exampleInputUsername1">Print Date</label>
                                                 <input type="date" class="form-control" id="exampleInputUsername1" value={value.printdate} name='printdate' onChange={onhandleChange} />
-                                                {<span className='text-danger'> {error.printdate} </span>}
+                                                
                                             </div>
 
                                             <div class="form-group col-lg-3">

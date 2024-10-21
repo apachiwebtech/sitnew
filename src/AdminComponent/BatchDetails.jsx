@@ -89,10 +89,10 @@ const BatchDetails = () => {
             isValid = false;
             newErrors.passingcriteria = "Passing criteria is required"
         }
-        if (!value.comments) {
-            isValid = false;
-            newErrors.comments = "Passing criteria is required"
-        }
+        // if (!value.comments) {
+        //     isValid = false;
+        //     newErrors.comments = "Passing criteria is required"
+        // }
         if (!value.briefdescription) {
             isValid = false;
             newErrors.briefdescription = "Description is required"
@@ -358,7 +358,7 @@ const BatchDetails = () => {
                                                     </div>
 
                                                     <div class="form-group col-lg-12">
-                                                        <label for="exampleTextarea1">Comments<span className='text-danger'>*</span></label>
+                                                        <label for="exampleTextarea1">Comments</label>
                                                         <textarea class="form-control" id="exampleTextarea1" name='comments' value={value.comments} placeholder="Comments" onChange={onhandleChange}></textarea>
                                                         {error.comments && <span className='text-danger'>{error.comments}</span>}
                                                     </div>

@@ -130,8 +130,7 @@ const EmployeeLoan = () => {
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
                 setUid(res.data[0])
-
-                console.log(res.data, "update")
+              
             })
             .catch((err) => {
                 console.log(err)
@@ -175,9 +174,10 @@ const EmployeeLoan = () => {
         }
 
 
-        axios.post(`${BASE_URL}/add_sit_employeeloan`, data)
+        axios.post(`${BASE_URL}/add_employeeloan`, data)
             .then((res) => {
                 //console.log(res)
+                alert("Data Added")
                 getEmployeeData()
 
             })

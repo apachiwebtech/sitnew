@@ -205,6 +205,7 @@ import EmployeeProfessionTaxMaster from './AdminComponent/EmployeeProfessionTaxM
 import MyDocument3 from './AdminComponent/MyDocument3.js';
 //import BatchTransferListing from './AdminComponent/BatchTransferListing.js';
 import AddAssets from './AdminComponent/AddAssets.js';
+import Taxmaster from './AdminComponent/Taxmaster.js';
 
 
 const Router = createBrowserRouter([
@@ -763,6 +764,10 @@ const Router = createBrowserRouter([
         element: <TaskAdd />
       },
       {
+        path: '/taxmaster',
+        element: <Taxmaster />
+      },
+      {
         path: '/AddChecklist',
         element: <AddChecklist />
       },
@@ -1033,7 +1038,7 @@ function WebApp() {
 
     } catch (error) {
       console.log('You are not authorized to view this content.');
-      // navigate('/weblog')
+      navigate('/weblog')
     }
   }
 

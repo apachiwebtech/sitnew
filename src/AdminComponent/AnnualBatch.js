@@ -11,6 +11,9 @@ const AnnualBatch = () => {
     const [uid, setUid] = useState([])
     const [batchcat, setBatchCat] = useState([])
     const [course, setCourseData] = useState([])
+    const [batchcatid, setBatchcatid] = useState('')
+    const [course_id, setCourseId] = useState('')
+    const [category, setCategory] = useState('')
 
     const { batch_id } = useParams()
 
@@ -72,11 +75,11 @@ const AnnualBatch = () => {
         const newErrors = {}
 
 
-        if (!value.selectcourse) {
+        if (!course_id) {
             isValid = false;
             newErrors.selectcourse = "Course is required"
         }
-        if (!value.batchcategory) {
+        if (!batchcatid) {
             isValid = false;
             newErrors.batchcategory = "Category is required"
         }
@@ -88,10 +91,7 @@ const AnnualBatch = () => {
             isValid = false;
             newErrors.timings = "Timing is required"
         }
-        //    if (!value.coursename) {
-        //     isValid = false;
-        //     newErrors.coursename = "Coursename is required"
-        //    }
+
         if (!value.planned) {
             isValid = false;
             newErrors.planned = "Date is required"
@@ -100,10 +100,7 @@ const AnnualBatch = () => {
             isValid = false;
             newErrors.duration = "Duration is required"
         }
-        //    if (!value.taxrate) {
-        //     isValid = false;
-        //     newErrors.taxrate = "Taxrate is required"
-        //    }
+ 
 
         setError(newErrors)
         return isValid
@@ -125,7 +122,9 @@ const AnnualBatch = () => {
         axios.post(`${BASE_URL}/new_update_data`, data)
             .then((res) => {
                 setUid(res.data[0])
-
+                 setBatchcatid(res.data[0].Batch_Category_id)
+                 setCourseId(res.data[0].Course_Id)
+                setCategory(res.data[0].Category)
                 console.log(res.data, "update")
             })
             .catch((err) => {
@@ -157,6 +156,26 @@ const AnnualBatch = () => {
             })
     }
 
+    const generatebatchcode = (id,text) =>{
+
+        setBatchcatid(id)
+        setCategory(text)
+
+        const data = {
+            course_id : course_id,
+            batchcat_id : id
+        }
+       
+       axios.post(`${BASE_URL}/generatebatchcode`  , data)
+       .then((res) =>{
+
+        
+        setValue({
+            batchcode : res.data.batch_code
+        })
+       })
+    }
+
 
     useEffect(() => {
         if (batch_id !== ':batch_id') {
@@ -175,8 +194,8 @@ const AnnualBatch = () => {
 
         if (validateForm()) {
             const data = {
-                selectcourse: value.selectcourse,
-                batchcategory: value.batchcategory,
+                selectcourse: course_id,
+                batchcategory: batchcatid,
                 description: value.description,
                 trainingdate: value.trainingdate,
                 actualdate: value.actualdate,
@@ -193,6 +212,7 @@ const AnnualBatch = () => {
                 totalinr: value.totalinr,
                 servicetax: value.servicetax,
                 publish: value.publish,
+                category : category,
                 uid: uid.Batch_Id
             }
 
@@ -249,7 +269,7 @@ const AnnualBatch = () => {
 
                                                     <div class="form-group col-lg-6">
                                                         <label for="exampleInputUsername1">Select Course</label>
-                                                        <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.selectcourse} name='selectcourse' onChange={onhandleChange} >
+                                                        <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={course_id} name='selectcourse' onChange={(e) => setCourseId(e.target.value)} >
                                                             <option>Select</option>
                                                             {course.map((item) => {
                                                                 return (
@@ -262,11 +282,11 @@ const AnnualBatch = () => {
                                                     </div>
                                                     <div class="form-group col-lg-6">
                                                         <label for="exampleInputUsername1">Batch Category<span className='text-danger'>*</span></label>
-                                                        <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batchcategory} name='batchcategory' onChange={onhandleChange} >
+                                                        <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={batchcatid} name='batchcategory' onChange={(e) =>generatebatchcode(e.target.value,e.target.options[e.target.selectedIndex].text)} >
                                                             <option>Select category</option>
                                                             {batchcat.map((item) => {
                                                                 return (
-                                                                    <option value={item.BatchCategory}>{item.BatchCategory}</option>
+                                                                    <option value={item.id}>{item.BatchCategory}</option>
                                                                 )
                                                             })}
 
@@ -280,10 +300,16 @@ const AnnualBatch = () => {
                                                         <input type="text" class="form-control" id="exampleInputUsername1" value={value.description} placeholder="Description" name='description' onChange={onhandleChange} disabled />
 
                                                     </div>
-                                                    <div class="form-group col-lg-6">
+                                                    {/* <div class="form-group col-lg-6">
                                                         <label for="exampleInputUsername1">Training completion Date<span className='text-danger'>*</span></label>
                                                         <input type="date" class="form-control" id="exampleInputUsername1" value={value.trainingdate} placeholder="End Date" name='trainingdate' onChange={onhandleChange} />
                                                         {error.trainingdate && <span className='text-danger'>{error.trainingdate}</span>}
+
+                                                    </div> */}
+                                                    <div class="form-group col-lg-6">
+                                                        <label for="exampleInputUsername1">Planned Start Date<span className='text-danger'>*</span></label>
+                                                        <input type="date" class="form-control" id="exampleInputUsername1" value={value.planned} placeholder="Planned Start Date" name='planned' onChange={onhandleChange} />
+                                                        {error.planned && <span className='text-danger'>{error.planned}</span>}
 
                                                     </div>
 
@@ -341,13 +367,18 @@ const AnnualBatch = () => {
 
                                                     </div>
 
-
                                                     <div class="form-group col-lg-6">
+                                                        <label for="exampleInputUsername1">Training completion Date<span className='text-danger'>*</span></label>
+                                                        <input type="date" class="form-control" id="exampleInputUsername1" value={value.trainingdate} placeholder="End Date" name='trainingdate' onChange={onhandleChange} />
+                                                        {error.trainingdate && <span className='text-danger'>{error.trainingdate}</span>}
+
+                                                    </div>
+                                                    {/* <div class="form-group col-lg-6">
                                                         <label for="exampleInputUsername1">Planned Start Date<span className='text-danger'>*</span></label>
                                                         <input type="date" class="form-control" id="exampleInputUsername1" value={value.planned} placeholder="Planned Start Date" name='planned' onChange={onhandleChange} />
                                                         {error.planned && <span className='text-danger'>{error.planned}</span>}
 
-                                                    </div>
+                                                    </div> */}
                                                     <div class="form-group col-lg-6">
                                                         <label for="exampleInputUsername1">Last Date of Admission</label>
                                                         <input type="date" class="form-control" id="exampleInputUsername1" value={value.admissiondate} placeholder="Last Date of Admission" name='admissiondate' onChange={onhandleChange} />

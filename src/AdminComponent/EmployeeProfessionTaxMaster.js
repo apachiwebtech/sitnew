@@ -149,7 +149,18 @@ const EmployeeProfessionTaxMaster = () => {
 
             try {
                 await axios.post(`${BASE_URL}/add_sit_eptaxmaster`, data);
+
+                setValue({
+                    from_sal:"",
+                    to_sal:"",
+                    tax_price:"",
+                    sep_mnth:"",
+                    sep_tax_price:"",
+                })
+                setUid([])
                 getsit_eptaxmaster();
+
+
                 alert("Data Submitted Successfully");
             } catch (err) {
                 console.error(err);

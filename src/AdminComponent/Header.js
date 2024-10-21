@@ -818,7 +818,7 @@ const Header = ({click}) => {
         <Collapse in={openStates.Accountmaster} timeout="auto" unmountOnExit>
           <ul className='inner-item'>
             <li className="nav-item">
-              <Link className="nav-link" to={'employeeprofessiontaxmaster'} >
+              <Link className="nav-link" to={'/employeeprofessiontaxmaster'} >
                 <Icon path={mdiCircleMedium} size={1} className='mx-3' />
                 <span className="menu-title">Employee Profession Tax</span>
               </Link>
@@ -831,7 +831,7 @@ const Header = ({click}) => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to={`/twofieldform/${"awt_tax"}/${"Tax"}/${"Tax_date"}/${"date"}/${"Tax"}`}>
+              <Link className="nav-link" to={`/taxmaster`}>
                 {/* <Icon path={mdiCircleMedium } size={1} className='mx-3' /> */}
                 <Icon path={mdiCircleMedium} size={1} className='mx-3' />
                 <span className="menu-title">Tax</span>

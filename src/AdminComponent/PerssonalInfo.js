@@ -90,6 +90,7 @@ const PerssonalInfo = () => {
     const getBatchwiseamount = async (batchcode) => {
 
         setbatchcode(batchcode)
+        
 
         const param = {
             Batch_Code: batchcode

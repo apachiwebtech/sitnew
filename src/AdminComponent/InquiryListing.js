@@ -189,10 +189,10 @@ const InquiryListing = () => {
                 </>
             )
         }},
-        { field: 'Discussion', headerName: 'Discuss', width : 200 , renderCell:(params) =>{
+        { field: 'discussion', headerName: 'Discuss', width : 200 , renderCell:(params) =>{
             return(
                 <>
-                  {params.row.IsUnread == 0 ?<p className ="text-danger" >{params.row.Discussion}</p> : <p>{params.row.Discussion}</p> }
+                  {params.row.IsUnread == 0 ?<p className ="text-danger" >{params.row.discussion}</p> : <p>{params.row.discussion}</p> }
                 </>
             )
         }},

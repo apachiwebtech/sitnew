@@ -117,7 +117,7 @@ const FeesStructure = () => {
             const data = {
                 basicinr : value.basicinr,
                 sevicetaxinr :value.sevicetaxinr,
-                totalinr :value.totalinr,
+                totalinr :value.basicinr,
                 basicdoller :value.basicdoller,
                 sevicetaxdoller :value.sevicetaxdoller,
                 totaldoller :value.totaldoller,

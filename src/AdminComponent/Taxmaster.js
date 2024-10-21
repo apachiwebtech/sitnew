@@ -9,9 +9,9 @@ import decryptedUserId from '../Utils/UserID';
 import { DataGrid } from '@mui/x-data-grid';
 
 
-const TwoFieldForm = () => {
+const Taxmaster = () => {
 
-    const {tablename,fieldname,text1,text2,type} = useParams()
+
     const [brand, setBrand] = useState([])
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
@@ -19,15 +19,15 @@ const TwoFieldForm = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
 
     const [value, setValue] = useState({
-        field1: "" || uid[text1] ,
-        field2: "" || uid[text2],
+        Tax: "" || uid.Tax ,
+        Tax_date: ""  || uid.Tax_date,
 
     })
 
     useEffect(() => {
         setValue({
-            field1: "" || uid[text1],
-            field2: "" || uid[text2],
+            Tax: uid.Tax ,
+            Tax_date: uid.Tax_date ,
             
         })
     }, [uid])
@@ -38,13 +38,13 @@ const TwoFieldForm = () => {
         const newErrors = {}
 
 
-        if (!value.field1) {
+        if (!value.Tax) {
             isValid = false;
-            newErrors.field1 = `${text1} is required`
+            newErrors.tax = `Tax is required`
         }
-        if (!value.field2) {
+        if (!value.Tax_date) {
             isValid = false;
-            newErrors.field2 = `${text2} is required`
+            newErrors.taxdate = `Tax Date is required`
         }
 
 
@@ -54,7 +54,7 @@ const TwoFieldForm = () => {
 
     const handleUpdate = (id) => {
         const data = {
-            tablename : tablename,
+            tablename : "awt_tax",
             u_id : id
         }
         axios.post(`${BASE_URL}/update_data`, data)
@@ -69,7 +69,7 @@ const TwoFieldForm = () => {
 
     async function getColorData() {
         const data = {
-            tablename : tablename
+            tablename : "awt_tax"
         }
         axios.post(`${BASE_URL}/get_data`,data)
             .then((res) => {
@@ -83,11 +83,11 @@ const TwoFieldForm = () => {
 
     useEffect(() => {
         getColorData()
-        value.field1 = ""
-        value.field2 = ""
+        value.Tax = ""
+        value.Tax_date = ""
         setError({})
         setUid([])
-    }, [tablename])
+    }, [])
 
     const handleClick = (id) => {
         setCid(id)
@@ -109,7 +109,7 @@ const TwoFieldForm = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename : tablename
+            tablename : "awt_tax"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
@@ -133,25 +133,22 @@ const TwoFieldForm = () => {
         if (validateForm()) {
 
             const data ={
-            tablename : tablename,
             user_id : decryptedUserId(),
             uid : uid.id,
-            field1 :value.field1,
-            field2 :value.field2,
-            field1_name : text1,
-            field2_name : text2,
+            Tax :value.Tax,
+            Tax_date :value.Tax_date,
 
             }
 
 
-            axios.post(`${BASE_URL}/add_data_two`, data)
+            axios.post(`${BASE_URL}/add_taxdata`, data)
                 .then((res) => {
                     alert(res.data)
                     getColorData()
                     setUid([])
                     setValue({
-                        field1 :"",
-                        field2 :""
+                        Tax :"",
+                        Tax_date :""
                     })
 
                 })
@@ -181,8 +178,8 @@ const TwoFieldForm = () => {
             flex: 1,
             filterable: false,
         },
-        { field: `${text1}`, headerName: `${text1}`, flex: 2 },
-        { field: `${text2}`, headerName: `${text2}`, flex: 2 },
+        { field: `Tax`, headerName: `Tax_date`, flex: 2 },
+        { field: `Tax_date`, headerName: `Tax_date`, flex: 2 },
         {
             field: 'actions',
             type: 'actions',
@@ -212,18 +209,18 @@ const TwoFieldForm = () => {
                         <div class="col-lg-5 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Add {fieldname}</h4>
+                                    <h4 class="card-title">Add Tax</h4>
 
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class="form-group">
-                                            <label for="exampleInputUsername1">{text1} <span className='text-danger'>*</span></label>
-                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.field1} placeholder={`Enter ${text1} Name `} name='field1' onChange={onhandleChange} />
-                                            {error.field1 && <span className='text-danger'>{error.field1}</span>}
+                                            <label for="exampleInputUsername1">Tax <span className='text-danger'>*</span></label>
+                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.Tax} placeholder={`Enter Tax Name `} name='Tax' onChange={onhandleChange} />
+                                            {error.tax && <span className='text-danger'>{error.tax}</span>}
                                         </div>
                                         <div class="form-group">
-                                            <label for="exampleInputUsername1">{text2} <span className='text-danger'>*</span></label>
-                                            <input type={type} class="form-control" id="exampleInputUsername1" value={value.field2} placeholder={`Enter ${text2}  `} name='field2' onChange={onhandleChange} />
-                                            {error.field2 && <span className='text-danger'>{error.field2}</span>}
+                                            <label for="exampleInputUsername1">Tax date <span className='text-danger'>*</span></label>
+                                            <input type="date" class="form-control" id="exampleInputUsername1" value={value.Tax_date} placeholder={`Enter Date `} name='Tax_date' onChange={onhandleChange} />
+                                            {error.taxdate && <span className='text-danger'>{error.taxdate}</span>}
                                         </div>
                                    
                                 
@@ -241,9 +238,9 @@ const TwoFieldForm = () => {
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
                                         <div>
-                                            <h4 class="card-title">{fieldname}</h4>
+                                            <h4 class="card-title">Tax</h4>
                                             <p class="card-description">
-                                                List Of {fieldname}
+                                                List Of Tax
                                             </p>
                                         </div>
 
@@ -283,4 +280,4 @@ const TwoFieldForm = () => {
     )
 }
 
-export default TwoFieldForm
+export default Taxmaster

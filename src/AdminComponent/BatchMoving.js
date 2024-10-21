@@ -11,7 +11,6 @@ import InnerHeader from './InnerHeader';
 
 const BatchMoving = () => {
 
-
     const [date, setDate] = useState('');
 
     useEffect(() => {
@@ -32,10 +31,14 @@ const BatchMoving = () => {
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
+    const [course, setCourse] = useState([])
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
+    const [courseid, setCourseid] = useState('')
+    const [batch, setBatch] = useState([])
+    const [batchid, setBatchid] = useState('')
+    const [student, setStudent] = useState([])
 
-    console.log(specification)
 
     const handleChange1 = (event) => {
         setChecked([event.target.checked, event.target.checked]);
@@ -49,37 +52,21 @@ const BatchMoving = () => {
         setChecked([checked[0], event.target.checked]);
     };
 
-    // const children = (
-    //     <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-    //       <FormControlLabel
-    //         label="Child 1"
-    //         control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
-    //       />
-    //       <FormControlLabel
-    //         label="Child 2"
-    //         control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
-    //       />
-    //     </Box>
-    //   );
+
 
     const [value, setValue] = useState({
-        selectcourse: "" || uid.selectcourse,
-        batchno: "" || uid.batchno,
-        student: "" || uid.student,
-        newbatch: "" || uid.newbatch,
 
-
-
+        student: "" || uid.student_id,
+        newbatch: "" || uid.newbatch_code,
 
 
     })
 
     useEffect(() => {
         setValue({
-            selectcourse: uid.selectcourse,
-            batchno: uid.batchno,
-            student: uid.student,
-            newbatch: uid.newbatch,
+
+            student: uid.student_id,
+            newbatch: uid.newbatch_code,
 
         })
     }, [uid])
@@ -103,25 +90,11 @@ const BatchMoving = () => {
     // }
 
 
-    async function getEmployeeData() {
-
-        axios.post(`${BASE_URL}/vendor_details`)
-            .then((res) => {
-                console.log(res.data)
-                setBrand(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
 
 
-
-    async function getEmployeeData() {
-        const data = {
-            tablename: "awt_batchmoving"
-        }
-        axios.post(`${BASE_URL}/get_data`, data)
+    async function getMovingData() {
+  
+        axios.get(`${BASE_URL}/getbatchmoving`)
             .then((res) => {
                 console.log(res.data)
                 setVendorData(res.data)
@@ -131,8 +104,90 @@ const BatchMoving = () => {
             })
     }
 
+    const getcourse = () => {
+
+        const data = {
+            tablename: "Course_Mst",
+            columnname: "Course_Id,Course_Name"
+        }
+
+        axios.post(`${BASE_URL}/get_new_data`, data)
+            .then((res) => {
+                console.log(res.data)
+                setCourse(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+
+    }
+
+    const getBatch = async (id) => {
+        setCourseid(id)
+        const data = {
+            courseid: id
+        }
+
+
+        if (id) {
+            axios.post(`${BASE_URL}/getcoursewisebatch`, data)
+                .then((res) => {
+                    console.log(res.data)
+                    setBatch(res.data)
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        } else {
+            try {
+                const res = await axios.get(`${BASE_URL}/getbatch`, data);
+
+                setBatch(res.data);
+
+            } catch (err) {
+                console.error("Error fetching data:", err);
+            }
+        }
+
+
+    }
+
+    
+    const getStudent = async (code) => {
+        setBatchid(code)
+        const data = {
+            batch_code: code
+        }
+        if (code) {
+            axios.post(`${BASE_URL}/getbatchwisestudent`, data)
+                .then((res) => {
+
+                    setStudent(res.data)
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        } else {
+            try {
+                const res = await axios.post(`${BASE_URL}/get_new_data`,
+                    { tablename: "Student_Master", columnname: "Student_Id,Student_Name" });
+
+                setStudent(res.data);
+
+            } catch (err) {
+                console.error("Error fetching data:", err);
+            }
+        }
+
+
+    }
+
+
     useEffect(() => {
-        getEmployeeData()
+        getBatch()
+        getStudent()
+        getcourse()
+        getMovingData()
         value.title = ""
         setError({})
         setUid([])
@@ -162,7 +217,8 @@ const BatchMoving = () => {
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
                 setUid(res.data[0])
-
+                setCourseid(res.data[0].course)
+                setBatchid(res.data[0].batch_code)
                 console.log(res.data, "update")
             })
             .catch((err) => {
@@ -178,7 +234,7 @@ const BatchMoving = () => {
 
         axios.post(`${BASE_URL}/delete_data`, data)
             .then((res) => {
-                getEmployeeData()
+                getMovingData()
 
             })
             .catch((err) => {
@@ -196,11 +252,8 @@ const BatchMoving = () => {
 
         // if(validateForm()){
         const data = {
-
-
-
-            selectcourse: value.selectcourse,
-            batchno: value.batchno,
+            selectcourse: courseid,
+            batchno: batchid,
             student: value.student,
             newbatch: value.newbatch,
             uid: uid.id
@@ -209,9 +262,16 @@ const BatchMoving = () => {
 
         axios.post(`${BASE_URL}/add_batchmoving`, data)
             .then((res) => {
-                console.log(res)
-                getEmployeeData()
+                alert("Data Added")
+                getMovingData()
 
+                setValue({
+                    student: "" ,
+                    newbatch: "",
+                })
+                setUid([])
+                setCourseid("")
+                setBatchid("")
             })
             .catch((err) => {
                 console.log(err)
@@ -245,10 +305,10 @@ const BatchMoving = () => {
             filterable: false,
 
         },
-        { field: 'selectcourse', headerName: 'Select Course', flex: 2 },
-        { field: 'batchno', headerName: 'Batch No.', flex: 2 },
-        { field: 'student', headerName: 'Student', flex: 2 },
-        { field: 'newbatch', headerName: 'New Batch', flex: 2 },
+        { field: 'Course_Name', headerName: 'Select Course', flex: 2 },
+        { field: 'batch_code', headerName: 'Batch No.', flex: 2 },
+        { field: 'Student_Name', headerName: 'Student', flex: 2 },
+        { field: 'newbatch_code', headerName: 'New Batch', flex: 2 },
 
         {
             field: 'actions',
@@ -284,35 +344,60 @@ const BatchMoving = () => {
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
 
-                                            <div class="form-group col-lg-3">
-                                                <lable for="exampleFormControlSelect1"> Select Course</lable>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.selectcourse} name='selectcourse' onChange={onhandleChange}>
+                                        <div class="form-group col-lg-3">
+                                                <label for="exampleFormControlSelect1">Course<span className="text-danger">*</span></label>
+                                                <select class="form-control" id="exampleFormControlSelect1"
+                                                    value={courseid} name='course' onChange={(e) => getBatch(e.target.value)}>
                                                     <option>Select Course</option>
-                                                    <option> Training in Process Plant System Modelling Using E3D</option>
-                                                    <option>Advance Pipe Stress Analysis </option>
-                                                    <option>Air Conditioning System Design (HVAC)</option>
-                                                    <option>Autocad - Piping</option>
+                                                    {course.map((item) => {
+                                                        return (
+                                                            <option value={item.Course_Id}>{item.Course_Name}</option>
+
+                                                        )
+                                                    })}
                                                 </select>
+                                                {<span className='text-danger'> {error.course} </span>}
                                             </div>
 
-                                            <div class="form-group col-lg-3">
+                                                 <div class="form-group col-lg-2">
                                                 <label for="exampleFormControlSelect1">Old Batch No.</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batchno} name='batchno' onChange={onhandleChange}>
-                                                    <option></option>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1"
+                                                    value={batchid} name='batchno' onChange={(e) => getStudent(e.target.value)}>
+                                                    <option>Select Batch</option>
+                                                    {batch.map((item) => {
+                                                        return (
+                                                            <option value={item.Batch_code}>{item.Batch_code}</option>
+
+                                                        )
+                                                    })}
                                                 </select>
                                             </div>
 
-                                            <div class="form-group col-lg-3">
+                                            <div class="form-group col-lg-2">
                                                 <label for="exampleFomrControlSelect1">Student</label>
-                                                <select className='form-control form-control-lg' id="exampleFormControlSelect1" value={value.student} name='student' onChange={onhandleChange}>
-                                                    <option></option>
+                                                <select className='form-control form-control-lg'
+                                                    id="exampleFormControlSelect1" value={value.student}
+                                                    name='student' onChange={onhandleChange}>
+                                                    <option>Select Student</option>
+                                                    {student.map((item) => {
+                                                        return (
+                                                            <option value={item.Student_Id}>{item.Student_Name}</option>
+                                                        )
+                                                    })}
                                                 </select>
                                             </div>
 
                                             <div class="form-group col-lg-3">
                                                 <lable for="exampleFormControlSelect1">New Batch No</lable>
                                                 <select className='form-control form-control-lg' id="exampleFormControlSelect1" value={value.newbatch} name='newbatch' onChange={onhandleChange}>
-                                                    <option></option>
+
+                                                    <option value={``}>Selct Batch</option>
+                                                {batch.map((item) => {
+                                                        return (
+                                                            <option value={item.Batch_code}>{item.Batch_code}</option>
+
+                                                        )
+                                                    })}
                                                 </select>
                                             </div>
 

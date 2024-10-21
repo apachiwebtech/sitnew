@@ -31,6 +31,9 @@ const QmsMaster = () => {
     }, [uid])
 
 
+    console.log(uid.id,"RRRRR")
+
+
     // const validateForm = () => {
     //     let isValid = true
     //     const newErrors = {}
@@ -92,13 +95,13 @@ const QmsMaster = () => {
         try {
             const data = {
                 u_id: id,
-                uidname: "id",
+                uidname: "Id",
                 tablename: "qms_master"
             }
-            axios.post(`${BASE_URL}/update_data`, data)
+            axios.post(`${BASE_URL}/new_update_data`, data)
             .then ((res) => {
                 setUid(res.data[0])
-                console.log(res.data, "update")
+         
             })
             .catch((err) => {
                 console.log(err)
@@ -110,10 +113,11 @@ const QmsMaster = () => {
     };
     const handleDelete = async (id) => {
         const data = {
-            cat_id: id,
+            delete_id: id,
             tablename: "qms_master",
+            column_name:"Id"
         };
-        axios.post(`${BASE_URL}/delete_data`, data)
+        axios.post(`${BASE_URL}/new_delete_data`, data)
             .then((res) => {
 
                 getqms_master();
@@ -133,15 +137,19 @@ const QmsMaster = () => {
 
             QMS_name: value.QMS_name,
             QMS_Desc: value.QMS_Desc,
-            uid: uid.id
+            uid: uid.Id
         }
 
 
         axios.post(`${BASE_URL}/add_qms_master`, data)
             .then((res) => {
-                console.log(res)
+                alert("Data Added")
                 getqms_master()
-
+                setUid([])
+                setValue({
+                    QMS_name: "",
+                    QMS_Desc: "",
+                })
             })
             .catch((err) => {
                 console.log(err)

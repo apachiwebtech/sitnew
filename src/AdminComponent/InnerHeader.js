@@ -258,6 +258,8 @@ const InnerHeader = () => {
                 return 'Short Listed By SIT';
             case '/studentdetails':
                 return 'Student Details';
+            case '/taxmaster':
+                return 'Tax';
 
                 
             case '/collegelisting':

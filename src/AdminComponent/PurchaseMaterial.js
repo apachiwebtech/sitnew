@@ -9,24 +9,17 @@ import InnerHeader from './InnerHeader';
 const PurchaseMaterial = () => {
 
 
-    const [date, setDate] = useState('');
-
-    useEffect(() => {
-        const currentDate = new Date();
-        const year = currentDate.getFullYear();
-        let month = currentDate.getMonth() + 1;
-        month = month < 10 ? '0' + month : month;
-        let day = currentDate.getDate();
-        day = day < 10 ? '0' + day : day;
-        const formattedDate = `${year}-${month}-${day}`;
-        setDate(formattedDate);
-    }, []);
 
 
-    const [brand, setBrand] = useState([])
+    const [purchase, setpurchase] = useState([])
+    const [faculty, setFaculty] = useState([])
+    const [vendor, setVendor] = useState([])
+    const [batch, setBatch] = useState([])
+    const [course, setCourse] = useState([])
     const [purchasematerialdata, setPurchaseMaterialData] = useState([])
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
+    const [courseid, setCourseid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
@@ -35,15 +28,17 @@ const PurchaseMaterial = () => {
 
         company: "" || uid.company,
         item: "" || uid.item,
-        date: "" || uid.date,
+        purchase_date: "" || uid.purchase_date,
         purchase: "" || uid.purchase,
         vendor: "" || uid.vendor,
         voucherno: "" || uid.voucherno,
-        purpose: "" || uid.purchase,
+        purpose: "" || uid.purpose,
         requireddate: "" || uid.requireddate,
         price: "" || uid.price,
         quantity: "" || uid.quantity,
         totalamt: "" || uid.totalamt,
+        purposetxt: "" || uid.purposetxt,
+        batch: "" || uid.batch_id,
 
     })
 
@@ -51,16 +46,17 @@ const PurchaseMaterial = () => {
         setValue({
             company: uid.company,
             item: uid.item,
-            date: uid.date,
+            purchase_date: uid.purchase_date,
             purchase: uid.purchase,
             vendor: uid.vendor,
             voucherno: uid.voucherno,
-            purpose: uid.purchase,
+            purpose: uid.purpose,
             requireddate: uid.requireddate,
             price: uid.price,
             quantity: uid.quantity,
             totalamt: uid.totalamt,
-
+            purposetxt: uid.purposetxt,
+            batch: "" || uid.batch_id,
         })
     }, [uid])
 
@@ -70,23 +66,19 @@ const PurchaseMaterial = () => {
         const newErrors = {}
 
 
-       if (!value.item) {
-        isValid = false;
-        newErrors.item = "Item is Required"
-       }
-        if (!value.date) {
+        if (!value.item) {
             isValid = false;
-            newErrors.date = "Date is Required"
+            newErrors.item = "Item is Required"
+        }
+        if (!value.purchase_date) {
+            isValid = false;
+            newErrors.purchase_date = "Date is Required"
         }
         if (!value.requireddate) {
             isValid = false;
             newErrors.requireddate = "Date is Required"
         }
-        if(!value.price) {
-            isValid = false;
-            newErrors.price = "Price is Required"
-        }
-        if(!value.quantity) {
+        if (!value.quantity) {
             isValid = false;
             newErrors.quantity = "Quantity is Required"
         }
@@ -97,14 +89,115 @@ const PurchaseMaterial = () => {
 
     async function getPurchaseMaterial() {
 
-        axios.post(`${BASE_URL}/purchasematerial_details`)
+        const data = {
+            tablename: "awt_material_cat",
+            columnname: "id,Category"
+        }
+
+        axios.post(`${BASE_URL}/get_data`, data)
             .then((res) => {
-                console.log(res.data)
-                setBrand(res.data)
+
+                setpurchase(res.data)
             })
             .catch((err) => {
                 console.log(err)
             })
+    }
+    
+    async function getVendor() {
+
+        const data = {
+            tablename: "awt_vendor_master",
+            columnname: "id,vendorname"
+        }
+
+        axios.post(`${BASE_URL}/get_data`, data)
+            .then((res) => {
+
+                setVendor(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+    async function getFaculty() {
+
+        const data = {
+            tablename: "faculty_master",
+            columnname: "Faculty_Id,Faculty_Name"
+        }
+
+        axios.post(`${BASE_URL}/get_new_data`, data)
+            .then((res) => {
+
+                setFaculty(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+
+    const getcourse = () => {
+
+        const data = {
+            tablename: "Course_Mst",
+            columnname: "Course_Id,Course_Name"
+        }
+
+        axios.post(`${BASE_URL}/get_new_data`, data)
+            .then((res) => {
+                console.log(res.data)
+                setCourse(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+
+    }
+    const getPurchase = () => {
+
+
+
+        axios.get(`${BASE_URL}/getpurchase`)
+            .then((res) => {
+                setPurchaseMaterialData(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+
+    }
+
+    const getbatch = async (id) => {
+
+        setCourseid(id)
+
+        const data = {
+            courseid: id,
+        }
+
+        if (id) {
+            try {
+                const res = await axios.post(`${BASE_URL}/getcoursewisebatch`, data);
+                setBatch(res.data);
+
+            } catch (err) {
+                console.error("error fetching data:", err);
+            }
+        } else {
+            try {
+                const res = await axios.post(`${BASE_URL}/get_new_data`,
+                    {
+                        tablename: "Batch_Mst",
+                        columnname: "Batch_Id , Batch_code"
+                    });
+                setBatch(res.data);
+
+            } catch (err) {
+                console.error("Error fetching data:", err);
+            }
+        }
+
     }
 
 
@@ -112,7 +205,12 @@ const PurchaseMaterial = () => {
 
 
     useEffect(() => {
-   
+        getFaculty()
+        getcourse()
+        getbatch()
+        getVendor()
+        getPurchase()
+        getPurchaseMaterial()
         value.title = ""
         setError({})
         setUid([])
@@ -137,7 +235,7 @@ const PurchaseMaterial = () => {
     const handleUpdate = (id) => {
         const data = {
             u_id: id,
-            tablename: "awt_employeetrainingplan"
+            tablename: "awt_purchase_material"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
@@ -153,13 +251,13 @@ const PurchaseMaterial = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename: "awt_employeetrainingplan"
+            tablename: "awt_purchase_material"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
             .then((res) => {
-          
 
+                getPurchase()
             })
             .catch((err) => {
                 console.log(err)
@@ -176,25 +274,48 @@ const PurchaseMaterial = () => {
 
         if (validateForm()) {
             const data = {
-
                 company: value.company,
                 item: value.item,
-                date: value.date,
+                purchase_date: value.purchase_date,
                 purchase: value.purchase,
                 vendor: value.vendor,
                 voucherno: value.voucherno,
-                purpose: value.purchase,
+                purpose: value.purpose,
+                purposetxt: value.purposetxt,
+                batch_id: value.batch,
+                course_id: courseid,
                 requireddate: value.requireddate,
                 price: value.price,
                 quantity: value.quantity,
                 totalamt: value.totalamt,
+                uid: uid.id
             }
 
 
-            axios.post(`${BASE_URL}/awt_employeetrainingplan`, data)
+            axios.post(`${BASE_URL}/add_purchase_material`, data)
                 .then((res) => {
                     console.log(res)
-              
+                    alert(res.data)
+
+                    getPurchase()
+                    setValue({
+                        company: "",
+                        item: "",
+                        purchase_date: "",
+                        purchase: "",
+                        vendor: "",
+                        voucherno: "",
+                        purpose: "",
+                        requireddate: "",
+                        price: "",
+                        quantity: "",
+                        totalamt: "",
+                        purposetxt: "",
+                        batch: "",
+                    })
+
+                    setCourseid("")
+                    setUid([])
 
                 })
                 .catch((err) => {
@@ -229,16 +350,15 @@ const PurchaseMaterial = () => {
             filterable: false,
 
         },
-        { field: 'subject', headerName: 'Company', flex: 2 },
-        { field: 'internal', headerName: 'Item', flex: 2 },
-        { field: 'identified', headerName: 'Identified', flex: 2 },
-        { field: 'date', headerName: 'Purchase Date', flex: 2},
-        { field: 'vendor', headerName: 'Vender', flex: 2},
-        { field: 'purchase', headerName: 'Who Purchased', flex: 2},
-        { field: 'voucharno', headerName: 'Vouchar No.'},
-        { field: 'price', headerName: 'Price', flex: 2},
-        { field: 'quantity', headerName: 'Quantity', flex: 2},
-        { field: 'totalamt', headerName: 'Total Amt', flex: 2},
+        { field: 'company', headerName: 'Company', flex: 2 },
+        { field: 'Category', headerName: 'Item', flex: 2 },
+        { field: 'purchase_date', headerName: 'Purchase Date', flex: 2 },
+        { field: 'vendorname', headerName: 'Vender', flex: 2 },
+        { field: 'Faculty_Name', headerName: 'Who Purchased', flex: 2 },
+        { field: 'voucherno', headerName: 'Vouchar No.' },
+        { field: 'price', headerName: 'Price', flex: 2 },
+        { field: 'quantity', headerName: 'Quantity', flex: 2 },
+        { field: 'totalamt', headerName: 'Total Amt', flex: 2 },
 
 
         {
@@ -270,96 +390,180 @@ const PurchaseMaterial = () => {
                         <div class="col-lg-12 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Add Employee Training Plan</h4>
+                                    <h4 class="card-title">Purchase Material</h4>
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
+                                            <div className="col-lg-4 borderRight" >
+                                                <div className="row">
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="exampleFormControlSelect1">Company</label>
+                                                        <select class="form-control form-control-lg" id="exampleFormControlSelect1"
+                                                            value={value.company} name='company' onChange={onhandleChange}>
+                                                            <option value={``}>Select Company</option>
+                                                            <option value={`suvidya`}>SUVIDYA</option>
+                                                            <option value={`accent`}>ACCENT</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="exampleFormControlSelect1">Item<span className="text-danger">*</span></label>
+                                                        <select class="form-control form-control-lg" id="exampleFormControlSelect1"
+                                                            value={value.item} name='item' onChange={onhandleChange}>
+                                                            <option>Select Item</option>
+                                                            {purchase.map((item) => {
+                                                                return (
+                                                                    <option value={item.id}>{item.Category}</option>
 
-                                            <div class="form-group col-lg-2">
-                                                <lable class="exampleFormControlSelect1">Company</lable>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1"
-                                                    value={value.company} name='company' onChange={onhandleChange}>
-                                                    <option></option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group col-lg-2">
-                                                <lable class="exampleFormControlSelect1">Item<span className="text-danger">*</span></lable>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1"
-                                                    value={value.item} name='item' onChange={onhandleChange}>
-                                                    <option></option>
-                                                </select>
-                                                {<span className='text-danger'> {error.item} </span>}
-                                            </div>
+                                                                )
+                                                            })}
+                                                        </select>
+                                                        {<span className='text-danger'> {error.item} </span>}
+                                                    </div>
 
-                                            <div className="form-group col-lg-2">
-                                                <label htmlFor="exampleInputUsername1">Purchase Date <span className="text-danger">*</span></label>
-                                                <input
-                                                    type="date"
-                                                    className="form-control"
-                                                    id="exampleInputUsername1"
-                                                    value={date}
-                                                    name="date"
-                                                    onChange={(e) => { }}
-                                                    disabled
-                                                />
-                                                {<span className='text-danger'> {error.date} </span>}
-                                            </div>
-                                            <div class="form-group col-lg-2">
-                                                <label class="exampleFormControlSelect1">Who Purchase</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1"
-                                                    value={value.purchase} name='purchase' onChange={onhandleChange}>
-                                                    <option></option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group col-lg-2">
-                                                <label class="exampleFormControlSelect1">Vendor Name</label>
-                                                <select class="form-control form-control-lg" id="exampleFormCorntrolSelect1"
-                                                    value={value.vendor} name='vendor' onChange={onhandleChange}>
-                                                    <option></option>
-                                                </select>
-                                            </div>
+                                                    <div className="form-group col-lg-6">
+                                                        <label htmlFor="exampleInputUsername1">Purchase Date <span className="text-danger">*</span></label>
+                                                        <input
+                                                            type="date"
+                                                            className="form-control"
+                                                            id="exampleInputUsername1"
+                                                            value={value.purchase_date}
+                                                            name="purchase_date"
+                                                            onChange={onhandleChange}
 
+                                                        />
+                                                        {<span className='text-danger'> {error.purchase_date} </span>}
+                                                    </div>
 
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">Voucher No</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1"
-                                                    value={value.voucherno} placeholder="Voucher No" name='voucherno' onChange={onhandleChange} />
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="exampleFormControlSelect1">Who Purchase</label>
+                                                        <select class="form-control form-control-lg" id="exampleFormControlSelect1"
+                                                            value={value.purchase} name='purchase' onChange={onhandleChange}>
+                                                            <option>Select</option>
+                                                            {faculty.map((item) => {
+                                                                return (
 
-                                            </div>
-
-                                            <div class="form-group col-lg-2">
-                                                <lable class="exampleFormControlSelect1">Purpose</lable>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1"
-                                                    value={value.purpose} name='purpose' onChange={onhandleChange}>
-                                                    <option></option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">Required Date<span className="text-danger">*</span></label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1"
-                                                    value={value.requireddate} placeholder="Required Date" name='requireddate' onChange={onhandleChange} />
-                                                {<span className='text-danger'> {error.requireddate} </span>}
-                                            </div>
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">Price<span className="text-danger">*</span></label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1"
-                                                    value={value.price} placeholder="price" name='price' onChange={onhandleChange} />
-                                                {<span className='text-danger'> {error.price} </span>}
-                                            </div>
-
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">Quantity<span className="text-danger">*</span></label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1"
-                                                    value={value.quantity} placeholder="Quantity" name='quantity' onChange={onhandleChange} />
-                                                {<span className='text-danger'> {error.quantity} </span>}
-                                            </div>
-
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">Total Amt</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1"
-                                                    value={value.totalamt} placeholder="Total Amt" name='totalamt' onChange={onhandleChange} />
+                                                                    <option value={item.Faculty_Id}>{item.Faculty_Name}</option>
+                                                                )
+                                                            })}
+                                                        </select>
+                                                    </div>
+                                                </div>
 
                                             </div>
+
+                                            <div className="col-lg-4 borderRight">
+                                                <div className="row">
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="exampleFormControlSelect1">Vendor Name</label>
+                                                        <select class="form-control form-control-lg" id="exampleFormCorntrolSelect1"
+                                                            value={value.vendor} name='vendor' onChange={onhandleChange}>
+                                                            <option>Select Vendor</option>
+                                                            {vendor.map((item) => {
+                                                                return (
+                                                                    <option value={item.id}>{item.vendorname}</option>
+                                                                )
+                                                            })}
+                                                        </select>
+                                                    </div>
+
+
+                                                    <div class="form-group col-lg-6">
+                                                        <label for="exampleInputUsername1">Voucher No</label>
+                                                        <input type="text" class="form-control" id="exampleInputUsername1"
+                                                            value={value.voucherno} placeholder="Voucher No" name='voucherno' onChange={onhandleChange} disabled />
+
+                                                    </div>
+
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="exampleFormControlSelect1">Purpose</label>
+                                                        <select class="form-control form-control-lg" id="exampleFormControlSelect1"
+                                                            value={value.purpose} name='purpose' onChange={onhandleChange}>
+                                                            <option value={``}>Select Purpose</option>
+                                                            <option value={`personal`}>Personal</option>
+                                                            <option value={`batch`}>Batch</option>
+                                                            <option value={`employee`}>Employee</option>
+                                                            <option value={`faculty`}>Faculty</option>
+                                                            <option value={`student`}>Student</option>
+                                                        </select>
+                                                    </div>
+
+                                                    {value.purpose == "batch" ?
+                                                        <>
+                                                            <div class="form-group col-lg-6">
+                                                                <label class="exampleFormControlSelect1">Course</label>
+                                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1"
+                                                                    value={value.course} name='course' onChange={(e) => getbatch(e.target.value)}>
+                                                                    <option value={courseid}>Select Course</option>
+                                                                    {course.map((item) => {
+                                                                        return (
+                                                                            <option value={item.Course_Id}>{item.Course_Name}</option>
+
+                                                                        )
+                                                                    })}
+
+
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group col-lg-6">
+                                                                <label class="exampleFormControlSelect1">Batch</label>
+                                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1"
+                                                                    value={value.batch} name='batch' onChange={onhandleChange}>
+                                                                    <option value={``}>Select Batch</option>
+                                                                    {batch.map((item) => {
+                                                                        return (
+                                                                            <option value={item.Batch_Id}>{item.Batch_code}</option>
+
+                                                                        )
+                                                                    })}
+
+
+                                                                </select>
+                                                            </div>
+                                                        </> : <div class="form-group col-lg-6">
+                                                            <label for="exampleInputUsername1">Purpose Text</label>
+                                                            <input type="text" class="form-control" id="exampleInputUsername1"
+                                                                value={value.purposetxt} placeholder="Enter.." name='purposetxt' onChange={onhandleChange} />
+
+                                                        </div>
+                                                    }
+
+
+
+                                                    <div class="form-group col-lg-6">
+                                                        <label for="exampleInputUsername1">Required Date<span className="text-danger">*</span></label>
+                                                        <input type="date" class="form-control" id="exampleInputUsername1"
+                                                            value={value.requireddate} placeholder="Required Date" name='requireddate' onChange={onhandleChange} />
+                                                        {<span className='text-danger'> {error.requireddate} </span>}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="col-lg-4 ">
+                                                <div className="row">
+                                                    <div class="form-group col-lg-6">
+                                                        <label for="exampleInputUsername1">Price<span className="text-danger">*</span></label>
+                                                        <input type="text" class="form-control" id="exampleInputUsername1"
+                                                            value={value.price} placeholder="price" name='price' onChange={onhandleChange} disabled />
+                                                        {<span className='text-danger'> {error.price} </span>}
+                                                    </div>
+
+                                                    <div class="form-group col-lg-6">
+                                                        <label for="exampleInputUsername1">Quantity<span className="text-danger">*</span></label>
+                                                        <input type="text" class="form-control" id="exampleInputUsername1"
+                                                            value={value.quantity} placeholder="Quantity" name='quantity' onChange={onhandleChange} />
+                                                        {<span className='text-danger'> {error.quantity} </span>}
+                                                    </div>
+
+                                                    <div class="form-group col-lg-6">
+                                                        <label for="exampleInputUsername1">Total Amt</label>
+                                                        <input type="text" class="form-control" id="exampleInputUsername1"
+                                                            value={value.totalamt} placeholder="Total Amt" name='totalamt' onChange={onhandleChange} />
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
 
 
 
@@ -385,7 +589,7 @@ const PurchaseMaterial = () => {
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
                                         <div>
-                                            <h4 class="card-title">Employee Training Plan</h4>
+                                            <h4 class="card-title">Purchase Material</h4>
                                         </div>
 
                                     </div>

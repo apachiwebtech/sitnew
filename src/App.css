@@ -405,3 +405,7 @@ li{
   font-weight: 900;
  border-color: lightblue;
 }
+
+.borderRight {
+border-right: 1px solid lightgray;
+}

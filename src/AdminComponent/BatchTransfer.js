@@ -13,6 +13,7 @@ const BatchTransfer = () => {
     const [currentdate, setDate] = useState('');
     const [course, setCourse] = useState([])
     const [batch, setBatch] = useState([])
+    const [transfer, setTransBatch] = useState([])
     const [student, setStudent] = useState([])
     const [batchleftdata, setData] = useState([])
     const [uid, setUid] = useState([])
@@ -27,7 +28,7 @@ const BatchTransfer = () => {
         coursename: "" || uid.coursename,
         oldbatchno: "" || uid.oldbatchno,
         student: "" || uid.student,
-        newbatch: "" || uid.newbatch,
+        newbatch: "" || uid.trans_batchcode,
         transferammount: "" || uid.transferammount,
         paymenttype: "" || uid.paymenttype
 
@@ -39,7 +40,7 @@ const BatchTransfer = () => {
             coursename: uid.coursename,
             oldbatchno: uid.oldbatchno,
             student: uid.student,
-            newbatch: uid.newbatch,
+            newbatch: uid.trans_batchcode,
             transferammount: uid.transferammount,
             paymenttype: uid.paymenttype,
         })
@@ -48,7 +49,7 @@ const BatchTransfer = () => {
     async function BatchTransfer() {
 
 
-        axios.post(`${BASE_URL}/getbatchtranfer`)
+        axios.get(`${BASE_URL}/getbatch_transfer`)
             .then((res) => {
                 console.log(res.data)
                 setData(res.data)
@@ -77,6 +78,8 @@ const BatchTransfer = () => {
 
     }
 
+
+
     const getassign = async (id) => {
         setBatchid(id)
 
@@ -95,10 +98,10 @@ const BatchTransfer = () => {
             }
         } else {
             try {
-                const res = await axios.post(`${BASE_URL}/get_data`,
+                const res = await axios.post(`${BASE_URL}/get_new_data`,
                     {
-                        tablename: "getcoursewisebatch",
-                        columnname: "id,coursewisebatch"
+                        tablename: "Batch_Mst",
+                        columnname: "Batch_Id , Batch_code"
                     });
                 Setassign(res.data);
 
@@ -107,6 +110,15 @@ const BatchTransfer = () => {
             }
         }
 
+    }
+
+    const gettransferbatch = () =>{
+
+        axios.get(`${BASE_URL}/gettranferbatch`)
+        .then((res) =>{
+            console.log(res)
+            setTransBatch(res.data)
+        })
     }
 
     const getBatch = async (id) => {
@@ -176,6 +188,7 @@ const BatchTransfer = () => {
 
 
     useEffect(() => {
+        gettransferbatch()
         getBatch()
         getStudent()
         getcourse()
@@ -210,9 +223,9 @@ const BatchTransfer = () => {
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
                 setUid(res.data[0])
-                setBatchid(res.data[0].batchno)
-                setCourseid(res.data[0].course)
-                setDate(res.data[0].date)
+                setBatchid(res.data[0].oldbatch_code)
+                setCourseid(res.data[0].coursename)
+         
             })
             .catch((err) => {
                 console.log(err)
@@ -244,8 +257,8 @@ const BatchTransfer = () => {
         e.preventDefault()
 
         const data = {
-            coursename: value.coursename,
-            oldbatchno: value.oldbatchno,
+            coursename: courseid,
+            oldbatchno: batchid,
             student: value.student,
             newbatch: value.newbatch,
             transferammount: value.transferammount,
@@ -257,6 +270,17 @@ const BatchTransfer = () => {
         axios.post(`${BASE_URL}/add_awt_batchtransfer`, data)
             .then((res) => {
                 console.log(res)
+                setValue({
+                    newbatch:"",
+                    student:"",
+                    transferammount:"",
+                    paymenttype:"",
+
+                    
+                })
+                setBatchid('')
+                setCourseid('')
+                setUid([])
                 alert("Data added successfully")
                 BatchTransfer()
             })
@@ -281,10 +305,10 @@ const BatchTransfer = () => {
             filterable: false,
 
         },
-        { field: 'student', headerName: 'Student Name', flex: 2 },
-        { field: 'oldbatchno', headerName: 'Old Batch Code', flex: 2 },
-        { field: 'newbatch', headerName: 'New Batch Code', flex: 2 },
-        { field: 'data', headerName: 'Date', flex: 2 },
+        { field: 'Student_Name', headerName: 'Student Name', flex: 2 },
+        { field: 'oldbatch_code', headerName: 'Old Batch Code', flex: 2 },
+        { field: 'trans_batchcode', headerName: 'Tranfer Batch', flex: 2 },
+        { field: 'created_date', headerName: 'Date', flex: 2 },
         { field: 'transferammount', headerName: 'Transfer Amount', flex: 2 },
 
         {
@@ -324,7 +348,7 @@ const BatchTransfer = () => {
                                             <div class="form-group col-lg-3">
                                                 <lable for="exampleFormControlSelect1">Course<span className="text-danger">*</span></lable>
                                                 <select class="form-control" id="exampleFormControlSelect1"
-                                                    value={value.coursename} name='coursename' onChange={(e) => getBatch(e.target.value)}>
+                                                    value={courseid} name='coursename' onChange={(e) => getBatch(e.target.value)}>
                                                     <option>Select Course</option>
                                                     {course.map((item) => {
                                                         return (
@@ -339,7 +363,7 @@ const BatchTransfer = () => {
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Batch No.</label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1"
-                                                    value={value.oldbatchno} name='oldbatchno' onChange={(e) => getStudent(e.target.value)}>
+                                                    value={batchid} name='oldbatchno' onChange={(e) => getStudent(e.target.value)}>
                                                     <option>Select Batch</option>
                                                     {batch.map((item) => {
                                                         return (
@@ -369,12 +393,9 @@ const BatchTransfer = () => {
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">New Batch No.<span className='text-danger'>*</span> </label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1" name='newbatch'
-                                                    value={value.newbatch} onChange={(e) => {
-                                                        getassign(e.target.value)
-
-                                                    }}>
+                                                    value={value.newbatch} onChange={onhandleChange}>
                                                     <option>Select Batch</option>
-                                                    {batch.map((item) => {
+                                                    {transfer.map((item) => {
                                                         return (
                                                             <option value={item.Batch_code}>{item.Batch_code}</option>
                                                         )
@@ -397,8 +418,10 @@ const BatchTransfer = () => {
                                                 <label for="exampleFomrControlSelect1">Payment Type<span className="text-danger">*</span></label>
                                                 <select className='form-control form-control-lg' id="exampleFormControlSelect1"
                                                     value={value.paymenttype} name='paymenttype' onChange={onhandleChange}>
-                                                    <option>Lumpsum</option>
-                                                    <option>Installment</option>
+
+                                                    <option value="">Select</option>
+                                                    <option value={`Lumpsum`}>Lumpsum</option>
+                                                    <option value={`Installment`}>Installment</option>
                                                 </select>
                                                 {<span className='text-danger'> {error.paymenttype} </span>}
                                             </div>
