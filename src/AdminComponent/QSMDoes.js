@@ -26,9 +26,6 @@ const QSMDoes = () => {
         department : ""|| uid.department,
         file : ""|| uid.file,
 
-
-
-
     })
 
     useEffect(() => {
@@ -90,11 +87,8 @@ const QSMDoes = () => {
     }
 
     async function getqms() {
-      const data = {
-          tablename: "QMS_master",
-          columnname: "*"
-      }
-      axios.post(`${BASE_URL}/get_new_data`, data)
+      
+      axios.post(`${BASE_URL}/getqms_master`)
           .then((res) => {
               console.log(res.data)
               setQMS(res.data)
@@ -279,7 +273,7 @@ const QSMDoes = () => {
                                                 <label for="exampleFormControlSelect1">QMS Name<span className='text-danger'>*</span> </label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.qmsname} onChange={onhandleChange} name='qmsname'>
                                                     <option>Select</option>
-                                                    {((item) => {
+                                                    {QMS.map((item) => {
                                                         return (
 
                                                             <option value={item.Id}>{item.QMS_name}</option>

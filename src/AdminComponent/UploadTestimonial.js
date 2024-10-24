@@ -42,17 +42,29 @@ const UploadTestimonial = () => {
     }
 
     const getBatch = async (id) => {
+        setCourseid(id)
         const data = {
             courseid: id
         }
-
-        try {
-            const res = await 
-            axios.post(`${BASE_URL}/getcoursewisebatch`, data);
-            setAnnulBatch(res.data);
-        } catch (err) {
-            console.error("Error fetching data:", err);
+       
+        if(id) {
+            try {
+                const res = await 
+                axios.post(`${BASE_URL}/getcoursewisebatch`, data);
+                setAnnulBatch(res.data);
+            } catch (err) {
+                console.error("Error fetching data:", err);
+            }
+        }else{
+            try {
+                const res = await 
+                axios.get(`${BASE_URL}/getbatch`);
+                setAnnulBatch(res.data);
+            } catch (err) {
+                console.error("Error fetching data:", err);
+            }
         }
+      
     };
 
     useEffect(() => {
@@ -61,24 +73,11 @@ const UploadTestimonial = () => {
             batch: uid.batch,
 
         })
+        getBatch()
     }, [uid])
 
 
-    async function getEmployeeData() {
-
-        axios.post(`${BASE_URL}/vendor_details`)
-            .then((res) => {
-                console.log(res.data)
-                setBrand(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
-
-
-
-    async function getEmployeeData() {
+    async function getData() {
         const data = {
             tablename: "awt_uploadtestimonial"
         }
@@ -93,7 +92,7 @@ const UploadTestimonial = () => {
     }
 
     useEffect(() => {
-        getEmployeeData()
+        getData()
         getCourseData()
         getBatch()
         value.title = ""
@@ -141,7 +140,7 @@ const UploadTestimonial = () => {
 
         axios.post(`${BASE_URL}/delete_data`, data)
             .then((res) => {
-                getEmployeeData()
+                getData()
 
             })
             .catch((err) => {
@@ -168,7 +167,7 @@ const UploadTestimonial = () => {
             axios.post(`${BASE_URL}/add_uploadtestimonial`, data)
                 .then((res) => {
                     console.log(res)
-                    getEmployeeData()
+                    getData()
 
                 })
                 .catch((err) => {

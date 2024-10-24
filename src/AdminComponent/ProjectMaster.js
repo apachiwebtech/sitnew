@@ -17,6 +17,7 @@ const ProjectMaster = () => {
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [loading, setLoading] = useState(true)
+    
 
 
     const [value, setValue] = useState({
@@ -55,29 +56,16 @@ const ProjectMaster = () => {
         })
     }, [uid])
 
-    async function getLibraryData() {
-
-        axios.post(`${BASE_URL}/vendor_details`)
-            .then((res) => {
-                console.log(res.data)
-                setBrand(res.data)
-                setLoading(false)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
 
 
-
-    async function getLibraryData() {
+    async function getData() {
         const data = {
-            tablename: "sit_projectmaster"
+            tablename: "awt_projectmaster"
         }
         axios.post(`${BASE_URL}/get_data`, data)
             .then((res) => {
                 console.log(res.data)
-                setVendorData(res.data)
+                // setVendorData(res.data)
                 setLoading(false)
 
             })
@@ -87,7 +75,7 @@ const ProjectMaster = () => {
     }
 
     useEffect(() => {
-        getLibraryData()
+        getData()
         value.title = ""
         setError({})
         setUid([])
@@ -112,7 +100,7 @@ const ProjectMaster = () => {
     const handleUpdate = (id) => {
         const data = {
             u_id: id,
-            tablename: "sit_projectmaster"
+            tablename: "awt_projectmaster"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
@@ -128,12 +116,12 @@ const ProjectMaster = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename: "sit_projectmaster"
+            tablename: "awt_projectmaster"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
             .then((res) => {
-                getLibraryData()
+                getData()
 
             })
             .catch((err) => {
@@ -155,23 +143,23 @@ const ProjectMaster = () => {
                 projectno: value.projectno,
                 projectname: value.projectname,
                 description: value.description,
-                quotation: value.quotation,
-                qtndate: value.qtndate,
-                qtnamount: value.qtnamount,
-                wodetails: value.wodetails,
-                wodate: value.wodate,
-                woamount: value.woamount,
-                invoiceno: value.invoiceno,
-                invoicedate: value.invoicedate,
-                invoiamount: value.invoiamount,
-                uid: uid.id
+                workorderdetails: value.wodetails,  // mapping workorderdetails from frontend to backend
+                wo_date: value.wodate,              // work order date
+                wo_amount: value.woamount,          // work order amount
+                quotationno: value.quotation,       // quotation no.
+                qtn_date: value.qtndate,            // quotation date
+                qtn_amount: value.qtnamount,        // quotation amount
+                invoice_no: value.invoiceno,        // invoice no.
+                invoice_date: value.invoicedate,    // invoice date
+                invoice_amt: value.invoiamount,     // invoice amount
+                uid: uid.id         
             }
 
 
             axios.post(`${BASE_URL}/add_sit_projectmaster`, data)
                 .then((res) => {
                     console.log(res)
-                    getLibraryData()
+                    getData()
 
                 })
                 .catch((err) => {
@@ -262,7 +250,7 @@ const ProjectMaster = () => {
                                                                 <label for="exampleTextarea1">Description </label>
                                                                 <textarea className="form-control" id="exampleTextarea1"
                                                                     value={value.description}
-                                                                    placeholder="Description Project"
+                                                                    placeholder="Enter..."
                                                                     name='description'
                                                                     onChange={onhandleChange}></textarea>
 
@@ -282,7 +270,7 @@ const ProjectMaster = () => {
                                                                 <input type="text" className="form-control"
                                                                     id="exampleInputUsername1"
                                                                     value={value.quotation}
-                                                                    placeholder="Contact Person"
+                                                                    placeholder="Quotation No"
                                                                     name='quotation'
                                                                     onChange={onhandleChange} />
 

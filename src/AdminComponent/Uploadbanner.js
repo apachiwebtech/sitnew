@@ -23,70 +23,57 @@ const UploadBanner = () => {
 		
 
     const [value, setValue] = useState({
-        titlename : ""|| uid.titlename,
-        file : ""|| uid.file,
-        seqno : ""|| uid.seqno,
-
-    })
+        titlename: "",
+        seqno: "",
+    });
 
     useEffect(() => {
-        setValue({
-            titlename : uid.titlename,
-            file : uid.file,
-            seqno : uid.seqno,
+        getVendorData();
+        setValue({ titlename: "", seqno: "" });
+        setError({});
+        setUid({});
+    }, []);
 
-        })
-    }, [uid])
+    useEffect(() => {
+        if (uid.id) {
+            setValue({
+                titlename: uid.titlename,
+                seqno: uid.seqno,
+            });
+        }
+    }, [uid]);
 
 
     const validateForm = () => {
-        let isValid = true
-        const newErrors = {}
+        let isValid = true;
+        const newErrors = {};
 
-
-       if (!value.titlename) {
-        isValid = false;
-        newErrors.titlename = "Title Name is Required"
-       }
+        if (!value.titlename) {
+            isValid = false;
+            newErrors.titlename = "Title Name is Required";
+        }
         if (!value.seqno) {
             isValid = false;
-            newErrors.seqno = "Seq. No. is Required"
+            newErrors.seqno = "Seq. No. is Required";
         }
-        setError(newErrors)
-        return isValid
-    }
-
-
-    async function getEmployeeData() {
-
-        axios.post(`${BASE_URL}/vendor_details`)
-            .then((res) => {
-                console.log(res.data)
-                setBrand(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
+        setError(newErrors);
+        return isValid;
+    };
 
 
     
-    async function getEmployeeData() {
-        const data = {
-            tablename : "awt_uploadbanner"
-        }
-        axios.post(`${BASE_URL}/get_data`,data)
+    const getVendorData = () => {
+        const data = { tablename: "awt_uploadbanner" };
+        axios.post(`${BASE_URL}/get_data`, data)
             .then((res) => {
-                console.log(res.data)
-                setVendorData(res.data)
+                console.log(res.data);
+                setVendorData(res.data);
             })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
+            .catch((err) => console.log(err));
+    };
 
     useEffect(() => {
-        getEmployeeData()
+        getVendorData()
         value.title = ""
         setError({})
         setUid([])
@@ -132,7 +119,7 @@ const UploadBanner = () => {
 
         axios.post(`${BASE_URL}/delete_data`, data)
             .then((res) => {
-                getEmployeeData()
+                getVendorData()
 
             })
             .catch((err) => {
@@ -162,23 +149,72 @@ const UploadBanner = () => {
          formdata.append('image' , image)
          formdata.append('titlename' , value.titlename)
          formdata.append('seqno', value.seqno)
+         if (uid.id) {
+            formdata.append('uid', uid.id); 
+        }
+
 
         axios.post(`${BASE_URL}/add_uploadbanner`, formdata)
             .then((res) => {
                console.log(res)
-               getEmployeeData()
+               getVendorData()
+               setValue({ titlename: "", file: "", seqno: "" });
+               setImage(null); // Reset i
 
             })
             .catch((err) => {
                 console.log(err)
             })
     }
-
-   
-        
-
-
     }
+    // const handleSubmit = (e) => {
+    //     e.preventDefault();
+    
+    //     // Check if form is valid
+    //     if (!validateForm()) {
+    //         alert('Please fill in all required fields');
+    //         return;
+    //     }
+    
+    //     // Create a new FormData object
+    //     const formdata = new FormData();
+    
+    //     // Append image to formdata if it exists
+    //     if (image) {
+    //         formdata.append('image', image);
+    //     }
+    
+    //     // Append titlename and seqno to formdata
+    //     if (value && value.titlename && value.seqno) {
+    //         formdata.append('titlename', value.titlename);
+    //         formdata.append('seqno', value.seqno);
+    //     } else {
+    //         alert('Please fill in titlename and seqno');
+    //         return;
+    //     }
+    
+    //     // Append uid to formdata if it exists
+    //     if (uid && uid.id) {
+    //         formdata.append('uid', uid.id);
+    //     }
+    
+    //     console.log('FormData:', formdata);
+    
+    //     // Make POST request to add_uploadbanner endpoint
+    //     axios.post(`${BASE_URL}/add_uploadbanner`, formdata)
+    //         .then((res) => {
+    //             console.log(res.data);
+    //             getVendorData();
+    //             setValue({ titlename: "", seqno: "" });
+    //             setImage(null);
+    //             setUid({});
+    //         })
+    //         .catch((err) => {
+    //             console.error(err);
+    //             const errorMessage = err.response?.data?.message || 'Something went wrong!';
+    //             alert('Error: ' + errorMessage);
+    //         });
+    // };
 
 
     const onhandleChange = (e) => {
@@ -187,10 +223,12 @@ const UploadBanner = () => {
 
  
     
-   const onhandleupload = (e) =>{
-   const image = e.target.files[0]
-   setImage(image)
-   }
+    const onhandleupload = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setImage(file);
+        }
+    };
 
 
     const columns = [
