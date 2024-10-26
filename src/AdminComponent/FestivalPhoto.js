@@ -176,6 +176,14 @@ const FestivalPhoto = () => {
             .then((res) => {
                console.log(res)
                getEmployeeData()
+               
+               setValue({
+                startdate: "",
+                enddate: "",
+                file: "",
+                description: "",
+            });
+            setImage(null);
 
             })
             .catch((err) => {

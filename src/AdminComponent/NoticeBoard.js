@@ -182,6 +182,13 @@ const NoticeBoard = () => {
                console.log(res)
                getEmployeeData()
 
+               setValue({
+                startdate: "",
+                enddate: "",
+                specification: "",
+            });
+            setSpecification("");
+
             })
             .catch((err) => {
                 console.log(err)
