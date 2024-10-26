@@ -18,8 +18,6 @@ const ProjectMaster = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [loading, setLoading] = useState(true)
     
-
-
     const [value, setValue] = useState({
         projectno: "" || uid.projectno,
         projectname: "" || uid.projectname,
@@ -38,7 +36,6 @@ const ProjectMaster = () => {
 
     useEffect(() => {
         setValue({
-
             projectno: uid.projectno,
             projectname: uid.projectname,
             description: uid.description,
@@ -51,8 +48,6 @@ const ProjectMaster = () => {
             invoiceno: uid.invoiceno,
             invoicedate: uid.invoicedate,
             invoiamount: uid.invoiamount
-
-
         })
     }, [uid])
 
@@ -65,7 +60,7 @@ const ProjectMaster = () => {
         axios.post(`${BASE_URL}/get_data`, data)
             .then((res) => {
                 console.log(res.data)
-                // setVendorData(res.data)
+                setVendorData(res.data)
                 setLoading(false)
 
             })
@@ -105,7 +100,6 @@ const ProjectMaster = () => {
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
                 setUid(res.data[0])
-
                 console.log(res.data, "update")
             })
             .catch((err) => {
@@ -143,15 +137,15 @@ const ProjectMaster = () => {
                 projectno: value.projectno,
                 projectname: value.projectname,
                 description: value.description,
-                workorderdetails: value.wodetails,  // mapping workorderdetails from frontend to backend
-                wo_date: value.wodate,              // work order date
-                wo_amount: value.woamount,          // work order amount
-                quotationno: value.quotation,       // quotation no.
-                qtn_date: value.qtndate,            // quotation date
-                qtn_amount: value.qtnamount,        // quotation amount
-                invoice_no: value.invoiceno,        // invoice no.
-                invoice_date: value.invoicedate,    // invoice date
-                invoice_amt: value.invoiamount,     // invoice amount
+                workorderdetails: value.wodetails, 
+                wo_date: value.wodate,             
+                wo_amount: value.woamount,         
+                quotationno: value.quotation,      
+                qtn_date: value.qtndate,           
+                qtn_amount: value.qtnamount,       
+                invoice_no: value.invoiceno,       
+                invoice_date: value.invoicedate,   
+                invoice_amt: value.invoiamount,    
                 uid: uid.id         
             }
 
@@ -160,6 +154,20 @@ const ProjectMaster = () => {
                 .then((res) => {
                     console.log(res)
                     getData()
+                    setValue({
+                        projectno: "",
+                        projectname: "",
+                        description: "",
+                        quotation: "",
+                        qtndate: "",
+                        qtnamount: "",
+                        wodetails: "",
+                        wodate: "",
+                        woamount: "",
+                        invoiceno: "",
+                        invoicedate: "",
+                        invoiamount: "",
+                    });
 
                 })
                 .catch((err) => {

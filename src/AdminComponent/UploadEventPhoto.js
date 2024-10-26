@@ -20,6 +20,7 @@ const UploadEventPhoto = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [images, setImages] = useState([]);
   const [imageNames, setImageNames] = useState([]);
+  const [eventPhotoId, setEventPhotoId] = useState(null);
 
   const [value, setValue] = useState({
     event: "" || uid.event,
@@ -52,7 +53,7 @@ const UploadEventPhoto = () => {
 
   useEffect(() => {
     getEmployeeData();
-    value.title = "";
+    // value.title = "";
     setError({});
     setUid([]);
   }, []);
@@ -110,7 +111,9 @@ const UploadEventPhoto = () => {
   };
 
   const handleSubmit = (e) => {
+    
     e.preventDefault();
+    const formData = new FormData();
     const data = {
       event: value.event,
       eventheader: value.eventheader,
@@ -123,6 +126,8 @@ const UploadEventPhoto = () => {
       .then((res) => {
         console.log(res);
         getEmployeeData();
+        // formData.append("event_id", res);
+        setEventPhotoId(res.data.id);
         setIsModalOpen(true);
       })
       .catch((err) => {
@@ -138,19 +143,21 @@ const UploadEventPhoto = () => {
 
   const uploadImages = () => {
     const formData = new FormData();
-    formData.append("event_id", uid.id);
+    formData.append('event_photo_id', eventPhotoId);
     images.forEach((image, index) => {
-      formData.append(`image_${index}`, image);
+      formData.append(`image`, image);
     });
-
+    console.log([...formData]);
     axios
-      .post(`${BASE_URL}/upload_images`, formData, {
+      .post(`${BASE_URL}/upload_img`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       })
       .then((res) => {
         console.log("Images uploaded successfully:", res.data);
         setIsModalOpen(false);
         getEmployeeData();
+        setImages([]); // Clear the selected images
+        setImageNames([]); 
       })
       .catch((err) => {
         console.log("Error uploading images:", err);
