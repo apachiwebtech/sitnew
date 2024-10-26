@@ -281,6 +281,7 @@ const Admission = () => {
                                                         <div className="form-group col-lg-6 ">
                                                             <label for="exampleInputUsername1">Payment Type</label>
                                                             <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.ptype} name='ptype' onChange={onhandleChange} >
+                                                                <option>Select--</option>
                                                                 <option value="Lumpsum">Lumpsum</option>
                                                                 <option value="Installment">Installment</option>
 

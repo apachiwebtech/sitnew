@@ -3,6 +3,11 @@ import { useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import axios from 'axios';
+import MyDocument1 from './MyDocument1';
+import MyDocument4 from './MyDocument4';
+import MyDocument5 from './MyDocument5';
+import MyDocument6 from './MyDocument6';
+import { pdf } from '@react-pdf/renderer';
 //import FormControlLabel from '@mui/material/FormControlLabel';
 
 const GenerateResult = () => {
@@ -51,7 +56,7 @@ const GenerateResult = () => {
             newErrors.returndate = "Return Date is Required"
         }
 
- 
+
 
         if (!value.approved) {
             isValid = false;
@@ -241,6 +246,57 @@ const GenerateResult = () => {
 
 
 
+
+    // For pdf     
+
+    const withoutabsentrule = async (data) => {
+
+        const blob = await pdf(<MyDocument6 data={data} />).toBlob();
+        const url = URL.createObjectURL(blob);
+
+        window.open(url);
+        URL.revokeObjectURL(url);
+    };
+
+    const fullAttendence = async (data) => {
+
+        const blob = await pdf(<MyDocument4 data={data} />).toBlob();
+        const url = URL.createObjectURL(blob);
+        window.open(url);
+        URL.revokeObjectURL(url);
+    };
+    const printReportCard = async (data) => {
+
+        const blob = await pdf(<MyDocument5 data={data} />).toBlob();
+        const url = URL.createObjectURL(blob);
+        window.open(url);
+        URL.revokeObjectURL(url);
+    };
+    const marksheet = async (data) => {
+
+        const blob = await pdf(<MyDocument1 data={data} />).toBlob();
+        const url = URL.createObjectURL(blob);
+        window.open(url);
+        URL.revokeObjectURL(url);
+    };
+
+    const certificateprint = async (data) => {
+
+        const blob = await pdf(<MyDocument1 data={data} />).toBlob();
+        const url = URL.createObjectURL(blob);
+        window.open(url);
+        URL.revokeObjectURL(url);
+    };
+    const printSheet = async (data) => {
+
+        const blob = await pdf(<MyDocument1 data={data} />).toBlob();
+        const url = URL.createObjectURL(blob);
+        window.open(url);
+        URL.revokeObjectURL(url);
+    };
+
+
+
     return (
 
         <div class="container-fluid page-body-wrapper col-lg-10">
@@ -295,7 +351,7 @@ const GenerateResult = () => {
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">Print Date</label>
                                                 <input type="date" class="form-control" id="exampleInputUsername1" value={value.printdate} name='printdate' onChange={onhandleChange} />
-                                                
+
                                             </div>
 
                                             <div class="form-group col-lg-3">
@@ -389,13 +445,13 @@ const GenerateResult = () => {
                                     </form>
 
                                     <button type="submit" class="btn btn-primary mr-2">Save</button>
-                                    <button type="submit" class="btn btn-primary mr-2">Without Absent Rule</button>
-                                    <button type="submit" class="btn btn-primary mr-2">Without Absent Rule with Full Attendance</button>
-                                    <button type="submit" class="btn btn-primary mr-2">Print Report Card</button>
-                                    <button type="submit" class="btn btn-primary mr-2">MarkSheet</button>
-                                    <button type="submit" class="btn btn-primary mr-2">Certificate Print</button>
-                                    <button type="submit" class="btn btn-primary mr-2">Print Sheet</button>
-                                    <button type='button' onClick={() => {
+                                    <button type="button" onClick={withoutabsentrule} class="btn btn-primary mr-2">Without Absent Rule</button>
+                                    <button type="button" onClick={fullAttendence} class="btn btn-primary mr-2">Without Absent Rule with Full Attendance</button>
+                                    <button type="button" onClick={printReportCard} class="btn btn-primary mr-2">Print Report Card</button>
+                                    <button type="button" onClick={marksheet} class="btn btn-primary mr-2">MarkSheet</button>
+                                    <button type="button" onClick={certificateprint} class="btn btn-primary mr-2">Certificate Print</button>
+                                    <button type="button"  onClick={printSheet}class="btn btn-primary mr-2">Print Sheet</button>
+                                    <button type='button'  onClick={() => {
                                         window.location.reload()
                                     }} class="btn btn-light border">Cancel</button>
 

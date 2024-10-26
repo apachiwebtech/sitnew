@@ -255,13 +255,7 @@ const LectureTaken = () => {
         }
 
         
-        try {
-            const res = await axios.post(`${BASE_URL}/`, data);
-            SetLecture(res.data);
-
-        } catch (err) {
-            console.error("Error fetching data:", err);
-        }
+   
 
 
 

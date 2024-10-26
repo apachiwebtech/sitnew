@@ -920,7 +920,7 @@ const Router = createBrowserRouter([
         element: <PurchaseMaterial />
       },
       {
-        path: '/addcashvoucher/:addcashvoucher',
+        path: '/cashvoucher/:voucherid',
         element: <AddCashVoucher />
       },
       {
@@ -1034,11 +1034,11 @@ function WebApp() {
         },
       });
 
-      console.log(response.data.message);
+
 
     } catch (error) {
       console.log('You are not authorized to view this content.');
-      // navigate('/weblog')
+      navigate('/weblog')
     }
   }
 
@@ -1047,10 +1047,10 @@ function WebApp() {
   const navigate = useNavigate();
   useEffect(() => {
 
-    accessSession(navigate)
+    // accessSession(navigate)
 
     return () => {
-
+     
     };
   }, []);
 

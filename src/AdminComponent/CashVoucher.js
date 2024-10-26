@@ -15,92 +15,26 @@ const CashVoucher = () => {
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
     const label = { inputProps: { 'aria-label': 'Color switch demo' } };
-    const [inquiryData, setInquiryData] = useState([]);
-    const [Discipline, setDescipline] = useState([]);
-    const [Course, setCourse] = useState([]);
-    const [Education, setEducation] = useState([]);
-    const [batch, setBatch] = useState([]);
-    const [batchCategoty, setbatchCategory] = useState([]);
-    const [value, setValue] = useState({
-        studentname: '',
-        studentid: '',
-        coursename: '',
-        batchcode: '',
+    const [voucherdata, setVoucherData] = useState([])
+    
 
-    })
+    async function getCashVoucher(params) {
 
-
-
-
-    const getInquiryData = async () => {
-        const response = await fetch(`${BASE_URL}/getaddcashvoucherdata`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-
-        setInquiryData(data);
+        axios.get(`${BASE_URL}/getCashVoucher`)
+            .then((res) => {
+                setVoucherData(res.data)
+            })
     }
 
-    const getDiscipline = async () => {
-        const response = await fetch(`${BASE_URL}/getDiscipline`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setDescipline(data);
-    }
-    const getCourse = async () => {
-        const response = await fetch(`${BASE_URL}/getCourses`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setCourse(data);
-    }
-    const getEducation = async () => {
-        const response = await fetch(`${BASE_URL}/getEducation`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setEducation(data);
-    }
-    const getBatch = async () => {
-        const response = await fetch(`${BASE_URL}/getBtach`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setBatch(data);
-    }
-    const getBtachCategory = async () => {
-        const response = await fetch(`${BASE_URL}/getBtachCategory`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setbatchCategory(data);
-    }
+
     useEffect(() => {
-        value.title = ""
-        setError({})
-        setUid([])
+        getCashVoucher()
     }, [])
+
+
+
+
 
     const handleClick = (id) => {
         setCid(id)
@@ -118,31 +52,17 @@ const CashVoucher = () => {
         }));
     };
 
-    const handleUpdate = (id) => {
-        const data = {
-            u_id: id,
-            tablename: "awt_addfeesdetails"
-        }
-        axios.post(`${BASE_URL}/update_data`, data)
-            .then((res) => {
-                setUid(res.data[0])
-
-                console.log(res.data, "update")
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
 
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename: "awt_addfeesdetails"
+            tablename: "awt_cashvoucher"
         }
 
-        axios.post(`${BASE_URL}/delete_inquiry_data`, data)
+        axios.post(`${BASE_URL}/delete_data`, data)
             .then((res) => {
-                getInquiryData()
+              alert("Deleted")
+              getCashVoucher()
             })
             .catch((err) => {
                 console.log(err)
@@ -155,56 +75,56 @@ const CashVoucher = () => {
     }
 
 
- const handleswitchchange = (value,Inquiry_Id) =>{
-    const newval = value == 0 ? 1 : 0
+    const handleswitchchange = (value, Inquiry_Id) => {
+        const newval = value == 0 ? 1 : 0
 
-    axios.post(`${BASE_URL}/data_status` , {status : newval, Inquiry_Id : Inquiry_Id, table_name : "awt_addfeesdetails"})
-    .then((res)=>{
-        console.log(res)
-        getInquiryData()
-    })
- }
+        axios.post(`${BASE_URL}/data_status`, { status: newval, Inquiry_Id: Inquiry_Id, table_name: "awt_addfeesdetails" })
+            .then((res) => {
+                console.log(res)
 
-
+            })
+    }
 
 
 
 
- const columns = [
-    {
-        field: 'index',
-        headerName: 'Id',
-        type: 'number',
-        align: 'center',
-        headerAlign: 'center',
-        flex: 1,
-        filterable: false,
-    },
-
-    
-    { field: 'date', headerName: 'Date', flex: 2 },
-    { field: 'srno', headerName: 'Cash Id', flex: 2 },
-    { field: 'paidto', headerName: 'Employee', flex: 2 },
-    { field: 'prepaired', headerName: 'Prepaired By', flex: 2 },
-    {
-        field: 'actions',
-        type: 'actions',
-        headerName: 'Action',
-        flex: 2,
-        renderCell: (params) => {
-            return (
-                <>
-                    <Link to={`addcashvoucher/${params.row.id}`}><EditIcon style={{ cursor: "pointer" }}  /></Link>
-                    <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
-                    <Switch {...label} onChange={() => handleswitchchange(params.row.isActive,params.row.id )} defaultChecked={params.row.isActive == 0 ? false : true} color="secondary" />
-                </>
-            )
-        }
-    },
-];
 
 
-    const rowsWithIds = inquiryData.map((row, index) => ({ index: index + 1, ...row }));
+    const columns = [
+        {
+            field: 'index',
+            headerName: 'Id',
+            type: 'number',
+            align: 'center',
+            headerAlign: 'center',
+            flex: 1,
+            filterable: false,
+        },
+
+
+        { field: 'date', headerName: 'Date', flex: 2 },
+        { field: 'voucherno', headerName: 'Cash Id', flex: 2 },
+        { field: 'paidto', headerName: 'Employee', flex: 2 },
+        { field: 'prepaired_by', headerName: 'Prepaired By', flex: 2 },
+        {
+            field: 'actions',
+            type: 'actions',
+            headerName: 'Action',
+            flex: 2,
+            renderCell: (params) => {
+                return (
+                    <>
+                        <Link to={`/cashvoucher/${params.row.id}`}><EditIcon style={{ cursor: "pointer" }} /></Link>
+                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
+                        {/* <Switch {...label} onChange={() => handleswitchchange(params.row.isActive, params.row.id)} defaultChecked={params.row.isActive == 0 ? false : true} color="secondary" /> */}
+                    </>
+                )
+            }
+        },
+    ];
+
+
+    const rowsWithIds = voucherdata.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
 
@@ -213,9 +133,9 @@ const CashVoucher = () => {
             <div className="main-panel">
 
                 <div className="content-wrapper">
-                 
+
                     <div className="row">
-                     
+
                         <div className="col-lg-12">
                             <div className="card">
                                 <div className="card-body">
@@ -223,8 +143,8 @@ const CashVoucher = () => {
                                         <div >
                                             <h4 class="card-title">View Cash Voucher</h4>
                                         </div>
-                                           <Link to='/addcashvoucher/:addcashvoucher'> <button className='btn btn-success'>Add +</button></Link>
-                                       
+                                        <Link to='/cashvoucher/:voucherid'> <button className='btn btn-success'>Add +</button></Link>
+
 
                                     </div>
 
@@ -250,7 +170,13 @@ const CashVoucher = () => {
                                             }}
                                         />
                                     </div>
-
+                                    {confirmationVisibleMap[cid] && (
+                                            <div className='confirm-delete'>
+                                                <p>Are you sure you want to delete?</p>
+                                                <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
+                                                <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
+                                            </div>
+                                        )}
 
 
                                 </div>
