@@ -21,8 +21,8 @@ const UploadTestimonial = () => {
     const [batchid, setBatch] = useState('')
 
     const [value, setValue] = useState({
-        course: "" || uid.course,
-        batch: "" || uid.batch,
+        course: "" ,
+        batch: "" ,
 
 
 
@@ -83,6 +83,10 @@ const UploadTestimonial = () => {
         }
         axios.post(`${BASE_URL}/get_data`, data)
             .then((res) => {
+                const updatedData = res.data.map(item => ({
+                ...item,
+                courseName: item.Course_Name
+            }));
                 console.log(res.data)
                 setVendorData(res.data)
             })
@@ -124,8 +128,6 @@ const UploadTestimonial = () => {
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
                 setUid(res.data[0])
-
-                console.log(res.data, "update")
             })
             .catch((err) => {
                 console.log(err)
@@ -141,6 +143,11 @@ const UploadTestimonial = () => {
         axios.post(`${BASE_URL}/delete_data`, data)
             .then((res) => {
                 getData()
+                setValue({
+                    course: "",
+                    batch: "",
+                });
+                setUid([]);
 
             })
             .catch((err) => {
@@ -155,14 +162,14 @@ const UploadTestimonial = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-
+        console.log("Submitting data:", value);
             const data = {
 
                 course: value.course,
                 batch: value.batch,
-                uid: uid.id
+                uid: uid.length > 0 ? uid.id : undefined 
             }
-
+            console.log("Data being sent to the server:", data);
 
             axios.post(`${BASE_URL}/add_uploadtestimonial`, data)
                 .then((res) => {
@@ -197,7 +204,7 @@ const UploadTestimonial = () => {
             filterable: false,
 
         },
-        { field: 'course', headerName: 'Course Name', flex: 2 },
+        { field: 'courseName', headerName: 'Course Name', flex: 2 },
         { field: 'batch', headerName: 'Batch Name', flex: 2 },
 
         {
@@ -237,29 +244,26 @@ const UploadTestimonial = () => {
                                             <div class="form-group col-lg-3">
                                                 <lable for="exampleFormControlSelect1">Course<span className="text-danger">*</span></lable>
                                                 <select class="form-control" id="exampleFormControlSelect1"
-                                                    value={value.course} name='course' onChange={(e) => getBatch(e.target.value)}>
-                                                    <option>Select Course</option>
-                                                    {course.map((item) => {
-                                                        return (
-                                                            <option value={item.Course_Id}>{item.Course_Name}</option>
-
-                                                        )
-                                                    })}
+                                                    value={value.course} name='course' onChange={(e) => {
+                                                        getBatch(e.target.value);
+                                                        onhandleChange(e); 
+                                                    }}>
+                                                    <option value="">Select Course</option> 
+                                                    {course.map((item) => (
+                                                        <option key={item.Course_Id} value={item.Course_Id}>{item.Course_Name}</option>
+                                                    ))}
                                                 </select>
                                                 {<span className='text-danger'> {error.course} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Batch</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1"
+                                                <select class="form-control" id="exampleFormControlSelect1"
                                                     value={value.batch} name='batch' onChange={onhandleChange}>
-                                                    <option>Select Batch</option>
-                                                    {batch.map((item) => {
-                                                        return (
-                                                            <option value={item.Batch_code}>{item.Batch_code}</option>
-
-                                                        )
-                                                    })}
+                                                    <option value="">Select Batch</option> 
+                                                    {batch.map((item) => (
+                                                        <option key={item.Batch_code} value={item.Batch_code}>{item.Batch_code}</option>
+                                                    ))}
                                                 </select>
                                             </div>
 

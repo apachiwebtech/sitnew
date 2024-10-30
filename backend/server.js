@@ -2951,37 +2951,6 @@ app.post('/nodeapp/add_uploadeventphoto', (req, res) => {
 })
 
 
-app.post('/nodeapp/add_uploadtestimonial', (req, res) => {
-  let { course, batch, uid } = req.body
-
-  let sql
-  let param;
-
-  console.log(uid)
-
-  if (uid == undefined) {
-    sql = "insert into awt_uploadtestimonial(`course`,`batch`) values(?,?)"
-
-    param = [course, batch,]
-
-  } else {
-    sql = "update `awt_uploadtestimonial` set `course` =? , `batch` =? where id = ?"
-
-    param = [course, batch, uid]
-
-  }
-
-
-  con.query(sql, param, (err, data) => {
-    if (err) {
-      return res.json(err)
-    }
-    else {
-      return res.json(data)
-    }
-  })
-})
-
 
 app.post('/nodeapp/add_uploadbanner', upload.single('image'), (req, res) => {
 

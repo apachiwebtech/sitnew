@@ -142,7 +142,7 @@ const UploadEventPhoto = () => {
   };
 
   const uploadImages = () => {
-    const formData = new FormData();
+    const formData = new FormData();    
     formData.append('event_photo_id', eventPhotoId);
     images.forEach((image, index) => {
       formData.append(`image`, image);
