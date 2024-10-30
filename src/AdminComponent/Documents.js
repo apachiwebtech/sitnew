@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { BASE_URL } from "./BaseUrl";
+import { BASE_URL, IMG_URL } from "./BaseUrl";
 import EditIcon from "@mui/icons-material/Edit";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { Link, useParams } from "react-router-dom";
 import OnlineAdmissionForm from "./OnlineAdmissionForm";
 import InnerHeader from "./InnerHeader";
-
-import Button from "@mui/material/Button";
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
 import { styled } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -26,22 +27,48 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 500,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
+
 const Documents = () => {
   const [open, setOpen] = React.useState(false);
   const [image, setImage] = useState(null);
   const [name, SetName] = useState('')
+  const [viewimg, setViewImg] = useState('')
   const handleClickOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
   };
+  const isPdf = viewimg && viewimg.split('.').pop().toLowerCase() === 'pdf';
 
-  const{admissionid}  = useParams();
 
-  useEffect(()=>{
-      localStorage.setItem("Admissionid", admissionid);
-  },[])
+  const [open2, setOpen2] = React.useState(false);
+  const handleOpen = (param) => {
+
+    console.log(param)
+    setOpen2(true);
+    setViewImg(param)
+  }
+
+
+  const handleClose2 = () => setOpen2(false);
+
+  const { admissionid } = useParams();
+
+  useEffect(() => {
+    localStorage.setItem("Admissionid", admissionid);
+  }, [])
 
   const [onlineAdmissions, setOnlineAdmissions] = useState([]);
 
@@ -64,7 +91,7 @@ const Documents = () => {
 
   const columns = [
     {
-      field: "id",
+      field: "index",
       headerName: "Id",
       type: "number",
       align: "center",
@@ -74,6 +101,40 @@ const Documents = () => {
     },
     { field: "doc_name", headerName: "Document Name", flex: 2 },
     { field: "upload_image", headerName: "Image", flex: 2 },
+    {
+      field: "View", headerName: "View", flex: 2, renderCell: (params) => {
+        return (
+          <>
+            <Button onClick={() => handleOpen(params.row.upload_image)}>View</Button>
+
+            <Modal
+              open={open2}
+              onClose={handleClose2}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
+              <Box sx={style}>
+                <div>
+                  {isPdf ? (
+                    // Render PDF viewer
+                    <iframe
+                      src={`${IMG_URL}/${viewimg}`}
+                      width="100%"
+                      height="500px"
+                      title="PDF Viewer"
+                    />
+                  ) : (
+                    // Render image
+                    <img src={`${IMG_URL}/${viewimg}`} alt="Content" />
+                  )}
+                </div>
+              </Box>
+
+            </Modal>
+          </>
+        )
+      }
+    },
 
 
   ];
@@ -109,10 +170,10 @@ const Documents = () => {
     })
 
       .then((res) => {
-      
+
         alert("File Uploaded")
         getOnlineAdmissions()
-    
+
       })
 
   }

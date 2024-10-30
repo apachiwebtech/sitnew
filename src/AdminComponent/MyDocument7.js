@@ -159,26 +159,21 @@ const styles = StyleSheet.create({
     },
 });
 
-const MyDocument6 = ({ data }) => {
+const MyDocument7 = ({ data }) => {
 
 
     return (
-
-
         <Document>
 
             {data.map((item) => {
-
 
                 const parseHTML = (html) => {
                     // This function can be expanded for more advanced parsing.
                     return html.replace(/<\/?[^>]+(>|$)/g, ""); // Removes HTML tags for simple use cases
                 };
-
+                
                 return (
                     <Page size="A4" style={styles.page}>
-
-
                         <View style={{ border: "2px solid black" }}>
 
 
@@ -192,10 +187,10 @@ const MyDocument6 = ({ data }) => {
 
                                 </div>
                                 <View style={[styles.tableCol, { width: '50%' }]}>
-                                    <Text style={{ fontSize: '10px', marginTop: 5, color: '#000', textTransform: "capitalize" }}>Name :{item.Student_Name}</Text>
+                                    <Text style={{ fontSize: '10px', marginTop: 5, color: '#000' }}>Name :{item.Student_Name}</Text>
                                 </View>
                                 <View style={[styles.tableCol1, { width: '50%' }]}>
-                                    <Text style={{ fontSize: '10px', marginTop: 5, marginLeft: 5, color: '#000' }}>ID No : {item.Student_Code} </Text>
+                                    <Text style={{ fontSize: '10px', marginTop: 5, marginLeft: 5, color: '#000' }}>ID No : {item.Student_Code}</Text>
 
                                 </View>
 
@@ -205,7 +200,7 @@ const MyDocument6 = ({ data }) => {
 
                                 </div>
                                 <View style={[styles.tableCol, { width: '50%' }]}>
-                                    <Text style={{ fontSize: '10px', marginTop: 5, color: '#000', textTransform: "capitalize" }}>Training Programme:{item.Course_Name}</Text>
+                                    <Text style={{ fontSize: '10px', marginTop: 5, color: '#000' }}>Training Programme</Text>
                                 </View>
                                 <View style={[styles.tableCol1, { width: '25%' }]}>
                                     <Text style={{ fontSize: '10px', marginTop: 5, marginLeft: 5, color: '#000' }}>Batch No : {item.Batch_code}</Text>
@@ -247,9 +242,9 @@ const MyDocument6 = ({ data }) => {
                                 <div style={{ height: "50px", margin: "0 0 0 0" }}>
 
                                 </div>
-                                <View style={[styles.tableCol, { width: '100%' , display :"flex" }]}>
-                                    <Text style={{ fontSize: '10px', marginLeft: 5, color: '#000' }}>Brief Description of Course : </Text>
-                                    <Text style={{padding:"5px 10px",fontSize:"7px" , color:"#000"}} >{parseHTML(item.Course_Description)}</Text>
+                                <View style={[styles.tableCol, { width: '100%' }]}>
+                                    <Text style={{ fontSize: '10px', marginLeft: 5, color: '#000' }}>Brief Description of Course</Text>
+                                    <Text style={{ padding: "5px 10px", fontSize: "7px", color: "#000" }} >{parseHTML(item.Course_Description)}</Text>
                                 </View>
                             </View>
 
@@ -275,20 +270,19 @@ const MyDocument6 = ({ data }) => {
                                     </Text>
                                     <Text style={{ fontSize: '10px', marginTop: 5, color: '#000', borderBottom: '1px solid black', paddingLeft: '5px' }}>Total Marks obtained in Assignments
                                     </Text>
-                                    <Text style={{ fontSize: '10px', marginTop: 5, color: '#000', paddingLeft: '5px' }}>Weightage -  15%</Text>
+                                    <Text style={{ fontSize: '10px', marginTop: 5, color: '#000', paddingLeft: '5px' }}>Weightage -  %</Text>
                                 </View>
 
 
 
                                 <View style={[styles.tableCol1, { width: '50%' }]}>
-                                    <Text style={{ fontSize: '10px', marginTop: 5, color: '#000', borderBottom: '1px solid black' }}> {item.Total_Assignments}</Text>
-                                    <Text style={{ fontSize: '10px', marginTop: 5, color: '#000', borderBottom: '1px solid black' }}>{item.Given_Assignments}</Text>
+                                    <Text style={{ fontSize: '10px', marginTop: 5, color: '#000', borderBottom: '1px solid black', paddingLeft: '20px' }}> {item.Total_Assignments}</Text>
+                                    <Text style={{ fontSize: '10px', marginTop: 5, color: '#000', borderBottom: '1px solid black', paddingLeft: '20px' }}>{item.Given_Assignments}</Text>
                                     <Text style={{ fontSize: '10px', marginTop: 5, color: '#000', borderBottom: '1px solid black' }}>
-                                        {item.Ass1_Given || ""} {item.Ass2_Given || ""} {item.Ass3_Given || ""} {item.Ass4_Given || ""} {item.Ass5_Given || ""} {item.Ass6_Given || ""} {item.Ass7_Given || ""} {item.Ass8_Given || ""} {item.Ass9_Given || ""} {item.Ass10_Given || ""}
-                                    </Text>
+                                    {item.Ass1_Given || ""} {item.Ass2_Given || ""} {item.Ass3_Given || ""} {item.Ass4_Given || ""} {item.Ass5_Given || ""} {item.Ass6_Given || ""} {item.Ass7_Given || ""} {item.Ass8_Given || ""} {item.Ass9_Given || ""} {item.Ass10_Given || ""} </Text>
 
 
-                                    <Text style={{ fontSize: '10px', marginTop: 16, color: '#000', paddingLeft: '20px', borderBottom: '1px solid black' }}> {item.Ass1_Given + item.Ass2_Given + item.Ass3_Given + item.Ass4_Given + item.Ass5_Given + item.Ass6_Given + item.Ass7_Given + item.Ass8_Given + item.Ass9_Given + item.Ass10_Given}    /{item.Ass1_Max + item.Ass2_Max + item.Ass3_Max + item.Ass4_Max + item.Ass5_Max + item.Ass6_Max + item.Ass7_Max + item.Ass8_Max + item.Ass9_Max + item.Ass10_Max}</Text>
+                                    <Text style={{ fontSize: '10px', marginTop: 16, color: '#000', paddingLeft: '20px', borderBottom: '1px solid black' }}>{item.Ass1_Given + item.Ass2_Given + item.Ass3_Given + item.Ass4_Given + item.Ass5_Given + item.Ass6_Given + item.Ass7_Given + item.Ass8_Given + item.Ass9_Given + item.Ass10_Given}    /{item.Ass1_Max + item.Ass2_Max + item.Ass3_Max + item.Ass4_Max + item.Ass5_Max + item.Ass6_Max + item.Ass7_Max + item.Ass8_Max + item.Ass9_Max + item.Ass10_Max}</Text>
 
                                     <Text style={{ fontSize: '10px', marginTop: 5, color: '#000', paddingLeft: '20px' }}>{item.Ass_Percent}</Text>
                                 </View>
@@ -322,11 +316,11 @@ const MyDocument6 = ({ data }) => {
 
 
                                 <View style={[styles.tableCol1, { width: '50%' }]}>
-                                    <Text style={{ fontSize: '10px', marginTop: 5, color: '#000', paddingLeft: '20px', borderBottom: '1px solid black' }}> {item.Total_Tests}</Text>
-                                    <Text style={{ fontSize: '10px', marginTop: 5, color: '#000', borderBottom: '1px solid black', paddingLeft: '20px', borderBottom: '1px solid black' }}> {item.Given_Tests}</Text>
+                                    <Text style={{ fontSize: '10px', marginTop: 5, color: '#000', borderBottom: '1px solid black', paddingLeft: '20px' }}>{item.Total_Tests}</Text>
+                                    <Text style={{ fontSize: '10px', marginTop: 5, color: '#000', borderBottom: '1px solid black', paddingLeft: '20px', borderBottom: '1px solid black' }}>{item.Given_Tests}</Text>
 
-                                    <Text style={{ fontSize: '10px', paddingTop: 4.5, color: '#000', borderBottom: '1px solid black', paddingLeft: '20px' }}>      {item.Test1_Given || ""} {item.Test2_Given || ""} {item.Test3_Given || ""} {item.Test4_Given || ""} {item.Test5_Given || ""} {item.Test6_Given || ""} {item.Test7_Given || ""} {item.Test8_Given || ""} {item.Test9_Given || ""} {item.Test10_Given || ""}</Text>
-                                    <Text style={{ fontSize: '10px', marginTop: 16, color: '#000', borderBottom: '1px solid black', paddingLeft: '20px' }}>{item.Test1_Given + item.Test2_Given + item.Test3_Given + item.Test4_Given + item.Test5_Given + item.Test6_Given + item.Test7_Given + item.Test8_Given + item.Test9_Given + item.Test10_Given}    / {item.Test1_Max + item.Test2_Max + item.Test3_Max + item.Test4_Max + item.Test5_Max + item.Test6_Max + item.Test7_Max + item.Test9_Max + item.Test10_Max}  </Text>
+                                    <Text style={{ fontSize: '10px', paddingTop: 4.5, color: '#000', borderBottom: '1px solid black', paddingLeft: '20px' }}>  {item.Test1_Given || ""} {item.Test2_Given || ""} {item.Test3_Given || ""} {item.Test4_Given || ""} {item.Test5_Given || ""} {item.Test6_Given || ""} {item.Test7_Given || ""} {item.Test8_Given || ""} {item.Test9_Given || ""} {item.Test10_Given || ""}</Text>
+                                    <Text style={{ fontSize: '10px', marginTop: 16, color: '#000', borderBottom: '1px solid black', paddingLeft: '20px' }}>{item.Test1_Given + item.Test2_Given + item.Test3_Given + item.Test4_Given + item.Test5_Given + item.Test6_Given + item.Test7_Given + item.Test8_Given + item.Test9_Given + item.Test10_Given}    / {item.Test1_Max + item.Test2_Max + item.Test3_Max + item.Test4_Max + item.Test5_Max + item.Test6_Max + item.Test7_Max + item.Test9_Max + item.Test10_Max} </Text>
                                     <Text style={{ fontSize: '10px', marginTop: 5, color: '#000', paddingLeft: '20px' }}>{item.Test_Percent}</Text>
                                 </View>
 
@@ -341,7 +335,7 @@ const MyDocument6 = ({ data }) => {
 
                                 </div>
                                 <View style={[styles.tableCol, { width: '5%' }]}>
-                                    <Text style={{ fontSize: '10px', marginTop: 20, marginLeft: 5, color: '#000' }}>03 </Text>
+                                    <Text style={{ fontSize: '10px', marginTop: 10, marginLeft: 5, color: '#000' }}>03 </Text>
 
                                 </View>
                                 <View style={[styles.tableCol, { width: '20%' }]}>
@@ -357,7 +351,7 @@ const MyDocument6 = ({ data }) => {
 
 
                                 <View style={[styles.tableCol1, { width: '50%' }]}>
-                                    <Text style={{ fontSize: '10px', paddingTop: 4.5, color: '#000', borderBottom: '1px solid black' }}> {item.Final1_Given}/{item.Final1_Max} {``}  {item.Final2_Given} /{item.Final2_Max} {``} {item.Final3_Given} / {item.Final2_Max}  </Text>
+                                    <Text style={{ fontSize: '10px', paddingTop: 4.5, color: '#000', borderBottom: '1px solid black' }}>{item.Final1_Given}/{item.Final1_Max} {``}  {item.Final2_Given} /{item.Final2_Max} {``} {item.Final3_Given} / {item.Final2_Max}  </Text>
                                     <Text style={{ fontSize: '10px', marginTop: 5, color: '#000', paddingLeft: '20px' }}>{item.Final_Percent}</Text>
                                 </View>
 
@@ -382,15 +376,17 @@ const MyDocument6 = ({ data }) => {
 
                                     <Text style={{ fontSize: '10px', marginTop: 5, color: '#000', borderBottom: '1px solid black', paddingLeft: '5px' }}>Attended Lectures/Total Lectures </Text>
                                     <Text style={{ fontSize: '10px', marginTop: 5, color: '#000', paddingLeft: '5px', borderBottom: '1px solid black' }}>Total No of Absent Days</Text>
-                                    <Text style={{ fontSize: '10px', marginTop: 5, color: '#000', paddingLeft: '5px', }}>Attendance %</Text>
+                                    <Text style={{ fontSize: '10px', marginTop: 5, color: '#000', paddingLeft: '5px', borderBottom: '1px solid black' }}>Attendance %</Text>
+                                    <Text style={{ fontSize: '10px', marginTop: 5, color: '#000', paddingLeft: '5px', }}>Full Attendance - 0 %</Text>
                                 </View>
 
 
 
                                 <View style={[styles.tableCol1, { width: '50%' }]}>
-                                    <Text style={{ fontSize: '10px', marginTop: 16, color: '#000', paddingLeft: '20px', borderBottom: '1px solid black' }}>{item.AttenLectures}/{item.Total_Lectures} </Text>
+                                    <Text style={{ fontSize: '10px', marginTop: 16, color: '#000', paddingLeft: '20px', borderBottom: '1px solid black' }}>{item.AttenLectures}/{item.Total_Lectures}</Text>
                                     <Text style={{ fontSize: '10px', marginTop: 5, color: '#000', paddingLeft: '20px', borderBottom: '1px solid black' }}>{item.Total_Lectures - item.AttenLectures}</Text>
-                                    <Text style={{ fontSize: '10px', marginTop: 5, color: '#000', paddingLeft: '20px' }}>{item.Full_Attendance}</Text>
+                                    <Text style={{ fontSize: '10px', marginTop: 5, color: '#000', paddingLeft: '20px', borderBottom: '1px solid black' }}>{item.Full_Attendance}</Text>
+                                    <Text style={{ fontSize: '10px', marginTop: 5, color: '#000', paddingLeft: '20px' }}>0.00</Text>
                                 </View>
 
 
@@ -420,7 +416,7 @@ const MyDocument6 = ({ data }) => {
 
                                 <View style={[styles.tableCol1, { width: '50%' }]}>
 
-                                    <Text style={{ fontSize: '10px', marginTop: 5, color: '#000', borderBottom: '1px solid black', paddingLeft: '20px' }}>{item.Final_Result_Percent}</Text>
+                                    <Text style={{ fontSize: '10px', marginTop: 5, color: '#000', borderBottom: '1px solid black', paddingLeft: '20px' }}> {item.Final_Result_Percent}</Text>
                                     <Text style={{ fontSize: '10px', marginTop: 5, color: '#000', paddingLeft: '20px' }}> </Text>
                                 </View>
                             </View>
@@ -444,9 +440,9 @@ const MyDocument6 = ({ data }) => {
 
                         </View>
                         <View style={styles.Course}>
-                            <div style={{ height: "20px", margin: "0 0 0 0" }}>
+                            {/* <div style={{ height: "20px", margin: "0 0 0 0" }}>
 
-                            </div>
+                            </div> */}
                             <View style={[styles.tableCol, { width: '33%', borderLeft: '1px solid black' }]}>
                                 <Text style={{ fontSize: '10px', marginLeft: 50, color: '#000' }}>{item.faculty1}</Text>
 
@@ -465,9 +461,9 @@ const MyDocument6 = ({ data }) => {
 
                         </View>
                         <View style={styles.Course}>
-                            <div style={{ height: "20px", margin: "0 0 0 0" }}>
+                            {/* <div style={{ height: "20px", margin: "0 0 0 0" }}>
 
-                            </div>
+                            </div> */}
                             <View style={[styles.tableCol, { width: '33%', borderLeft: '1px solid black' }]}>
 
                                 <Text style={{ fontSize: '10px', marginLeft: 50, color: '#000' }}>{item.Label1}{``} By</Text>
@@ -490,6 +486,7 @@ const MyDocument6 = ({ data }) => {
 
                     </Page>
                 )
+
             })}
 
 
@@ -502,4 +499,4 @@ const MyDocument6 = ({ data }) => {
 
 
 
-export default MyDocument6
+export default MyDocument7

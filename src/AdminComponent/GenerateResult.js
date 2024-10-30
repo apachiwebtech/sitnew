@@ -7,6 +7,7 @@ import MyDocument1 from './MyDocument1';
 import MyDocument4 from './MyDocument4';
 import MyDocument5 from './MyDocument5';
 import MyDocument6 from './MyDocument6';
+import MyDocument7 from './MyDocument7';
 import { pdf } from '@react-pdf/renderer';
 //import FormControlLabel from '@mui/material/FormControlLabel';
 
@@ -245,13 +246,34 @@ const GenerateResult = () => {
         : [];
 
 
+        const [pdfdata, setpdfData] = useState([])
+
+
+
+        async function getDetails(params) {
+    
+            const param = {
+                gen_id: generateresultid
+            }
+    
+            axios.post(`${BASE_URL}/getgendetails`, param)
+                .then((res) => {
+                    setpdfData(res.data)
+                })
+        }
+    
+        useEffect(() =>{
+            getDetails()
+        },[])
+
+
 
 
     // For pdf     
 
     const withoutabsentrule = async (data) => {
 
-        const blob = await pdf(<MyDocument6 data={data} />).toBlob();
+        const blob = await pdf(<MyDocument6 data={pdfdata} />).toBlob();
         const url = URL.createObjectURL(blob);
 
         window.open(url);
@@ -260,7 +282,7 @@ const GenerateResult = () => {
 
     const fullAttendence = async (data) => {
 
-        const blob = await pdf(<MyDocument4 data={data} />).toBlob();
+        const blob = await pdf(<MyDocument7 data={pdfdata} />).toBlob();
         const url = URL.createObjectURL(blob);
         window.open(url);
         URL.revokeObjectURL(url);
@@ -274,7 +296,7 @@ const GenerateResult = () => {
     };
     const marksheet = async (data) => {
 
-        const blob = await pdf(<MyDocument1 data={data} />).toBlob();
+        const blob = await pdf(<MyDocument4 data={pdfdata} />).toBlob();
         const url = URL.createObjectURL(blob);
         window.open(url);
         URL.revokeObjectURL(url);
@@ -450,8 +472,8 @@ const GenerateResult = () => {
                                     <button type="button" onClick={printReportCard} class="btn btn-primary mr-2">Print Report Card</button>
                                     <button type="button" onClick={marksheet} class="btn btn-primary mr-2">MarkSheet</button>
                                     <button type="button" onClick={certificateprint} class="btn btn-primary mr-2">Certificate Print</button>
-                                    <button type="button"  onClick={printSheet}class="btn btn-primary mr-2">Print Sheet</button>
-                                    <button type='button'  onClick={() => {
+                                    <button type="button" onClick={printSheet} class="btn btn-primary mr-2">Print Sheet</button>
+                                    <button type='button' onClick={() => {
                                         window.location.reload()
                                     }} class="btn btn-light border">Cancel</button>
 

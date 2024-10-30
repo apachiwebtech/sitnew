@@ -203,6 +203,13 @@ const InquiryListing = () => {
                 </>
             )
         }},
+        { field: 'Email', headerName: 'Email', width : 100 , renderCell:(params) =>{
+            return(
+                <>
+                  {params.row.IsUnread == 0 ?<p className ="text-danger" >{params.row.Email}</p> : <p>{params.row.Email}</p> }
+                </>
+            )
+        }},
         { field: 'Deciplin', headerName: 'Discipline',  width : 150 , renderCell:(params) =>{
             return(
                 <>

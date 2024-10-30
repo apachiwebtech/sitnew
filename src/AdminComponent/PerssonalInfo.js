@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
-import { BASE_URL } from './BaseUrl';
+import { BASE_URL, IMG_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import OnlineAdmissionForm from './OnlineAdmissionForm';
 import img from '../assets/pass.jpg';
@@ -15,6 +15,7 @@ const PerssonalInfo = () => {
     const [amount, setAmount] = useState('')
     const [batchid, setBatchId] = useState([])
     const [batchcode, setbatchcode] = useState('')
+    const [profilephoto, setProfile] = useState('')
     const location = useLocation();
     const navigate = useNavigate()
     const [personalInfo, setPersonalInfo] = useState({
@@ -130,8 +131,25 @@ const PerssonalInfo = () => {
     }
 
 
+    async function getProfile() {
+
+        const data = {
+          student_id: localStorage.getItem(`Admissionid`)
+        }
+        axios.post(`${BASE_URL}/getdocuments`, data)
+          .then((res) => {
+            console.log(res)
+
+            if(res.data && res.data[0].upload_image){
+                
+                setProfile(res.data[0].upload_image)
+            }
+          })
+      }
+
 
     useEffect(() => {
+        getProfile()
         getStatus()
         getCourse()
         getBtachCategory()
@@ -174,7 +192,7 @@ const PerssonalInfo = () => {
             state: data[0].Present_State,
             presentCountry: data[0].Present_Country,
             mobile: data[0].Present_Mobile,
-            reference: data[0].reference,
+            reference: data[0].Refered_By,
             whatsapp: '',
             course: data[0].Course_Id,
             category: data[0].Batch_Category_id,
@@ -621,7 +639,7 @@ const PerssonalInfo = () => {
                                                 </div>
 
                                                 <div className='student-img text-center'>
-                                                    <img style={{ width: "150px" }} src={img} alt='' />
+                                                    <img style={{ width: "150px" }} src={`${IMG_URL}/` + profilephoto} alt='' />
                                                 </div>
 
                                             </div>
