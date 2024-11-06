@@ -25,12 +25,14 @@ const QSMDoes = () => {
   });
 
   useEffect(() => {
-    setValue({
-      qmsname: uid.qmsname,
-      department: uid.department,
-      file: uid.file,
-    });
-  }, [uid]);
+    if (uid) {
+        setValue({
+            qmsname: uid.qmsname,
+            department: uid.department,
+            file: uid.file,
+        });
+    }
+}, [uid]);
 
   useEffect(() => {
     getEmployeeData();
@@ -94,14 +96,14 @@ const QSMDoes = () => {
       });
   }
 
-//   useEffect(() => {
-//     getEmployeeData();
-//     getqms();
-//     getrole();
-//     value.title = "";
-//     setError({});
-//     setUid([]);
-//   }, []);
+  useEffect(() => {
+    getEmployeeData();
+    getqms();
+    getrole();
+    value.title = "";
+    setError({});
+    setUid([]);
+  }, []);
 
   const handleClick = (id) => {
     setCid(id);
@@ -127,9 +129,15 @@ const QSMDoes = () => {
     axios
       .post(`${BASE_URL}/update_data`, data)
       .then((res) => {
-        setUid(res.data[0]);
-
-        console.log(res.data, "update");
+        if (res.data && res.data.length > 0) {
+          setUid(res.data[0]); 
+          setValue({
+              qmsname: res.data[0].qmsname, 
+              department: res.data[0].department, 
+              file: res.data[0].file, 
+          });
+          console.log(res.data, "update");
+      }
       })
       .catch((err) => {
         console.log(err);
@@ -166,8 +174,8 @@ const QSMDoes = () => {
       formdata.append("image", image);
       formdata.append("qmsname", value.qmsname);
       formdata.append("department", value.department);
-      if (uid) {
-        formdata.append("uid", uid);
+      if (uid && uid.id) {
+        formdata.append("uid", uid.id);
       }
       axios
         .post(`${BASE_URL}/add_qmsdoes`, formdata)
@@ -190,8 +198,8 @@ const QSMDoes = () => {
 
   const onhandleupload = (e) => {
     const image = e.target.files[0];
-
     setImage(image);
+    
   };
 
   const columns = [
@@ -301,7 +309,7 @@ const QSMDoes = () => {
                           type="file"
                           class="form-control"
                           id="exampleInputUsername1"
-                          value={value.file}
+                      
                           name="file"
                           onChange={onhandleupload}
                         />

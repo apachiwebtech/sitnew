@@ -28,6 +28,7 @@ const Convocation = () => {
 
   const [open, setOpen] = React.useState(false);
   const { batchid } = useParams();
+  console.log("Batch ID:", batchid);
   const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
   const [cid, setCid] = useState("")
   const [uid, setUid] = useState([])
@@ -40,11 +41,11 @@ const Convocation = () => {
     setOpen(false);
     setValue(
       {
-        faculty_name :"",
-        guest_name:"",
-        guest_mobile :"",
-        email:"",
-        guest_designation :"",
+        faculty_name: "",
+        guest_name: "",
+        guest_mobile: "",
+        email: "",
+        guest_designation: "",
 
       }
     )
@@ -56,16 +57,17 @@ const Convocation = () => {
   async function getUnitTest() {
 
     const data = {
-      batch_id : batchid
+      batch_id: batchid
+
     }
-
-    axios.post(`${BASE_URL}/batch_convocation`,data)
-
+    axios.post(`${BASE_URL}/batch_convocation`, data)
       .then((res) => {
-        
-        setOnlineAdmissions(res.data)
+        setOnlineAdmissions(res.data);
       })
-
+      .catch((error) => {
+        console.error("There was an error making the request:", error);
+      });
+    console.log("Batch ID:", batchid);
   }
 
   useEffect(() => {
@@ -75,30 +77,30 @@ const Convocation = () => {
   const memoizedAdmissions = useMemo(() => onlineAdmissions, [onlineAdmissions]);
 
   const [value, setValue] = useState({
-        faculty_name :"" || uid.faculty_name,
-        guest_name:"" || uid.guest_name,
-        guest_mobile :"" || uid.guest_mobile,
-        email:"" || uid.email,
-        guest_designation :"" || uid.guest_designation,
-        
+    faculty_name: "" || uid.faculty_name,
+    guest_name: "" || uid.guest_name,
+    guest_mobile: "" || uid.guest_mobile,
+    email: "" || uid.email,
+    guest_designation: "" || uid.guest_designation,
+
   })
 
-  useEffect(()=>{
-   setValue({
-    faculty_name :uid.faculty_name,
-    guest_name:uid.guest_name,
-    guest_mobile :uid.guest_mobile,
-    email:uid.email,
-    guest_designation :uid.guest_designation,
-   })
-  },[uid])
+  useEffect(() => {
+    setValue({
+      faculty_name: uid.faculty_name,
+      guest_name: uid.guest_name,
+      guest_mobile: uid.guest_mobile,
+      email: uid.email,
+      guest_designation: uid.guest_designation,
+    })
+  }, [uid])
 
   const handleChange = (e) => {
     setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
   }
 
 
-  
+
   const handleClick = (id) => {
     setCid(id)
     setConfirmationVisibleMap((prevMap) => ({
@@ -128,7 +130,7 @@ const Convocation = () => {
       .then((res) => {
         setUid(res.data[0])
 
-  
+
       })
       .catch((err) => {
         console.log(err)
@@ -203,13 +205,13 @@ const Convocation = () => {
     e.preventDefault()
 
     const data = {
-      faculty_name :value.faculty_name,
-      guest_name:value.guest_name,
-      guest_mobile :value.guest_mobile,
-      email:value.email,
-      guest_designation :value.guest_designation,
-      uid :uid.id,
-      batch_id : batchid
+      faculty_name: value.faculty_name,
+      guest_name: value.guest_name,
+      guest_mobile: value.guest_mobile,
+      email: value.email,
+      guest_designation: value.guest_designation,
+      uid: uid.id,
+      batch_id: batchid
     }
 
     axios.post(`${BASE_URL}/add_batchconvocation`, data)
@@ -227,7 +229,6 @@ const Convocation = () => {
       <InnerHeader />
       <div className="main-pannel">
         <div className="content-wrapper ">
-             <BatchEdit batchid={batchid} />
           <div className="row">
             <div className="col-lg-12">
               <div className="card">
@@ -268,7 +269,7 @@ const Convocation = () => {
                         },
                       }}
                     />
-                           {confirmationVisibleMap[cid] && (
+                    {confirmationVisibleMap[cid] && (
                       <div className='confirm-delete'>
                         <p>Are you sure you want to delete?</p>
                         <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
@@ -276,7 +277,7 @@ const Convocation = () => {
                       </div>
                     )}
                   </div>
-   
+
                 </div>
               </div>
             </div>
@@ -311,13 +312,13 @@ const Convocation = () => {
                   <div className="form-group col-lg-4 ">
 
                     <label for="exampleInputUsername1">
-                     Faculty Name
+                      Faculty Name
                     </label>
                     <input
                       type="text"
                       class="form-control"
                       id="exampleInputUsername1"
-                      value={value.faculty_name}     
+                      value={value.faculty_name}
                       placeholder="Enter.."
                       name="faculty_name"
                       onChange={handleChange}
@@ -354,7 +355,7 @@ const Convocation = () => {
                   </div>
                   <div className="form-group col-lg-4">
                     <label for="exampleInputUsername1">
-                      Email 
+                      Email
                     </label>
                     <input
                       type="text"
@@ -368,7 +369,7 @@ const Convocation = () => {
                   </div>
                   <div className="form-group col-lg-4">
                     <label for="exampleInputUsername1">
-                      Guest Designation 
+                      Guest Designation
                     </label>
                     <input
                       type="text"
@@ -381,7 +382,7 @@ const Convocation = () => {
                     />
                   </div>
 
-           
+
                   <div className="form-group col-lg-12 ">
                     <button className="btn btn-success" type="submit">Save</button>
                   </div>

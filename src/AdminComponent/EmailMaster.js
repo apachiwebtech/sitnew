@@ -54,6 +54,7 @@ const EmailMaster = () => {
         isValid = false;
         newErrors.emailsubject = "Email Subject is Required"
        }
+       
 
         setError(newErrors)
         return isValid
@@ -115,6 +116,7 @@ const EmailMaster = () => {
                         cc: value.cc,
                         bcc: value.bcc,
                         specification: value.specification,
+                        userId: "1"
                     }),
                     headers: {
                         'Content-Type': 'application/json'
@@ -132,7 +134,7 @@ const EmailMaster = () => {
                         cc: value.cc,
                         bcc: value.bcc,
                         specification: value.specification,
-
+                        uid: emailmasterid
 
 
                     }),

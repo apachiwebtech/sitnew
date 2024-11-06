@@ -104,18 +104,26 @@ const AddConsultancyMaster = () => {
 
 
     async function getAddConsultancyMasterDetail() {
-        const response = await fetch(`${ BASE_URL } / addconsultancymasterDetail`, {
-            method: 'POST',
-            body: JSON.stringify({
-                id: addconsultancymasterid,
-            }),
-            headers: {
-                'Contect-Type': 'application/json',
+        try {
+            const response = await fetch(`${BASE_URL}/addconsultancymasterDetail`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    id: addconsultancymasterid,
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
-        })
-
-        const data = await response.json();
-        console.log(data, "DATA A GAYA!");
+            
+            const data = await response.json();
+            console.log(data, "DATA A GAYA!");
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
     }
 
     useEffect(() => {

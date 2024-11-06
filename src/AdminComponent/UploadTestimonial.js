@@ -83,10 +83,19 @@ const UploadTestimonial = () => {
         }
         axios.post(`${BASE_URL}/get_data`, data)
             .then((res) => {
-                const updatedData = res.data.map(item => ({
-                ...item,
-                courseName: item.Course_Name
-            }));
+                console.log(res.data)
+                setVendorData(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+    async function getDatas() {
+        const data = {
+            tablename: "awt_uploadtestimonial"
+        }
+        axios.post(`${BASE_URL}/gettestimonial`, data)
+            .then((res) => {
                 console.log(res.data)
                 setVendorData(res.data)
             })
@@ -97,6 +106,7 @@ const UploadTestimonial = () => {
 
     useEffect(() => {
         getData()
+        getDatas()
         getCourseData()
         getBatch()
         value.title = ""
@@ -204,7 +214,7 @@ const UploadTestimonial = () => {
             filterable: false,
 
         },
-        { field: 'courseName', headerName: 'Course Name', flex: 2 },
+        { field: 'Course_Name', headerName: 'Course Name', flex: 2 },
         { field: 'batch', headerName: 'Batch Name', flex: 2 },
 
         {

@@ -208,7 +208,9 @@ const ProjectMaster = () => {
     ];
 
 
-    const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
+    const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }))
+    .sort((a, b) => b.projectno.localeCompare(a.projectno));
+
 
     return (
 
