@@ -104,7 +104,7 @@ function RoleAssignment() {
         <div class="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
 
-            {roleaccess > 1 ?      <div class="main-panel">
+            {roleaccess > 1 ?   <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="row">
                         <div class="col-lg-12 grid-margin stretch-card">

@@ -9,7 +9,9 @@ import decryptedUserId from '../Utils/UserID';
 import { DataGrid ,GridToolbar} from '@mui/x-data-grid';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-
+import { useDispatch, useSelector } from 'react-redux';
+import Cookies from 'js-cookie';
+import { getRoleData } from '../Store/Role/role-action';
 
 const Discipline = () => {
 
@@ -190,8 +192,8 @@ const Discipline = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.Id)} />
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.Id)} />
+                       {roleaccess >=2 && <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.Id)} />} 
+                        {roleaccess > 3 &&  <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.Id)} />}
                     </>
                 )
             }
@@ -201,11 +203,28 @@ const Discipline = () => {
 
     const rowsWithIds = Discipline.map((row, index) => ({ index: index + 1, ...row }));
 
+    const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 1
+    }
+
+    const dispatch = useDispatch()
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata))
+    }, [])
+
+    
+
+
     return (
 
         <div class="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
-            <div class="main-panel">
+
+          {roleaccess > 1 ?     <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="row">
                         <div class="col-lg-5 grid-margin stretch-card">
@@ -216,17 +235,17 @@ const Discipline = () => {
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
                                             <div class="form-group col-lg-12">
-                                                <label for="exampleInputUsername1">Disciplain<span className='text-danger'>*</span></label>
+                                                <label for="exampleInputUsername1">Disciplaine<span className='text-danger'>*</span></label>
                                                 <input type="text" class="form-control" id="exampleInputUsername1" value={value.discipline} placeholder="Disciplain" name='discipline' onChange={onhandleChange} />
                                                 {error.discipline && <span className='text-danger'>{error.discipline}</span>}
                                             </div>
                                         </div>
 
 
-                                        <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                        <button type='button' onClick={() => {
+                                        {roleaccess > 2 && <button type="submit" class="btn btn-primary mr-2">Submit</button>}
+                                        {roleaccess > 2 &&  <button type='button' onClick={() => {
                                             window.location.reload()
-                                        }} class="btn btn-light">Cancel</button>
+                                        }} class="btn btn-light">Cancel</button>}
                                     </form>
 
                                 </div>
@@ -281,7 +300,8 @@ const Discipline = () => {
                         </div>
                     </div>
                 </div>
-            </div >
+            </div >:null } 
+      
         </div >
 
     )

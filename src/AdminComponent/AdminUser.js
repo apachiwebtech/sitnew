@@ -132,7 +132,7 @@ const AdminUser = () => {
                 return (
                     <>
                         <div>
-                            {roleaccess >= 2 && <Link to={`/webapp/adminuser/${params.row.id}`}> <EditIcon sx={{ cursor: "pointer" }}  /></Link>}
+                            {roleaccess >= 2 && <Link to={`/adminuser/${params.row.id}`}> <EditIcon sx={{ cursor: "pointer" }}  /></Link>}
 
 
                             {roleaccess > 3 && <DeleteIcon sx={{ cursor: "pointer" }} style={{ color: "red" }} onClick={() => handleClick(params.row.id)} />}
@@ -183,7 +183,7 @@ const AdminUser = () => {
                                             </p>
                                         </div>
                                         <div>
-                                            <Link to="/webapp/adminuser/:userid"><button className='btn btn-success'>Add User +</button></Link>
+                                            <Link to="/adminuser/:userid"><button className='btn btn-success'>Add User +</button></Link>
                                         </div>
 
                                     </div>
