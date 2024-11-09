@@ -140,6 +140,9 @@ const Inquiry = () => {
         const data = await response.json();
 
 
+        localStorage.setItem("Student_id" , data[0].Student_Id)
+
+
         setValue(prevState => ({
             ...prevState,
             firstname: data[0].Student_Name,
@@ -319,9 +322,9 @@ const navigate = useNavigate()
                                                             <label for="exampleInputUsername1">Gender</label>
                                                             <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.gender} name='gender' onChange={onhandleChange} defaultValue={value.gender}>
                                                                 <option>Select Gender</option>
-                                                                <option value="male">Male</option>
-                                                                <option value="female">Female</option>
-                                                                <option value="other">Other</option>
+                                                                <option value="Male">Male</option>
+                                                                <option value="Female">Female</option>
+                                                                <option value="Other">Other</option>
                                                             </select>
                                                         </div>
 
@@ -525,7 +528,7 @@ const navigate = useNavigate()
                                                                 {
                                                                     Education.map((item) => {
                                                                         return (
-                                                                            <option value={item.Id}>{item.Education}</option>
+                                                                            <option value={item.Education}>{item.Education}</option>
                                                                         )
                                                                     })
                                                                 }

@@ -36,19 +36,20 @@ const Batch = () => {
 
     // Load data when component mounts
     useEffect(() => {
-        const cachedData = localStorage.getItem(CACHE_KEY);
-        if (cachedData) {
-            const { data, timestamp } = JSON.parse(cachedData);
-            // Check if cache is expired
-            if (Date.now() - timestamp < CACHE_EXPIRY_MS) {
-                setAnnulBatch(data);
-                setLoading(false)
-            } else {
-                getAnnualData(); // Fetch new data if cache is expired
-            }
-        } else {
-            getAnnualData(); // Fetch data if not cached
-        }
+        // const cachedData = localStorage.getItem(CACHE_KEY);
+        // if (cachedData) {
+        //     const { data, timestamp } = JSON.parse(cachedData);
+        //     // Check if cache is expired
+        //     if (Date.now() - timestamp < CACHE_EXPIRY_MS) {
+        //         setAnnulBatch(data);
+        //         setLoading(false)
+        //     } else {
+        //         getAnnualData(); // Fetch new data if cache is expired
+        //     }
+        // } else {
+        //     getAnnualData(); // Fetch data if not cached
+        // }
+        getAnnualData(); // Fetch data if not cached
     }, []);
 
     const handleClick = (id) => {

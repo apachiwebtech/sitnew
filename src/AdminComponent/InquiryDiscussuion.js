@@ -23,6 +23,8 @@ function AddRole() {
 
     const { inquiryid } = useParams()
 
+    const student_id = localStorage.getItem("Student_id")
+
 
     const [value, setValue] = useState({
         date: "" || uid.date,
@@ -61,7 +63,7 @@ function AddRole() {
 
     async function getinquiryDiscuss() {
         const data = {
-            inquiry_id : inquiryid
+            student_id : student_id
         }
         axios.post(`${BASE_URL}/inquirydiscuss_data` ,data)
             .then((res) => {
@@ -91,7 +93,7 @@ function AddRole() {
                 discussion: value.discussion,
                 user_id: decryptedUserId(),
                 u_id: uid.id,
-                inquiry_id: localStorage.getItem('Inquiryid')
+                student_id: localStorage.getItem('Student_id')
             }
 
             axios.post(`${BASE_URL}/add_inquirydiscuss`, data)
@@ -167,7 +169,7 @@ function AddRole() {
             flex: 1,
             filterable: false,
         },
-        { field: 'discussion', headerName: 'Discussion', flex: 2 },
+        { field: 'discussion', headerName: 'Discussion', flex: 5 },
         { field: 'date', headerName: 'Date', flex: 2 },
         { field: 'nextdate', headerName: 'NextDate', flex: 2 },
         {

@@ -206,6 +206,7 @@ import MyDocument3 from './AdminComponent/MyDocument3.js';
 //import BatchTransferListing from './AdminComponent/BatchTransferListing.js';
 import AddAssets from './AdminComponent/AddAssets.js';
 import Taxmaster from './AdminComponent/Taxmaster.js';
+import AddAdminUSer from './AdminComponent/AddAdminUSer.jsx';
 
 
 const Router = createBrowserRouter([
@@ -998,6 +999,10 @@ const Router = createBrowserRouter([
         element: <AdminUser />
       },
       {
+        path: '/adminuser/:userid',
+        element: <AddAdminUSer />
+      },
+      {
         path: '/roleassign',
         element: <RoleAssignment />
       },
@@ -1047,7 +1052,7 @@ function WebApp() {
   const navigate = useNavigate();
   useEffect(() => {
 
-    // accessSession(navigate)
+    accessSession(navigate)
 
     return () => {
      

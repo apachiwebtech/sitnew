@@ -55,7 +55,7 @@ const con = mysql.createPool({
   host: 'localhost',   // Replace with your host name
   user: 'root',        // Replace with your database username
   password: '', // Replace with your database password
-  database: 'sit'  // Replace with your database name
+  database: 'sit_new'  // Replace with your database name
 });
 
 con.getConnection((err, connection) => {
@@ -5634,3 +5634,36 @@ app.post('/nodeapp/add_taxdata', (req, res) => {
     }
   })
 })
+
+
+
+app.get('/resultchange', (req, res) => {
+  const sql = "SELECT * FROM generate_final_result_dummy";
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      // Map data items to an array of promises for updates
+      const updatePromises = data.map((item) => {
+        const { Id, Batch_Id } = item;
+        const sql2 = "UPDATE final_result_report SET Result_Id = ? WHERE Batch_Id = ?";
+        
+        return new Promise((resolve, reject) => {
+          con.query(sql2, [Id, Batch_Id], (err, result) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(result);
+            }
+          });
+        });
+      });
+
+      // Wait for all updates to complete
+      Promise.all(updatePromises)
+        .then(() => res.json("Done"))
+        .catch((err) => res.json(err));
+    }
+  });
+});

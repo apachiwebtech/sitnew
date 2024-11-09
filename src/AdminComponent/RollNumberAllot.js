@@ -108,7 +108,11 @@ const RollNumberAllot = () => {
         axios.post(`${BASE_URL}/getbatchwisestudent`, data)
             .then((res) => {
                 setStudent(res.data)
-                setDone(res.data[0].IsDone)
+
+                if(res.data && res.data[0].IsDone){
+                    
+                    setDone(res.data[0].IsDone)
+                }
             })
     }
 

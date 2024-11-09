@@ -48,19 +48,19 @@ const CourseListing = () => {
 
 
     useEffect(() => {
-        const cachedData = localStorage.getItem(CACHE_KEY);
-        if (cachedData) {
-            const { data, timestamp } = JSON.parse(cachedData);
-            // Check if cache is expired
-            if (Date.now() - timestamp < CACHE_EXPIRY_MS) {
-                setCourseData(data);
-                setLoading(false)
-            } else {
-                getCourseData(); // Fetch new data if cache is expired
-            }
-        } else {
-            getCourseData(); // Fetch data if not cached
-        }
+        // const cachedData = localStorage.getItem(CACHE_KEY);
+        // if (cachedData) {
+        //     const { data, timestamp } = JSON.parse(cachedData);
+        //     // Check if cache is expired
+        //     if (Date.now() - timestamp < CACHE_EXPIRY_MS) {
+        //         setCourseData(data);
+        //         setLoading(false)
+        //     } else {
+        //         getCourseData(); // Fetch new data if cache is expired
+        //     }
+        // } else {
+        // }
+        getCourseData(); // Fetch data if not cached
     
         setError({})
         setUid([])

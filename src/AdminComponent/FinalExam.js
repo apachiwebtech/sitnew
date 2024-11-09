@@ -316,15 +316,16 @@ const FinalExam = () => {
       }
     },
   ];
+
+
   async function downloadPDF(id) {
 
 
-    axios.post(`${BASE_URL}/getprintinfo`, { id: id })
+    axios.post(`${BASE_URL}/getfinalreport`, { Batch_Id: id })
       .then((res) => {
-        console.log(res.data[0], "DDD")
-        setData(res.data[0])
+        setData(res.data)
 
-        Blob(res.data[0])
+        Blob(res.data)
 
       })
       .catch((err) => {
@@ -336,7 +337,7 @@ const FinalExam = () => {
 
     try {
       // Generate PDF
-   const blob = await pdf(<MyDocument3 data={data} />).toBlob();
+      const blob = await pdf(<MyDocument3 data={data} />).toBlob();
       const url = URL.createObjectURL(blob);
 
       // Display PDF in a new tab
@@ -385,6 +386,7 @@ const FinalExam = () => {
                           <RadioGroup
                             row
                             onChange={onhandleChange}
+                            defaultValue={`1`}
                             aria-labelledby="demo-row-radio-buttons-group-label" name="row_radio_buttons_group" >
                             <FormControlLabel value="1" control={<Radio />} label="Batchwise" />
                             <FormControlLabel value="2" control={<Radio />} label="Studentwise" />
@@ -415,12 +417,12 @@ const FinalExam = () => {
                           {AnnulBatch.map((item) => {
                             return (
 
-                              <option value={item.Batch_code}>{item.Batch_code}</option>
+                              <option value={item.Batch_Id}>{item.Batch_code}</option>
                             )
                           })}
                         </select>
                       </div>
-                      {value.row_radio_buttons_group === "2" ? (
+                      {value.row_radio_buttons_group === "2" && (
                         <div class="form-group col-lg-4">
                           <label for="exampleFormControlSelect1">Select Student<span className='text-danger'>*</span> </label>
                           <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.student} onChange={onhandleChange} name='studee'>
@@ -433,15 +435,7 @@ const FinalExam = () => {
                             })}
                           </select>
                         </div>
-                      ) :
-                        (
-                          <div class="form-group col-lg-4">
-                            <label for="exampleFormControlSelect1">Select Batch<span className='text-danger'>*</span> </label>
-                            <select class="form-control form-control-lg" id="exampleFormControlSelect1" onChange={onhandleChange} name='studee'>
-                              <option></option>
-                            </select>
-                          </div>
-                        )}
+                      )}
 
                     </div>
 

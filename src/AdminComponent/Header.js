@@ -60,7 +60,7 @@ const Header = ({click}) => {
         </li> */}
 
 
-        <li className="nav-item" onClick={() => handleToggle('product')}>
+        <li className="nav-item" style={{cursor :"pointer"}} onClick={() => handleToggle('product')}>
           <div className="nav-link" >
             <Icon path={mdiAccountTie} size={1} className='mx-3' />
             <span className="menu-title">General Master</span>
@@ -174,7 +174,7 @@ const Header = ({click}) => {
 
 
 
-        <li className="nav-item" onClick={() => handleToggle('home')}>
+        <li className="nav-item" style={{cursor :"pointer"}} onClick={() => handleToggle('home')}>
           <div className="nav-link" >
 
             <Icon path={mdiLayersTripleOutline} size={1} className='mx-3' />
@@ -282,7 +282,7 @@ const Header = ({click}) => {
         {/* ================Admission Activity====================== */}
 
 
-        <li className="nav-item" onClick={() => handleToggle('admission')}>
+        <li className="nav-item" style={{cursor :"pointer"}} onClick={() => handleToggle('admission')}>
           <div className="nav-link" >
 
             <Icon path={mdiChartTree} size={1} className='mx-3' />
@@ -349,7 +349,7 @@ const Header = ({click}) => {
         {/* ================Daily Activities====================== */}
 
 
-        <li className="nav-item" onClick={() => handleToggle('daily')}>
+        <li className="nav-item" style={{cursor :"pointer"}} onClick={() => handleToggle('daily')}>
           <div className="nav-link" >
 
             <Icon path={mdiChartTree} size={1} className='mx-3' />
@@ -454,6 +454,34 @@ const Header = ({click}) => {
               </Link>
             </li>
 
+            <li className="nav-item">
+              <Link className="nav-link" to="batchleft">
+                <Icon path={mdiCircleMedium} size={1} className='mx-3' />
+                <span className="menu-title">Batch Left</span>
+              </Link>
+            </li>
+
+            <li className="nav-item">
+              <Link className="nav-link" to="batchmoving">
+                <Icon path={mdiCircleMedium} size={1} className='mx-3' />
+                <span className="menu-title">Bacth Moving</span>
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to='batchtransfer'>
+
+                <Icon path={mdiCircleMedium} size={1} className='mx-3' />
+                <span className="menu-title">Batch Transfer</span>
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to='batchcancellation'>
+
+                <Icon path={mdiCircleMedium} size={1} className='mx-3' />
+                <span className="menu-title">Batch Cancellation</span>
+              </Link>
+            </li>
+
           </ul>
         </Collapse>
 
@@ -461,7 +489,7 @@ const Header = ({click}) => {
         {/* ================Daily Activities End====================== */}
 
 
-        <li className="nav-item" onClick={() => handleToggle('library')}>
+        <li className="nav-item" style={{cursor :"pointer"}} onClick={() => handleToggle('library')}>
           <div className="nav-link" >
 
             <Icon path={mdiLayersTripleOutline} size={1} className='mx-3' />
@@ -496,7 +524,7 @@ const Header = ({click}) => {
           </ul>
         </Collapse>
 
-        <li className="nav-item" onClick={() => handleToggle('role')}>
+        <li className="nav-item" style={{cursor :"pointer"}} onClick={() => handleToggle('role')}>
           <div className="nav-link" >
 
             <Icon path={mdiFormatListBulletedSquare} size={1} className='mx-3' />
@@ -539,7 +567,7 @@ const Header = ({click}) => {
 
 
 
-        <li className="nav-item" onClick={() => handleToggle('employee')}>
+        <li className="nav-item" style={{cursor :"pointer"}} onClick={() => handleToggle('employee')}>
           <div className="nav-link" >
 
             <Icon path={mdiAccountTie} size={1} className='mx-3' />
@@ -575,7 +603,7 @@ const Header = ({click}) => {
 
 
 
-        <li className="nav-item" onClick={() => handleToggle('reports')}>
+        <li className="nav-item" style={{cursor :"pointer"}} onClick={() => handleToggle('reports')}>
           <div className="nav-link" >
 
             <Icon path={mdiClipboardFileOutline} size={1} className='mx-3' />
@@ -803,7 +831,7 @@ const Header = ({click}) => {
 
         {/* ==============Acount Master=================== */}
 
-        <li className="nav-item" onClick={() => handleToggle('Accountmaster')}>
+        <li className="nav-item" style={{cursor :"pointer"}} onClick={() => handleToggle('Accountmaster')}>
           <div className="nav-link" >
 
             <Icon path={mdiBookmarkMultipleOutline} size={1} className='mx-3' />
@@ -867,20 +895,7 @@ const Header = ({click}) => {
                 <span className="menu-title">Fees Details</span>
               </Link>
             </li>
-            <li className="nav-item">
-              <Link className="nav-link" to='batchtransfer'>
-
-                <Icon path={mdiCircleMedium} size={1} className='mx-3' />
-                <span className="menu-title">Batch Transfer</span>
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to='batchcancellation'>
-
-                <Icon path={mdiCircleMedium} size={1} className='mx-3' />
-                <span className="menu-title">Batch Cancellation</span>
-              </Link>
-            </li>
+ 
 
             <li className="nav-item">
               <Link className="nav-link" to='purchasematerial'>
@@ -907,7 +922,7 @@ const Header = ({click}) => {
             <li className="nav-item">
               <Link className="nav-link" to="stockview">
                 <Icon path={mdiCircleMedium} size={1} className='mx-3' />
-                <spna className="menu-title">Stock View</spna>
+                <span className="menu-title">Stock View</span>
               </Link>
             </li>
 
@@ -939,19 +954,7 @@ const Header = ({click}) => {
               </Link>
             </li>
 
-            <li className="nav-item">
-              <Link className="nav-link" to="batchleft">
-                <Icon path={mdiCircleMedium} size={1} className='mx-3' />
-                <span className="menu-title">Batch Left</span>
-              </Link>
-            </li>
-
-            <li className="nav-item">
-              <Link className="nav-link" to="batchmoving">
-                <Icon path={mdiCircleMedium} size={1} className='mx-3' />
-                <span className="menu-title">Bacth Moving</span>
-              </Link>
-            </li>
+         
 
             <li className="nav-item">
               <Link className="nav-link" to="employeeloan">
@@ -988,7 +991,7 @@ const Header = ({click}) => {
 
         {/* ================Utility====================== */}
 
-        <li className="nav-item" onClick={() => handleToggle('utility')}>
+        <li className="nav-item" style={{cursor :"pointer"}} onClick={() => handleToggle('utility')}>
           <div className="nav-link" >
 
             <Icon path={mdiCog} size={1} className='mx-3' />
@@ -1098,7 +1101,7 @@ const Header = ({click}) => {
         {/* ================Placements====================== */}
 
 
-        <li className="nav-item" onClick={() => handleToggle('placement')}>
+        <li className="nav-item" style={{cursor :"pointer"}} onClick={() => handleToggle('placement')}>
           <div className="nav-link" >
 
             <Icon path={mdiAccountTie} size={1} className='mx-3' />

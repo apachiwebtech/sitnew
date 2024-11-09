@@ -33,12 +33,19 @@ const AdmissionListing = () => {
             headers: { 'Content-Type': 'application/json' }
         });
         const data = await response.json();
-        setadmissionData(data);
+
+        if(data){
+            setadmissionData(data);
+            setLoading(false)
+
+        }
+
+
     };
 
     useEffect(() => {
         getInquiryData();
-        setLoading(false);
+   
     }, []);
 
     const handleClick = (id) => {

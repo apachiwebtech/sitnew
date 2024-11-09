@@ -113,6 +113,14 @@ const Discussion = () => {
       axios.post(`${BASE_URL}/add_oadmissiondiscussion`, data).then((res) => {
         setOpen(false);
         getDisscussionData()
+
+        setDiscussion({
+          date:"",
+          department:"",
+          remark :""
+        })
+
+        setUid([])
       }).catch((err) => {
         console.log(err)
       })

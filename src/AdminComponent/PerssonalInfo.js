@@ -91,7 +91,7 @@ const PerssonalInfo = () => {
     const getBatchwiseamount = async (batchcode) => {
 
         setbatchcode(batchcode)
-        
+
 
         const param = {
             Batch_Code: batchcode
@@ -118,7 +118,7 @@ const PerssonalInfo = () => {
 
         const data = {
             statusid: value,
-            student_id : admissionid
+            student_id: admissionid
         }
 
         axios.post(`${BASE_URL}/updateadmissionstatus`, data)
@@ -134,18 +134,18 @@ const PerssonalInfo = () => {
     async function getProfile() {
 
         const data = {
-          student_id: localStorage.getItem(`Admissionid`)
+            student_id: localStorage.getItem(`Admissionid`)
         }
         axios.post(`${BASE_URL}/getdocuments`, data)
-          .then((res) => {
-            console.log(res)
+            .then((res) => {
+                console.log(res)
 
-            if(res.data && res.data[0].upload_image){
-                
-                setProfile(res.data[0].upload_image)
-            }
-          })
-      }
+                // if(res.data && res.data[0].upload_image){
+
+                //     setProfile(res.data[0].upload_image)
+                // }
+            })
+    }
 
 
     useEffect(() => {
@@ -280,54 +280,59 @@ const PerssonalInfo = () => {
 
 
     const handleadmission = async (id) => {
-        
-      let confirm = window.confirm("Are you sure you want to proceed?");
 
-      if (confirm) {
-          try {
-              // Fetch batch code from personalInfo.Batch_Code
-              const dataw =  { batch: personalInfo.Batch_Code }
+        let confirm = window.confirm("Are you sure you want to proceed?");
 
+        if (confirm) {
+            try {
+                // Fetch batch code from personalInfo.Batch_Code
+                const dataw = { batch: personalInfo.Batch_Code }
 
-              // const batchCodeResponse = await axios.post(`${BASE_URL}/getBatchCode`, dataw);
-              // const batchCode = batchCodeResponse.data[0].Batch_code;
-              const batchCode = personalInfo.Batch_Code;
-
-              // const batchCode = personalInfo.Batch_Code;
-              const data =  { batch: personalInfo.Batch_Code }
-              // Fetch the existing student count for the batch
-              const countResponse = await axios.post(`${BASE_URL}/getStudentCount`,data);
-              const existingCount = countResponse.data[0].total + 1;
-              console.log(existingCount)
-
-              // Generate the student code
-              const year = new Date().getFullYear().toString().slice(2);
-              const countStr = String(existingCount).padStart(3, '0');
-              const studentCode = `${year}${batchCode}${countStr}`;
+                const currentDate = new Date();
+                const formattedDate = `${String(currentDate.getDate()).padStart(2, '0')}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${currentDate.getFullYear()}`;
+                // console.log(formattedDate); // Output: 08-11-2024
 
 
-              const dataq = {
-                  Student_Id: personalInfo.Student_Id, // Send the generated student code as Student_Id
-                  Course_Id: personalInfo.course,
-                  Batch_Id: personalInfo.Batch_Code,
-                  Admission_Dt: "05-08-2024",
-                  Amount: amount,
-                  student_code : studentCode
-              };
 
-              // Send the data via POST request
-              const res = await axios.post(`${BASE_URL}/process_admission`, dataq);
+                // const batchCodeResponse = await axios.post(`${BASE_URL}/getBatchCode`, dataw);
+                // const batchCode = batchCodeResponse.data[0].Batch_code;
+                const batchCode = personalInfo.Batch_Code;
 
-              alert("Admission successful");
+                // const batchCode = personalInfo.Batch_Code;
+                const data = { batch: personalInfo.Batch_Code }
+                // Fetch the existing student count for the batch
+                const countResponse = await axios.post(`${BASE_URL}/getStudentCount`, data);
+                const existingCount = countResponse.data[0].total + 1;
+                console.log(existingCount)
 
-              // Optionally navigate to a different page
-              navigate(`/admissionlisting`);
-          } catch (error) {
-              console.error("Error processing admission:", error);
-              alert("Failed to process admission. Please try again.");
-          }
-      }
-  };
+                // Generate the student code
+                const year = new Date().getFullYear().toString().slice(2);
+                const countStr = String(existingCount).padStart(3, '0');
+                const studentCode = `${year}${batchCode}${countStr}`;
+
+
+                const dataq = {
+                    Student_Id: personalInfo.Student_Id, // Send the generated student code as Student_Id
+                    Course_Id: personalInfo.course,
+                    Batch_Id: batchid,
+                    Admission_Dt: formattedDate,
+                    Amount: amount,
+                    student_code: studentCode
+                };
+
+                // Send the data via POST request
+                const res = await axios.post(`${BASE_URL}/process_admission`, dataq);
+
+                alert("Admission successful");
+
+                // Optionally navigate to a different page
+                navigate(`/admissionlisting`);
+            } catch (error) {
+                console.error("Error processing admission:", error);
+                alert("Failed to process admission. Please try again.");
+            }
+        }
+    };
 
     // const handleadmission = (id) => {
     //     let confirm = window.confirm("Are you sure want to proceed ")
