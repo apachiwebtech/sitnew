@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 //import FormControlLabel from '@mui/material/FormControlLabel';
@@ -19,186 +19,50 @@ const AddConsultancyMaster = () => {
     const [category, setCat] = useState('')
     const [course, setCourse] = useState([])
     const [annualbatch, setAnnulBatch] = useState([])
-
+    const navigate = useNavigate();
 
 
     const [value, setValue] = useState({
-        training: "" || uid.training,
-        attendee: "" || uid.attendee,
-        instructor: "" || uid.instructor,
-        description: "" || uid.description,
-        feedback: "" || uid.feedback,
+        Comp_Name: "",
+        Contact_Person: "",
+        Designation: "",
+        Address: "",
+        City: "",
+        State: "",
+        Pin: "",
+        Country: "",
+        Tel: "",
+        Fax: "",
+        EMail: "",
+        Remark: "",
+        Date_Added: "",
+        Purpose: "",
+        IsActive: true,
+        IsDelete: false,
+        Company_Status: "",
+        Website: "",
+        Mobile: "",
+        Mention_Date: "",
+        Industry: "",
+        CreatedBy: ""
+    });
 
-
-
-
-    })
-
-    useEffect(() => {
-        setValue({
-            training: uid.training,
-            attendee: uid.attendee,
-            instructor: uid.instructor,
-            description: uid.description,
-            feedback: uid.feedback,
-
-        })
-    }, [uid])
-
-
-    // const validateForm = () => {
-    //     let isValid = true
-    //     const newErrors = {}
-
-
-    //    if (!value.college) {
-    //     isValid = false;
-    //     newErrors.name = "Name is require"
-    //    }
-    //     if (!value.email) {
-    //         isValid = false;
-    //         newErrors.email = "Email is require"
-    //     }
-    //     setError(newErrors)
-    //     return isValid
-    // }
-
-
-    async function getEmployeeData() {
-
-        axios.post(`${BASE_URL}/vendor_details`)
-            .then((res) => {
-                console.log(res.data)
-                setBrand(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
-
-    async function getCourseData() {
-
-        axios.get(`${BASE_URL}/getCourse`)
-            .then((res) => {
-                console.log(res.data)
-                setCourse(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
-
-    const getbatch = async (id) => {
-        const data = {
-            courseid: id
-        }
-
-        try{
-            const res = await axios.post(`${BASE_URL}/getcoursewisebatch`, data);
-            setAnnulBatch(res.data);
-        }catch (err) {
-            console.error("Error fetching data:", err);
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post(`${BASE_URL}/addConsultancy`, value);
+            alert(response.data.message);
+            navigate("/consultancymasterlisting"); // Redirect after adding data
+        } catch (error) {
+            console.error("Error adding data:", error);
         }
     };
 
-
-
-    async function getAddConsultancyMasterDetail() {
-        try {
-            const response = await fetch(`${BASE_URL}/addconsultancymasterDetail`, {
-                method: 'POST',
-                body: JSON.stringify({
-                    id: addconsultancymasterid,
-                }),
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            });
-            
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            
-            const data = await response.json();
-            console.log(data, "DATA A GAYA!");
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        }
-    }
-
-    useEffect(() => {
-
-        if (addconsultancymasterid !== ":addconsultancymasterid") {
-            getAddConsultancyMasterDetail()
-        }
-        value.title = ""
-        setError({})
-        setUid([])
-    }, [])
-
-
-    const handleSubmit = async (e) => {
-        e.preventDefault()
-        let response
-        // if(validateForm()){
-        if (addconsultancymasterid == ":addconsultancymasterid") {
-            response = await fetch(`${ BASE_URL } / add_projectmaster`, {
-                method: 'POST',
-                body: JSON.stringify({
-                    projectno: value.projectno,
-                }),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-        } else {
-
-            response = await fetch(`${ BASE_URL } / updateInquiry`, {
-                method: 'POST',
-                body: JSON.stringify({
-
-                    projectno: value.projectno,
-                    projectname: value.firstname,
-                }),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-        }
-
-
-
-
-
-        const data = await response.json();
-
-        alert(data.message)
-        //   window.location.pathname = '/inquirylisting'
-
-
-        // }        
-    }
-
-
-
-
     const onhandleChange = (e) => {
-        setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
-    }
-
-
-
-    const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
-
-
-    const handleradiochange = (e) => {
-        console.log(e.target.value)
-
-        setCat(e.target.value)
-    }
+        setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    };
 
     return (
-
         <div class="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
             <div class="main-panel">
@@ -390,21 +254,18 @@ const AddConsultancyMaster = () => {
                                         </div>
 
                                         <div className='row p-2 gap-2'>
-                                            <button className='mr-2 btn btn-primary' onClick={handleSubmit}>Submit</button>
-                                            <button class="btn btn-light">Cancel</button>
-
+                                            <button className='mr-2 btn btn-primary' type="submit">Submit</button>
+                                            <button type="button" className="btn btn-light" onClick={() => navigate("/consultancymasterlisting")}>Cancel</button>
                                         </div>
-
                                     </form>
-
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div >
-        </div >
-    )
+            </div>
+        </div>
+    );
 }
 
-export default AddConsultancyMaster
+export default AddConsultancyMaster;
