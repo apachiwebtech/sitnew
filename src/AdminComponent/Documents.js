@@ -92,7 +92,7 @@ const Documents = () => {
   const columns = [
     {
       field: "index",
-      headerName: "Id",
+      headerName: "id",
       type: "number",
       align: "center",
       headerAlign: "center",
@@ -125,7 +125,7 @@ const Documents = () => {
                     />
                   ) : (
                     // Render image
-                    <img src={`${IMG_URL}/${viewimg}`} alt="Content" />
+                    <img src={`${IMG_URL}/${admissionid}/${viewimg}`} alt="Content" />
                   )}
                 </div>
               </Box>

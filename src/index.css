@@ -10068,7 +10068,7 @@ pre code {
 
 .table th,
 .table td {
-  padding: 1.25rem 0.9375rem;
+  padding: 0px 10px;
   vertical-align: top;
   border-top: 1px solid #f3f3f3;
 }

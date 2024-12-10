@@ -44,8 +44,8 @@ const StudentDocument = () => {
 
   const columns = [
     {
-      field: "id",
-      headerName: "Id",
+      field: "index",
+      headerName: "id",
       type: "number",
       align: "center",
       headerAlign: "center",

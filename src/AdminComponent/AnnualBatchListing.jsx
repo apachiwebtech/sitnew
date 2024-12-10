@@ -22,9 +22,9 @@ const AnnualBatchListing = () => {
   const [loading, setLoading] = useState(true)
 
   const [value, setValue] = useState({
-    selectcourse:"",
-    from_date:"",
-    to_date:""
+    selectcourse: "",
+    from_date: "",
+    to_date: ""
   })
 
   async function getAnnualData() {
@@ -44,17 +44,37 @@ const AnnualBatchListing = () => {
       })
 
   }
+
   async function getCourseData() {
 
     axios.get(`${BASE_URL}/getCourse`)
-        .then((res) => {
-            console.log(res.data)
-            setcourse(res.data)
-        })
-        .catch((err) => {
-            console.log(err)
-        })
-}
+      .then((res) => {
+        console.log(res.data)
+        setcourse(res.data)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
+
+  useEffect(() => {
+    // Calculate the current financial year's start and end dates
+    const today = new Date();
+    const year = today.getFullYear();
+    const isBeforeApril = today.getMonth() < 3; // Months are zero-based
+    const startYear = isBeforeApril ? year - 1 : year;
+    const endYear = isBeforeApril ? year : year + 1;
+
+    // Format the dates as YYYY-MM-DD
+    const fromDate = `${startYear}-04-01`;
+    const toDate = `${endYear}-03-31`;
+
+    setValue({
+      from_date: fromDate,
+      to_date: toDate,
+    });
+  }, []);
   useEffect(() => {
     // const cachedData = localStorage.getItem(CACHE_KEY);
     // if (cachedData) {
@@ -117,21 +137,21 @@ const AnnualBatchListing = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    if ( value.from_date || value.to_date ||  value.selectcourse  ) {
+    if (value.from_date || value.to_date || value.selectcourse) {
 
-    }else{
+    } else {
       alert('Nothing Is Select')
       return
     }
     if (value.from_date) {
       if (value.to_date) {
 
-      }else{
+      } else {
         alert("Please select to date")
         return
 
       }
-    }else{
+    } else {
       if (value.to_date) {
         alert("Please select from date")
         return
@@ -139,27 +159,27 @@ const AnnualBatchListing = () => {
     }
     setLoading(true)
     const data = {
-      selectcourse : value.selectcourse,
-      from_date : value.from_date,
-      to_date : value.to_date
+      selectcourse: value.selectcourse,
+      from_date: value.from_date,
+      to_date: value.to_date
     }
 
     axios.post(`${BASE_URL}/getfilterbatch`, data)
-    .then((res) => {
-       console.log(res)
-       setAnnulBatch(res.data)
-       setLoading(false)
-       setUid([])
-       setValue({
-        selectcourse: '',
-        from_date: '',
-        to_date: ''
-     })
-    })
-    .catch((err) => {
+      .then((res) => {
+        console.log(res)
+        setAnnulBatch(res.data)
+        setLoading(false)
+        setUid([])
+        setValue({
+          selectcourse: '',
+          from_date: '',
+          to_date: ''
+        })
+      })
+      .catch((err) => {
         console.log(err)
         setLoading(false)
-    })
+      })
 
   }
 
@@ -220,7 +240,7 @@ const AnnualBatchListing = () => {
   const rowsWithIds = annulbatch.map((row, index) => ({ index: index + 1, ...row }));
   const onhandleChange = (e) => {
     setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
-}
+  }
 
   return (
     <div className="container-fluid page-body-wrapper col-lg-10">
@@ -247,8 +267,8 @@ const AnnualBatchListing = () => {
                     <div className="card-body">
                       <form class="forms-sample row py-3 " onSubmit={handleSubmit}>
                         <div class="form-group col-lg-3">
-                          <label for="exampleFormControlSelect1">Cource <span className='text-danger'>*</span></label>
-                          <select class="form-control form-control-lg" id="exampleFormControlSelect1"  name='selectcourse' onChange={onhandleChange} >
+                          <label for="exampleFormControlSelect1">Course <span className='text-danger'>*</span></label>
+                          <select class="form-control form-control-lg" id="exampleFormControlSelect1" name='selectcourse' onChange={onhandleChange} >
                             <option value={''}>Select</option>
                             {course.map((item) => {
                               return (
@@ -260,15 +280,16 @@ const AnnualBatchListing = () => {
                         </div>
                         <div class="form-group col-lg-3">
                           <label for="exampleInputUsername1">From Date <span className='text-danger'>*</span></label>
-                          <input type="date" class="form-control" id="exampleInputUsername1" placeholder="from_date" name='from_date' onChange={onhandleChange}/>
+                          <input type="date" class="form-control" id="exampleInputUsername1" placeholder="from_date" name='from_date'
+                          value={value.from_date} onChange={onhandleChange} />
                         </div>
                         <div class="form-group col-lg-3">
                           <label for="exampleInputUsername1">To Date <span className='text-danger'>*</span></label>
-                          <input type="date" class="form-control" id="exampleInputUsername1" placeholder="to_date" name='to_date' onChange={onhandleChange}/>
+                          <input type="date" class="form-control" id="exampleInputUsername1" placeholder="to_date" name='to_date' value={value.to_date}onChange={onhandleChange} />
                         </div>
                         <div className='d-flex align-items-center mt-3' >
                           <button type="submit" class="btn btn-sm btn-primary mr-2">Submit</button>
-                          <button type='reset' onClick={ ()=> getAnnualData()} class="btn btn-sm btn-primary mr-2">Clear</button>
+                          <button type='reset' onClick={() => getAnnualData()} class="btn btn-sm btn-primary mr-2">Clear</button>
                         </div>
                       </form>
                     </div>

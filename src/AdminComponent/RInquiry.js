@@ -147,20 +147,20 @@ const RInquiry = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!value.all && !value.allinquiries && !value.selctbatch && !value.rollnumberallot && !value.selectcourse && !value.fromdate && !value.fromtodate) {
-      alert("Please fill required fields");
+    if (!value.fromdate && !value.fromtodate) {
+      alert("Please Select dates");
       return;
     }
 
-    if ((value.fromdate || value.fromtodate) && !(value.fromdate && value.fromtodate)) {
-      alert("Please select both from date and to date");
-      return;
-    }
+    // if ((value.fromdate || value.fromtodate) && !(value.fromdate && value.fromtodate)) {
+    //   alert("Please select both from date and to date");
+    //   return;
+    // }
 
-    if (!value.selctbatch && ! value.selectcourse && !value.rollnumberallot ) {
-      alert("Please select the following: Batch, Course, Batch Type");
-      return;
-    }
+    // if (!value.selctbatch && ! value.selectcourse && !value.rollnumberallot ) {
+    //   alert("Please select the following: Batch, Course, Batch Type");
+    //   return;
+    // }
 
     let data = {
       fromdate: value.fromdate,
@@ -272,7 +272,7 @@ const RInquiry = () => {
                       </div>
 
                       <div class="form-group col-lg-3">
-                        <label for="exampleFormControlSelect1">Select Course<span className="text-danger">*</span></label>
+                        <label for="exampleFormControlSelect1">Select Course</label>
                         <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.selectcourse} name='selectcourse' onChange={onhandleChange} >
                           <option>Select Course</option>
 
@@ -288,7 +288,7 @@ const RInquiry = () => {
                       </div>
 
                       <div class="form-group col-lg-3">
-                        <label for="exampleFormControlSelect1">Batch Type<span className="text-danger">*</span></label>
+                        <label for="exampleFormControlSelect1">Batch Type</label>
                         <select class="form-control form-control-lg" id="exampleFromControlSelect1" value={value.rollnumberallot} name='rollnumberallot' onChange={onhandleChange} >
                           <option value="">Select Batch Type</option>
                           {batchcat.map((item) => {
@@ -301,7 +301,7 @@ const RInquiry = () => {
                       </div>
 
                       <div class="form-group col-lg-3">
-                        <lable for="exampleInputUsername1">Select Batch<span className="text-danger">*</span></lable>
+                        <label for="exampleInputUsername1">Select Batch</label>
                         {/* <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Select Batch code" value={value.selectbatchs} name='selectbatchs' onChange={onhandleChange}  /> */}
                         {/* <pre>{JSON.stringify(selected)}</pre> */}
                         <MultiSelect
@@ -322,7 +322,7 @@ const RInquiry = () => {
                       </div>
 
                       <div class="form-group col-lg-3">
-                        <lable for="exampleFormControlSelect1">Enquiry Type</lable>
+                        <label for="exampleFormControlSelect1">Enquiry Type</label>
                         <select class="form-control" id="exampleFormControlSelect1" value={value.allinquiries}
                           name='allinquiries' onChange={onhandleChange} >
                           <option value="">Select Enquiry Type</option>
@@ -336,7 +336,7 @@ const RInquiry = () => {
                       </div>
 
                       <div class="form-group col-lg-3">
-                        <lable for="exampleFormControlSelect1">Inquiry From</lable>
+                        <label for="exampleFormControlSelect1">Inquiry From</label>
                         <select class="form-control" id="exampleFormControlSelect1" value={value.all} name='all'
                           onChange={onhandleChange}>
                           <option value="">Select Inquiry From</option>

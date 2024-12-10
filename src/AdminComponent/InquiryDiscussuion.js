@@ -52,10 +52,6 @@ function AddRole() {
             isValid = false;
             newErrors.discussion = "title is require"
         }
-        if (!value.nextdate) {
-            isValid = false;
-            newErrors.nextdate = "nextdate is require"
-        }
 
         setError(newErrors)
         return isValid
@@ -63,7 +59,7 @@ function AddRole() {
 
     async function getinquiryDiscuss() {
         const data = {
-            student_id : student_id
+            inquiryid : inquiryid
         }
         axios.post(`${BASE_URL}/inquirydiscuss_data` ,data)
             .then((res) => {
@@ -93,13 +89,20 @@ function AddRole() {
                 discussion: value.discussion,
                 user_id: decryptedUserId(),
                 u_id: uid.id,
-                student_id: localStorage.getItem('Student_id')
+                inquiryid: inquiryid
             }
 
             axios.post(`${BASE_URL}/add_inquirydiscuss`, data)
                 .then((res) => {
                     alert(res.data)
+                    setUid([])
+                    setValue({
+                        date : '',
+                        discussion : '',
+                        nextdate :''
+                    })
                     getinquiryDiscuss()
+
 
                 })
                 .catch((err) => {
@@ -226,9 +229,9 @@ function AddRole() {
 
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div className='row'>
-                                            <div class="form-group col-lg-12">
+                                            <div class="form-group col-lg-6">
                                                 <label for="exampleTextarea1">Discussion<span className='text-danger'>*</span></label>
-                                                <textarea class="form-control" id="exampleTextarea1" rows="4" value={value.discussion} name='discussion' onChange={onhandleChange}></textarea>
+                                                <textarea class="form-control" id="exampleTextarea1" rows="2" value={value.discussion} name='discussion' onChange={onhandleChange}></textarea>
                                                 {error.discussion && <span className='text-danger'>{error.discussion}</span>}
                                             </div>
                                             <div class="form-group col-lg-3">
@@ -237,17 +240,17 @@ function AddRole() {
                                                 {error.date && <span className='text-danger'>{error.date}</span>}
                                             </div>
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">Next Date<span className='text-danger'>*</span></label>
+                                                <label for="exampleInputUsername1">Next Date</label>
                                                 <input type="date" class="form-control" id="exampleInputUsername1" value={value.nextdate}  name='nextdate' onChange={onhandleChange} />
                                                 {error.nextdate && <span className='text-danger'>{error.nextdate}</span>}
                                             </div>
                                         </div>
 
 
-                                        {roleaccess > 2 && <>  <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                                        {roleaccess > 2 && <>  <button type="submit" class="btn btn-primary mr-2 float-right">Submit</button>
                                             <button type='button' onClick={() => {
                                                 window.location.reload()
-                                            }} class="btn btn-light">Cancel</button></>}
+                                            }} class="btn btn-light float-right">Cancel</button></>}
 
                                     </form>
                                 </div>

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import "bootstrap-icons/font/bootstrap-icons.css";
 import Cookies from 'js-cookie';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Outlet, createBrowserRouter, useLocation, useNavigate } from 'react-router-dom';
 import AdminDashBoard from './AdminComponent/AdminDashBoard';
 import { BASE_URL } from './AdminComponent/BaseUrl';
@@ -9,6 +9,7 @@ import Header from './AdminComponent/Header';
 import OneFieldForm from './AdminComponent/OneFieldForm';
 import PageNotFound from './AdminComponent/PageNotFound';
 import WebLogin from './AdminComponent/WebLogin';
+import { SidebarContext, SidebarProvider } from './context/SideBarContext.jsx';
 import './App.css';
 import './Responsive.css';
 import './Style.css';
@@ -1028,18 +1029,17 @@ function WebApp() {
   const [click, setClick] = useState(false)
   const { pathname } = useLocation();
 
+
   async function accessSession(navigate) {
 
     const token = Cookies.get('token')
 
     try {
-      const response = await axios.get(`${BASE_URL}/protected`, {
+      await axios.get(`${BASE_URL}/protected`, {
         headers: {
           Authorization: token,
         },
       });
-
-
 
     } catch (error) {
       console.log('You are not authorized to view this content.');
@@ -1055,7 +1055,7 @@ function WebApp() {
     accessSession(navigate)
 
     return () => {
-     
+
     };
   }, []);
 
@@ -1070,11 +1070,14 @@ function WebApp() {
 
   return (
     <>
-      <div className="container-scroller row">
-        {/* <button onClick={() =>setClick(!click)} style={{background :"red", position:"absolute",top :"0px",left:"1px", zIndex:"100"}}>click</button> */}
-        <Header click={click} />
-        <Outlet />
-      </div>
+
+      <SidebarProvider>
+        <div className="container-scroller row">
+          <Header />
+          <Outlet />
+        </div>
+      </SidebarProvider>
+
     </>
 
   );

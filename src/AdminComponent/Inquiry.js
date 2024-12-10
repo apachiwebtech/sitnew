@@ -1,10 +1,25 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import InquiryForm from './InquiryForm';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
 
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 700,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+};
 
 const Inquiry = () => {
 
@@ -23,6 +38,19 @@ const Inquiry = () => {
     const [Education, setEducation] = useState([]);
     const [batch, setBatch] = useState([]);
     const [batchCategoty, setbatchCategory] = useState([]);
+    const [emailid, setEmailid] = useState('');
+    const [courseid, setCourseID] = useState('');
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+    const [categoryid, setCategoryId] = useState('')
+
+
+    const today = new Date();
+    const formattedDate = `${today.getFullYear()}-${(today.getMonth() + 1)
+      .toString()
+      .padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
+
     const [value, setValue] = useState({
         firstname: '',
         gender: '',
@@ -43,9 +71,11 @@ const Inquiry = () => {
         qualification: '',
         descipline: '',
         percentage: '',
-        statusdate: '',
+        statusdate: '' || formattedDate,
         status: ''
     })
+
+
 
 
     const validateForm = () => {
@@ -105,16 +135,10 @@ const Inquiry = () => {
         const data = await response.json();
         setEducation(data);
     }
-    const getBatch = async () => {
-        const response = await fetch(`${BASE_URL}/getBtach`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setBatch(data);
-    }
+
+
+
+
     const getBtachCategory = async () => {
         const response = await fetch(`${BASE_URL}/getBtachCategory`, {
             method: 'GET',
@@ -124,6 +148,21 @@ const Inquiry = () => {
         });
         const data = await response.json();
         setbatchCategory(data);
+    }
+
+    const handleSend = (email, course, inquiry) => {
+        const data = {
+            email: email,
+            course: course,
+            inquiry: inquiry
+        }
+
+        axios.post(`${BASE_URL}/inquirysendmail`, data)
+            .then((res) => {
+                console.log(res)
+                alert("Mail is sent...")
+                setOpen(false)
+            })
     }
 
     async function getStudentDetail() {
@@ -140,8 +179,11 @@ const Inquiry = () => {
         const data = await response.json();
 
 
-        localStorage.setItem("Student_id" , data[0].Student_Id)
+        localStorage.setItem("Student_id", data[0].Student_Id)
 
+        setEmailid(data[0].Email)
+        setCourseID(data[0].Course_Id)
+        setCategoryId(data[0].Batch_Category_id)
 
         setValue(prevState => ({
             ...prevState,
@@ -167,6 +209,20 @@ const Inquiry = () => {
             statusdate: data[0].StateChangeDt,
             status: data[0].OnlineState
         }))
+
+        getBatch(data[0].Batch_Category_id, data[0].Course_Id)
+    }
+
+    const getBatch = async (cat_id, courseid) => {
+        setCategoryId(cat_id)
+        const param = {
+            course_id: courseid || value.selectedProgramme,
+            category_id: cat_id || categoryid
+        }
+        axios.post(`${BASE_URL}/getbatchcategorywise`, param)
+            .then((res) => {
+                setBatch(res.data)
+            })
     }
     useEffect(() => {
         if (inquiryid !== ":inquiryid") {
@@ -176,9 +232,9 @@ const Inquiry = () => {
         getDiscipline();
         getEducation();
         getCourse();
-        getBatch();
         getBtachCategory();
         value.title = ""
+        getBatch();
         setError({})
         setUid([])
     }, [])
@@ -197,7 +253,7 @@ const Inquiry = () => {
     }, [])
 
 
-const navigate = useNavigate()
+    const navigate = useNavigate()
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -381,7 +437,7 @@ const navigate = useNavigate()
                                                     <div className='row'>
                                                         <div class="form-group col-lg-6 ">
                                                             <label for="exampleInputUsername1">Date</label>
-                                                            <input type="date" className="form-control" id="exampleInputUsername1" value={value.statusdate} placeholder="Contact Person" name='statusdate' onChange={onhandleChange} />
+                                                            <input type="date" className="form-control" id="exampleInputUsername1" value={value.statusdate} placeholder="Contact Person" name='statusdate' onChange={onhandleChange}  disabled/>
 
                                                         </div>
                                                         <div className="form-group col-lg-6 ">
@@ -401,10 +457,40 @@ const navigate = useNavigate()
 
                                                 </div>
                                             </div>
-                                            <div className='row p-2 gap-2'>
-                                                <button className='mr-2 btn btn-primary' onClick={handleSubmit}>Save</button>
-                                                {/* <button className='col-2'>close</button> */}
+                                            <div className='d-flex'>
+                                                <div className='row p-2 gap-2'>
+                                                    <button className='mr-2 btn btn-primary' onClick={handleSubmit}>Save</button>
+                                                    {/* <button className='col-2'>close</button> */}
+                                                </div>
+                                                <div className='row p-2 gap-2 mx-2'>
+                                                    <button className='mr-2 btn btn-primary' onClick={handleOpen}>Send Admission Form</button>
+                                                    {/* <button className='col-2'>close</button> */}
+                                                </div>
                                             </div>
+
+                                            <Modal
+                                                open={open}
+                                                onClose={handleClose}
+                                                aria-labelledby="modal-modal-title"
+                                                aria-describedby="modal-modal-description"
+                                            >
+                                                <Box sx={style}>
+                                                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                                                        Send Email To:
+                                                    </Typography>
+                                                    <div>
+                                                        <b>email id :</b> ${emailid}
+                                                    </div>
+                                                    <div>
+                                                        <b>Admission_url :</b> <Link to={`https://sitsuvidya.in/addmission_form.php?course=${courseid}&id=${inquiryid}`}>https://sitsuvidya.in/addmission_form.php?course={courseid}&id={inquiryid}</Link>
+
+
+                                                    </div>
+                                                    <div className='my-3'>
+                                                        <button onClick={() => handleSend(emailid, courseid, inquiryid)} className='btn btn-primary'>Send</button>
+                                                    </div>
+                                                </Box>
+                                            </Modal>
                                         </div>
                                         <div className='col-md-6 col-lg-6'>
                                             <div className='row justify-content-center' >
@@ -489,7 +575,7 @@ const navigate = useNavigate()
 
                                                         <div className="form-group col-lg-4">
                                                             <label for="exampleInputUsername1">Category</label>
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.category} defaultValue={value.category} name='category' onChange={onhandleChange} >
+                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={categoryid} defaultValue={value.category} name='category' onChange={(e) => getBatch(e.target.value)} >
                                                                 <option>Select Category</option>
 
                                                                 {batchCategoty?.map((item) => {
@@ -524,7 +610,7 @@ const navigate = useNavigate()
                                                             <label for="exampleInputUsername1">Qualification</label>
                                                             <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.qualification}
                                                                 defaultValue={value.qualification} name='qualification' onChange={onhandleChange} >
-                                                                    <option>Select Qualification</option>
+                                                                <option>Select Qualification</option>
                                                                 {
                                                                     Education.map((item) => {
                                                                         return (
@@ -538,7 +624,7 @@ const navigate = useNavigate()
                                                             <label for="exampleInputUsername1">Descipline</label>
                                                             <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.descipline}
                                                                 defaultValue={value.descipline} name='descipline' onChange={onhandleChange} >
-                                                                    <option>Select Descipline</option>
+                                                                <option>Select Descipline</option>
                                                                 {
                                                                     Discipline.map((item) => {
                                                                         return (

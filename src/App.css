@@ -409,3 +409,7 @@ li{
 .borderRight {
 border-right: 1px solid lightgray;
 }
+
+.font-12{
+  font-size: 12px;
+}

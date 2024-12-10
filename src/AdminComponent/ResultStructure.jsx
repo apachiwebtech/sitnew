@@ -42,12 +42,12 @@ const ResultStructure = () => {
 
 
   const [value, setValue] = useState({
-    last_mark_limit: "" || result.late_limit,
-    absent_wt: "" || result.absent_wt,
-    full_atten_wt: "" || result.full_atten_wt,
-    exam_wt: "" || result.exam_wt,
-    assignment_wt: "" || result.assignment_wt,
-    unit_test: "" || result.unit_test,
+    last_mark_limit: "" || result.LateMarkLimit,
+    absent_wt: "" || result.AttendWtg,
+    full_atten_wt: "" || result.FullAttendWtg,
+    exam_wt: "" || result.ExamWtg,
+    assignment_wt: "" || result.AssignWtg,
+    unit_test: "" || result.UnitTestWtg,
 
 
 
@@ -58,12 +58,12 @@ const ResultStructure = () => {
 
   useEffect(() => {
     setValue({
-      last_mark_limit: result.late_limit,
-      absent_wt: result.absent_wt,
-      full_atten_wt: result.full_atten_wt,
-      exam_wt: result.exam_wt,
-      assignment_wt: result.assignment_wt,
-      unit_test: result.unit_test,
+      last_mark_limit: result.LateMarkLimit,
+      absent_wt: result.AttendWtg,
+      full_atten_wt: result.FullAttendWtg,
+      exam_wt: result.ExamWtg,
+      assignment_wt: result.AssignWtg,
+      unit_test: result.UnitTestWtg,
     })
   }, [result])
 
@@ -171,10 +171,9 @@ const ResultStructure = () => {
       assignment_wt: value.assignment_wt,
       unit_test: value.unit_test,
       batchid: batchid,
-      uid: result.id
     }
 
-    axios.post(`${BASE_URL}/add_batch_result`, data)
+    axios.post(`${BASE_URL}/Update_batch_result`, data)
       .then((res) => {
         alert("Data Added successfully")
         setOpen(false)

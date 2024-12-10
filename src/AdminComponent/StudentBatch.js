@@ -10,26 +10,24 @@ import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 //import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
+import BlankAttendance from "./Document/Blank_Attendance";
+import { PDFDownloadLink, pdf } from '@react-pdf/renderer';
+
 
 const StudentBatch = () => {
 
-    const [brand, setBrand] = useState([])
-    const [vendordata, setVendorData] = useState([])
+
     const [uid, setUid] = useState([])
-    const [cid, setCid] = useState("")
     const [error, setError] = useState({})
-    const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
-    const  [category , setCat] = useState('')
-   
+    const [category, setCat] = useState('')
+    const [course, setCourse] = useState([])
+    const [batch, setBatch] = useState([])
+
 
     const [value, setValue] = useState({
         course: "" || uid.course,
         batch: "" || uid.batch,
         // category: "" || uid.category
-
-
-
 
     })
 
@@ -38,7 +36,6 @@ const StudentBatch = () => {
             training: uid.training,
             attendee: uid.attendee,
             // category: uid.category
-
         })
     }, [uid])
 
@@ -48,10 +45,10 @@ const StudentBatch = () => {
         const newErrors = {}
 
 
-       if (!value.course) {
-        isValid = false;
-        newErrors.course = "Course is Required"
-       }
+        if (!value.course) {
+            isValid = false;
+            newErrors.course = "Course is Required"
+        }
         if (!value.batch) {
             isValid = false;
             newErrors.batch = "Batch is Required"
@@ -61,12 +58,11 @@ const StudentBatch = () => {
     }
 
 
-    async function getEmployeeData() {
+    async function getCourseData() {
 
-        axios.post(`${BASE_URL}/vendor_details`)
+        axios.get(`${BASE_URL}/getCourse`)
             .then((res) => {
-                console.log(res.data)
-                setBrand(res.data)
+                setCourse(res.data)
             })
             .catch((err) => {
                 console.log(err)
@@ -75,108 +71,43 @@ const StudentBatch = () => {
 
 
 
-    async function getEmployeeData() {
-        const data = {
-            tablename: "awt_studentbatch"
-        }
-        axios.post(`${BASE_URL}/get_data`, data)
-            .then((res) => {
-                console.log(res.data)
-                setVendorData(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
 
+    
     useEffect(() => {
-        getEmployeeData()
+        getCourseData()
         value.title = ""
         setError({})
         setUid([])
     }, [])
 
-    const handleClick = (id) => {
-        setCid(id)
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: true,
-        }));
-    };
+   
 
-    const handleCancel = (id) => {
-        // Hide the confirmation dialog without performing the delete action
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
-    };
-
-    const handleUpdate = (id) => {
-        const data = {
-            u_id: id,
-            tablename: "awt_studentbatch"
-        }
-        axios.post(`${BASE_URL}/update_data`, data)
-            .then((res) => {
-                setUid(res.data[0])
-
-                console.log(res.data, "update")
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
-
-    const handleDelete = (id) => {
-        const data = {
-            cat_id: id,
-            tablename: "awt_studentbatch"
-        }
-
-        axios.post(`${BASE_URL}/delete_data`, data)
-            .then((res) => {
-                getEmployeeData()
-
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
-    }
+    
 
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        if(validateForm()){
-        const data = {
+        if (validateForm()) {
+            const data = {
 
-            course: value.course,
-            batch: value.batch,
-            // category: value.category,
-            uid: uid.id,
-            
+                course: value.course,
+                batch: value.batch,
+                // category: value.category,
+                uid: uid.id,
+
+            }
+
+
+            axios.post(`${BASE_URL}/add_studentbatch`, data)
+                .then((res) => {
+                    console.log(res)
+
+
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
         }
-
-
-        axios.post(`${BASE_URL}/add_studentbatch`, data)
-            .then((res) => {
-                console.log(res)
-                getEmployeeData()
-
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-        }
-
-
-
-
 
     }
 
@@ -189,47 +120,45 @@ const StudentBatch = () => {
 
 
 
-
-    const columns = [
-        {
-            field: 'index',
-            headerName: 'Id',
-            type: 'number',
-            align: 'center',
-            headerAlign: 'center',
-            flex: 1,
-            filterable: false,
-
-        },
-        { field: 'course', headerName: 'Course', flex: 2 },
-        { field: 'batch', headerName: 'Batch', flex: 2 },
-        // { field: 'category', headerName: 'Category', flex: 2 },
-
-        {
-            field: 'actions',
-            type: 'actions',
-            headerName: 'Action',
-            flex: 1,
-            renderCell: (params) => {
-                return (
-                    <>
-                        <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
-                    </>
-                )
-            }
-        },
-    ];
-
-
-    const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
-
-
     const handleradiochange = (e) => {
-        console.log(e.target.value)
 
         setCat(e.target.value)
     }
+
+    async function downloadPDF(id) {
+
+        axios.post(`${BASE_URL}/getbatchwisestudent`, { batch_code: value.batch })
+        .then((res) => {
+    
+          Blob(res.data)
+        })
+       
+    }
+
+    const Blob = async (data) => {
+
+        const blob = await pdf(<BlankAttendance data={data} />).toBlob();
+        const url = URL.createObjectURL(blob);
+
+        window.open(url);
+        URL.revokeObjectURL(url);
+    };
+
+    const handlegetbatch = async (courseid) =>{
+        
+        
+        try {
+            const res = await axios.post(`${BASE_URL}/getcoursewisebatch`, {courseid :courseid});
+            setBatch(res.data)
+
+        } catch (err) {
+            console.error("Error fetching data:", err);
+        }
+    }
+
+
+
+
     return (
 
         <div class="container-fluid page-body-wrapper col-lg-10">
@@ -249,7 +178,7 @@ const StudentBatch = () => {
                                                 <FormControl>
                                                     <RadioGroup
                                                         row
-                                                        onChange={(e) =>handleradiochange(e)}
+                                                        onChange={(e) => handleradiochange(e)}
                                                         aria-labelledby="demo-row-radio-buttons-group-label"
                                                         name="row-radio-buttons-group"  >
                                                         <FormControlLabel value="0102" control={<Radio />} label="Student Name" />
@@ -262,7 +191,7 @@ const StudentBatch = () => {
                                                         <FormControlLabel value="0109" control={<Radio />} label="Lecture Taken" />
                                                         <FormControlLabel value="0110" control={<Radio />} label="Acomodation" />
                                                         <FormControlLabel value="0111" control={<Radio />} label="Viva/MOC" />
-                                                        <FormControlLabel value="0112" control={<Radio />} label="Blank Attendance" />
+                                                        <FormControlLabel value="Blank_Attend" control={<Radio />} label="Blank Attendance" />
                                                         <FormControlLabel value="0113" control={<Radio />} label="Assignment Receipt" />
                                                         <FormControlLabel value="0114" control={<Radio />} label="Test Taken" />
                                                         <FormControlLabel value="0115" control={<Radio />} label="Analysis" />
@@ -292,9 +221,14 @@ const StudentBatch = () => {
 
                                             <div class="form-group col-lg-4">
                                                 <label for="exampleFormControlSelect1">Select Course<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course}
-                                                 onChange={onhandleChange} name='course'>
-                                                    <option>Select</option>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" 
+                                                    onChange={(e) =>handlegetbatch(e.target.value)} name='course'>
+                                                    <option>Select Course</option>
+                                                    {course.map((item) => {
+                                                        return (
+                                                            <option value={item.Course_Id}>{item.Course_Name}</option>
+                                                        )
+                                                    })}
                                                 </select>
                                                 {<span className='text-danger'> {error.course} </span>}
                                             </div>
@@ -302,9 +236,16 @@ const StudentBatch = () => {
 
                                             <div class="form-group col-lg-4">
                                                 <label for="exampleFormControlSelect1">Select Batch<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.batch}
-                                                 onChange={onhandleChange} name='batch'>
-                                                    <option></option>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" 
+                                                    onChange={onhandleChange} name='batch'>
+                                                        <option>Select Batch</option>
+
+                                                        {batch.map((item) =>{
+                                                            return  (
+                                                                <option value={item.Batch_code}>{item.Batch_code}</option>
+                                                                
+                                                            )
+                                                        })}
                                                 </select>
                                                 {<span className='text-danger'> {error.batch} </span>}
                                             </div>
@@ -314,7 +255,7 @@ const StudentBatch = () => {
 
 
 
-                                        <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                                        <button type="submit" class="btn btn-primary mr-2" onClick={() => downloadPDF(1)}>Submit</button>
                                         <button type='button' onClick={() => {
                                             window.location.reload()
                                         }} class="btn btn-light">Cancel</button>
@@ -323,52 +264,7 @@ const StudentBatch = () => {
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div className='d-flex justify-content-between'>
-                                        <div>
-                                            <h4 class="card-title">Student Batch Wise Report</h4>
-                                        </div>
 
-                                    </div>
-
-                                    <div>
-                                        <DataGrid
-                                            rows={rowsWithIds}
-                                            columns={columns}
-                                            disableColumnFilter
-                                            disableColumnSelector
-                                            disableDensitySelector
-                                            rowHeight={35}
-                                            getRowId={(row) => row.id}
-                                            initialState={{
-                                                pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
-                                                },
-                                            }}
-                                            slots={{ toolbar: GridToolbar }}
-                                            slotProps={{
-                                                toolbar: {
-                                                    showQuickFilter: true,
-                                                },
-                                            }}
-                                        />
-
-                                        {confirmationVisibleMap[cid] && (
-                                            <div className='confirm-delete'>
-                                                <p>Are you sure you want to delete?</p>
-                                                <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
-                                                <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
-                                            </div>
-                                        )}
-                                    </div>
-
-
-
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div >

@@ -16,6 +16,7 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
 import axios from "axios";
+import InnerHeaderForm from "./InnerHeaderForm";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -235,7 +236,8 @@ const rowsWithIds = onlineAdmissions.map((row, index) => ({
 
 return (
   <div className="container-fluid page-body-wrapper col-lg-12">
-    <InnerHeader />
+
+    <InnerHeaderForm />
     <div className="main-pannel">
       <div className="content-wrapper ">
         <OnlineAdmissionForm admissionid={admissionid} />

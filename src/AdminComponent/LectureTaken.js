@@ -50,6 +50,7 @@ const LectureTaken = () => {
             test: 0 || '',
             topicdescuss: '',
             nextplanning: '',
+            In_Time: "",
         })
 
 
@@ -138,7 +139,7 @@ const LectureTaken = () => {
         }
 
 
- 
+
 
         if (id) {
             try {
@@ -166,10 +167,12 @@ const LectureTaken = () => {
     };
 
     async function gettakedata(params) {
-        axios.post(`${BASE_URL}/geteditlecturetaken`, { Takeid: lecturetakenid })
+        axios.post(`${BASE_URL}/geteditlecturetaken`, { Takeid: params || lecturetakenid })
             .then((res) => {
                 console.log(res)
                 setStudentdata(res.data)
+
+             
             })
     }
 
@@ -254,8 +257,8 @@ const LectureTaken = () => {
             }
         }
 
-        
-   
+
+
 
 
 
@@ -350,7 +353,7 @@ const LectureTaken = () => {
 
 
 
-   const Navigate = useNavigate()
+    const Navigate = useNavigate()
 
 
     const handleSubmit = async (e) => {
@@ -387,7 +390,8 @@ const LectureTaken = () => {
                 .then((res) => {
                     console.log(res.data)
                     alert("Data submitted successfully")
-                    Navigate('/lecturetaken')
+                    gettakedata(res.data.TakeId)
+                    setHide(true)
                 })
 
 
@@ -408,8 +412,6 @@ const LectureTaken = () => {
 
 
 
-
-
     const onhandleChange = (e) => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
@@ -417,23 +419,82 @@ const LectureTaken = () => {
 
     const handleSubmitTable = async (e) => {
 
-      setupdateLoding(true)
+        setupdateLoding(true)
 
 
         try {
             const response = await axios.post(`${BASE_URL}/update_lecture_child`, studentdata);
-            if(response){
+            if (response) {
                 setupdateLoding(false)
                 alert("Data updated successfully")
                 Navigate('/lecturetaken')
             }
-         
+
 
         } catch (error) {
             console.error('Error saving data', error);
             // Handle the error
         }
     };
+
+    const handleImport = () => {
+        
+        const studentIds = studentdata.map((item) => item.Student_Id);
+
+        const url = `http://172.16.1.40:84/api/v2/WebAPI/GetDeviceLogs?APIKey=575714112428&FromDate=2024-11-29&ToDate=2024-11-29`;
+
+        axios.get(url)
+            .then((res) => {
+                const logdata = res.data;
+
+                // Function to format the date
+                const formatLogDate = (logDate) => {
+                    const date = new Date(logDate);
+                    let hours = date.getHours();
+                    const minutes = date.getMinutes().toString().padStart(2, "0");
+                    const ampm = hours >= 12 ? "PM" : "AM";
+                    hours = hours % 12 || 12; // Convert 0 to 12 for midnight
+                    return `${hours}:${minutes} ${ampm}`;
+                };
+
+                // Group logs by EmployeeCode
+                const groupedLogs = studentIds.reduce((acc, id) => {
+                    acc[id] = logdata
+                        .filter((item) => Number(item.EmployeeCode) === id)
+                        .sort((a, b) => new Date(a.LogDate) - new Date(b.LogDate)); // Sort logs by date
+                    return acc;
+                }, {});
+
+                // Map student data to include In_Time and Out_Time
+                const updatedStudentData = studentdata.map((student) => {
+                    const logs = groupedLogs[student.Student_Id] || [];
+
+                    return {
+                        ...student,
+                        In_Time: logs.length > 0 ? formatLogDate(logs[0].LogDate) : null, // First log
+                        Out_Time: logs.length > 1 ? formatLogDate(logs[logs.length - 1].LogDate) : null, // Last log
+                    };
+                });
+
+
+                // Update your state with the formatted data
+                setStudentdata(updatedStudentData);
+
+                setStudentdata((prevData) =>
+                    prevData.map((item) => ({
+                        ...item,
+                        Student_Atten: item.In_Time ? "Present" : "Absent",
+                    }))
+                );
+            })
+            .catch((err) => {
+                console.error('Error fetching data:', err);
+            });
+
+
+    };
+
+
 
 
 
@@ -463,9 +524,9 @@ const LectureTaken = () => {
                                                     <div className='row'>
                                                         <div className="form-group col-lg-6 ">
                                                             <label for="exampleFormControlSelect1">Course<span className="text-danger">*</span></label>
-                                                            <select className="form-control form-control-lg" 
-                                                            id="exampleFormControlSelect1" name='course' 
-                                                            value={courseid} onChange={(e) => getbatch(e.target.value)} >
+                                                            <select className="form-control form-control-lg"
+                                                                id="exampleFormControlSelect1" name='course'
+                                                                value={courseid} onChange={(e) => getbatch(e.target.value)} >
 
                                                                 <option >Select Course</option>
 
@@ -722,9 +783,12 @@ const LectureTaken = () => {
 
 
                                             <div className='row p-2 justify-content-end'>
+                                                <button className='mr-2 btn btn-primary' onClick={handleImport}>Import</button>
+                                                {/* <button className='col-2'>close</button> */}
                                                 <button className='mr-2 btn btn-primary' style={{ float: "right" }} onClick={handleSubmit}>Save</button>
                                                 {/* <button className='col-2'>close</button> */}
                                             </div>
+
 
                                         </div>
 
@@ -742,7 +806,7 @@ const LectureTaken = () => {
 
 
 
-                                                        <table class="table table-bordered">
+                                                        <table class="table table-bordered p-0">
                                                             <thead>
                                                                 <tr>
                                                                     <th>
@@ -788,23 +852,27 @@ const LectureTaken = () => {
 
                                                                             </td>
                                                                             <td>
-                                                                                <select class="form-control form-control-lg" name="Student_Reaction" onChange={(e) => handleInputChange(index, e)} value={item.Student_Reaction} id="exampleFromControlSelect1" >
-
-                                                                                    <option>Select</option>
-                                                                                    <option value='excellent'>excellent</option>
-                                                                                    <option value='verygood' >Verygood</option>
-                                                                                    <option value='good'>Good</option>
-                                                                                    <option value='satisfactory'>Satisfactory</option>
-                                                                                    <option value='unsatisfactory'>Unsatisfactory</option>
-
+                                                                                <select
+                                                                                    className="form-control form-control-lg"
+                                                                                    name="Student_Reaction"
+                                                                                    onChange={(e) => handleInputChange(index, e)}
+                                                                                    value={ item.Student_Reaction} 
+                                                                                    id="exampleFromControlSelect1"
+                                                                                >
+                                                                                    <option value="">Select</option>
+                                                                                    <option value="0">Excellent</option>
+                                                                                    <option value="1">Very Good</option>
+                                                                                    <option value="2">Good</option>
+                                                                                    <option value="3">Satisfactory</option>
+                                                                                    <option value="4">Unsatisfactory</option>
                                                                                 </select>
+
                                                                             </td>
                                                                             <td>
                                                                                 <>
                                                                                     <select class="form-control form-control-lg" value={item.Student_Atten} onChange={(e) => handleInputChange(index, e)} name='Student_Atten' id="exampleFromControlSelect1" >
 
                                                                                         <option>Select</option>
-
                                                                                         <option value='Present'>Present</option>
                                                                                         <option value='Absent'>Absent</option>
 
@@ -816,27 +884,16 @@ const LectureTaken = () => {
                                                                             <td>
                                                                                 <div class="form-group ">
                                                                                     <label for="exampleFormControlSelect1"></label>
-                                                                                    {/* <input type="time" class="form-control" id="exampleInputUsername1" name='In_Time' onChange={(e) => handleInputChange(index, e)} value={item.In_Time} /> */}
+                                                                                    <input type="text" class="form-control" id="exampleInputUsername1" name='In_Time' onChange={(e) => handleInputChange(index, e)} value={item.In_Time} />
 
-                                                                                    <select className="form-control form-control-lg" id="exampleFormControlSelect1" name='In_Time' value={item.In_Time}  onChange={(e) => handleInputChange(index, e)}  >
 
-                                                                                        <option>Select Time</option>
-                                                                                        {time.map((item) => {
-
-                                                                                            return (
-                                                                                                <option value={item.Timing}>{item.Timing}</option>
-                                                                                            )
-
-                                                                                        })}
-
-                                                                                    </select>
 
                                                                                 </div>
                                                                             </td>
                                                                             <td>
                                                                                 <div class="form-group ">
                                                                                     <label for="exampleFormControlSelect1"></label>
-                                                                                    <input type="time" class="form-control" id="exampleInputUsername1"
+                                                                                    <input type="text" class="form-control" id="exampleInputUsername1"
                                                                                         name='Out_Time' onChange={(e) => handleInputChange(index, e)} value={item.Out_Time} />
 
                                                                                 </div>

@@ -100,7 +100,7 @@ const PerssonalInfo = () => {
         axios.post(`${BASE_URL}/getBtachwiseamount`, param)
             .then((res) => {
                 if (res.data[0]) {
-                    setAmount(res.data[0].total_inr)
+                    // setAmount(res.data[0].total_inr)
 
                 }
             })
@@ -140,10 +140,10 @@ const PerssonalInfo = () => {
             .then((res) => {
                 console.log(res)
 
-                // if(res.data && res.data[0].upload_image){
+                if(res.data && res.data[0].upload_image){
 
-                //     setProfile(res.data[0].upload_image)
-                // }
+                    setProfile(res.data[0].upload_image)
+                }
             })
     }
 
@@ -175,6 +175,7 @@ const PerssonalInfo = () => {
         setbatchcode(data[0].Batch_Code)
         getBatchwiseamount(data[0].Batch_Code)
         setBatchId(data[0].Batch_Id)
+        setAmount(data[0].INR_Total)
 
         console.log(data[0].Permanent_Country)
         setPersonalInfo(prevState => ({
@@ -303,7 +304,7 @@ const PerssonalInfo = () => {
                 // Fetch the existing student count for the batch
                 const countResponse = await axios.post(`${BASE_URL}/getStudentCount`, data);
                 const existingCount = countResponse.data[0].total + 1;
-                console.log(existingCount)
+
 
                 // Generate the student code
                 const year = new Date().getFullYear().toString().slice(2);
@@ -644,7 +645,7 @@ const PerssonalInfo = () => {
                                                 </div>
 
                                                 <div className='student-img text-center'>
-                                                    <img style={{ width: "150px" }} src={`${IMG_URL}/` + profilephoto} alt='' />
+                                                    <img style={{ width: "150px" }} src={`${IMG_URL}/${admissionid}/` + profilephoto} alt='' />
                                                 </div>
 
                                             </div>

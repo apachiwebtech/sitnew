@@ -21,7 +21,7 @@ const Batch = () => {
 
     const getAnnualData = async () => {
         try {
-            const res = await axios.get(`${BASE_URL}/getannualbatch`);
+            const res = await axios.get(`${BASE_URL}/getbatchlisting`);
             setAnnulBatch(res.data);
             // Cache data in localStorage
             localStorage.setItem(CACHE_KEY, JSON.stringify({

@@ -8,6 +8,60 @@ import { Link } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import Loader from "./Loader";
+import { styled } from '@mui/material/styles';
+export const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
+    border: 0,
+    color: 'rgba(255,255,255,0.85)',
+    fontFamily: [
+        '-apple-system',
+        'BlinkMacSystemFont',
+        '"Segoe UI"',
+        'Roboto',
+        '"Helvetica Neue"',
+        'Arial',
+        'sans-serif',
+        '"Apple Color Emoji"',
+        '"Segoe UI Emoji"',
+        '"Segoe UI Symbol"',
+    ].join(','),
+    WebkitFontSmoothing: 'auto',
+    letterSpacing: 'normal',
+    '& .MuiDataGrid-columnsContainer': {
+        backgroundColor: '#1d1d1d',
+        ...theme.applyStyles('light', {
+            backgroundColor: '#fafafa',
+        }),
+    },
+    '& .MuiDataGrid-iconSeparator': {
+        display: 'none',
+    },
+    '& .MuiDataGrid-columnHeader, .MuiDataGrid-cell': {
+        borderRight: '1px solid #303030',
+        ...theme.applyStyles('light', {
+            borderRightColor: '#f0f0f0',
+        }),
+    },
+    '& .MuiDataGrid-columnsContainer, .MuiDataGrid-cell': {
+        borderBottom: '1px solid #303030',
+        ...theme.applyStyles('light', {
+            borderBottomColor: '#f0f0f0',
+        }),
+    },
+    '& .MuiDataGrid-cell': {
+        color: 'rgba(255,255,255,0.65)',
+        ...theme.applyStyles('light', {
+            color: 'rgba(0,0,0,.85)',
+        }),
+    },
+    '& .MuiPaginationItem-root': {
+        borderRadius: 0,
+    },
+   
+
+    ...theme.applyStyles('light', {
+        color: 'rgba(0,0,0,.85)',
+    }),
+}));
 
 const InquiryListing = () => {
 
@@ -17,12 +71,12 @@ const InquiryListing = () => {
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const label = { inputProps: { 'aria-label': 'Color switch demo' } };
-    const [loading , setLoading] = useState(true)
+    const [loading, setLoading] = useState(true)
     const [inquiryData, setInquiryData] = useState([]);
 
     const [value, setValue] = useState({
-      from_date:"",
-      to_date:""
+        from_date: "",
+        to_date: ""
     })
 
 
@@ -54,48 +108,48 @@ const InquiryListing = () => {
 
 
     const handleSubmit = (e) => {
-      e.preventDefault()
-      if ( value.from_date || value.to_date ) {
+        e.preventDefault()
+        if (value.from_date || value.to_date) {
 
-      }else{
-        alert('Nothing Is Select')
-        return
-      }
-      if (value.from_date) {
-        if (value.to_date) {
-
-        }else{
-          alert("Please select to date")
-          return
-
+        } else {
+            alert('Nothing Is Select')
+            return
         }
-      }else{
-        if (value.to_date) {
-          alert("Please select from date")
-          return
-        }
-      }
-      setLoading(true)
-      const data = {
-        from_date : value.from_date,
-        to_date : value.to_date
-      }
+        if (value.from_date) {
+            if (value.to_date) {
 
-      axios.post(`${BASE_URL}/getfilterinqury`, data)
-      .then((res) => {
-         console.log(res)
-         setInquiryData(res.data)
-         setLoading(false)
-         setUid([])
-         setValue({
-          from_date: '',
-          to_date: ''
-       })
-      })
-      .catch((err) => {
-          console.log(err)
-          setLoading(false)
-      })
+            } else {
+                alert("Please select to date")
+                return
+
+            }
+        } else {
+            if (value.to_date) {
+                alert("Please select from date")
+                return
+            }
+        }
+        setLoading(true)
+        const data = {
+            from_date: value.from_date,
+            to_date: value.to_date
+        }
+
+        axios.post(`${BASE_URL}/getfilterinqury`, data)
+            .then((res) => {
+                console.log(res)
+                setInquiryData(res.data)
+                setLoading(false)
+                setUid([])
+                setValue({
+                    from_date: '',
+                    to_date: ''
+                })
+            })
+            .catch((err) => {
+                console.log(err)
+                setLoading(false)
+            })
 
     }
 
@@ -149,12 +203,12 @@ const InquiryListing = () => {
 
     function CustomToolbar() {
         return (
-          <GridToolbarContainer>
-            {/* <GridToolbarExport /> */}
-            <GridToolbarFilterButton />
-          </GridToolbarContainer>
+            <GridToolbarContainer>
+                {/* <GridToolbarExport /> */}
+                <GridToolbarFilterButton />
+            </GridToolbarContainer>
         );
-      }
+    }
 
 
     const columns = [
@@ -168,71 +222,103 @@ const InquiryListing = () => {
             width: 50,
             filterable: false,
         },
-        { field: 'Student_Name', headerName: 'Student Name',  width : 200 , renderCell:(params) =>{
-            return(
-                <>
-                  {params.row.IsUnread == 0 ?<p className ="text-danger" >{params.row.Student_Name}</p> : <p>{params.row.Student_Name}</p> }
-                </>
-            )
-        } },
-        { field: 'Course_Name', headerName: 'Course Name',  width : 150 , renderCell:(params) =>{
-            return(
-                <>
-                  {params.row.IsUnread == 0 ?<p className ="text-danger" >{params.row.Course_Name}</p> : <p>{params.row.Course_Name}</p> }
-                </>
-            )
-        }},
-        { field: 'inquiry_DT', headerName: 'Inquiry Date', width : 100 , renderCell:(params) =>{
-            return(
-                <>
-                  {params.row.IsUnread == 0 ?<p className ="text-danger" >{params.row.inquiry_DT}</p> : <p>{params.row.inquiry_DT}</p> }
-                </>
-            )
-        }},
-        { field: 'discussion', headerName: 'Discuss', width : 200 , renderCell:(params) =>{
-            return(
-                <>
-                  {params.row.IsUnread == 0 ?<p className ="text-danger" >{params.row.discussion}</p> : <p>{params.row.discussion}</p> }
-                </>
-            )
-        }},
-        { field: 'present_mobile', headerName: 'Mobile', width : 100 , renderCell:(params) =>{
-            return(
-                <>
-                  {params.row.IsUnread == 0 ?<p className ="text-danger" >{params.row.present_mobile}</p> : <p>{params.row.present_mobile}</p> }
-                </>
-            )
-        }},
-        { field: 'Email', headerName: 'Email', width : 100 , renderCell:(params) =>{
-            return(
-                <>
-                  {params.row.IsUnread == 0 ?<p className ="text-danger" >{params.row.Email}</p> : <p>{params.row.Email}</p> }
-                </>
-            )
-        }},
-        { field: 'Deciplin', headerName: 'Discipline',  width : 150 , renderCell:(params) =>{
-            return(
-                <>
-                  {params.row.IsUnread == 0 ?<p className ="text-danger" >{params.row.Deciplin}</p> : <p>{params.row.Deciplin}</p> }
-                </>
-            )
-        }},
-        { field: 'Inquiry_type', headerName: 'Inquiry type', width : 100 , renderCell:(params) =>{
-            return(
-                <>
-                  {params.row.IsUnread == 0 ?<p className ="text-danger" >{params.row.Inquiry_type}</p> : <p>{params.row.Inquiry_type}</p> }
-                </>
-            )
-        }},
-        { field: 'Status', headerName: 'Status', width : 150,renderCell: (params) => {
-            return (
-                <>
-                  {params.row.IsUnread == 0 ?<p className ="text-danger" >{params.row.Status}</p> : <p>{params.row.Status}</p> }
-                </>
-            )
-        }
+        {
+            field: 'Student_Name', headerName: 'Student Name', width: 150, renderCell: (params) => {
+                return (
+                    <>
+                        {params.row.IsUnread == 0 ? <p   className="text-danger font-12" >{params.row.Student_Name}</p> : <p  className="font-12">{params.row.Student_Name}</p>}
+                    </>
+                )
+            }
+        },
+        {
+            field: 'Course_Name', headerName: 'Course Name', width: 150, renderCell: (params) => {
+                return (
+                    <>
+                        {params.row.IsUnread == 0 ? <p className="text-danger font-12" >{params.row.Course_Name}</p> : <p className="font-12">{params.row.Course_Name}</p>}
+                    </>
+                )
+            }
+        },
+        {
+            field: 'inquiry_DT', headerName: 'Inquiry Date', width: 100, renderCell: (params) => {
+                return (
+                    <>
+                        {params.row.IsUnread == 0 ? <p className="text-danger font-12" >{params.row.inquiry_DT}</p> : <p className="font-12">{params.row.inquiry_DT}</p>}
+                    </>
+                )
+            }
+        },
+        {
+            field: "Discussion",
+            headerName: "Discussion",
+            width: 250,
+            renderCell: (params) => {
+              return (
+                <div
+                  style={{
+                    whiteSpace: "normal",
+                    wordWrap: "break-word",
+                    overflowWrap: "break-word", // Ensure long words break properly
+                    lineHeight: 1,
+               
+                  }}
+                >
+                  {params.row.IsUnread == 0 ? (
+                    <p className="text-danger font-12">{params.row.Discussion}</p>
+                  ) : (
+                    <p className="font-12">{params.row.Discussion}</p>
+                  )}
+                </div>
+              );
+            },
+          },
+        {
+            field: 'present_mobile', headerName: 'Mobile', width: 100, renderCell: (params) => {
+                return (
+                    <>
+                        {params.row.IsUnread == 0 ? <p className="text-danger font-12" >{params.row.present_mobile}</p> : <p className="font-12">{params.row.present_mobile}</p>}
+                    </>
+                )
+            }
+        },
+        {
+            field: 'Email', headerName: 'Email', width: 200, renderCell: (params) => {
+                return (
+                    <> 
+                        {params.row.IsUnread == 0 ? <p className="text-danger font-12" >{params.row.Email}</p> : <p className="font-12">{params.row.Email}</p>}
+                    </>
+                )
+            }
+        },
+        {
+            field: 'Deciplin', headerName: 'Discipline', width: 100, renderCell: (params) => {
+                return (
+                    <>
+                        {params.row.IsUnread == 0 ? <p className="text-danger font-12" >{params.row.Deciplin}</p> : <p className="font-12">{params.row.Deciplin}</p>}
+                    </>
+                )
+            }
+        },
+        {
+            field: 'Inquiry_type', headerName: 'Inquiry type', width: 100, renderCell: (params) => {
+                return (
+                    <>
+                        {params.row.IsUnread == 0 ? <p className="text-danger font-12" >{params.row.Inquiry_type}</p> : <p className="font-12">{params.row.Inquiry_type}</p>}
+                    </>
+                )
+            }
+        },
+        {
+            field: 'Status', headerName: 'Status', width: 150, renderCell: (params) => {
+                return (
+                    <>
+                        {params.row.IsUnread == 0 ? <p className="text-danger font-12" >{params.row.Status}</p> : <p className="font-12">{params.row.Status}</p>}
+                    </>
+                )
+            }
 
-         },
+        },
         {
             field: 'actions',
             type: 'actions',
@@ -248,24 +334,24 @@ const InquiryListing = () => {
             }
         },
     ];
- const onhandleChange = (e) => {
-    setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
-}
+    const onhandleChange = (e) => {
+        setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+    }
 
     const rowsWithIds = inquiryData.map((row, index) => ({ index: index + 1, ...row }));
 
 
-    const paginationModel = (param) =>{
-       console.log(param)
+    const paginationModel = (param) => {
+        console.log(param)
     }
 
     return (
 
         <div className="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
-           {loading &&  <Loader />}
+            {loading && <Loader />}
 
-            <div className="main-panel" style={{display : loading ? "none" : "block"}}>
+            <div className="main-panel" style={{ display: loading ? "none" : "block" }}>
 
                 <div className="content-wrapper">
 
@@ -274,65 +360,91 @@ const InquiryListing = () => {
                         <div className="col-lg-12">
                             <div className="">
                                 {/* <div className="card-body"> */}
-                                    <div className='d-flex justify-content-between gap-3' style={{ width: "100%", padding: "10px 0" }}>
+
+                                <div className="card" >
+                                    <div className='d-flex justify-content-between ' >
                                         <div >
                                             {/* <h4 class="card-title">List Of Inquiry</h4> */}
                                         </div>
+                                        <div className="m-2">
+
                                         <Link to='/onlineinquiry/inquiryform/:inquiryid'> <button className='btn btn-success'>Add +</button></Link>
+                                        </div>
 
 
                                     </div>
-                                    <div className="card" >
-                                      <div className="card-body">
-                                      <form class="forms-sample row py-3 " onSubmit={handleSubmit}>
-                                          <div class="form-group col-lg-3">
-                                            <label for="exampleInputUsername1">From Date <span className='text-danger'>*</span></label>
-                                            <input type="date" class="form-control" id="exampleInputUsername1" placeholder="from_date" name='from_date' onChange={onhandleChange}/>
-                                          </div>
-                                          <div class="form-group col-lg-3">
-                                            <label for="exampleInputUsername1">To Date <span className='text-danger'>*</span></label>
-                                            <input type="date" class="form-control" id="exampleInputUsername1" placeholder="to_date" name='to_date' onChange={onhandleChange}/>
-                                          </div>
-                                          <div className='d-flex align-items-center mt-3' >
-                                            <button type="submit" class="btn btn-sm btn-primary mr-2">Submit</button>
-                                            <button type='reset' onClick={()=>getInquiryData() } class="btn btn-sm btn-primary mr-2">Clear</button>
-                                          </div>
-                                        </form>
-                                      </div>
-                                    </div>
-
-                                    <div className="card">
-                                        <DataGrid
-                                            rows={rowsWithIds}
-                                            columns={columns}
-                                            disableColumnSelector
-                                            disableDensitySelector
-                                            rowHeight={37}
-                                            // pageSizeOptions={[5]}
-                                            // paginationMode="server"
-                                            onPaginationModelChange={paginationModel}
-                                            getRowId={(row) => row.id}
-                                            initialState={{
-                                                pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
-                                                },
-                                            }}
-                                            slots={{ toolbar: CustomToolbar }}
-                                            slotProps={{
-                                                toolbar: {
-                                                    showQuickFilter: true,
-                                                },
-                                            }}
-                                        />
-
-                                        {confirmationVisibleMap[cid] && (
-                                            <div className='confirm-delete'>
-                                                <p>Are you sure you want to delete?</p>
-                                                <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
-                                                <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
+                                    <div className="px-3">
+                                        <form class="forms-sample row py-1 " onSubmit={handleSubmit}>
+                                            <div class="form-group col-lg-3">
+                                                <label for="exampleInputUsername1">From Date <span className='text-danger'>*</span></label>
+                                                <input type="date" class="form-control" id="exampleInputUsername1" placeholder="from_date" name='from_date' onChange={onhandleChange} />
                                             </div>
-                                        )}
+                                            <div class="form-group col-lg-3">
+                                                <label for="exampleInputUsername1">To Date <span className='text-danger'>*</span></label>
+                                                <input type="date" class="form-control" id="exampleInputUsername1" placeholder="to_date" name='to_date' onChange={onhandleChange} />
+                                            </div>
+                                            <div className='d-flex align-items-center mt-3' >
+                                                <button type="submit" class="btn btn-sm btn-primary mr-2">Submit</button>
+                                                <button type='reset' onClick={() => getInquiryData()} class="btn btn-sm btn-primary mr-2">Clear</button>
+                                            </div>
+                                        </form>
+
+                                        
                                     </div>
+                                </div>
+
+                                <div className="card">
+                                    <StyledDataGrid
+                                        rows={rowsWithIds}
+                                        columns={columns}
+                                        disableColumnSelector
+                                        disableDensitySelector
+                                        rowHeight={40}
+                                        // pageSizeOptions={[5]}
+                                        // paginationMode="server"
+                                        onPaginationModelChange={paginationModel}
+                                        getRowId={(row) => row.id}
+                                        initialState={{
+                                            pagination: {
+                                                paginationModel: { pageSize: 10, page: 0 },
+                                            },
+                                        }}
+                                        slots={{ toolbar: CustomToolbar }}
+                                        slotProps={{
+                                            toolbar: {
+                                                showQuickFilter: true,
+                                            },
+                                        }}
+
+                                        // sx={{
+                                        //     "& .MuiDataGrid-cell": {
+                                        //       borderRight: "1px solid #ccc", // Add border to cells
+                                        //     },
+                                        //     "& .MuiDataGrid-columnHeaders": {
+                                        //       borderBottom: "2px solid #000", // Add border below header
+                                        //     },
+                                        //   }}
+
+                                        sx={{
+                                            "& .MuiDataGrid-cell": {
+                                              whiteSpace: "normal",
+                                              wordWrap: "break-word",
+                                              overflowWrap: "break-word",
+                                              lineHeight: 2,
+                                              display: "block",
+                                            },
+                                          }}
+                                   
+                                    />
+
+                                    {confirmationVisibleMap[cid] && (
+                                        <div className='confirm-delete'>
+                                            <p>Are you sure you want to delete?</p>
+                                            <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
+                                            <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
+                                        </div>
+                                    )}
+                                </div>
 
 
 

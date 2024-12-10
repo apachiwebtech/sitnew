@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import Loader from "./Loader";
+import { StyledDataGrid } from "./StyledDataGrid";
 
 const LectureTakenListing = () => {
 
@@ -17,31 +18,55 @@ const LectureTakenListing = () => {
     const label = { inputProps: { 'aria-label': 'Color switch demo' } };
     const [lecturetakendata, setlecturetakendata] = useState([]);
     const [loading, setLoading] = useState(true)
+    const [page, setPage] = useState(0); // Current page
+    const [pageSize, setPageSize] = useState(10); // Number of records per page
+    const [lastStudentId, setLastStudentId] = useState(null);
 
 
 
 
+    const getLectureTakenData = async () => {
+        setLoading(true); // Set loading to true before the request
 
+        const data = {
+            page: page,
+            pageSize: pageSize
+        };
 
-    const getInquiryData = async () => {
-        const response = await fetch(`${BASE_URL}/getlecturetakendata`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
+        try {
+            const response = await fetch(`${BASE_URL}/getlecturetakendata`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data) // Serialize the data to JSON
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
             }
-        });
-        const data = await response.json();
-        setLoading(false)
 
-        setlecturetakendata(data);
-    }
+            const newdata = await response.json();
+            setlecturetakendata(newdata.data);
+            setLastStudentId(newdata.lastTakeId);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        } finally {
+            setLoading(false); // Ensure loading is set to false after the request
+        }
+    };
+
 
 
     useEffect(() => {
-        getInquiryData()
+        // getLectureTakenData()
         setError({})
         setUid([])
     }, [])
+
+    useEffect(() => {
+        getLectureTakenData(page, pageSize);
+    }, [page, pageSize]);
 
     const handleClick = (id) => {
         setCid(id)
@@ -70,8 +95,8 @@ const LectureTakenListing = () => {
 
         axios.post(`${BASE_URL}/new_delete_data`, data)
             .then((res) => {
-                getInquiryData()
-                
+                getLectureTakenData()
+
             })
             .catch((err) => {
                 console.log(err)
@@ -90,7 +115,7 @@ const LectureTakenListing = () => {
         axios.post(`${BASE_URL}/data_status`, { status: newval, Inquiry_Id: Inquiry_Id, table_name: "awt_lecturetaken" })
             .then((res) => {
                 console.log(res)
-                getInquiryData()
+                getLectureTakenData()
                 setLoading(false)
             })
     }
@@ -140,10 +165,10 @@ const LectureTakenListing = () => {
 
         <div className="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
-            
-            {loading && <Loader  />}
 
-            <div className="main-panel" style={{display : loading ? "nonr" : "Block"}}>
+            {loading && <Loader />}
+
+            <div className="main-panel" style={{ display: loading ? "nonr" : "Block" }}>
 
                 <div className="content-wrapper">
 
@@ -162,26 +187,47 @@ const LectureTakenListing = () => {
                                     </div>
 
                                     <div>
-                                        <DataGrid
+                                        <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
+                                            pageSize={pageSize}
+                                            page={page}
                                             disableColumnFilter
                                             disableColumnSelector
                                             disableDensitySelector
                                             rowHeight={37}
-                                            getRowId={(row,index) => row.Take_Id}
+                                            getRowId={(row, index) => row.Take_Id}
                                             initialState={{
                                                 pagination: {
                                                     paginationModel: { pageSize: 10, page: 0 },
                                                 },
                                             }}
-                                            // slots={{ toolbar: GridToolbar }}
-                                            // slotProps={{
-                                            //     toolbar: {
-                                            //         showQuickFilter: true,
-                                            //     },
-                                            // }}
+                                        // slots={{ toolbar: GridToolbar }}
+                                        // slotProps={{
+                                        //     toolbar: {
+                                        //         showQuickFilter: true,
+                                        //     },
+                                        // }}
                                         />
+
+                                        <div className='float-right py-2'>
+                                            <button
+                                                onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
+                                                disabled={page === 0} // Disable the "Previous" button on the first page
+                                            >
+                                                Previous
+                                            </button>
+
+                                            <span>Page {page + 1}</span>
+
+                                            <button
+                                                onClick={() => setPage((prev) => prev + 1)}
+                                                disabled={!lastStudentId} // Disable the "Next" button if there is no lastStudentId (i.e., no data)
+                                            >
+                                                Next
+                                            </button>
+                                        </div>
+
 
                                         {confirmationVisibleMap[cid] && (
                                             <div className='confirm-delete'>

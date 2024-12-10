@@ -2,7 +2,7 @@ import { mdiAccountGroupOutline, mdiAccountOutline, mdiCartOutline, mdiCircleMed
 import Icon from '@mdi/react';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { Collapse } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Sidebar.css';
 import { mdiAccountTie } from '@mdi/js';
@@ -12,9 +12,13 @@ import { mdiChartTree } from '@mdi/js';
 import { mdiClipboardFileOutline } from '@mdi/js';
 import { mdiLayersTripleOutline } from '@mdi/js';
 import { mdiBookmarkMultipleOutline } from '@mdi/js';
-
+import { SidebarContext } from '../context/SideBarContext';
 
 const Header = ({click}) => {
+
+  const { isSidebarOpen, toggleSidebar,setSidebarOpen } = useContext(SidebarContext);
+
+
 
   const [openStates, setOpenStates] = useState({
     order: false,
@@ -44,12 +48,13 @@ const Header = ({click}) => {
   };
 
   return (
-    <nav className= {`sidebar sidebar-offcanvas ${click ? 'col-lg-2' :''}`}  id="sidebar" wordBreak='break-word' overflowWrap='break-word'>
+    <nav className= {`sidebar sidebar-offcanvas ${isSidebarOpen ? 'col-lg-1' :''}`}  id="sidebar" wordBreak='break-word' overflowWrap='break-word'>
+      <button className='btn btn-primary' onClick={() =>setSidebarOpen(!isSidebarOpen)}>Click</button>
       <ul className="nav p-2">
 
         <li className="nav-item">
           <Link className="nav-link" to="/">
-            <Icon path={mdiHome} size={1} className='mx-3' />
+            <Icon path={mdiHome} size={1} className={`mx-3 ${isSidebarOpen ? '' : ''}`}  />
             <span className="menu-title">Dashboard</span>
             {/* <div className="badge badge-info badge-pill">2</div> */}
           </Link>

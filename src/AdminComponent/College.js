@@ -27,9 +27,6 @@ const College = () => {
 
 
 
-
-
-
     const [value, setValue] = useState({
         college_name: "" || uid.college_name,
         university: "" || uid.university,
