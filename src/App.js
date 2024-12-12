@@ -208,9 +208,12 @@ import MyDocument3 from './AdminComponent/MyDocument3.js';
 import AddAssets from './AdminComponent/AddAssets.js';
 import Taxmaster from './AdminComponent/Taxmaster.js';
 import AddAdminUSer from './AdminComponent/AddAdminUSer.jsx';
+import AcademicQualificationss from './AdminComponent/AcademicQualificaton.js';
 
 
 const Router = createBrowserRouter([
+
+
   {
     path: '/weblog',
     element: <WebLogin />
@@ -1012,6 +1015,11 @@ const Router = createBrowserRouter([
       {
         path: '/addcollegeinfo',
         element: <AddCollegeInfo />
+      },
+
+      {
+        path: '/academicqualification',
+        element: <AcademicQualificationss />
       }
 
 
@@ -1081,6 +1089,8 @@ function WebApp() {
     </>
 
   );
+
+
 }
 
 
