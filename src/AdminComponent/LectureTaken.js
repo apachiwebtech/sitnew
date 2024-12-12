@@ -441,9 +441,13 @@ const LectureTaken = () => {
         
         const studentIds = studentdata.map((item) => item.Student_Id);
 
-        const url = `http://172.16.1.40:84/api/v2/WebAPI/GetDeviceLogs?APIKey=575714112428&FromDate=2024-11-29&ToDate=2024-11-29`;
+        const data = {
+            date : value.lecturedate
+        }
 
-        axios.get(url)
+        const url = `${BASE_URL}/getAttendence`;
+
+        axios.post(url , data)
             .then((res) => {
                 const logdata = res.data;
 

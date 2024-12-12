@@ -375,7 +375,7 @@ const LecturePlan = () => {
                       getRowId={(row) => row.id}
                       initialState={{
                         pagination: {
-                          paginationModel: { pageSize: 5, page: 0 },
+                          paginationModel: { pageSize:100, page: 0 },
                         },
                       }}
                       slots={{ toolbar: GridToolbar }}

@@ -130,7 +130,7 @@ const StudentBatch = () => {
         axios.post(`${BASE_URL}/getbatchwisestudent`, { batch_code: value.batch })
         .then((res) => {
     
-          Blob(res.data)
+          Blob([{batchid :value.batch, students: res.data}])
         })
        
     }

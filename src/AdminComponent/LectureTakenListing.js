@@ -8,6 +8,14 @@ import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import Loader from "./Loader";
 import { StyledDataGrid } from "./StyledDataGrid";
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
+import InputLabel from '@mui/material/InputLabel';
+import { Button, Switch } from '@mui/material';
+import _debounce from 'lodash.debounce';
 
 const LectureTakenListing = () => {
 
@@ -21,9 +29,14 @@ const LectureTakenListing = () => {
     const [page, setPage] = useState(0); // Current page
     const [pageSize, setPageSize] = useState(10); // Number of records per page
     const [lastStudentId, setLastStudentId] = useState(null);
-
-
-
+    const [searchwise, setSearchWise] = useState('')
+    const [searchdata, setSearchData] = useState('')
+    const [students, setStudents] = useState([]);
+    const [data, setData] = useState([])
+    const [searchtext, setText] = useState('')
+    const [expand, setPageExpand] = useState(false)
+    const [selectedStudent, setSelectedStudent] = React.useState(null);
+    const [totalstudent, setTotalStudent] = useState('')
 
     const getLectureTakenData = async () => {
         setLoading(true); // Set loading to true before the request
@@ -57,6 +70,97 @@ const LectureTakenListing = () => {
     };
 
 
+    //Search Section
+
+    async function getstudents() {
+
+        axios.post(`${BASE_URL}/getAdmittedStudent`, { param: searchtext })
+            .then((res) => {
+                setData(res.data)
+            })
+    }
+    async function getBatchcode() {
+
+
+        axios.post(`${BASE_URL}/getSearchLectureBatch`, { param: searchtext })
+            .then((res) => {
+                setData(res.data)
+            })
+    }
+
+    async function getEmail() {
+
+
+        axios.post(`${BASE_URL}/getSearchEmail`, { param: searchtext })
+            .then((res) => {
+                setData(res.data)
+            })
+    }
+
+    const onsearchformSumbit = (e) => {
+        e.preventDefault()
+
+        const data = {
+            searchwise: searchwise,
+            search: searchdata
+        }
+
+        axios.post(`${BASE_URL}/getlectureserchresult`, data)
+            .then((res) => {
+                setlecturetakendata(res.data)
+            })
+
+
+    }
+
+    const handlesearchselect = (value) => {
+        setSearchWise(value)
+
+
+        if (value == 'BatchWise') {
+            getBatchcode()
+        }
+        if (value == 'EmailWise') {
+            getEmail()
+        }
+    }
+
+    const handleSearchChange = (newValue) => {
+        setSelectedStudent(newValue); // Update state
+
+        if (searchwise == 'NameWise') {
+            setSearchData(newValue?.Student_Id)
+        }
+        if (searchwise == 'BatchWise') {
+            setSearchData(newValue?.Batch_code)
+        }
+        if (searchwise == 'EmailWise') {
+            setSearchData(newValue?.Email)
+        }
+
+
+
+    };
+
+    const handleInputChange = _debounce((newValue) => {
+        console.log(newValue)
+        setText(newValue)
+
+        if (searchwise == 'BatchWise') {
+            getBatchcode()
+        }
+        if (searchwise == 'NameWise') {
+            getstudents()
+
+        }
+        if (searchwise == 'EmailWise') {
+            getEmail()
+
+        }
+
+    }, 500);
+
+
 
     useEffect(() => {
         // getLectureTakenData()
@@ -87,25 +191,30 @@ const LectureTakenListing = () => {
 
 
     const handleDelete = (id) => {
-        const data = {
-            delete_id: id,
-            tablename: "lecture_taken_master",
-            column_name: 'Take_Id'
-        }
 
-        axios.post(`${BASE_URL}/new_delete_data`, data)
-            .then((res) => {
-                getLectureTakenData()
+        const confirm = window.confirm("Are you sure?")
 
-            })
-            .catch((err) => {
-                console.log(err)
-            })
 
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
+            const data = {
+                delete_id: id,
+                tablename: "lecture_taken_master",
+                column_name: 'Take_Id'
+            }
+
+            axios.post(`${BASE_URL}/new_delete_data`, data)
+                .then((res) => {
+                    getLectureTakenData()
+
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+
+            setConfirmationVisibleMap((prevMap) => ({
+                ...prevMap,
+                [id]: false,
+            }));
+        
     }
 
 
@@ -177,6 +286,87 @@ const LectureTakenListing = () => {
                         <div className="col-lg-12">
                             <div className="card">
                                 <div className="card-body">
+                                    <div className='row ' style={{ width: "100%", padding: "10px 0" }}>
+                                        <div className='col-lg-7 ' >
+                                            <form className='row align-items-center' onSubmit={onsearchformSumbit} >
+                                                {/* <h4 class="card-title">Student Information</h4> */}
+
+                                                <div class="form-group col-lg-3">
+
+                                                    <FormControl fullWidth size="small">
+                                                        <InputLabel id="demo-simple-select-label">Select Search</InputLabel>
+                                                        <Select
+                                                            labelId="demo-simple-select-label"
+                                                            id="demo-simple-select"
+                                                            value={searchwise}
+                                                            label="Select Search"
+                                                            onChange={(e) => handlesearchselect(e.target.value)}
+
+                                                        >
+                                                            <MenuItem value={`Select`}>Select</MenuItem>
+                                                            <MenuItem value={`NameWise`}>Name Wise</MenuItem>
+                                                            <MenuItem value={`BatchWise`}>Batch Wise</MenuItem>
+                                                            <MenuItem value={`CourseWise`}>Course Wise</MenuItem>
+                                                            <MenuItem value={`EmailWise`}>Email Wise</MenuItem>
+                                                            <MenuItem value={`MobileWise`}>Mobile Wise</MenuItem>
+                                                        </Select>
+                                                    </FormControl>
+                                                </div>
+
+                                                <div class="form-group col-lg-5">
+
+                                                    <Autocomplete
+                                                        size="small"
+                                                        disablePortal
+                                                        options={data} // Pass the array of student objects
+                                                        getOptionLabel={(option) =>
+                                                            searchwise === 'NameWise'
+                                                                ? option.Student_Name
+                                                                : searchwise === 'BatchWise'
+                                                                    ? option.Batch_code
+                                                                    : searchwise === 'EmailWise' ? option.Email : '' // Provide a default fallback
+                                                        } // Dynamically display the label based on `searchdata`
+                                                        value={selectedStudent} // Use a state to manage the selected value
+                                                        onChange={(e, newValue) => handleSearchChange(newValue)} // `newValue` is the selected object
+                                                        onInputChange={(e, newInputValue) => handleInputChange(newInputValue)} // Capture typed input
+                                                        renderOption={(props, option) => (
+                                                            <li {...props} key={option.Student_Id}>
+                                                                {searchwise === 'NameWise'
+                                                                    ? option.Student_Name
+                                                                    : searchwise === 'BatchWise'
+                                                                        ? option.Batch_code
+                                                                        : searchwise === 'EmailWise' ? option.Email : ''} {/* Dynamically render the option */}
+                                                            </li>
+                                                        )}
+                                                        renderInput={(params) => <TextField {...params} label="Enter.." />} // Render the input field
+                                                    />
+
+
+
+
+                                                </div>
+
+                                                <div class="form-group col-lg-2">
+
+                                                    <Button type='submit' onClick={() => {
+                                                        setPageExpand()
+                                                    }} variant="contained">Search</Button>
+                                                </div>
+                                                <div className='form-group col-lg-2'>
+                                                    <Button type='submit' onClick={() => {
+                                                        window.location.reload()
+                                                    }} variant="contained">Clear</Button>
+                                                </div>
+                                            </form>
+                                        </div>
+
+                                        <div className='col-lg-5'>
+                                            <p className='float-right'><b>Total Student :</b>{totalstudent}</p>
+                                        </div>
+
+
+
+                                    </div>
                                     <div className='d-flex justify-content-between gap-3' style={{ width: "100%", padding: "10px 0" }}>
                                         <div >
                                             <h4 class="card-title">Add Lecture Details</h4>
@@ -192,6 +382,7 @@ const LectureTakenListing = () => {
                                             columns={columns}
                                             pageSize={pageSize}
                                             page={page}
+                                            pagination={false}
                                             disableColumnFilter
                                             disableColumnSelector
                                             disableDensitySelector
@@ -199,7 +390,7 @@ const LectureTakenListing = () => {
                                             getRowId={(row, index) => row.Take_Id}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 100, page: 0 },
                                                 },
                                             }}
                                         // slots={{ toolbar: GridToolbar }}

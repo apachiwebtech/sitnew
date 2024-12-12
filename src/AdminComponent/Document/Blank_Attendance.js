@@ -66,7 +66,10 @@ const styles = StyleSheet.create({
 const BlankAttendance = (props) => {
 
 
-  const data = props.data
+  const data = props.data[0].students;
+  const batch_id = props.data[0].batchid
+
+  console.log(props,"%%%")
 
 
   return (
@@ -119,7 +122,7 @@ const BlankAttendance = (props) => {
               </View>
             </View>
             <View style={{ flex: "3" }}>
-              <Text style={{ color: "black", borderLeft: "1px solid black", padding: "0px 10px" }}>01159
+              <Text style={{ color: "black", borderLeft: "1px solid black", padding: "0px 10px" }}>{batch_id}
               </Text>
             </View>
 
@@ -208,10 +211,10 @@ const BlankAttendance = (props) => {
                   padding: "4px 2px",
                 }}
               >
-                {item.name} {/* Replace with the actual field */}
+                {item.Student_Id} {/* Replace with the actual field */}
               </Text>
               <Text style={{ color: "red", padding: "4px 2px" }}>
-                {item.detail} {/* Replace with the actual field */}
+                {item.Student_Name} {/* Replace with the actual field */}
               </Text>
             </View>
             {/* Ratings Section */}
