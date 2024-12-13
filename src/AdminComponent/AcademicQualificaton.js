@@ -1,188 +1,97 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
-
+import { Link, useParams } from 'react-router-dom';
 
 const AcademicQualification = () => {
-
-    const [brand, setBrand] = useState([])
-    const [vendordata, setVendorData] = useState([])
-    const [uid, setUid] = useState([])
-    const [cid, setCid] = useState("")
-    const [error, setError] = useState({})
-    const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
+    const { feedback1id } = useParams();
 
 
 
     const [value, setValue] = useState({
-        student: "" || uid.student,
-        book: "" || uid.book,
-        bookcode: "" || uid.bookcode,
-        issuedate: "" || uid.issuedate,
-        returndate: "" || uid.status,
-
-
+        
+        qualification: '',
+        institute: '',
+        passingyear: '',
+        greadpercentage: '',
 
     })
 
-    useEffect(() => {
-        setValue({
-            student: uid.student,
-            book: uid.book,
-            bookcode: uid.bookcode,
-            issuedate: uid.issuedate,
-            returndate: uid.returndate,
 
 
-        })
-    }, [uid])
+
+    async function getStudentDetail() {
+        const response = await fetch(`${BASE_URL}/studentDetail`, {
+            method: 'POST',
+            body: JSON.stringify({
+                id: feedback1id,
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        const data = await response.json();
 
 
-    // const validateForm = () => {
-    //     let isValid = true
-    //     const newErrors = {}
-
-
-    //    if (!value.student) {
-    //     isValid = false;
-    //     newErrors.student = "Student is Required"
-    //    }
-    //     if (!value.book) {
-    //         isValid = false;
-    //         newErrors.book = "Book is Required"
-    //     }
-    //     setError(newErrors)
-    //     return isValid
-    // }
-
-
-    async function getBookData() {
-
-        axios.post(`${BASE_URL}/vendor_details`)
-            .then((res) => {
-                console.log(res.data)
-                setBrand(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
+        setValue(prevState => ({
+            ...prevState,
+            
+            qualification: data[0].qualification,
+            institute: data[0].institute,
+            passingyear: data[0].passingyear,
+            greadpercentage: data[0].greadpercentage,
+        }))
     }
 
-
-
-    async function getBookData() {
-        const data = {
-            tablename: "awt_bookissue"
-        }
-        axios.post(`${BASE_URL}/get_data`, data)
-            .then((res) => {
-                console.log(res.data)
-                setVendorData(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
-
-    useEffect(() => {
-        getBookData()
-        value.title = ""
-        setError({})
-        setUid([])
-    }, [])
-
-    const handleClick = (id) => {
-        setCid(id)
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: true,
-        }));
-    };
-
-    const handleCancel = (id) => {
-        // Hide the confirmation dialog without performing the delete action
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
-    };
-
-    // const handleUpdate = (id) => {
-    //     const data = {
-    //         u_id: id,
-    //         tablename: "awt_bookissue"
-    //     }
-    //     axios.post(`${BASE_URL}/update_data`, data)
-    //         .then((res) => {
-    //             setUid(res.data[0])
-
-    //             console.log(res.data, "update")
-    //         })
-    //         .catch((err) => {
-    //             console.log(err)
-    //         })
-    // }
-
-    // const handleDelete = (id) => {
-    //     const data = {
-    //         cat_id: id,
-    //         tablename: "awt_bookissue"
-    //     }
-
-    //     axios.post(`${BASE_URL}/delete_data`, data)
-    //         .then((res) => {
-    //             getBookData()
-
-    //         })
-    //         .catch((err) => {
-    //             console.log(err)
-    //         })
-
-    //     setConfirmationVisibleMap((prevMap) => ({
-    //         ...prevMap,
-    //         [id]: false,
-    //     }));
-    // }
-
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
+        let response
+        
+        if (feedback1id == ":feedback1id") {
+            response = await fetch(`${BASE_URL}/add_feedback1`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    
+                    qualification: value.qualification,
+                    institute: value.institute,
+                    passingyear: value.passingyear,
+                    greadpercentage: value.greadpercentage,
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+        } else {
 
-        // if(validateForm()){
-        const data = {
+            response = await fetch(`${BASE_URL}/updatefeedbackid`, {
+                method: 'POST',
+                body: JSON.stringify({
 
-            student: value.student,
-            book: value.book,
-            bookcode: value.bookcode,
-            issuedate: value.issuedate,
-            returndate: value.returndate,
-            uid: uid.id
+                    
+                    qualification: value.qualification,
+                    institute: value.institute,
+                    passingyear: value.passingyear,
+                    greadpercentage: value.greadpercentage,
+
+
+
+
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
         }
 
 
-        axios.post(`${BASE_URL}/add_bookissue`, data)
-            .then((res) => {
-                console.log(res)
-                getBookData()
 
-            })
-            .catch((err) => {
-                console.log(err)
-            })
     }
-    // }
-
-
-
 
 
     const onhandleChange = (e) => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
-
-
-    const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
 
@@ -191,53 +100,148 @@ const AcademicQualification = () => {
             <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="row">
+                        <div class="d-flex">
+
+                            <div className='px-2 mx-2'><Link to="/faculty/:facultyid"><h4>Personal Information</h4></Link></div>
+                            <div className='px-2 mx-2'><Link to="/academicqualification"><h4>Academic Qualification</h4></Link></div>
+                            <div className='px-2 mx-2'><Link to="/addfacultymaster"><h4>Current Experience/Other Details</h4></Link></div>
+
+                            <div className='px-2 mx-2'><Link to="/facultyexperience"><h4>Total Experience and Documents</h4></Link></div>
+                            <div className='px-2 mx-2'><Link to="/facultydiscussion"><h4>Discussion</h4></Link></div>
+
+                        </div>
                         <div class="col-lg-12 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Acadamic Qualification</h4>
+                                    <h2 class="card-title titleback">Academic Qualification</h2>
                                     <hr></hr>
-                                    <form class="forms-sample py-3" onSubmit={handleSubmit}>
-                                        <div class='row'>
-                                            <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">Qualification</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.qualification}
-                                                    placeholder="Qualification" name='qualification' onChange={onhandleChange} />
-                                                {/* {<span className='text-danger'>{error.student}</span>} */}
-                                            </div>
-                                            <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">Institute</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.institute}
-                                                    placeholder="Institute" name='institute' onChange={onhandleChange} />
-                                                {/* {<span className='text-danger'>{error.book}</span>} */}
-                                            </div>
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">Passing Year</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.passingyear}
-                                                    placeholder="Passing Year" name='passingyear' onChange={onhandleChange} />
-                                            </div>
+                                    <div className="pt-2">
+                                        <table className='table table-bordered'>
+                                            <tr>
+                                                <td>
+                                                </td>
+                                                <td>
+                                                    <h4>Qualification</h4>
+                                                </td>
+                                                <td>
+                                                    <h4>Institute</h4>
+                                                </td>
+                                                <td>
+                                                    <h4>Passing Year</h4>
+                                                </td>
+                                                <td>
+                                                    <h4>Grade/Percentage</h4>
+                                                </td>
+                                            </tr>
+                                            <tbody>
+                                                <tr>
+                                                    <td><a href=''>Update</a>/<a href='/academicqualification'>Cancel</a></td>
+                                                    <td>
+                                                        <div className="form-group">
+                                                            <label html="qualificationInput1"></label>
+                                                            <input type="text"
+                                                                className="form-control"
+                                                                id="qualificationInput1"
+                                                                value={value.qualification}
+                                                                name='qualification'
+                                                                onChange={onhandleChange} />
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div className="form-group">
+                                                            <label html="instituteInput1"></label>
+                                                            <input type="text"
+                                                                className="form-control"
+                                                                id="instituteInput1"
+                                                                value={value.institute}
+                                                                name='institute'
+                                                                onChange={onhandleChange} />
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div className="form-group">
+                                                            <label html="passingyearInput1"></label>
+                                                            <input type="text"
+                                                                className="form-control"
+                                                                id="passingyearInput1"
+                                                                value={value.passingyear}
+                                                                name='passingyear'
+                                                                onChange={onhandleChange} />
+                                                        </div>
+                                                    </td>
+                                                    <td>
 
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">Grade/Percentage</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.grade} placeholder='Grade/Percentage'
-                                                    name='grade' onChange={onhandleChange} />
-                                            </div>
-
-                                            <div class="d-flex align-items-center mt-3">
-                                                <button type="submit" class="btn btn-sm btn-primary mr-2 py-2">Add</button>
-                                            </div>
-
-
-
-                                        </div>
-
-
-
-
+                                                        <div className="form-group">
+                                                            <label html="greadpercentageInput1"></label>
+                                                            <input type="text"
+                                                                className="form-control"
+                                                                id="greadpercentageInput1"
+                                                                value={value.greadpercentage}
+                                                                name='greadpercentage'
+                                                                onChange={onhandleChange} />
+                                                        </div>
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td>
+                                                        <div className="form-group">
+                                                            <label html="qualificationInput1"></label>
+                                                            <input type="text"
+                                                                className="form-control"
+                                                                id="qualificationInput1"
+                                                                value={value.qualification}
+                                                                name='qualification'
+                                                                onChange={onhandleChange} />
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div className="form-group">
+                                                            <label html="instituteInput1"></label>
+                                                            <input type="text"
+                                                                className="form-control"
+                                                                id="instituteInput1"
+                                                                value={value.institute}
+                                                                name='institute'
+                                                                onChange={onhandleChange} />
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div className="form-group">
+                                                            <label html="passingyearInput1"></label>
+                                                            <input type="text"
+                                                                className="form-control"
+                                                                id="passingyearInput1"
+                                                                value={value.passingyear}
+                                                                name='passingyear'
+                                                                onChange={onhandleChange} />
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div className="form-group">
+                                                            <label html="greadpercentageInput1"></label>
+                                                            <input type="text"
+                                                                className="form-control"
+                                                                id="greadpercentageInput1"
+                                                                value={value.greadpercentage}
+                                                                name='greadpercentage'
+                                                                onChange={onhandleChange} />
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="d-flex align-items-center mt-3">
+                                                            <button type="submit" class="btn btn-sm btn-primary mr-2 py-2">Add</button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                         <button type="submit" class="btn btn-primary mr-2">Save</button>
                                         <button type='button' onClick={() => {
                                             window.location.reload()
                                         }} class="btn btn-light">Close</button>
-                                    </form>
+                                    </div>
 
                                 </div>
                             </div>

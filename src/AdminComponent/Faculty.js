@@ -232,6 +232,7 @@ const Faculty = () => {
                                         <div className='px-2 mx-2'><Link to="/facultydiscussion"><h4>Discussion</h4></Link></div> </>
                             }
                         </div>
+
                         <div class="col-lg-12 grid-margin">
 
                             <form onSubmit={handleSubmit} class="card">

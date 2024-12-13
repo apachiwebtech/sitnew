@@ -141,8 +141,9 @@ const FacultyDiscussion = () => {
                         <div class="d-flex">
 
                             <div className='px-2 mx-2'><Link to="/faculty/:facultyid"><h4>Personal Information</h4></Link></div>
+                            <div className='px-2 mx-2'><Link to="/academicqualification"><h4>Academic Qualification</h4></Link></div>
                             <div className='px-2 mx-2'><Link to="/addfacultymaster"><h4>Current Experience/Other Details</h4></Link></div>
-                            <div className='px-2 mx-2'><Link to="/facademicqualification"><h4>Academic Qualification</h4></Link></div>
+
                             <div className='px-2 mx-2'><Link to="/facultyexperience"><h4>Total Experience and Documents</h4></Link></div>
                             <div className='px-2 mx-2'><Link to="/facultydiscussion"><h4>Discussion</h4></Link></div>
 
@@ -160,23 +161,23 @@ const FacultyDiscussion = () => {
                                                 <div className='row'>
                                                     <div class="form-group col-lg-3">
                                                         <label for="exampleInputUsername1" >Discussion Date</label>
-                                                        <input type="date" class="form-control" id="exampleInputUsername1" 
-                                                        value={value.discussiondate}
+                                                        <input type="date" class="form-control" id="exampleInputUsername1"
+                                                            value={value.discussiondate}
                                                             name='discussiondate' onChange={onhandleChange} />
 
                                                     </div>
                                                     <div class="form-group col-lg-3">
                                                         <label for="exampleInputUsername1"> Remark </label>
-                                                        <input type="text" class="form-control" id="exampleInputUsername1" 
-                                                        value={value.remark}
+                                                        <input type="text" class="form-control" id="exampleInputUsername1"
+                                                            value={value.remark}
                                                             name='remark' onChange={onhandleChange} />
 
                                                     </div>
 
                                                     <div class="form-group col-lg-3">
                                                         <label for="exampleFormControlSelect1">Department</label>
-                                                        <select class="form-control" id="exampleFormControlSelect1" 
-                                                        value={value.department}
+                                                        <select class="form-control" id="exampleFormControlSelect1"
+                                                            value={value.department}
                                                             name='department' onChange={onhandleChange}>
                                                             <option>--Select Department--</option>
                                                         </select>

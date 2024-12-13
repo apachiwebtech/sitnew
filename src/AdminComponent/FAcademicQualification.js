@@ -11,7 +11,7 @@ import Faculty from "./Faculty";
 
 const FAcademicQualification = () => {
 
-    const { facultyid } = useParams ();
+    const { facultyid } = useParams();
     const [uid, setUid] = useState([])
     const [error, setError] = useState({})
 
@@ -90,48 +90,48 @@ const FAcademicQualification = () => {
         e.preventDefault()
         let response
         // if (validateForm()) {
-            if (facultyid == ":facultyid") {
-                response = await fetch(`${BASE_URL}/add_faculty_master`, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        Faculty_Name: value.Faculty_Name,
-                        Faculty_Code: value.Faculty_Code,
-                        DOB: value.DOB,
-                        Nationality: value.Nationality,
-                        discipline: value.discipline,
-                        status: value.status,
-                    }),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-            } else {
+        if (facultyid == ":facultyid") {
+            response = await fetch(`${BASE_URL}/add_faculty_master`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    Faculty_Name: value.Faculty_Name,
+                    Faculty_Code: value.Faculty_Code,
+                    DOB: value.DOB,
+                    Nationality: value.Nationality,
+                    discipline: value.discipline,
+                    status: value.status,
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+        } else {
 
-                response = await fetch(`${BASE_URL}/updatefaculty`, {
-                    method: 'POST',
-                    body: JSON.stringify({
+            response = await fetch(`${BASE_URL}/updatefaculty`, {
+                method: 'POST',
+                body: JSON.stringify({
 
-                        course: value.course,
-                        batch: value.batch,
-                        student: value.student,
-                        date: value.date,
-                        feedback: value.feedback,
-                        srno: value.srno,
-                       
-
+                    course: value.course,
+                    batch: value.batch,
+                    student: value.student,
+                    date: value.date,
+                    feedback: value.feedback,
+                    srno: value.srno,
 
 
 
-                    }),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-            }
+
+
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+        }
 
 
 
-       // }
+        // }
     }
 
 
@@ -151,10 +151,11 @@ const FAcademicQualification = () => {
                 <div class="content-wrapper">
                     <div class="row">
                         <div class="d-flex">
-                            
+
                             <div className='px-2 mx-2'><Link to="/faculty/:facultyid"><h4>Personal Information</h4></Link></div>
+                            <div className='px-2 mx-2'><Link to="/academicqualification"><h4>Academic Qualification</h4></Link></div>
                             <div className='px-2 mx-2'><Link to="/addfacultymaster"><h4>Current Experience/Other Details</h4></Link></div>
-                            <div className='px-2 mx-2'><Link to="/facademicqualification"><h4>Academic Qualification</h4></Link></div>
+
                             <div className='px-2 mx-2'><Link to="/facultyexperience"><h4>Total Experience and Documents</h4></Link></div>
                             <div className='px-2 mx-2'><Link to="/facultydiscussion"><h4>Discussion</h4></Link></div>
 
@@ -191,7 +192,7 @@ const FAcademicQualification = () => {
                                             }}
                                         />
 
-                                        
+
                                     </div>
 
 
@@ -211,16 +212,16 @@ const FAcademicQualification = () => {
 
                                         <div class="form-group col-lg-2">
                                             <label for="exampleFormControlSelect1">Select Course<span className='text-danger'>*</span> </label>
-                                            <select class="form-control form-control-lg" id="exampleFormControlSelect1" 
-                                            value={value.course} onChange={onhandleChange} name='course'>
+                                            <select class="form-control form-control-lg" id="exampleFormControlSelect1"
+                                                value={value.course} onChange={onhandleChange} name='course'>
                                                 <option>Select</option>
                                             </select>
                                         </div>
 
                                         <div class="form-group col-lg-2">
                                             <label for="exampleFormControlSelect1">Select Batch<span className='text-danger'>*</span> </label>
-                                            <select class="form-control form-control-lg" id="exampleFormControlSelect1" 
-                                            value={value.batch} onChange={onhandleChange} name='batch'>
+                                            <select class="form-control form-control-lg" id="exampleFormControlSelect1"
+                                                value={value.batch} onChange={onhandleChange} name='batch'>
                                                 <option></option>
 
                                             </select>
@@ -228,8 +229,8 @@ const FAcademicQualification = () => {
 
                                         <div class="form-group col-lg-2">
                                             <label for="exampleFormControlSelect1">Student Name<span className='text-danger'>*</span> </label>
-                                            <select class="form-control form-control-lg" id="exampleFormControlSelect1" 
-                                            value={value.student} onChange={onhandleChange} name='student'>
+                                            <select class="form-control form-control-lg" id="exampleFormControlSelect1"
+                                                value={value.student} onChange={onhandleChange} name='student'>
                                                 <option></option>
 
                                             </select>
@@ -239,15 +240,15 @@ const FAcademicQualification = () => {
 
                                         <div class="form-group col-lg-2">
                                             <label for="exampleInputUsername1">Date</label>
-                                            <input type="date" class="form-control" id="exampleInputUsername1" 
-                                            value={value.date} name='date' onChange={onhandleChange} />
+                                            <input type="date" class="form-control" id="exampleInputUsername1"
+                                                value={value.date} name='date' onChange={onhandleChange} />
 
                                         </div>
 
                                         <div class="form-group col-lg-2">
                                             <label for="exampleFormControlSelect1">Feedback<span className='text-danger'>*</span> </label>
-                                            <select class="form-control form-control-lg" id="exampleFormControlSelect1" 
-                                            value={value.feedback} onChange={onhandleChange} name='feedback'>
+                                            <select class="form-control form-control-lg" id="exampleFormControlSelect1"
+                                                value={value.feedback} onChange={onhandleChange} name='feedback'>
                                                 <option></option>
 
                                             </select>
@@ -255,8 +256,8 @@ const FAcademicQualification = () => {
 
                                         <div class="form-group col-lg-2">
                                             <label for="exampleInputUsername1">Sr No</label>
-                                            <input type="text" class="form-control" id="exampleInputUsername1" 
-                                            value={value.srno} name='srno' onChange={onhandleChange} />
+                                            <input type="text" class="form-control" id="exampleInputUsername1"
+                                                value={value.srno} name='srno' onChange={onhandleChange} />
 
                                         </div>
 
