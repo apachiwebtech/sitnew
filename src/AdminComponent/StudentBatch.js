@@ -127,7 +127,7 @@ const StudentBatch = () => {
 
     async function downloadPDF(id) {
 
-        axios.post(`${BASE_URL}/getbatchwisestudent`, { batch_code: value.batch })
+        axios.post(`${BASE_URL}/getattendStudent`, { batch_code: value.batch })
         .then((res) => {
     
           Blob([{batchid :value.batch, students: res.data}])
@@ -145,7 +145,9 @@ const StudentBatch = () => {
     };
 
     const handlegetbatch = async (courseid) =>{
-        
+        setValue({
+            course : courseid
+        })
         
         try {
             const res = await axios.post(`${BASE_URL}/getcoursewisebatch`, {courseid :courseid});

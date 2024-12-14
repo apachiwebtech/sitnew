@@ -141,7 +141,7 @@ const AdmissionListing = () => {
     const rowsWithIds = admission.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
-        <div className="container-fluid page-body-wrapper col-lg-10">
+        <div className="container-fluid page-body-wrapper ">
             <InnerHeader />
             {loading && <Loader />}
             <div className="main-panel" style={{ display: loading ? "none" : "block" }}>

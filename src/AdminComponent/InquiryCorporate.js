@@ -161,7 +161,7 @@ const InquiryCorporate = () => {
 
     return (
 
-        <div className="container-fluid page-body-wrapper col-lg-10">
+        <div className="container-fluid page-body-wrapper ">
             <InnerHeader />
             {loading && <Loader />}
             <div className="main-panel" style={{display : loading ? "none" : "block"}} >

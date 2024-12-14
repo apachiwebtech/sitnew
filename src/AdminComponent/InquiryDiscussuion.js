@@ -213,7 +213,7 @@ function AddRole() {
 
 
 
-        <div class="container-fluid page-body-wrapper col-lg-10">
+        <div class="container-fluid page-body-wrapper">
             <InnerHeader />
 
             {roleaccess > 1 ? <div class="main-panel">

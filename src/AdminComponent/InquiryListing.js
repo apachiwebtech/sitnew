@@ -3,12 +3,14 @@ import EditIcon from "@mui/icons-material/Edit";
 import Switch from '@mui/material/Switch';
 import { DataGrid, GridToolbar, GridToolbarContainer, GridToolbarFilterButton } from '@mui/x-data-grid';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import Loader from "./Loader";
 import { styled } from '@mui/material/styles';
+import { SidebarContext } from "../context/SideBarContext";
+
 export const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
     border: 0,
     color: 'rgba(255,255,255,0.85)',
@@ -56,7 +58,7 @@ export const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
     '& .MuiPaginationItem-root': {
         borderRadius: 0,
     },
-   
+
 
     ...theme.applyStyles('light', {
         color: 'rgba(0,0,0,.85)',
@@ -67,7 +69,7 @@ const InquiryListing = () => {
 
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
-
+    const { isSidebarOpen } = useContext(SidebarContext);
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const label = { inputProps: { 'aria-label': 'Color switch demo' } };
@@ -226,7 +228,7 @@ const InquiryListing = () => {
             field: 'Student_Name', headerName: 'Student Name', width: 150, renderCell: (params) => {
                 return (
                     <>
-                        {params.row.IsUnread == 0 ? <p   className="text-danger font-12" >{params.row.Student_Name}</p> : <p  className="font-12">{params.row.Student_Name}</p>}
+                        {params.row.IsUnread == 0 ? <p className="text-danger font-12" >{params.row.Student_Name}</p> : <p className="font-12">{params.row.Student_Name}</p>}
                     </>
                 )
             }
@@ -254,25 +256,25 @@ const InquiryListing = () => {
             headerName: "Discussion",
             width: 250,
             renderCell: (params) => {
-              return (
-                <div
-                  style={{
-                    whiteSpace: "normal",
-                    wordWrap: "break-word",
-                    overflowWrap: "break-word", // Ensure long words break properly
-                    lineHeight: 1,
-               
-                  }}
-                >
-                  {params.row.IsUnread == 0 ? (
-                    <p className="text-danger font-12">{params.row.Discussion}</p>
-                  ) : (
-                    <p className="font-12">{params.row.Discussion}</p>
-                  )}
-                </div>
-              );
+                return (
+                    <div
+                        style={{
+                            whiteSpace: "normal",
+                            wordWrap: "break-word",
+                            overflowWrap: "break-word", // Ensure long words break properly
+                            lineHeight: 1,
+
+                        }}
+                    >
+                        {params.row.IsUnread == 0 ? (
+                            <p className="text-danger font-12">{params.row.Discussion}</p>
+                        ) : (
+                            <p className="font-12">{params.row.Discussion}</p>
+                        )}
+                    </div>
+                );
             },
-          },
+        },
         {
             field: 'present_mobile', headerName: 'Mobile', width: 100, renderCell: (params) => {
                 return (
@@ -285,7 +287,7 @@ const InquiryListing = () => {
         {
             field: 'Email', headerName: 'Email', width: 200, renderCell: (params) => {
                 return (
-                    <> 
+                    <>
                         {params.row.IsUnread == 0 ? <p className="text-danger font-12" >{params.row.Email}</p> : <p className="font-12">{params.row.Email}</p>}
                     </>
                 )
@@ -347,7 +349,8 @@ const InquiryListing = () => {
 
     return (
 
-        <div className="container-fluid page-body-wrapper col-lg-10">
+        <div className={`container-fluid page-body-wrapper `}>
+
             <InnerHeader />
             {loading && <Loader />}
 
@@ -362,17 +365,7 @@ const InquiryListing = () => {
                                 {/* <div className="card-body"> */}
 
                                 <div className="card" >
-                                    <div className='d-flex justify-content-between ' >
-                                        <div >
-                                            {/* <h4 class="card-title">List Of Inquiry</h4> */}
-                                        </div>
-                                        <div className="m-2">
 
-                                        <Link to='/onlineinquiry/inquiryform/:inquiryid'> <button className='btn btn-success'>Add +</button></Link>
-                                        </div>
-
-
-                                    </div>
                                     <div className="px-3">
                                         <form class="forms-sample row py-1 " onSubmit={handleSubmit}>
                                             <div class="form-group col-lg-3">
@@ -383,13 +376,18 @@ const InquiryListing = () => {
                                                 <label for="exampleInputUsername1">To Date <span className='text-danger'>*</span></label>
                                                 <input type="date" class="form-control" id="exampleInputUsername1" placeholder="to_date" name='to_date' onChange={onhandleChange} />
                                             </div>
-                                            <div className='d-flex align-items-center mt-3' >
+                                            <div className='d-flex align-items-center mt-3 col-lg-3' >
                                                 <button type="submit" class="btn btn-sm btn-primary mr-2">Submit</button>
                                                 <button type='reset' onClick={() => getInquiryData()} class="btn btn-sm btn-primary mr-2">Clear</button>
                                             </div>
+                                            <div className="col-lg-3">
+                                                <div className="m-2 float-right">
+                                                    <Link to='/onlineinquiry/inquiryform/:inquiryid'> <button className='btn btn-success'>Add +</button></Link>
+                                                </div>
+                                            </div>
                                         </form>
 
-                                        
+
                                     </div>
                                 </div>
 
@@ -427,14 +425,14 @@ const InquiryListing = () => {
 
                                         sx={{
                                             "& .MuiDataGrid-cell": {
-                                              whiteSpace: "normal",
-                                              wordWrap: "break-word",
-                                              overflowWrap: "break-word",
-                                              lineHeight: 2,
-                                              display: "block",
+                                                whiteSpace: "normal",
+                                                wordWrap: "break-word",
+                                                overflowWrap: "break-word",
+                                                lineHeight: 2,
+                                                display: "block",
                                             },
-                                          }}
-                                   
+                                        }}
+
                                     />
 
                                     {confirmationVisibleMap[cid] && (

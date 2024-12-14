@@ -209,6 +209,7 @@ import AddAssets from './AdminComponent/AddAssets.js';
 import Taxmaster from './AdminComponent/Taxmaster.js';
 import AddAdminUSer from './AdminComponent/AddAdminUSer.jsx';
 import AcademicQualificationss from './AdminComponent/AcademicQualificaton.js';
+import NavbarWithDropdowns from './AdminComponent/Navbar/Navbar.jsx';
 
 
 const Router = createBrowserRouter([
@@ -1080,8 +1081,9 @@ function WebApp() {
     <>
 
       <SidebarProvider>
-        <div className="container-scroller row">
-          <Header />
+        <div className="container-scroller ">
+          <NavbarWithDropdowns/>
+          {/* <Header /> */}
           <Outlet />
         </div>
       </SidebarProvider>

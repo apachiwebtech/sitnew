@@ -12634,6 +12634,7 @@ input[type="button"].btn-block {
   align-items: center;
   justify-content: space-between;
   padding: 0.5rem 1rem;
+  background: #223E9C !important;
 }
 
 .navbar .container,
@@ -20730,9 +20731,9 @@ dl li {
   -webkit-transition: background 0.25s ease;
   -moz-transition: background 0.25s ease;
   -ms-transition: background 0.25s ease;
-  background: url(./assets/images/other/navbar-cover.jpg) center center no-repeat;
+  /* background: url(./assets/images/other/navbar-cover.jpg) center center no-repeat; */
   background-size: cover;
-  height: 262px;
+  /* height: 262px; */
   width: auto;
 }
 
@@ -21157,4 +21158,10 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type=number] {
   -moz-appearance: textfield;
+}
+
+.navbar-light .navbar-nav .nav-link{
+  font-size: 14px !important;
+  color: #fff;
+  font-weight: 500;
 }
