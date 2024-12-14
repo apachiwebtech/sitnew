@@ -14,6 +14,7 @@ const AcademicQualification = () => {
         institute: '',
         passingyear: '',
         greadpercentage: '',
+        
 
     })
 
