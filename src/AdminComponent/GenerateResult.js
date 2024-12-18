@@ -220,8 +220,6 @@ const GenerateResult = () => {
             ? headers.filter((header) => child.some((ch) => ch[header]))
             : [];
 
-    // console.log(updatedHeaders);
-
     const [pdfdata, setpdfData] = useState([]);
 
     async function getDetails(params) {
@@ -665,7 +663,7 @@ const GenerateResult = () => {
                             <form class="card">
                                 <div class="card-body">
                                     <div className="table-responsive">
-                                        <table class="table table-bordered table-p">
+                                        <table class="table table-bordered table-gen">
                                             <thead>
                                                 <tr>
                                                     {/* {headers.map(
@@ -680,6 +678,7 @@ const GenerateResult = () => {
                                                             );
                                                         }
                                                     )} */}
+
                                                     {updatedHeaders.map(
                                                         (item, index) => {
                                                             return (
