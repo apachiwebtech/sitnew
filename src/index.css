@@ -10096,6 +10096,11 @@ pre code {
   border: 1px solid #f3f3f3;
 }
 
+.table-p th,
+.table-p td{
+    padding: 1rem;
+}
+
 .table-bordered thead th,
 .table-bordered thead td {
   border-bottom-width: 2px;
