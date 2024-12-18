@@ -244,7 +244,7 @@ const MyDocument7 = ({ data }) => {
                                 </div>
                                 <View style={[styles.tableCol, { width: '100%' }]}>
                                     <Text style={{ fontSize: '10px', marginLeft: 5, color: '#000' }}>Brief Description of Course</Text>
-                                    <Text style={{ padding: "5px 10px", fontSize: "7px", color: "#000" }} >{parseHTML(item.Course_Description)}</Text>
+                                    <Text style={{ padding: "5px 10px", fontSize: "7px", color: "#000" }} >{item.Course_Description }</Text>
                                 </View>
                             </View>
 

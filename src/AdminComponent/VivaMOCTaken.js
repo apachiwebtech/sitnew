@@ -179,7 +179,7 @@ const VivaMOCTaken = () => {
     };
 
     async function gettakedata(params) {
-        axios.post(`${BASE_URL}/geteditvivataken`, { Takeid: vivamoctakenid })
+        axios.post(`${BASE_URL}/geteditvivataken`, { Takeid: params || vivamoctakenid })
             .then((res) => {
                 console.log(res)
                 setStudentdata(res.data)
@@ -227,7 +227,8 @@ const VivaMOCTaken = () => {
                 .then((res) => {
                     console.log(res)
                     alert("Data added successfully")
-                    Navigate('/vivamoctaken')
+                    gettakedata(res.data.Take_Id)
+                    setHide(true)
                 })
 
         }

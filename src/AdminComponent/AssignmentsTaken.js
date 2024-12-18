@@ -214,7 +214,7 @@ const AssignmentsTaken = () => {
     }
 
     async function gettakedata(params) {
-        axios.post(`${BASE_URL}/geteditassignmenttaken`, { GivenId: assignmentstakenid })
+        axios.post(`${BASE_URL}/geteditassignmenttaken`, { GivenId: params ||  assignmentstakenid  })
             .then((res) => {
                 console.log(res)
                 setStudentdata(res.data)
@@ -264,7 +264,9 @@ const AssignmentsTaken = () => {
                 .then((res) => {
                     console.log(res)
                     alert("Data added successfully")
-                    Navigate('/assignmentstaken')
+                    gettakedata(res.data.TakeId)
+                    setHide(true)
+                    // Navigate('/assignmentstaken')
                 })
 
 

@@ -7,63 +7,73 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
+import { Button } from '@mui/material';
 import Loader from "./Loader";
 import { styled } from '@mui/material/styles';
 import { SidebarContext } from "../context/SideBarContext";
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import { StyledDataGrid } from './StyledDataGrid';
+import { param } from 'jquery';
+import _debounce from 'lodash.debounce';
 
-export const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
-    border: 0,
-    color: 'rgba(255,255,255,0.85)',
-    fontFamily: [
-        '-apple-system',
-        'BlinkMacSystemFont',
-        '"Segoe UI"',
-        'Roboto',
-        '"Helvetica Neue"',
-        'Arial',
-        'sans-serif',
-        '"Apple Color Emoji"',
-        '"Segoe UI Emoji"',
-        '"Segoe UI Symbol"',
-    ].join(','),
-    WebkitFontSmoothing: 'auto',
-    letterSpacing: 'normal',
-    '& .MuiDataGrid-columnsContainer': {
-        backgroundColor: '#1d1d1d',
-        ...theme.applyStyles('light', {
-            backgroundColor: '#fafafa',
-        }),
-    },
-    '& .MuiDataGrid-iconSeparator': {
-        display: 'none',
-    },
-    '& .MuiDataGrid-columnHeader, .MuiDataGrid-cell': {
-        borderRight: '1px solid #303030',
-        ...theme.applyStyles('light', {
-            borderRightColor: '#f0f0f0',
-        }),
-    },
-    '& .MuiDataGrid-columnsContainer, .MuiDataGrid-cell': {
-        borderBottom: '1px solid #303030',
-        ...theme.applyStyles('light', {
-            borderBottomColor: '#f0f0f0',
-        }),
-    },
-    '& .MuiDataGrid-cell': {
-        color: 'rgba(255,255,255,0.65)',
-        ...theme.applyStyles('light', {
-            color: 'rgba(0,0,0,.85)',
-        }),
-    },
-    '& .MuiPaginationItem-root': {
-        borderRadius: 0,
-    },
+// export const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
+//     border: 0,
+//     color: 'rgba(255,255,255,0.85)',
+//     fontFamily: [
+//         '-apple-system',
+//         'BlinkMacSystemFont',
+//         '"Segoe UI"',
+//         'Roboto',
+//         '"Helvetica Neue"',
+//         'Arial',
+//         'sans-serif',
+//         '"Apple Color Emoji"',
+//         '"Segoe UI Emoji"',
+//         '"Segoe UI Symbol"',
+//     ].join(','),
+//     WebkitFontSmoothing: 'auto',
+//     letterSpacing: 'normal',
+//     '& .MuiDataGrid-columnsContainer': {
+//         backgroundColor: '#1d1d1d',
+//         ...theme.applyStyles('light', {
+//             backgroundColor: '#fafafa',
+//         }),
+//     },
+//     '& .MuiDataGrid-iconSeparator': {
+//         display: 'none',
+//     },
+//     '& .MuiDataGrid-columnHeader, .MuiDataGrid-cell': {
+//         borderRight: '1px solid #303030',
+//         ...theme.applyStyles('light', {
+//             borderRightColor: '#f0f0f0',
+//         }),
+//     },
+//     '& .MuiDataGrid-columnsContainer, .MuiDataGrid-cell': {
+//         borderBottom: '1px solid #303030',
+//         ...theme.applyStyles('light', {
+//             borderBottomColor: '#f0f0f0',
+//         }),
+//     },
+//     '& .MuiDataGrid-cell': {
+//         color: 'rgba(255,255,255,0.65)',
+//         ...theme.applyStyles('light', {
+//             color: 'rgba(0,0,0,.85)',
+//         }),
+//     },
+//     '& .MuiPaginationItem-root': {
+//         borderRadius: 0,
+//     },
 
 
-    ...theme.applyStyles('light', {
-        color: 'rgba(0,0,0,.85)',
-    }),
-}));
+//     ...theme.applyStyles('light', {
+//         color: 'rgba(0,0,0,.85)',
+//     }),
+// }));
 
 const InquiryListing = () => {
 
@@ -72,10 +82,19 @@ const InquiryListing = () => {
     const { isSidebarOpen } = useContext(SidebarContext);
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
+    const [searchwise, setSearchWise] = useState('')
     const label = { inputProps: { 'aria-label': 'Color switch demo' } };
     const [loading, setLoading] = useState(true)
     const [inquiryData, setInquiryData] = useState([]);
-
+    const [expand, setPageExpand] = useState(false)
+    const [searchdata, setSearchData] = useState('')
+    const [selectedStudent, setSelectedStudent] = React.useState(null);
+    const [data, setData] = useState([])
+    const [searchtext, setText] = useState('')
+    const [lastStudentId, setLastStudentId] = useState(null);
+    const [page, setPage] = useState(0);
+    const [totalstudent, setTotalStudent] = useState('')
+    const [pageSize, setPageSize] = useState(10);
     const [value, setValue] = useState({
         from_date: "",
         to_date: ""
@@ -83,19 +102,128 @@ const InquiryListing = () => {
 
 
     const getInquiryData = async () => {
+        setLoading(true)
+        const payload = {
+            page: page,
+            pageSize: pageSize
+        }
 
-        const response = await fetch(`${BASE_URL}/getadmissionactivity`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
+        axios.post(`${BASE_URL}/getadmissionactivity`, payload)
+            .then((res) => {
 
-        setInquiryData(data);
-        setLoading(false)
+                setInquiryData(res.data.data);
+                setLastStudentId(res.data.lastStudentId)
+                setTotalStudent(res.data.totalCount)
+                setLoading(false)
+            })
+
+
     }
 
+    useEffect(() => {
+        getInquiryData(page, pageSize);
+    }, [page, pageSize]);
+
+
+    const onsearchformSumbit = (e) => {
+        e.preventDefault()
+
+
+
+        const data = {
+            searchwise: searchwise,
+            search: searchdata
+        }
+
+        axios.post(`${BASE_URL}/getserchInquiry`, data)
+            .then((res) => {
+                setInquiryData(res.data)
+            })
+
+
+    }
+
+    const handlesearchselect = (value) => {
+        setSearchWise(value)
+
+
+        if (value == 'BatchWise') {
+            getBatchcode()
+        }
+        if (value == 'EmailWise') {
+            getEmail()
+        }
+        if (value == 'MobileWise') {
+            getMobile()
+        }
+        if (value == 'CourseWise') {
+            getCourse()
+        }
+    }
+
+    const handleSearchChange = (newValue) => {
+
+
+        setSelectedStudent(newValue); // Update state
+
+        if (searchwise == 'NameWise') {
+            setSearchData(newValue?.Inquiry_Id)
+        }
+        if (searchwise == 'BatchWise') {
+            setSearchData(newValue?.Batch_code)
+        }
+        if (searchwise == 'EmailWise') {
+            setSearchData(newValue?.Email)
+        }
+        if (searchwise == 'MobileWise') {
+            setSearchData(newValue?.Present_Mobile)
+        }
+        if (searchwise == 'CourseWise') {
+            setSearchData(newValue?.Course_Id)
+        }
+
+
+
+    };
+
+    async function getstudents() {
+
+        axios.post(`${BASE_URL}/getInquiryStudents`, { param: searchtext })
+            .then((res) => {
+                setData(res.data)
+            })
+    }
+    async function getBatchcode() {
+
+
+        axios.post(`${BASE_URL}/getSearchBatch`, { param: searchtext })
+            .then((res) => {
+                setData(res.data)
+            })
+    }
+
+    async function getEmail() {
+
+
+        axios.post(`${BASE_URL}/getSearchInquiryEmail`, { param: searchtext })
+            .then((res) => {
+                setData(res.data)
+            })
+    }
+    async function getMobile() {
+
+        axios.post(`${BASE_URL}/getSearchInquiryMobile`, { param: searchtext })
+            .then((res) => {
+                setData(res.data)
+            })
+    }
+    async function getCourse() {
+
+        axios.post(`${BASE_URL}/getSearchInquiryCourse`, { param: searchtext })
+            .then((res) => {
+                setData(res.data)
+            })
+    }
 
 
 
@@ -107,6 +235,33 @@ const InquiryListing = () => {
         setError({})
         setUid([])
     }, [])
+
+
+    const handleInputChange = _debounce((newValue) => {
+        console.log(newValue)
+        setText(newValue)
+
+        if (searchwise == 'BatchWise') {
+            getBatchcode()
+        }
+        if (searchwise == 'NameWise') {
+            getstudents()
+
+        }
+        if (searchwise == 'EmailWise') {
+            getEmail()
+
+        }
+        if (searchwise == 'MobileWise') {
+            getMobile()
+
+        }
+        if (searchwise == 'CourseWise') {
+            getCourse()
+
+        }
+
+    }, 500);
 
 
     const handleSubmit = (e) => {
@@ -215,15 +370,7 @@ const InquiryListing = () => {
 
     const columns = [
 
-        {
-            field: 'index',
-            headerName: 'Id',
-            type: 'number',
-            align: 'center',
-            headerAlign: 'center',
-            width: 50,
-            filterable: false,
-        },
+
         {
             field: 'Student_Name', headerName: 'Student Name', width: 150, renderCell: (params) => {
                 return (
@@ -254,7 +401,7 @@ const InquiryListing = () => {
         {
             field: "Discussion",
             headerName: "Discussion",
-            width: 250,
+            width: 320,
             renderCell: (params) => {
                 return (
                     <div
@@ -365,9 +512,10 @@ const InquiryListing = () => {
                                 {/* <div className="card-body"> */}
 
                                 <div className="card" >
-
-                                    <div className="px-3">
-                                        <form class="forms-sample row py-1 " onSubmit={handleSubmit}>
+                                    <div className="row">
+                                        <div className="col-lg-7">
+                                            <div className="px-3 m-2">
+                                                {/* <form class="forms-sample row py-1 " onSubmit={handleSubmit}>
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">From Date <span className='text-danger'>*</span></label>
                                                 <input type="date" class="form-control" id="exampleInputUsername1" placeholder="from_date" name='from_date' onChange={onhandleChange} />
@@ -385,10 +533,95 @@ const InquiryListing = () => {
                                                     <Link to='/onlineinquiry/inquiryform/:inquiryid'> <button className='btn btn-success'>Add +</button></Link>
                                                 </div>
                                             </div>
-                                        </form>
+                                          </form> */}
+                                                <form className='row align-items-center' onSubmit={onsearchformSumbit} >
+                                                    {/* <h4 class="card-title">Student Information</h4> */}
+
+                                                    <div class="col-lg-3">
+
+                                                        <FormControl fullWidth size="small">
+                                                            <InputLabel id="demo-simple-select-label">Select Search</InputLabel>
+                                                            <Select
+                                                                labelId="demo-simple-select-label"
+                                                                id="demo-simple-select"
+                                                                value={searchwise}
+                                                                label="Select Search"
+                                                                onChange={(e) => handlesearchselect(e.target.value)}
+
+                                                            >
+                                                                <MenuItem value={`Select`}>Select</MenuItem>
+                                                                <MenuItem value={`NameWise`}>Name Wise</MenuItem>
+                                                                <MenuItem value={`BatchWise`}>Batch Wise</MenuItem>
+                                                                <MenuItem value={`CourseWise`}>Course Wise</MenuItem>
+                                                                <MenuItem value={`EmailWise`}>Email Wise</MenuItem>
+                                                                <MenuItem value={`MobileWise`}>Mobile Wise</MenuItem>
+                                                            </Select>
+                                                        </FormControl>
+                                                    </div>
+
+                                                    <div class=" col-lg-5">
+
+                                                        <Autocomplete
+                                                            size="small"
+                                                            disablePortal
+                                                            options={data} // Pass the array of student objects
+                                                            getOptionLabel={(option) =>
+                                                                searchwise === 'NameWise'
+                                                                    ? option.Student_Name
+                                                                    : searchwise === 'BatchWise'
+                                                                        ? option.Batch_code
+                                                                        : searchwise === 'EmailWise' ? option.Email : searchwise === 'MobileWise' ? option.Present_Mobile : searchwise === 'CourseWise' ? option.Course_Name : ""// Provide a default fallback
+                                                            } // Dynamically display the label based on `searchdata`
+                                                            value={selectedStudent} // Use a state to manage the selected value
+                                                            onChange={(e, newValue) => handleSearchChange(newValue)} // `newValue` is the selected object
+                                                            onInputChange={(e, newInputValue) => handleInputChange(newInputValue)} // Capture typed input
+                                                            renderOption={(props, option) => (
+                                                                <li {...props} key={option.Student_Id}>
+                                                                    {searchwise === 'NameWise'
+                                                                        ? option.Student_Name
+                                                                        : searchwise === 'BatchWise'
+                                                                            ? option.Batch_code
+                                                                            : searchwise === 'EmailWise' ? option.Email : searchwise === 'MobileWise' ? option.Present_Mobile : searchwise === 'CourseWise' ? option.Course_Name : ""} {/* Dynamically render the option */}
+                                                                </li>
+                                                            )}
+                                                            renderInput={(params) => <TextField {...params} label="Enter.." />} // Render the input field
+                                                        />
 
 
+
+
+                                                    </div>
+
+                                                    <div class=" col-lg-2">
+
+                                                        <Button type='submit' onClick={() => {
+                                                            setPageExpand()
+                                                        }} variant="contained">Search</Button>
+                                                    </div>
+                                                    <div className=' col-lg-2'>
+                                                        <Button type='submit' onClick={() => {
+                                                            window.location.reload()
+                                                        }} variant="contained">Clear</Button>
+                                                    </div>
+                                                </form>
+
+
+                                            </div>
+                                        </div>
+
+                                        <div className="col-lg-5">
+
+                                            <div className="m-2 float-right">
+                                                <span className="mx-4">
+                                                    Total Inquiry : {totalstudent}
+                                                </span>
+                                                <Link to='/onlineinquiry/inquiryform/:inquiryid'> <button className='btn btn-success'>Add +</button></Link>
+                                            </div>
+
+                                        </div>
                                     </div>
+
+
                                 </div>
 
                                 <div className="card">
@@ -402,17 +635,9 @@ const InquiryListing = () => {
                                         // paginationMode="server"
                                         onPaginationModelChange={paginationModel}
                                         getRowId={(row) => row.id}
-                                        initialState={{
-                                            pagination: {
-                                                paginationModel: { pageSize: 10, page: 0 },
-                                            },
-                                        }}
-                                        slots={{ toolbar: CustomToolbar }}
-                                        slotProps={{
-                                            toolbar: {
-                                                showQuickFilter: true,
-                                            },
-                                        }}
+                                     
+
+
 
                                         // sx={{
                                         //     "& .MuiDataGrid-cell": {
@@ -434,6 +659,23 @@ const InquiryListing = () => {
                                         }}
 
                                     />
+                                    <div className='float-right py-2'>
+                                        <button
+                                            onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
+                                            disabled={page === 0} // Disable the "Previous" button on the first page
+                                        >
+                                            Previous
+                                        </button>
+
+                                        <span>Page {page + 1}</span>
+
+                                        <button
+                                            onClick={() => setPage((prev) => prev + 1)}
+                                            disabled={!lastStudentId} // Disable the "Next" button if there is no lastStudentId (i.e., no data)
+                                        >
+                                            Next
+                                        </button>
+                                    </div>
 
                                     {confirmationVisibleMap[cid] && (
                                         <div className='confirm-delete'>

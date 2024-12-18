@@ -96,7 +96,7 @@ const BlankAttendance = (props) => {
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: "1px" }}>
 
             <Image src={`https://webapp.sitsuvidya.in/static/media/logo.66d383f907e5f7ec4411.jpg`} style={{ width: "60px" }} ></Image>
-            <Text style={{ fontSize: 10 }}>Total Lecture : 30</Text>
+            <Text style={{ fontSize: 10 }}>Total Lecture : 57</Text>
           </View>
 
           <View style={{ backgroundColor: "yellow", textAlign: "center", padding: "5px", border: "1px solid black" }} >

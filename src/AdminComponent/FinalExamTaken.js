@@ -128,14 +128,16 @@ const Navigate = useNavigate()
                     alert("Data Added Successfully")
 
                     setUid([])
-                    setValue({
-                        setTestNameid: '',
-                        setAnnulBatchid: '',
-                        setCourseid: '',
-                        Test_No:''
-                    })
+                    // setValue({
+                    //     setTestNameid: '',
+                    //     setAnnulBatchid: '',
+                    //     setCourseid: '',
+                    //     Test_No:''
+                    // })
 
-                    Navigate('/finalexamtakenlisting')
+                    gettakedata(res.data.TakeId)
+
+                    setHide(true)
 
                 })
                 .catch((err) => {
@@ -231,7 +233,7 @@ const Navigate = useNavigate()
     };
 
     async function gettakedata(params) {
-        axios.post(`${BASE_URL}/geteditfinalexam`, { Takeid: finalexamtakenid })
+        axios.post(`${BASE_URL}/geteditfinalexam`, { Takeid: params || finalexamtakenid })
             .then((res) => {
                 console.log(res)
                 setStudentdata(res.data)

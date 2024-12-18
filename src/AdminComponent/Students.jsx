@@ -44,6 +44,9 @@ const Students = () => {
     const [searchtext, setText] = useState('')
     const [expand, setPageExpand] = useState(false)
     const [data, setData] = useState([])
+
+
+    
     async function getOnlineAdmissions(params) {
         setLoading(true)
         const data = {

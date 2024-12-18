@@ -10096,6 +10096,15 @@ pre code {
   border: 1px solid #f3f3f3;
 }
 
+.table-gen th,
+.table-gen td{
+    padding: 1rem;
+}
+
+.table-gen th{
+    background-color: #759bff;
+}
+
 .table-bordered thead th,
 .table-bordered thead td {
   border-bottom-width: 2px;

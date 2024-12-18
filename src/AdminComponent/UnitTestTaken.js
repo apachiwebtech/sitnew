@@ -183,7 +183,7 @@ const UnitTestTaken = () => {
     }
 
     async function gettakedata(params) {
-        axios.post(`${BASE_URL}/geteditunittesttaken`, { Takeid: unittesttakenid })
+        axios.post(`${BASE_URL}/geteditunittesttaken`, { Takeid: params || unittesttakenid })
             .then((res) => {
                 console.log(res)
                 setStudentdata(res.data)
@@ -235,7 +235,8 @@ const UnitTestTaken = () => {
                 .then((res) => {
                     console.log(res)
                     alert("Data added successfully")
-                    Navigate('/unittesttaken')
+                    gettakedata(res.data.Take_Id)
+                    setHide(true)
                 })
 
 
