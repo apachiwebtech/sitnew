@@ -10101,7 +10101,7 @@ pre code {
     padding: 1rem;
 }
 
-.table-gen th{
+.table-gen thead th{
     background-color: #759bff;
 }
 

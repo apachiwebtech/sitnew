@@ -1,166 +1,117 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import Switch from '@mui/material/Switch';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
+import ConsultancyFollowUpForm from "./ConsultancyFollowUpForm";
+import Modal from '@mui/material/Modal';
 
 const ConsultancyFollowUp = () => {
-
-    const [uid, setUid] = useState([])
-    const [cid, setCid] = useState("")
-    const [error, setError] = useState({})
-    const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
-    const label = { inputProps: { 'aria-label': 'Color switch demo' } };
-
-    const [inquiryData, setInquiryData] = useState([]);
-    const [Discipline, setDescipline] = useState([]);
-    const [Course, setCourse] = useState([]);
-    const [Education, setEducation] = useState([]);
-    const [batch, setBatch] = useState([]);
-    const [batchCategoty, setbatchCategory] = useState([]);
-    const [value, setValue] = useState({
-        firstname: '',
-        gender: '',
-        dob: '',
-        mobile: '',
-        whatsapp: '',
-        email: '',
-    })
-
-
-
-
-    const getInquiryData = async () => {
-        const response = await fetch(`${BASE_URL}/getadmissionactivity`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-
-        setInquiryData(data);
+    const [searchParams] = useSearchParams()
+    const Const_Id = parseInt(searchParams.get('Const_Id'))
+    const [followUpData, setFollowUpData] = useState([])
+    const [openFollowUpForm, setOpenFollowUpForm] = useState(false)
+    const initialState = {
+        Consultant_Id: Const_Id,
+        CName: "",
+        Phone: "",
+        Email: "",
+        Designation: "",
+        Purpose: "",
+        Remark: "",
+        Tdate: "",
+        Course: "",
+        nextdate: "",
+        DirectLine: "",
+        Course_id: null
     }
-    useEffect(() => {
-        value.title = ""
-        setError({})
-        setUid([])
-    }, [])
+    const [formState, setFormState] = useState(initialState)
+    const [isEdit, setIsEdit] = useState(false)
+    const [deleteId, setDeleteId] = useState(null)
 
-    const handleClick = (id) => {
-        setCid(id)
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: true,
-        }));
+    const handleDelete = async () => {
+        try {
+            const id = deleteId;
+            setDeleteId(null)
+            await axios.delete(`${BASE_URL}/deleteConsultancyFollowUp/${id}`);
+            getFollowUpData()
+            alert('Follow up deleted successfully')
+        } catch (error) {
+            setDeleteId(null)
+            console.error("Error deleting follow up:", error);
+            alert('Error deleting')
+        }
     };
 
-    const handleCancel = (id) => {
-        // Hide the confirmation dialog without performing the delete action
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
-    };
+    useEffect(()=>{
+        getFollowUpData()
+    },[])
 
-    const handleUpdate = (id) => {
-        const data = {
-            u_id: id,
-            tablename: "awt_faculty"
-        }
-        axios.post(`${BASE_URL}/update_data`, data)
-            .then((res) => {
-                setUid(res.data[0])
-
-                console.log(res.data, "update")
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
-
-    const handleDelete = (id) => {
-        const data = {
-            cat_id: id,
-            tablename: "Student_Inquiry"
+    const getFollowUpData = async()=>{
+        try{
+            const response = await axios.get(`${BASE_URL}/consultancyFollowUp?Const_Id=${Const_Id}`)
+            setFollowUpData(response.data)
+        }catch(err){
+            console.log('Error fetching consultancy Follow Up data', err)
         }
 
-        axios.post(`${BASE_URL}/delete_inquiry_data`, data)
-            .then((res) => {
-                getInquiryData()
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
     }
 
-
-    const handleswitchchange = (value, Inquiry_Id) => {
-        const newval = value == 0 ? 1 : 0
-
-        axios.post(`${BASE_URL}/data_status`, { status: newval, Inquiry_Id: Inquiry_Id, table_name: "Student_Inquiry" })
-            .then((res) => {
-                console.log(res)
-                getInquiryData()
-            })
+    const duplicateFollowUp = async(data)=>{
+        try{
+            const response = await axios.post(`${BASE_URL}/addConsultancyFollowUp`,data)
+            getFollowUpData()
+            alert("Done")
+        }catch(err){
+            console.log('Error duplicating Follow up data', err)
+            alert('Error')
+        }
     }
 
-    const handleSubmit = async (e) => {
-        e.preventDefault()
-        let response
+    const handleFollowUpFormClose = ()=>{
+        setIsEdit(false)
+        setFormState(initialState)
+        setOpenFollowUpForm(false)
     }
-
 
     const columns = [
-        {
-            field: 'index',
-            headerName: 'Id',
-            type: 'number',
-            align: 'center',
-            headerAlign: 'center',
-            flex: 1,
-            filterable: false,
-        },
-        { field: 'date', headerName: 'Date', flex: 2 },
-        { field: 'contactperson', headerName: 'Contact Person', flex: 2 },
-        { field: 'designation', headerName: 'Designation', flex: 2 },
-        { field: 'mobile', headerName: 'Mobile', flex: 2 },
-        { field: 'email', headerName: 'Email', flex: 2 },
-        { field: 'purpose', headerName: 'Purpose', flex: 2 },
-        { field: 'course', headerName: 'Course', flex: 2 },
-        { field: 'directline', headerName: 'Direct Line', flex: 2 },
-        { field: 'remarks', headerName: 'Remarks', flex: 2},
-        { field: 'addedby', headerName: 'Added By', flex: 2},
-        // { field: 'isActive', headerName: 'Options', flex: 2},
+        { field: 'Tdate', headerName: 'Date', width:100 },
+        { field: 'CName', headerName: 'Contact Person', width:150 },
+        { field: 'Designation', headerName: 'Designation', width:200 },
+        { field: 'Phone', headerName: 'Mobile', width: 150 },
+        { field: 'Email', headerName: 'Email', width: 200 },
+        { field: 'Purpose', headerName: 'Purpose', width:150 },
+        { field: 'Course', headerName: 'Course', width: 200 },
+        { field: 'DirectLine', headerName: 'Direct Line', width: 150 },
+        { field: 'Remark', headerName: 'Remarks', width: 200},
+        { field: 'CreatedBy', headerName: 'Added By', width: 150},
         {
             field: 'actions',
-            type: 'actions',
             headerName: 'Action',
-            flex: 2,
+            width:130,
             renderCell: (params) => {
                 return (
                     <>
-                        <Link to={`/consultancymaster/${params.row.id}`}><EditIcon style={{ cursor: "pointer" }} /></Link>
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
-                        <Switch {...label} onChange={() => handleswitchchange(params.row.isActive, params.row.id)} defaultChecked={params.row.isActive == 0 ? false : true} color="secondary" />
+                        <EditIcon style={{ cursor: "pointer" }} onClick={()=>{
+                            setIsEdit(true)
+                            setFormState(params.row)
+                            setOpenFollowUpForm(true)
+                        }}/>
+                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() =>{
+                            setDeleteId(params.row.ID)
+                        }} />
+                        <AddCircleOutlineIcon style={{color:"green", cursor:"pointer"}} onClick={()=> duplicateFollowUp(params.row)}/>
                     </>
                 )
             }
         },
     ];
 
-
-    const rowsWithIds = inquiryData.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
 
@@ -173,10 +124,10 @@ const ConsultancyFollowUp = () => {
                     <div className="row">
                         <div class="d-flex">
 
-                            <div className='px-2 mx-2'><Link to="/consultancymaster/:consultancymasterid"><h4>Consultancy Details</h4></Link></div>
-                            <div className='px-2 mx-2'><Link to="/consstudentdetails"><h4>Student Details</h4></Link></div>
-                            <div className='px-2 mx-2'><Link to="/consultancybranches"><h4>Branches</h4></Link></div>
-                            <div className='px-2 mx-2'><Link to="/consultancyfollowup"><h4>Follow Up</h4></Link></div>
+                            <div className='px-2 mx-2'><Link to={`/consultancymaster/${Const_Id}`}><h4>Consultancy Details</h4></Link></div>
+                            <div className='px-2 mx-2'><Link to={`/consstudentdetails?Const_Id=${Const_Id}`}><h4>Student Details</h4></Link></div>
+                            <div className='px-2 mx-2'><Link to={`/consultancybranches?Const_Id=${Const_Id}`}><h4>Branches</h4></Link></div>
+                            <div className='px-2 mx-2'><Link to={`/consultancyfollowup?Const_Id=${Const_Id}`}><h4>Follow Up</h4></Link></div>
                         </div>
                         <div className="col-lg-12">
                             <div className="card">
@@ -185,21 +136,29 @@ const ConsultancyFollowUp = () => {
                                         <div >
                                             <h4 class="card-title">View Consultancy Info</h4>
                                         </div>
-                                        <Link to=''> <button className='btn btn-success'>Add +</button></Link>
-
-
-
+                                        
+                                        <button class="btn btn-success" onClick={()=>setOpenFollowUpForm(true)}>
+                                            Add + 
+                                        </button>
+                                        <Modal
+                                            open={openFollowUpForm}
+                                            onClose={handleFollowUpFormClose}
+                                        >
+                                            <ConsultancyFollowUpForm onClose={handleFollowUpFormClose} formState={formState}
+                                            setFormState={setFormState} isEdit={isEdit} onSubmit={()=>{
+                                                getFollowUpData()
+                                            }}/>
+                                        </Modal>
                                     </div>
-
                                     <div>
                                         <DataGrid
-                                            rows={rowsWithIds}
+                                            rows={followUpData}
                                             columns={columns}
                                             disableColumnFilter
                                             disableColumnSelector
                                             disableDensitySelector
                                             rowHeight={37}
-                                            getRowId={(row) => row.id}
+                                            getRowId={(row) => row.ID}
                                             initialState={{
                                                 pagination: {
                                                     paginationModel: { pageSize: 10, page: 0 },
@@ -213,20 +172,19 @@ const ConsultancyFollowUp = () => {
                                             }}
                                         />
 
-                                        {confirmationVisibleMap[cid] && (
+                                        {deleteId && (
                                             <div className='confirm-delete'>
-                                                <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>Export</button>
-                                                <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Print</button>
+                                                <p>Are you sure you want to delete?</p>
+                                                <button onClick={handleDelete} className='btn btn-sm btn-primary'>Ok</button>
+                                                <button onClick={() => setDeleteId(null)} className='btn btn-sm btn-danger'>Cancel</button>
                                             </div>
                                         )}
                                     </div>
 
-                                    <div className='row p-2 gap-2'>
-                                            <button className='mr-2 btn btn-primary' onClick={handleSubmit}>Submit</button>
+                                    {/* <div className='row p-2 gap-2'>
+                                            <button className='mr-2 btn btn-primary' >Submit</button>
                                             <button class="btn btn-light">Cancel</button>
-
-                                        </div>
-
+                                    </div> */}
                                 </div>
                             </div>
                         </div>

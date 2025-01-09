@@ -4,121 +4,73 @@ import Switch from '@mui/material/Switch';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 
 const AddConsultancyMasterListing = () => {
-    const [inquiryData, setInquiryData] = useState([]);
-    const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [editModalOpen, setEditModalOpen] = useState(false);
-    const [currentRow, setCurrentRow] = useState(null); // Track the current row for editing
+    const [deleteId, setDeleteId] = useState(null)
+    const [consultancyData, setConsultancyData] = useState([])
+    const navigate = useNavigate()
 
     const label = { inputProps: { 'aria-label': 'Color switch demo' } };
-
-    // Fetch inquiry data on mount
     useEffect(() => {
-        getInquiryData();
+        getConsultancyData();
     }, []);
 
-    const getInquiryData = async () => {
+    
+    const getConsultancyData = async () => {
         try {
-            const response = await axios.get(`${BASE_URL}/getadmissionactivity`);
-            setInquiryData(response.data);
+            const response = await axios.get(`${BASE_URL}/consultancy`);
+            setConsultancyData(response.data)
         } catch (error) {
-            console.error("Error fetching inquiry data:", error);
+            console.error("Error fetching consultancy data:", error);
         }
     };
 
-    const openEditModal = (row) => {
-        setCurrentRow(row);
-        setEditModalOpen(true);
-    };
-
-    const closeEditModal = () => {
-        setEditModalOpen(false);
-        setCurrentRow(null);
-    };
-
-    const handleEditChange = (e) => {
-        setCurrentRow({ ...currentRow, [e.target.name]: e.target.value });
-    };
-
-    const handleUpdate = async () => {
+    const handleDelete = async () => {
         try {
-            await axios.post(`${BASE_URL}/update_data`, {
-                ...currentRow,
-                tablename: "Student_Inquiry"
-            });
-            setEditModalOpen(false);
-            getInquiryData();
+            await axios.delete(`${BASE_URL}/deleteConsultancy/${deleteId}`);
+            setDeleteId(null)
+            getConsultancyData();
         } catch (error) {
-            console.error("Error updating inquiry data:", error);
+            setDeleteId(null)
+            console.error("Error deleting consultancy data:", error);
         }
     };
 
-    const handleClick = (id) => {
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: true,
-        }));
-    };
-
-    const handleCancel = (id) => {
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
-    };
-
-    const handleDelete = async (id) => {
-        try {
-            await axios.post(`${BASE_URL}/delete_inquiry_data`, {
-                cat_id: id,
-                tablename: "Student_Inquiry"
-            });
-            setConfirmationVisibleMap((prevMap) => ({
-                ...prevMap,
-                [id]: false,
-            }));
-            getInquiryData();
-        } catch (error) {
-            console.error("Error deleting inquiry data:", error);
-        }
-    };
-
-    const handleSwitchChange = async (value, Inquiry_Id) => {
+    const handleSwitchChange = async (value, Const_Id) => {
         const newStatus = value === 0 ? 1 : 0;
         try {
-            await axios.post(`${BASE_URL}/data_status`, { status: newStatus, Inquiry_Id, table_name: "Student_Inquiry" });
-            getInquiryData();
+            await axios.put(`${BASE_URL}/consultancy/status`, { status: newStatus, Const_Id});
+            getConsultancyData();
         } catch (error) {
             console.error("Error updating status:", error);
         }
     };
-
+    
     const columns = [
-        { field: 'index', headerName: 'Id', type: 'number', align: 'center', headerAlign: 'center', flex: 1, filterable: false },
-        { field: 'FName', headerName: 'Student Name', flex: 2 },
-        { field: 'course', headerName: 'Course Name', flex: 2 },
-        { field: 'inquiry_DT', headerName: 'Inquiry Date', flex: 2 },
-        { field: 'discussion', headerName: 'Discuss', flex: 2 },
-        { field: 'present_mobile', headerName: 'Mobile', flex: 2 },
-        { field: 'Email', headerName: 'Email', flex: 2 },
-        { field: 'Discipline', headerName: 'Discipline', flex: 2 },
-        { field: 'Inquiry_type', headerName: 'Inquiry Type', flex: 2 },
+        { field: 'Comp_Name', headerName: 'Consultancy Name', width:200 },
+        { field: 'Contact_Person', headerName: 'Contact Person', width: 150 },
+        { field: 'Designation', headerName: 'Designation', width: 200 },
+        { field: 'Address', headerName: 'Address', width: 250 },
+        { field: 'City', headerName: 'City', width: 100 },
+        { field: 'Tel', headerName: 'Telephone', width: 150 },
+        { field: 'EMail', headerName: 'Email', width: 200 },
         {
             field: 'actions',
             headerName: 'Action',
-            flex: 2,
+            width:200,
             renderCell: (params) => (
                 <>
-                    <EditIcon style={{ cursor: "pointer" }} onClick={() => openEditModal(params.row)} />
-                    <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
+                    <EditIcon style={{ cursor: "pointer" }} onClick={() =>{navigate(`/consultancymaster/${params.row.Const_Id}`)}} />
+                    <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => setDeleteId(params.row.Const_Id)} />
                     <Switch
                         {...label}
-                        onChange={() => handleSwitchChange(params.row.isActive, params.row.id)}
-                        checked={params.row.isActive === 1}
+                        onChange={() =>
+                            handleSwitchChange(params.row.IsActive, params.row.Const_Id)
+                         }
+                        checked={params.row.IsActive === 1}
                         color="secondary"
                     />
                 </>
@@ -126,7 +78,6 @@ const AddConsultancyMasterListing = () => {
         },
     ];
 
-    const rowsWithIds = inquiryData.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
         <div className="container-fluid page-body-wrapper col-lg-10">
@@ -141,29 +92,30 @@ const AddConsultancyMasterListing = () => {
                                         <h4 className="card-title">View Consultancy</h4>
                                         <Link to='/consultancymaster/:consultancymasterid'><button className='btn btn-success'>Add +</button></Link>
                                     </div>
+                                    <div>
+                                        <DataGrid
+                                            rows={consultancyData}
+                                            columns={columns}
+                                            disableColumnFilter
+                                            disableColumnSelector
+                                            disableDensitySelector
+                                            rowHeight={37}
+                                            getRowId={(row) => row.Const_Id}
+                                            initialState={{ pagination: { paginationModel: { pageSize: 10, page: 0 } } }}
+                                            slots={{ toolbar: GridToolbar }}
+                                            slotProps={{ toolbar: { showQuickFilter: true } }}
+                                        />
 
-                                    <DataGrid
-                                        rows={rowsWithIds}
-                                        columns={columns}
-                                        disableColumnFilter
-                                        disableColumnSelector
-                                        disableDensitySelector
-                                        rowHeight={37}
-                                        getRowId={(row) => row.id}
-                                        initialState={{ pagination: { paginationModel: { pageSize: 10, page: 0 } } }}
-                                        slots={{ toolbar: GridToolbar }}
-                                        slotProps={{ toolbar: { showQuickFilter: true } }}
-                                    />
-
-                                    {confirmationVisibleMap[currentRow?.id] && (
-                                        <div className='confirm-delete'>
-                                            <p>Are you sure you want to delete?</p>
-                                            <button onClick={() => handleDelete(currentRow.id)} className='btn btn-sm btn-primary'>OK</button>
-                                            <button onClick={() => handleCancel(currentRow.id)} className='btn btn-sm btn-danger'>Cancel</button>
-                                        </div>
-                                    )}
-
-                                   
+                                        {deleteId && (
+                                            <div className='confirm-delete'>
+                                                <p>Are you sure you want to delete?</p>
+                                                <button onClick={() =>{ 
+                                                    handleDelete()
+                                                }} className='btn btn-sm btn-primary'>OK</button>
+                                                <button onClick={()=>setDeleteId(null)} className='btn btn-sm btn-danger'>Cancel</button>
+                                            </div>
+                                        )}
+                                    </div>               
                                 </div>
                             </div>
                         </div>

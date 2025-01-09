@@ -210,6 +210,7 @@ import Taxmaster from './AdminComponent/Taxmaster.js';
 import AddAdminUSer from './AdminComponent/AddAdminUSer.jsx';
 import AcademicQualificationss from './AdminComponent/AcademicQualificaton.js';
 import NavbarWithDropdowns from './AdminComponent/Navbar/Navbar.jsx';
+import AddCVShortListed from './AdminComponent/AddCVShortListed.js';
 
 
 const Router = createBrowserRouter([
@@ -805,6 +806,10 @@ const Router = createBrowserRouter([
       {
         path: '/cvshortlisted',
         element: <CVShortListed />
+      },
+      {
+        path: '/cvshortlisted/:CVId',
+        element: <AddCVShortListed/>
       },
       {
         path: '/latestcvupdated',

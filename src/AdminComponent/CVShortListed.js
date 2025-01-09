@@ -5,22 +5,21 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useDebugValue, useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
+import { useNavigate } from 'react-router-dom';
 
 
 const CVShortListed = () => {
-
-
-
     const [brand, setBrand] = useState([])
     const [vendordata, setVendorData] = useState([])
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-
+    const [CVShortlistedList, setCVShortlistedList] = useState([])
+    const navigate = useNavigate()
     const [date, setDate] = useState('');
 
     useEffect(() => {
@@ -43,6 +42,18 @@ const CVShortListed = () => {
 
 
     })
+
+    const getCVShortlistedData = async()=>{
+        try{
+            const response = await axios.get(`${BASE_URL}/cvshortlisted`)
+            setCVShortlistedList(response.data)
+        }catch(err){
+            console.log('Error fetching cv shortlisted data', err)
+        }
+    }
+    useEffect(()=>{
+        getCVShortlistedData()
+    },[])
 
     useEffect(() => {
         setValue({
@@ -111,12 +122,12 @@ const CVShortListed = () => {
             })
     }
 
-    useEffect(() => {
-        getCollegeData()
-        value.title = ""
-        setError({})
-        setUid([])
-    }, [])
+    // useEffect(() => {
+    //     getCollegeData()
+    //     value.title = ""
+    //     setError({})
+    //     setUid([])
+    // }, [])
 
     const handleClick = (id) => {
         setCid(id)
@@ -205,35 +216,22 @@ const CVShortListed = () => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
 
-
-
-
-
-
     const columns = [
-        {
-            field: 'index',
-            headerName: 'Id',
-            type: 'number',
-            align: 'center',
-            headerAlign: 'center',
-            flex: 1,
-            filterable: false,
-        },
-        { field: 'batchcode', headerName: 'Batch Code', flex: 2 },
-        { field: 'coursename', headerName: 'Course Name', flex: 2 },
-        { field: 'company', headerName: 'Company Name', flex: 2 },
-        { field: 'date', headerName: 'Date', flex: 2 },
+        { field: 'Batch_code', headerName: 'Batch Code', flex:2 },
+        { field: 'Course_Name', headerName: 'Course Name', flex:3 },
+        { field: 'CompanyName', headerName: 'Company Name', flex:3 },
+        { field: 'TDate', headerName: 'Date', flex: 2 },
 
         {
             field: 'actions',
-            type: 'actions',
             headerName: 'Action',
             flex: 1,
             renderCell: (params) => {
                 return (
                     <>
-                        <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />
+                        <EditIcon style={{ cursor: "pointer" }} onClick={() => {
+                            navigate(`/cvshortlisted/${params.row.id}`)
+                        }} />
                         <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
                     </>
                 )
@@ -258,7 +256,6 @@ const CVShortListed = () => {
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
-
                                             <div class="form-group col-lg-3">
                                                 <label htmlfor="exampleInputUsername1">Date<span className="text-danger">*</span></label>
                                                 <input type="date" class="form-control" id="exampleInputUsername1"
@@ -289,9 +286,6 @@ const CVShortListed = () => {
                                                 </select>
                                                 {<span className='text-danger'> {error.batchcode} </span>}
                                             </div>
-
-
-
                                             {/* <div>
                                             <FormControlLabel
                                                 label="Parent"
@@ -305,17 +299,7 @@ const CVShortListed = () => {
                                             />
                                             {children}
                                             </div> */}
-
-
-
                                         </div>
-
-
-
-
-
-
-
                                         <button type="submit" class="btn btn-primary mr-2">Submit</button>
                                         <button type='button' onClick={() => {
                                             window.location.reload()
@@ -337,7 +321,7 @@ const CVShortListed = () => {
 
                                     <div>
                                         <DataGrid
-                                            rows={rowsWithIds}
+                                            rows={CVShortlistedList}
                                             columns={columns}
                                             disableColumnFilter
                                             disableColumnSelector
