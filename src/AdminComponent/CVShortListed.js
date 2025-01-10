@@ -8,7 +8,7 @@ import axios from 'axios';
 import React, { useDebugValue, useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 
 const CVShortListed = () => {
@@ -45,7 +45,9 @@ const CVShortListed = () => {
 
     const getCVShortlistedData = async()=>{
         try{
+            console.log('getCVShortlistedData')
             const response = await axios.get(`${BASE_URL}/cvshortlisted`)
+            console.log(response.data)
             setCVShortlistedList(response.data)
         }catch(err){
             console.log('Error fetching cv shortlisted data', err)
@@ -252,7 +254,10 @@ const CVShortListed = () => {
                         <div class="col-lg-12 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">CV Shortlisted </h4>
+                                    <div className='d-flex justify-content-between align-items-center gap-3' style={{ width: "100%", padding: "10px 0" }}>
+                                        <h4 class="card-title">CV Shortlisted </h4>
+                                        <Link to='/cvshortlisted/:cvid' className="btn btn-success">Add +</Link>
+                                    </div>
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
