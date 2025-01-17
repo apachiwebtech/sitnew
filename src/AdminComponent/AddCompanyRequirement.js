@@ -9,31 +9,22 @@ import InnerHeader from './InnerHeader';
 //import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import { MultiSelect } from 'react-multi-select-component';
+import { Checkbox } from '@mui/material';
 
 const AddCompanyRequirement = () => {
 
-    const [brand, setBrand] = useState([])
-    const [vendordata, setVendorData] = useState([])
+    const [batch, setBatch] = useState([]);
+    const [company, StudentCompany] = useState([]);
+    const [selected, setSelected] = useState([]);
     const [uid, setUid] = useState([])
     const [error, setError] = useState({})
-    const [options, setOptions] = useState([]);
     const { companyrequirmentid } = useParams();
     const [category, setCat] = useState('')
-    const [selected, setSelected] = useState([]);
+    const [coursedata, setCourseData] = useState([])
+    const [desciplinevalue, setDesciplinevalue] = useState()
+    const [ispass, setIspass] = useState('');
 
 
-    const [date, setDate] = useState('');
-
-    useEffect(() => {
-        const currentDate = new Date();
-        const year = currentDate.getFullYear();
-        let month = currentDate.getMonth() + 1;
-        month = month < 10 ? '0' + month : month;
-        let day = currentDate.getDay();
-        day = day < 10 ? '0' + day : day;
-        const formattedDate = `${year}-${month}-${day}`;
-        setDate(formattedDate);
-    }, []);
 
 
     const [value, setValue] = useState({
@@ -90,10 +81,7 @@ const AddCompanyRequirement = () => {
             isValid = false;
             newErrors.date = "Date is Required"
         }
-        if (!value.posteddate) {
-            isValid = false;
-            newErrors.posteddate = "PostedDate is Required"
-        }
+
         if (!value.responsibilities) {
             isValid = false;
             newErrors.responsibilities = "Responsibilities is Required"
@@ -106,18 +94,49 @@ const AddCompanyRequirement = () => {
         return isValid
     }
 
+    const handleselect = (value) => {
 
-    async function getEmployeeData() {
+        setSelected(value)
 
-        axios.post(`${BASE_URL}/vendor_details`)
+        setDesciplinevalue(value.map((item) => item.value).join(','))
+
+        console.log(value.map((item) => item.value))
+
+    }
+
+
+    const fetchbatch = async () => {
+        try {
+            const res = await axios.get(`${BASE_URL}/getbatch`);
+            setBatch(res.data.map(item => ({ label: item.Batch_code, value: item.Batch_Id })));
+        } catch (err) {
+            console.error(err);
+        }
+    };
+    const getcompany = async () => {
+        try {
+            const res = await axios.get(`${BASE_URL}/getCompanies`);
+            StudentCompany(res.data)
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    async function getCourseData() {
+        axios.get(`${BASE_URL}/getCourse`)
             .then((res) => {
                 console.log(res.data)
-                setBrand(res.data)
-            })
-            .catch((err) => {
+                setCourseData(res.data)
+            }).catch((err) => {
                 console.log(err)
             })
     }
+
+    useEffect(() => {
+        getCourseData()
+        getcompany()
+        fetchbatch();
+    }, []);
 
 
     async function getAddCompanyRequirementDetail() {
@@ -149,36 +168,31 @@ const AddCompanyRequirement = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         let response
-        if (validateForm()) {
-            if (companyrequirmentid == ":companyrequirmentid") {
-                response = await fetch(`${BASE_URL}/add_projectmaster`, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        projectno: value.projectno,
-                    }),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-            } else {
 
-                response = await fetch(`${BASE_URL}/updateInquiry`, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        companyname: value.companyname,
-                        profile: value.profile,
-                        location: value.location,
-                        eligibilty: value.eligibilty,
-                        date: value.date,
-                        responsibilities: value.responsibilities,
-                        course: value.course,
-                        selected: value.selected,
-                    }),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-            }
+
+        if (validateForm()) {
+
+            response = await fetch(`${BASE_URL}/add_companyrequirement`, {
+
+                method: 'POST',
+                body: JSON.stringify({
+                    companyname: value.companyname,
+                    profile: value.profile,
+                    location: value.location,
+                    eligibilty: value.eligibilty,
+                    date: value.date,
+                    responsibilities: value.responsibilities,
+                    course: value.course,
+                    selected: value.selected,
+                    uid: uid.id
+                }),
+
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+
+            })
+
 
 
 
@@ -202,14 +216,23 @@ const AddCompanyRequirement = () => {
 
 
 
-    const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
 
+    const handleCheckboxChange = (e) => {
+        const isChecked = e.target.checked;
+    
+        // Update `isPass` based on whether the checkbox is checked or not
+        if (isChecked) {
+            setIspass("1");
+        } else {
+            setIspass("2");
+        }
+    
+        // Update `cat` with the value of the checkbox
+        setCat(isChecked ? "1" : "2");
+    };
+    
 
-    const handleradiochange = (e) => {
-        console.log(e.target.value)
-
-        setCat(e.target.value)
-    }
+    console.log(ispass)
 
     return (
 
@@ -228,86 +251,104 @@ const AddCompanyRequirement = () => {
                                         <div class='row'>
 
 
-                                            <div class="form-group col-lg-4">
+                                            <div class="form-group col-lg-6">
                                                 <label for="exampleFormControlSelect1">Company Name<span className='text-danger'>*</span> </label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1"
                                                     value={value.companyname} onChange={onhandleChange} name='companyname'>
                                                     <option>---Select Company Name---</option>
+                                                    {company.map((item) => {
+                                                        return (
+                                                            <option value={item.Company_Id}>{item.CompanyName}</option>
+
+                                                        )
+                                                    })}
                                                 </select>
                                                 {<span className='text-danger'> {error.companyname} </span>}
                                             </div>
 
 
-                                            <div class="form-group col-lg-2">
-                                                <lable for="exampleInputUsername1">Profile <span className="text-danger">*</span> </lable>
+                                            <div class="form-group col-lg-6">
+                                                <label for="exampleInputUsername1">Profile <span className="text-danger">*</span> </label>
                                                 <input type="text" class="form-control" id="exampleInputUsername1"
                                                     value={value.profile} placeholder='Profile' name='profile' onChange={onhandleChange} />
 
                                                 {<span className='text-danger'> {error.profile} </span>}
                                             </div>
 
-                                            <div class="form-group col-lg-2">
-                                                <lable for="exampleInputUsername1">Location<span className="text-danger" >*</span> </lable>
+                                            <div class="form-group col-lg-6">
+                                                <label for="exampleInputUsername1">Location<span className="text-danger" >*</span> </label>
                                                 <input type="text" class="form-control" id="exampleInputUsername1" value={value.location}
                                                     placeholder='Location' name='location' onChange={onhandleChange} />
                                                 {<span className='text-danger'> {error.location} </span>}
                                             </div>
 
-                                            <div class="form-group col-lg-2">
-                                                <lable for="exampleInputUsername1">Eligibilty <span className="text-danger">*</span> </lable>
+                                            <div class="form-group col-lg-6">
+                                                <label for="exampleInputUsername1">Eligibilty <span className="text-danger">*</span> </label>
                                                 <input type="text" class="form-control" id="exampleInputUsername" value={value.eligibilty}
                                                     placeholder='Eligibilty' name='eligibilty' onChange={onhandleChange} />
 
                                                 {<span className='text-danger'> {error.eligibilty} </span>}
                                             </div>
-
-                                            <div class="form-group col-lg-2">
-                                                <lable htmlfor="exampleInputUsername1">Posted Date <span className="text-danger">*</span></lable>
-                                                <input type="date" class="form-control"
-                                                    id="exampleInputUsername1"
-                                                    value={date}
-                                                    name='date'
-                                                    onChange={(e) => { }} />
-
-                                                {<span className='text-danger'> {error.posteddate} </span>}
-                                            </div>
-
-                                            <div class="form-group col-lg-4">
-                                                <lable for="exampleTextarea1">Responsibilities <span className="text-danger">*</span> </lable>
+                                            <div class="form-group col-lg-12">
+                                                <label for="exampleTextarea1">Responsibilities <span className="text-danger">*</span> </label>
                                                 <textarea class="form-control" id="exampleTextarea1" value={value.responsibilities}
                                                     placeholder='Responsibilities' name='responsibilities' onChange={onhandleChange}></textarea>
 
                                                 {<span className='text-danger'> {error.responsibilities} </span>}
                                             </div>
+                                            <div class="form-group col-lg-2">
+                                                <label htmlfor="exampleInputUsername1">Posted Date <span className="text-danger">*</span></label>
+                                                <input type="date" class="form-control"
+                                                    id="exampleInputUsername1"
+                                                    value={value.date}
+                                                    name='date'
+                                                    onChange={onhandleChange} />
+
+                                                {<span className='text-danger'> {error.date} </span>}
+                                            </div>
+
+
 
                                             <div class="form-group col-lg-4">
-                                                <lable for="exampleFormControlSelect1">Course<span className="text-danger">*</span></lable>
+                                                <label for="exampleFormControlSelect1">Course<span className="text-danger">*</span></label>
                                                 <select class="form-control form-control-lg" id="exampleFromControlSelect1"
                                                     value={value.course}
                                                     name='course' onChange={onhandleChange}>
                                                     <option>--Select Course--</option>
+                                                    {coursedata.map((item) => {
+                                                        return (
+                                                            <option value={item.Course_Id}>{item.Course_Name}</option>
+                                                        )
+                                                    })}
                                                 </select>
                                                 {<span className='text-danger'> {error.course} </span>}
                                             </div>
 
 
                                             <div class="form-group col-lg-3">
-                                                <lable for="exampleFormControlSelect1">Batch</lable>
-                                                <MultiSelect option={options} value={selected} onChange={setSelected}
-                                                    labelledBy='Select All' name="selected" ></MultiSelect>
+                                                <label for="exampleFormControlSelect1">Batch</label>
+                                                <MultiSelect
+                                                    options={batch}
+                                                    value={selected}
+                                                    onChange={(value) => handleselect(value)}
+                                                    labelledBy="Select All"
+                                                    name="selected"
+                                                />
                                             </div>
 
                                             <div class="from-group col-lg-12">
                                                 <FormControl>
-                                                    <RadioGroup
-                                                        row
-                                                        onChange={(e) => handleradiochange(e)}
-                                                        aria-labelledby="demo-row-radio-buttons-group-label"
-                                                        name="row-radio-buttons-group"  >
-                                                        <FormControlLabel value="0118" control={<Radio />} label="Is Pass Student" />
-
-                                                    </RadioGroup>
+                                                    <FormControlLabel
+                                                        control={
+                                                            <Checkbox
+                                                                onChange={(e) => handleCheckboxChange(e)}
+                                                                name="isPassStudent"
+                                                            />
+                                                        }
+                                                        label="Is Pass Student"
+                                                    />
                                                 </FormControl>
+
                                             </div>
 
 

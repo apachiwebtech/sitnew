@@ -2,180 +2,102 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 //import FormControlLabel from '@mui/material/FormControlLabel';
 
 const ConsultancyReport = () => {
 
-    const [brand, setBrand] = useState([])
-    const [consultancyreportdata, setConsultancyReportData] = useState([])
-    const [uid, setUid] = useState([])
-    const [cid, setCid] = useState("")
-    const [error, setError] = useState({})
-    const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
+    const [coursedata, setCourseData] = useState([])
+    const [city, setCity] = useState([])
+    const [consultant, setConsulatant] = useState([])
+
+
+
 
 
     const [value, setValue] = useState({
-        training: "" || uid.training,
-        attendee: "" || uid.attendee,
-        instructor: "" || uid.instructor,
-        description: "" || uid.description,
-        feedback: "" || uid.feedback,
-
-
-
-
+        course: "",
+        city: '',
+        purpose: "",
+        fromdate: "",
+        todate: ""
     })
 
-    useEffect(() => {
-        setValue({
-            training: uid.training,
-            attendee: uid.attendee,
-            instructor: uid.instructor,
-            description: uid.description,
-            feedback: uid.feedback,
-
-        })
-    }, [uid])
 
 
-    // const validateForm = () => {
-    //     let isValid = true
-    //     const newErrors = {}
-
-
-    //    if (!value.college) {
-    //     isValid = false;
-    //     newErrors.name = "Name is require"
-    //    }
-    //     if (!value.email) {
-    //         isValid = false;
-    //         newErrors.email = "Email is require"
-    //     }
-    //     setError(newErrors)
-    //     return isValid
-    // }
-
-
-    async function getEmployeeData() {
-
-        axios.post(`${BASE_URL}/vendor_details`)
+    async function getCourseData() {
+        axios.get(`${BASE_URL}/getCourse`)
             .then((res) => {
-                console.log(res.data)
-                setBrand(res.data)
+
+                setCourseData(res.data)
+            }).catch((err) => {
+                console.log(err)
             })
-            .catch((err) => {
+    }
+    async function getCity() {
+        axios.get(`${BASE_URL}/getConsultantCity`)
+            .then((res) => {
+
+                setCity(res.data)
+            }).catch((err) => {
                 console.log(err)
             })
     }
 
 
 
-    async function getEmployeeData() {
-        const data = {
-            tablename: "awt_employeerecord"
-        }
-        axios.post(`${BASE_URL}/get_data`, data)
-            .then((res) => {
-                console.log(res.data)
-                setConsultancyReportData(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
+
 
     useEffect(() => {
-        getEmployeeData()
-        value.title = ""
-        setError({})
-        setUid([])
+        getCity()
+        getCourseData()
     }, [])
 
-    const handleClick = (id) => {
-        setCid(id)
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: true,
-        }));
-    };
 
-    const handleCancel = (id) => {
-        // Hide the confirmation dialog without performing the delete action
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
-    };
 
-    const handleUpdate = (id) => {
-        const data = {
-            u_id: id,
-            tablename: "awt_employeerecord"
-        }
-        axios.post(`${BASE_URL}/update_data`, data)
-            .then((res) => {
-                setUid(res.data[0])
+    const handlesubmit = (e) =>{
+      e.preventDefault()
 
-                console.log(res.data, "update")
-            })
-            .catch((err) => {
-                console.log(err)
-            })
+      const data = {
+        course: value.course,
+        city: value.city,
+        purpose: value.purpose,
+        fromdate: value.fromdate,
+        todate: value.todate
+      }
+
+      axios.post(`${BASE_URL}/searchconsultantreport` , data)
+      .then((res) =>{
+        setConsulatant(res.data)
+      })
     }
 
-    const handleDelete = (id) => {
-        const data = {
-            cat_id: id,
-            tablename: "awt_employeerecord"
-        }
 
-        axios.post(`${BASE_URL}/delete_data`, data)
-            .then((res) => {
-                getEmployeeData()
+    const columns = [
+        {
+            field: 'index',
+            headerName: 'Id',
+            type: 'number',
+            align: 'center',
+            headerAlign: 'center',
+            width: 100,
+            filterable: false,
 
-            })
-            .catch((err) => {
-                console.log(err)
-            })
+        },
+        { field: 'Date_Added', headerName: 'Created Date', width: 150 },
+        { field: 'Comp_Name', headerName: 'Company Name', width: 250  },
+        { field: 'Contact_Person', headerName: 'Contact Person Name', width: 200  },
+        { field: 'Address', headerName: 'Address', width: 500  },
+        { field: 'Country', headerName: 'Country', width: 200 },
+        { field: 'Tel', headerName: 'Contact_No', width: 200  },
+        { field: 'EMail', headerName: 'Email', width: 200  },
+        { field: 'CourseName1', headerName: 'Courses', width: 250  },
 
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
-    }
-
-    const handleSubmit = (e) => {
-        e.preventDefault()
-
-        // if(validateForm()){
-        const data = {
-
-            training: value.training,
-            attendee: value.attendee,
-            instructor: value.instructor,
-            description: value.description,
-            feedback: value.feedback,
-            uid: uid.id
-        }
+    ];
 
 
-        axios.post(`${BASE_URL}/add_employeerecord`, data)
-            .then((res) => {
-                console.log(res)
-                getEmployeeData()
+    const rowsWithIds = consultant.map((row, index) => ({ index: index + 1, ...row }));
 
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-        // }
-
-
-
-
-
-    }
 
 
     const onhandleChange = (e) => {
@@ -184,43 +106,6 @@ const ConsultancyReport = () => {
 
 
 
-
-
-
-    // const columns = [
-    //     {
-    //         field: 'index',
-    //         headerName: 'Id',
-    //         type: 'number',
-    //         align: 'center',
-    //         headerAlign: 'center',
-    //         flex: 1,
-    //         filterable: false,
-
-    //     },
-    //     { field: 'attendee', headerName: 'Attendee', flex: 2},
-    //     { field: 'instructor', headerName: 'Instructor', flex: 2},
-    //     { field: 'description', headerName: 'Description', flex: 2},
-    //     { field: 'feedback', headerName: 'FeedBack', flex: 2},
-
-    //     {
-    //         field: 'actions',
-    //         type: 'actions',
-    //         headerName: 'Action',
-    //         flex: 1,
-    //         renderCell: (params) => {
-    //             return (
-    //                 <>
-    //                     <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />
-    //                     <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
-    //                 </>
-    //             )
-    //         }
-    //     },
-    // ];
-
-
-    //const rowsWithIds = consultancyreportdata.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
 
@@ -234,19 +119,22 @@ const ConsultancyReport = () => {
                                 <div class="card-body">
                                     <h4 class="card-title">Consultancy Report</h4>
                                     <hr></hr>
-                                    <form class="forms-sample py-3" onSubmit={handleSubmit}>
+                                    <form class="forms-sample py-3" onSubmit={handlesubmit}>
                                         <div class='row'>
 
 
                                             <div class="form-group col-lg-4">
                                                 <label for="exampleFormControlSelect1">Course</label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.course} onChange={onhandleChange} name='course'>
-                                                    
-                                                        <option>Select Course</option>
-                                                        <option> Training in Process Plant System Modelling Using E3D</option>
-                                                        <option>Advance Pipe Stress Analysis </option>
 
-                                                    </select>
+                                                    <option>Select Course</option>
+                                                    {coursedata.map((item) => {
+                                                        return (
+                                                            <option value={item.Course_Id}>{item.Course_Name}</option>
+                                                        )
+                                                    })}
+
+                                                </select>
                                             </div>
 
 
@@ -254,20 +142,31 @@ const ConsultancyReport = () => {
                                                 <label for="exampleFormControlSelect1">City </label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.city} onChange={onhandleChange} name='city'>
                                                     <option>Select City</option>
-                                                    <option>Thane(W)</option>
-                                                    <option>,Andhra Pradesh,</option>
-                                                    <option >380 015</option>
-                                                    
+                                                    {city.map((item) => {
+                                                        return (
+                                                            <option value={item.City}>{item.City}</option>
+                                                        )
+                                                    })}
+
+
                                                 </select>
                                             </div>
 
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleFormControlSelect1">Purpose </label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.purpose} onChange={onhandleChange} name='purpose'>
-                                                    <option></option>
-                                                    <option>Meeting</option>
-                                                    <option>Others</option>
-                                                    <option>Placement</option>
+                                                    <option value="">Select Purpose</option>
+                                                    <option value="Meeting">Meeting</option>
+                                                    <option value="Others">Others</option>
+                                                    <option value="Placement">Placement</option>
+                                                    <option value="Placement Received">Placement Received</option>
+                                                    <option value="Placements">Placements</option>
+                                                    <option value="Project">Project</option>
+                                                    <option value="Proposal">Proposal</option>
+                                                    <option value="Seminar">Seminar</option>
+                                                    <option value="Training">Training</option>
+                                                    <option value="Training Received">Training Received</option>
+
                                                 </select>
                                             </div>
 
@@ -278,13 +177,18 @@ const ConsultancyReport = () => {
                                             </div>
 
                                             <div class="form-group col-lg-2">
-                                                <lable for="exampleInputUsername1">To Date</lable>
+                                                <label for="exampleInputUsername1">To Date</label>
                                                 <input type="date" class="form-control" id="exampleInputUsername1" value={value.todate} name='todate' onChange={onhandleChange} />
                                             </div>
 
                                         </div>
 
+                                        <div>
                                         <button type="submit" class="btn btn-primary mr-2">Go</button>
+                                        <button type="button" onClick={() => window.location.reload()} class="btn btn-primary mr-2">Clear</button>
+
+                                        </div>
+
 
                                     </form>
 
@@ -301,7 +205,7 @@ const ConsultancyReport = () => {
 
                                     </div>
 
-                                    {/* <div>
+                                    <div>
                                         <DataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
@@ -309,7 +213,7 @@ const ConsultancyReport = () => {
                                             disableColumnSelector
                                             disableDensitySelector
                                             rowHeight={35}
-                                            getRowId={(row) => row.id}
+                                            getRowId={(row) => row.Const_Id}
                                             initialState={{
                                                 pagination: {
                                                     paginationModel: { pageSize: 10, page: 0 },
@@ -323,14 +227,7 @@ const ConsultancyReport = () => {
                                             }}
                                         />
 
-                                        {confirmationVisibleMap[cid] && (
-                                            <div className='confirm-delete'>
-                                                <p>Are you sure you want to delete?</p>
-                                                <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
-                                                <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
-                                            </div>
-                                        )}
-                                    </div> */}
+                                    </div>
 
                                     <button type="submit" class="btn btn-primary mr-2">Print</button>
                                     <button type='button' onClick={() => {

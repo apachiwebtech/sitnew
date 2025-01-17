@@ -295,9 +295,9 @@ const NavbarWithDropdowns = () => {
                                 <li><Link className="dropdown-item" to="/latestcvupdated">Latest CV Updated</Link></li>
                                 <li><Link className="dropdown-item" to="/convocation">Convocation Guest List</Link></li>
                                 <li><Link className="dropdown-item" to="/consultancyreport">Consultancy Report</Link></li>
-                                <li><Link className="dropdown-item" to="/studentplacement">Student Placement Repor</Link></li>
+                                <li><Link className="dropdown-item" to="/studentplacement">Student Placement Report</Link></li>
                                 <li><Link className="dropdown-item" to="/viewstudent">View Student CV Folder</Link></li>
-                                <li><Link className="dropdown-item" to="/companyrequirment">Company Requirment Report</Link></li>
+                                <li><Link className="dropdown-item" to="/companyrequirment">Company Requirment Master</Link></li>
                                 <li><Link className="dropdown-item" to="/shortlisted">Shortlisted By SIT</Link></li>
                                 <li><Link className="dropdown-item" to="/shortlistedcompany">Shortlisted By Company</Link></li>
                         
