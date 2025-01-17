@@ -180,7 +180,7 @@ const AddConsultancyMaster = () => {
                 navigate("/consultancymaster"); // Redirect after adding data
             } catch (error) {
                 alert("Error adding/updating data")
-                console.error("Error adding/updating data:", error);
+                console.log("Error adding/updating data:", error);
             }
         }
     };
@@ -273,7 +273,7 @@ const AddConsultancyMaster = () => {
                                                     </div>
                                                     <div className="form-group col-lg-6">
                                                         <label for="exampleInputUsername1">Date</label>
-                                                        <input type="date" className="form-control" id="exampleInputUsername1" value={value.Date_Added} name='Date_Added' onChange={onhandleChange} />
+                                                        <input type="date" className="form-control" id="exampleInputUsername1" value={value.Mention_Date} name='Mention_Date' onChange={onhandleChange} />
                                                     </div>
                                                     <div className="form-group col-lg-6">
                                                         <label for="exampleFormControlSelect1">Industry</label>

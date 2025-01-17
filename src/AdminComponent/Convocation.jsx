@@ -14,6 +14,7 @@ import BatchEdit from "./BatchEdit";
 import InnerHeader from "./InnerHeader";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { Link, useNavigate } from "react-router-dom";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -32,7 +33,11 @@ const Convocation = () => {
   const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
   const [cid, setCid] = useState("")
   const [uid, setUid] = useState([])
-
+  const [batchData, setBatchData] = useState({})
+  const [convocationData, setConvocationData] = useState([])
+  const [convocationDataM, setConvocationDataM] = useState([])
+  const [deleteId, setDeleteId] = useState(null)
+  const navigate = useNavigate()
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -100,95 +105,79 @@ const Convocation = () => {
   }
 
 
+  useEffect(()=>{
+    getBatch()
+    getConvocationData()
+  },[])
 
-  const handleClick = (id) => {
-    setCid(id)
-    setConfirmationVisibleMap((prevMap) => ({
-      ...prevMap,
-      [id]: true,
-    }));
+
+  const getConvocationData = async()=>{
+    try{
+        const response = await axios.get(`${BASE_URL}/getConvocation`)
+        setConvocationData(response.data)
+    }catch(err){
+        console.log(err)
+    }
+  }
+  const getBatch = async () => {
+    try {
+        const response = await axios.get(`${BASE_URL}/getbatch`);
+
+        const data = response.data.reduce((acc, curr)=>({
+            ...acc,
+            [curr.Batch_Id]:curr.Batch_code
+        }),{})
+
+        setBatchData(data)
+    } catch (err) {
+        console.log(err);
+    }
   };
 
-  const handleCancel = (id) => {
-    // Hide the confirmation dialog without performing the delete action
-    setConfirmationVisibleMap((prevMap) => ({
-      ...prevMap,
-      [id]: false,
-    }));
-  };
-
-  const getupdatedata = (id) => {
-
-    setOpen(true)
-
-    const data = {
-      u_id: id,
-      uidname: "id",
-      tablename: "Batch_Convocation"
+  useEffect(()=>{
+    if(convocationData.length>0 && Object.keys(batchData).length>0){
+        const data = convocationData.map((row)=>{
+            let batchCodeStr = ''
+            const batchIdArr = row.Batch_Id ? row.Batch_Id.split(','):[]
+            batchCodeStr = batchIdArr.map((id)=>batchData[id]).join(',')
+            return {...row, Batch_Code: batchCodeStr}
+        })
+        setConvocationDataM(data)
     }
-    axios.post(`${BASE_URL}/new_update_data`, data)
-      .then((res) => {
-        setUid(res.data[0])
+  },[convocationData, batchData])
 
-
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-  }
-
-
-  const handleDelete = (id) => {
-    const data = {
-
-      cat_id: id,
-      tablename: "Batch_Convocation",
-
+  const handleDeleteConfirm = async()=>{
+    try{
+        await axios.post(`${BASE_URL}/deletePChild`,{
+            parentTable: 'Convocation_Guest_List',
+            parentColumn: 'Id',
+            childTable: 'Convocation_Guest_List_Child',
+            childColumn: 'Id',
+            id: deleteId
+        })
+        setDeleteId(null)
+        getConvocationData()
+        alert('Data deleted successfully')
+    }catch(err){
+        setDeleteId(null)
+        console.log('Error deleting data',err)
+        alert('Error deleting data')
     }
-
-    axios.post(`${BASE_URL}/delete_data`, data)
-      .then((res) => {
-        getUnitTest()
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-
-    setConfirmationVisibleMap((prevMap) => ({
-      ...prevMap,
-      [id]: false,
-    }));
   }
-
-
-
-
 
   const columns = [
-    {
-      field: "index",
-      headerName: "Id",
-      type: "number",
-      align: "center",
-      headerAlign: "center",
-      flex: 1,
-      filterable: false,
-    },
-    { field: "faculty_name", headerName: "Faculty ", flex: 2 },
-    { field: "guest_name", headerName: "Guest Name ", flex: 2 },
-    { field: "guest_mobile", headerName: "Guest Mobile ", flex: 2 },
-    { field: "email", headerName: "Email", flex: 2 },
-    { field: "guest_designation", headerName: "Guest Designation", flex: 2 },
+    { field: "Batch_Code", headerName: "Batch Code", flex:2 },
+    { field: "DateAdded", headerName: "Convocation Date", flex: 1 },
+    { field: "Combined_FName", headerName: "Faculty Name", flex: 2 },
     {
       field: 'actions',
-      type: 'actions',
       headerName: 'Action',
-      flex: 1,
+      flex:1,
       renderCell: (params) => {
         return (
           <>
-            <EditIcon style={{ cursor: "pointer" }} onClick={() => getupdatedata(params.row.id)} />
-            <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
+            <EditIcon style={{ cursor: "pointer" }} onClick={()=>navigate(`/convocation/${params.row.Id}`)} />
+            <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => setDeleteId(params.row.Id)} />
           </>
         )
       }
@@ -240,26 +229,29 @@ const Convocation = () => {
                     <div>
                       <h4 class="card-title">Convocation</h4>
                     </div>
-                    <button
+                    {/* <button
                       className="btn btn-success"
                       onClick={handleClickOpen}
                     >
                       Add +
-                    </button>
+                    </button> */}
+                    <Link to='/convocation/:Id' className='btn btn-success'>
+                        Add +
+                    </Link>
                   </div>
 
                   <div>
                     <DataGrid
-                      rows={rowsWithIds}
+                      rows={convocationDataM}
                       columns={columns}
                       disableColumnFilter
                       disableColumnSelector
                       disableDensitySelector
                       rowHeight={37}
-                      getRowId={(row) => row.id}
+                      getRowId={(row) => row.Id}
                       initialState={{
                         pagination: {
-                          paginationModel: { pageSize: 5, page: 0 },
+                          paginationModel: { pageSize: 10, page: 0 },
                         },
                       }}
                       slots={{ toolbar: GridToolbar }}
@@ -269,12 +261,14 @@ const Convocation = () => {
                         },
                       }}
                     />
-                    {confirmationVisibleMap[cid] && (
-                      <div className='confirm-delete'>
-                        <p>Are you sure you want to delete?</p>
-                        <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
-                        <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
-                      </div>
+                    {deleteId && (
+                        <div className='confirm-delete'>
+                            <p>Are you sure you want to delete?</p>
+                            <button type='button' onClick={() =>{ 
+                                    handleDeleteConfirm()
+                            }} className='btn btn-sm btn-primary'>OK</button>
+                            <button type='button' onClick={()=>setDeleteId(null)} className='btn btn-sm btn-danger'>Cancel</button>
+                        </div>
                     )}
                   </div>
 

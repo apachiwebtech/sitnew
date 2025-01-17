@@ -211,6 +211,7 @@ import AddAdminUSer from './AdminComponent/AddAdminUSer.jsx';
 import AcademicQualificationss from './AdminComponent/AcademicQualificaton.js';
 import NavbarWithDropdowns from './AdminComponent/Navbar/Navbar.jsx';
 import AddCVShortListed from './AdminComponent/AddCVShortListed.js';
+import AddConvocation from './AdminComponent/AddConvocation.js';
 
 
 const Router = createBrowserRouter([
@@ -818,6 +819,10 @@ const Router = createBrowserRouter([
       {
         path: '/convocation',
         element: <Convocation />
+      },
+      {
+        path:'/convocation/:Id',
+        element:<AddConvocation/>
       },
       {
         path: '/viewstudent',
