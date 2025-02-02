@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
-import { BASE_URL } from './BaseUrl';
+import { BASE_URL, IMG_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import OnlineAdmissionForm from './OnlineAdmissionForm';
 import img from '../assets/pass.jpg';
@@ -14,6 +14,7 @@ const StudentPersonalInfo = () => {
     const [course, setCourse] = useState([])
     const [batchCategoty, setbatchCategory] = useState([]);
     const [status, setStatus] = useState([])
+    const [photo, setPhoto] = useState('')
     const location = useLocation();
     const [personalInfo, setPersonalInfo] = useState({
         studentName: '',
@@ -78,8 +79,30 @@ const StudentPersonalInfo = () => {
                 setStatus(res.data)
             })
     }
+    async function getStatus() {
+
+
+        axios.get(`${BASE_URL}/getstatus`)
+            .then((res) => {
+                setStatus(res.data)
+            })
+    }
+    async function getdocument() {
+        const data = {
+            student_id: localStorage.getItem(`Admissionid`)
+        }
+
+        axios.post(`${BASE_URL}/getdocuments`, data)
+            .then((res) => {
+                if(res.data && res.data[0]){
+
+                    setPhoto(res.data[0].doc_name)
+                }
+            })
+    }
 
     useEffect(() => {
+        getdocument()
         getStatus()
         getCourse()
         getBtachCategory()
@@ -481,7 +504,7 @@ const StudentPersonalInfo = () => {
                                                 </div>
 
                                                 <div className='student-img text-center'>
-                                                    <img style={{ width: "150px" }} src={img} alt='' />
+                                                    <img style={{ width: "150px" }} src={`${IMG_URL}/student_document/${admissionid}/${photo}`} alt='' />
                                                 </div>
 
                                                 <div className='p-2'>
