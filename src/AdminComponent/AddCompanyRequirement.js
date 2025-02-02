@@ -1,6 +1,5 @@
 import FormControlLabel from "@mui/material/FormControlLabel";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
+
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -10,18 +9,20 @@ import InnerHeader from "./InnerHeader";
 import FormControl from "@mui/material/FormControl";
 import { MultiSelect } from "react-multi-select-component";
 import { Checkbox } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const AddCompanyRequirement = () => {
     const [batchData, setBatchData] = useState([]);
     const [company, StudentCompany] = useState([]);
     const [selected, setSelected] = useState([]);
-    const [uid, setUid] = useState([]);
+
     const [error, setError] = useState({});
     const { companyrequirmentid } = useParams();
-    const [category, setCat] = useState("");
+
     const [coursedata, setCourseData] = useState([]);
-    const [desciplinevalue, setDesciplinevalue] = useState();
-    const [ispass, setIspass] = useState("");
+
+    const [isEdit, setIsEdit] = useState(false)
+    const navigate = useNavigate()
 
     const [formState, setFormState] = useState({
         CompanyId: "",
@@ -34,29 +35,7 @@ const AddCompanyRequirement = () => {
         PostedDate: "",
     });
 
-    const [value, setValue] = useState({
-        companyname: "" || uid.companyname,
-        profile: "" || uid.profile,
-        location: "" || uid.location,
-        eligibilty: "" || uid.eligibilty,
-        date: "" || uid.date,
-        responsibilities: "" || uid.responsibilities,
-        course: "" || uid.course,
-        selected: "" || uid.select,
-    });
-
-    useEffect(() => {
-        setValue({
-            companyname: uid.companyname,
-            profile: uid.profile,
-            location: uid.location,
-            eligibilty: uid.eligibilty,
-            date: uid.date,
-            responsibilities: uid.responsibilities,
-            course: uid.course,
-            selected: uid.selected,
-        });
-    }, [uid]);
+    
 
     const validateForm = () => {
         let isValid = true;
@@ -95,13 +74,7 @@ const AddCompanyRequirement = () => {
         return isValid;
     };
 
-    const handleselect = (value) => {
-        setSelected(value);
 
-        setDesciplinevalue(value.map((item) => item.value).join(","));
-
-        console.log(value.map((item) => item.value));
-    };
 
     const getcompany = async () => {
         try {
@@ -109,6 +82,7 @@ const AddCompanyRequirement = () => {
             StudentCompany(res.data);
         } catch (err) {
             console.error(err);
+            navigate('/companyrequirment')
         }
     };
 
@@ -134,6 +108,7 @@ const AddCompanyRequirement = () => {
             })
             .catch((err) => {
                 console.log(err);
+                navigate('/companyrequirment')
             });
     }
 
@@ -146,6 +121,7 @@ const AddCompanyRequirement = () => {
             })
             .catch((err) => {
                 console.log(err);
+                navigate('/companyrequirment')
             });
     }
 
@@ -154,64 +130,59 @@ const AddCompanyRequirement = () => {
         getcompany();
     }, []);
 
-    async function getAddCompanyRequirementDetail() {
-        const response = await fetch(
-            `${BASE_URL}/addcompanyrequirementDetail`,
-            {
-                method: "POST",
-                body: JSON.stringify({
-                    id: companyrequirmentid,
-                }),
-                headers: {
-                    "Contect-Type": "application/json",
-                },
-            }
-        );
-
-        const data = await response.json();
-        console.log(data, "DATA A GAYA!");
-    }
 
     useEffect(() => {
-        if (companyrequirmentid !== ":companyrequirmentid") {
-            getAddCompanyRequirementDetail();
+        const id = parseInt(companyrequirmentid)
+        if(!isNaN(id)){
+            setIsEdit(true)
+            getCompanyReq(id)
         }
-        value.title = "";
-        setError({});
-        setUid([]);
     }, []);
 
+    useEffect(()=>{
+        const batchIdArr = formState.companyReqBatch
+
+        if(batchIdArr && batchIdArr.length>0 && batchData.length>0){
+            const selectedArr = batchData.filter((data)=>batchIdArr.includes(data.value))
+            setSelected(selectedArr)
+        }
+    },[formState.companyReqBatch, batchData])
+
+    const getCompanyReq = async(id)=>{
+        try{
+            const response = await axios.get(`${BASE_URL}/getCompanyRequirement/${id}`)
+            setFormState({...response.data.companyReq,companyReqBatch:response.data.companyReqBatch.map((item)=>item.BatchId)})
+        }catch(err){
+            console.log('getCompanyReq error', err)
+            alert('Error')
+            navigate('/companyrequirment')
+        }
+    }
+
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
-        let response;
+        try{
+            if(validateForm()) {
+                const BatchIdArr = selected.map((item)=>item.value)
+                
+                if(!isEdit){
+                    const response = await axios.post(`${BASE_URL}/add_companyrequirement`,{...formState,BatchIdArr})
+                    
+                    alert('Data added successfully')
+                }else{
+                    const BatchIdRemove = formState.companyReqBatch.filter((item)=>!BatchIdArr.includes(item))
+                    const BatchIdInsert = BatchIdArr.filter((item)=>!formState.companyReqBatch.includes(item))
+                    const response = await axios.put(`${BASE_URL}/updateCompanyRequirement`,{...formState,BatchIdRemove,BatchIdInsert})
+                    
+                    alert('Data updated successfully')
+                }
 
-        if (validateForm()) {
-            console.log("formstate", formState);
-            console.log(selected);
-            return;
-            // response = await fetch(`${BASE_URL}/add_companyrequirement`, {
-            //     method: "POST",
-            //     body: JSON.stringify({
-            //         companyname: value.companyname,
-            //         profile: value.profile,
-            //         location: value.location,
-            //         eligibilty: value.eligibilty,
-            //         date: value.date,
-            //         responsibilities: value.responsibilities,
-            //         course: value.course,
-            //         selected: value.selected,
-            //         uid: uid.id,
-            //     }),
-
-            //     headers: {
-            //         "Content-Type": "application/json",
-            //     },
-            // });
-
-            // const data = await response.json();
-
-            // alert(data.message);
-            //   window.location.pathname = '/inquirylisting'
+            }
+        }catch(err){
+            console.log('error adding company Req', err)
+            alert('Error')
+            navigate('/companyrequirment')
         }
     };
 
@@ -219,21 +190,14 @@ const AddCompanyRequirement = () => {
         setFormState((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     };
 
-    const handleCheckboxChange = (e) => {
-        const isChecked = e.target.checked;
-
-        // Update `isPass` based on whether the checkbox is checked or not
-        if (isChecked) {
-            setIspass("1");
-        } else {
-            setIspass("2");
+    const handleChangeId = (e)=>{
+        if(e.target.value){
+            setFormState((prev)=>({...prev, [e.target.name]:parseInt(e.target.value)}))
+        }else{
+            setFormState((prev)=>({...prev,[e.target.name]:null}))
         }
+    }
 
-        // Update `cat` with the value of the checkbox
-        setCat(isChecked ? "1" : "2");
-    };
-
-    console.log(ispass);
 
     return (
         <div class="container-fluid page-body-wrapper col-lg-10">
@@ -264,8 +228,8 @@ const AddCompanyRequirement = () => {
                                                 <select
                                                     class="form-control form-control-lg"
                                                     id="exampleFormControlSelect1"
-                                                    value={formState.CompanyId}
-                                                    onChange={handleChange}
+                                                    value={formState.CompanyId !== null ? formState.CompanyId:""}
+                                                    onChange={handleChangeId}
                                                     name="CompanyId"
                                                 >
                                                     <option value="">
@@ -425,11 +389,11 @@ const AddCompanyRequirement = () => {
                                                 <select
                                                     class="form-control form-control-lg"
                                                     id="exampleFromControlSelect1"
-                                                    value={formState.CourseId}
+                                                    value={formState.CourseId !== null? formState.CourseId:""}
                                                     name="CourseId"
-                                                    onChange={handleChange}
+                                                    onChange={handleChangeId}
                                                 >
-                                                    <option>
+                                                    <option value="">
                                                         --Select Course--
                                                     </option>
                                                     {coursedata.map((item) => {

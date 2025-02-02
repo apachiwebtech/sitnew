@@ -18,11 +18,8 @@ const AddCompanyRequirementListing = () => {
     const label = { inputProps: { 'aria-label': 'Color switch demo' } };
 
     const [inquiryData, setInquiryData] = useState([]);
-    const [Discipline, setDescipline] = useState([]);
-    const [Course, setCourse] = useState([]);
-    const [Education, setEducation] = useState([]);
-    const [batch, setBatch] = useState([]);
-    const [batchCategoty, setbatchCategory] = useState([]);
+    const [companyReqData, setCompanyReqData] = useState([])
+    const [deleteId, setDeleteId] = useState(null)
     const [value, setValue] = useState({
         companyname: '',
         profile: '',
@@ -34,8 +31,18 @@ const AddCompanyRequirementListing = () => {
         selected: '',
     })
 
+    useEffect(()=>{
+        getCompanyReq()
+    },[])
 
-
+    const getCompanyReq = async()=>{
+        try{
+            const response = await axios.get(`${BASE_URL}/getCompanyRequirement`)
+            setCompanyReqData(response.data)
+        }catch(err){
+            console.log('/getCompanyRequirement error', err)
+        }
+    }
 
     const getInquiryData = async () => {
         const response = await fetch(`${BASE_URL}/getadmissionactivity`, {
@@ -88,72 +95,67 @@ const AddCompanyRequirementListing = () => {
             })
     }
 
-    const handleDelete = (id) => {
-        const data = {
-            cat_id: id,
-            tablename: "Student_Inquiry"
-        }
 
-        axios.post(`${BASE_URL}/delete_inquiry_data`, data)
-            .then((res) => {
-                getInquiryData()
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
+ const handleSwitchChange = async (status ,id) =>{
+    try{
+        const newStatus = status === 1 ? 0 : 1
+        console.log(newStatus)
+        await axios.post(`${BASE_URL}/statusPChild`,{
+            parentTable: 'Company_Requirements_APK',
+            parentColumn: 'CompReqId',
+            childTable: 'Company_Req_Batch_details_APK',
+            childColumn: 'CompanyReqId',
+            id,
+            status:newStatus
+        })
+        getCompanyReq()
+        alert('Status updated successfully')
+    }catch(err){
+        console.log('Error updating status', err)
+        alert('Error updating status')
     }
-
-
- const handleswitchchange = (value,Inquiry_Id) =>{
-    const newval = value == 0 ? 1 : 0
-
-    axios.post(`${BASE_URL}/data_status` , {status : newval, Inquiry_Id : Inquiry_Id, table_name : "Student_Inquiry"})
-    .then((res)=>{
-        console.log(res)
-        getInquiryData()
-    })
  }
 
+ const handleDelete = async()=>{
+    try{
+        await axios.post(`${BASE_URL}/deletePChild`,{
+            parentTable: 'Company_Requirements_APK',
+            parentColumn: 'CompReqId',
+            childTable: 'Company_Req_Batch_details_APK',
+            childColumn: 'CompanyReqId',
+            id: deleteId
+        })
+        setDeleteId(null)
+        getCompanyReq()
+        alert('Data deleted successfully')
+    }catch(err){
+        setDeleteId(null)
+        console.log('Error deleting data',err)
+        alert('Error deleting data')
+    }
+  }
 
 
 
 
 
  const columns = [
-    {
-        field: 'index',
-        headerName: 'Id',
-        type: 'number',
-        align: 'center',
-        headerAlign: 'center',
-        flex: 1,
-        filterable: false,
-    },
-    { field: 'FName', headerName: 'Student Name', flex: 2 },
-    { field: 'course', headerName: 'Course Name', flex: 2 },
-    { field: 'inquiry_DT', headerName: 'Inquiry Date', flex: 2 },
-    { field: 'discussion', headerName: 'Discuss', flex: 2 },
-    { field: 'present_mobile', headerName: 'Mobile', flex: 2 },
-    { field: 'Email', headerName: 'Email', flex: 2 },
-    { field: 'Discipline', headerName: 'Discipline', flex: 2 },
-    { field: 'Inquiry_type', headerName: 'Inquiry type', flex: 2 },
-    // { field: 'isActive', headerName: 'Options', flex: 2},
+    { field: 'CompanyName', headerName: 'Company Name', width:200 },
+    { field: 'Profile', headerName: 'Profile', width: 200 },
+    { field: 'Location', headerName: 'Location', width:100 },
+    { field: 'Eligibility', headerName: 'Eligibility', width: 200 },
+    { field: 'Responsibility', headerName: 'Responsibilities', width: 200 },
+    { field: 'Course_Name', headerName: 'Course', width:150 },
     {
         field: 'actions',
-        type: 'actions',
         headerName: 'Action',
-        flex: 2,
+        width: 150,
         renderCell: (params) => {
             return (
                 <>
-                    <Link to={`/companyrequirment/${params.row.id}`}><EditIcon style={{ cursor: "pointer" }}  /></Link>
-                    <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
-                    <Switch {...label} onChange={() => handleswitchchange(params.row.isActive,params.row.id )} defaultChecked={params.row.isActive == 0 ? false : true} color="secondary" />
+                    <Link to={`/companyrequirment/${params.row.CompReqId}`}><EditIcon style={{ cursor: "pointer" }}  /></Link>
+                    <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => setDeleteId(params.row.CompReqId)} />
+                    <Switch {...label} onChange={() => handleSwitchChange(params.row.IsActive, params.row.CompReqId )} checked={params.row.IsActive === 1} color="secondary" />
                 </>
             )
         }
@@ -161,7 +163,7 @@ const AddCompanyRequirementListing = () => {
 ];
 
 
-    const rowsWithIds = inquiryData.map((row, index) => ({ index: index + 1, ...row }));
+    
 
     return (
 
@@ -188,13 +190,13 @@ const AddCompanyRequirementListing = () => {
 
                                     <div>
                                         <DataGrid
-                                            rows={rowsWithIds}
+                                            rows={companyReqData}
                                             columns={columns}
                                             disableColumnFilter
                                             disableColumnSelector
                                             disableDensitySelector
                                             rowHeight={37}
-                                            getRowId={(row) => row.id}
+                                            getRowId={(row) => row.CompReqId}
                                             initialState={{
                                                 pagination: {
                                                     paginationModel: { pageSize: 10, page: 0 },
@@ -208,11 +210,13 @@ const AddCompanyRequirementListing = () => {
                                             }}
                                         />
 
-                                        {confirmationVisibleMap[cid] && (
+                                        {deleteId && (
                                             <div className='confirm-delete'>
                                                 <p>Are you sure you want to delete?</p>
-                                                <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
-                                                <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
+                                                <button onClick={() =>{ 
+                                                    handleDelete()
+                                                }} className='btn btn-sm btn-primary'>OK</button>
+                                                <button onClick={()=>setDeleteId(null)} className='btn btn-sm btn-danger'>Cancel</button>
                                             </div>
                                         )}
                                     </div>

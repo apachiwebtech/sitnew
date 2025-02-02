@@ -21174,3 +21174,19 @@ input[type=number] {
   color: #fff;
   font-weight: 500;
 }
+
+/* mui */
+
+.hide-scrollbar .MuiDataGrid-virtualScroller::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari, and Edge */
+}
+
+.hide-scrollbar .MuiDataGrid-virtualScroller {
+  -ms-overflow-style: none; /* For Internet Explorer and Edge */
+  scrollbar-width: none; /* For Firefox */
+}
+
+.student-option-fees:hover{
+    background-color: #d3d3d3;
+    cursor: pointer;
+}

@@ -211,6 +211,7 @@ import AddAdminUSer from './AdminComponent/AddAdminUSer.jsx';
 import AcademicQualificationss from './AdminComponent/AcademicQualificaton.js';
 import NavbarWithDropdowns from './AdminComponent/Navbar/Navbar.jsx';
 import AddCVShortListed from './AdminComponent/AddCVShortListed.js';
+import AddShortlistedBySIT from './AdminComponent/AddShortlistedBySIT.js';
 
 
 const Router = createBrowserRouter([
@@ -802,6 +803,10 @@ const Router = createBrowserRouter([
       {
         path: '/shortlisted',
         element: <ShortlistedBySIT />
+      },
+      {
+        path:'/shortlisted/:id',
+        element: <AddShortlistedBySIT/>
       },
       {
         path: '/cvshortlisted',

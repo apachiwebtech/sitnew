@@ -1,466 +1,719 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { BASE_URL } from './BaseUrl';
-import InnerHeader from './InnerHeader';
-
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { BASE_URL } from "./BaseUrl";
+import InnerHeader from "./InnerHeader";
+import axios from "axios";
 
 const AddFacultySalary = () => {
+    const [error, setError] = useState({});
+    const [isEdit, setIsEdit] = useState(false);
+    const [facultyList, setFacultyList] = useState([]);
+    const [lectureList, setLectureList] = useState([]);
+    const [salaryList, setSalaryList] = useState([]);
+    const initialState = {
+        Salary_Id: "",
+        Faculty_Id: "",
+        Sal_Month: "",
+        Sal_Year: "",
+        Faculty_Type: "",
+        Salary_struct: "",
+        Rate: "",
+        Total_Hours: "",
+        Salary: "",
+        Bonus: "",
+        Award: "",
+        Other_Inc: "",
+        Tot_Inc: "",
+        Tot_Amount: "",
+        TDS_Per: "",
+        TDS: "",
+        Advance: "",
+        Other_Ded: "",
+        Total_Ded: "",
+        Net_Payment: "",
+        Payment_Type: "",
+        Cheque_No: "",
+        Payment_Dt: "",
+        Date_Added: "",
+        Remark: "",
+        IsActive: 1,
+        IsDelete: 0,
+        NEFT_No: "",
+    };
+    const [formState, setFormState] = useState({ ...initialState });
 
-    const [uid, setUid] = useState([])
-    const [cid, setCid] = useState("")
-    const [error, setError] = useState({})
+    useEffect(() => {
+        getFacultyList();
+    }, []);
 
-    const { projectmasterid } = useParams();
-    const [inquiryData, setInquiryData] = useState([]);
-    const [Discipline, setDescipline] = useState([]);
-    const [Course, setCourse] = useState([]);
-    const [Education, setEducation] = useState([]);
-    const [batch, setBatch] = useState([]);
-    const [batchCategoty, setbatchCategory] = useState([]);
-    const [value, setValue] = useState({
-        projectno: '',
-        projectname: '',
-        description: '',
-        dworkorderob: '',
-        wodate: '',
-        woamount: '',
-        quotation: '',
-        qtndate: '',
-        qtnamount: '',
-        invoice: '',
-        invoicedate: '',
-        invoiceamount: '',
-    })
+    useEffect(() => {
+        setFormState((prev) => ({
+            ...prev,
+            Faculty_Type: "",
+            Salary_struct: "",
+            Rate: "",
+            TDS_Per: "",
+        }));
+        if (formState.Faculty_Id) {
+            getFacultyDetails(formState.Faculty_Id);
+            getFacultySalary(formState.Faculty_Id);
+        }
+    }, [formState.Faculty_Id]);
 
+    useEffect(() => {
+        const year = formState.Sal_Year;
+        const month = formState.Sal_Month;
+        const id = formState.Faculty_Id;
+
+        setLectureList([]);
+
+        setFormState((prev) => ({
+            ...initialState,
+            Sal_Year: prev.Sal_Year,
+            Sal_Month: prev.Sal_Month,
+            Faculty_Id: prev.Faculty_Id,
+            Faculty_Type: prev.Faculty_Type,
+            Salary_struct: prev.Salary_struct,
+            Rate: prev.Rate,
+            TDS_Per: prev.TDS_Per,
+        }));
+
+        if (year && month && id) {
+            getFacultySalaryByMYI(month, year, id);
+            getLectureDetails(month, year, id);
+        }
+    }, [formState.Sal_Year, formState.Sal_Month, formState.Faculty_Id]);
+
+    const getFacultySalaryByMYI = async (month, year, id) => {
+        try {
+            const response = await axios.post(`${BASE_URL}/getFacultySalaryByMYI`, {
+                Sal_Month: month,
+                Sal_Year: year,
+                Faculty_Id: id,
+            });
+
+            if (response.data.length) {
+                console.log(response.data);
+                setFormState({ ...response.data[0] });
+            }
+        } catch (err) {
+            console.log("/getFacultySalaryByMYI error", err);
+        }
+    };
+
+    const getFacultySalary = async (id) => {
+        try {
+            const response = await axios.post(`${BASE_URL}/getFacultySalaryById`, {
+                Faculty_Id: id,
+            });
+            setSalaryList(response.data);
+        } catch (err) {
+            console.log("/getFacultySalary error", err);
+        }
+    };
+
+    const getFacultyList = async () => {
+        try {
+            const response = await axios.get(`${BASE_URL}/getfaculty`);
+            setFacultyList(response.data);
+        } catch (err) {
+            console.log("getFacultyList error", err);
+        }
+    };
+
+    const getFacultyDetails = async (id) => {
+        try {
+            const response = await axios.get(`${BASE_URL}/getFaculty/${id}`);
+
+            const faculty = response.data;
+            setFormState((prev) => ({
+                ...prev,
+                Faculty_Type: faculty.Faculty_Type,
+                Salary_struct: faculty.Sal_Struct,
+                Rate: faculty.Salary,
+                TDS_Per: faculty.TDS ? faculty.TDS : "",
+            }));
+        } catch (err) {
+            console.log("getFacultyDetails error", err);
+        }
+    };
+
+    const getLectureDetails = async (month, year, id) => {
+        try {
+            const LectureDate = `${year}-${(months.indexOf(month) + 1).toString().padStart(2, "0")}%`;
+            const response = await axios.post(`${BASE_URL}/getLectureByMYI`, { LectureDate, Faculty_Id: id });
+
+            setLectureList(response.data);
+        } catch (err) {
+            console.log(err);
+        }
+    };
 
     const validateForm = () => {
-        let isValid = true
-        const newErrors = {}
+        let isValid = true;
+        const newErrors = {};
 
-
-        if (!value.facultyname) {
+        if (!formState.Sal_Month) {
             isValid = false;
-            newErrors.name = "Name is require"
+            newErrors.Sal_Month = "Month is Required";
         }
 
-        setError(newErrors)
-        return isValid
-    }
-
-
-    const getInquiryData = async () => {
-        const response = await fetch(`${BASE_URL}/getadmissionactivity`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-
-        setInquiryData(data);
-    }
-
-    const getDiscipline = async () => {
-        const response = await fetch(`${BASE_URL}/getDiscipline`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setDescipline(data);
-    }
-    const getCourse = async () => {
-        const response = await fetch(`${BASE_URL}/getCourses`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setCourse(data);
-    }
-    const getEducation = async () => {
-        const response = await fetch(`${BASE_URL}/getEducation`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setEducation(data);
-    }
-    const getBatch = async () => {
-        const response = await fetch(`${BASE_URL}/getBtach`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setBatch(data);
-    }
-    const getBtachCategory = async () => {
-        const response = await fetch(`${BASE_URL}/getBtachCategory`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setbatchCategory(data);
-    }
-
-    async function getStudentDetail() {
-        const response = await fetch(`${BASE_URL}/studentDetail`, {
-            method: 'POST',
-            body: JSON.stringify({
-                id: projectmasterid,
-            }),
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
-
-        const data = await response.json();
-
-        console.log(data, "DATA A GAYA!");
-
-
-    }
-    useEffect(() => {
-        if (projectmasterid !== ":projectmasterid") {
-            getStudentDetail()
+        if (!formState.Sal_Year) {
+            isValid = false;
+            newErrors.Sal_Year = "Year is Required";
         }
-        value.title = ""
-        setError({})
-        setUid([])
-    }, [])
 
+        if (!formState.Faculty_Id) {
+            isValid = false;
+            newErrors.Faculty_Id = "Faculty is required";
+        }
 
+        setError(newErrors);
 
+        setTimeout(() => {
+            setError({});
+        }, 5000);
+        return isValid;
+    };
 
+    const months = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+    ];
 
+    const years = Array.from({ length: 2025 - 2000 + 1 }, (_, i) => 2025 - i);
 
+    const handleChange = (e) => {
+        setFormState((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    };
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
-        let response
-        // if(validateForm()){
-        if (projectmasterid == ":projectmasterid") {
-            response = await fetch(`${BASE_URL}/add_projectmaster`, {
-                method: 'POST',
-                body: JSON.stringify({
-                    projectno: value.projectno,
-                    projectname: value.firstname,
-                    description: value.gender,
-                    dworkorderob: value.dob,
-                    wodate: value.mobile,
-                    woamount: value.woamount,
-                    quotation: value.quotation,
-                    qtndate: value.qtndate,
-                    qtnamount: value.qtnamount,
-                    invoice: value.invoice,
-                    invoicedate: value.invoicedate,
-                    invoiceamount: value.invoiceamount,
-                }),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-        } else {
+        e.preventDefault();
+        try {
+            if (validateForm()) {
+                const data = setToNum(formState);
+                console.log(data);
+                if (!isEdit) {
+                    const response = await axios.post(`${BASE_URL}/addFacultySalary`, data);
 
-            response = await fetch(`${BASE_URL}/updateInquiry`, {
-                method: 'POST',
-                body: JSON.stringify({
-
-                    projectno: value.projectno,
-                    projectname: value.firstname,
-                    description: value.gender,
-                    dworkorderob: value.dob,
-                    wodate: value.mobile,
-                    woamount: value.woamount,
-                    quotation: value.quotation,
-                    qtndate: value.qtndate,
-                    qtnamount: value.qtnamount,
-                    invoice: value.invoice,
-                    invoicedate: value.invoicedate,
-                    invoiceamount: value.invoiceamount,
-                }),
-                headers: {
-                    'Content-Type': 'application/json'
+                    console.log(response.data);
+                    alert("Faculty Salary Added");
                 }
-            })
+            }
+        } catch (err) {
+            console.log("error", err);
+            alert("Error");
         }
+    };
 
+    const numInputs = [
+        "Total_Hours",
+        "Award",
+        "Other_Inc",
+        "Bonus",
+        "Advance",
+        "TDS_Per",
+        "Other_Ded",
+        "TDS",
+        "Tot_Inc",
+        "Total_Ded",
+        "Net_Payment",
+        "Salary",
+    ];
+    const setToNum = (data) => {
+        const temp = numInputs.reduce((acc, current) => {
+            return { ...acc, [current]: getFloat(data[current]) };
+        }, {});
 
+        return { ...data, ...temp };
+    };
 
-
-
-        const data = await response.json();
-
-        alert(data.message)
-        //   window.location.pathname = '/inquirylisting'
-
-
-        // }        
-    }
-
-
-    const onhandleChange = (e) => {
-        setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
-    }
-
-
+    const getFloat = (num) => {
+        let num1 = parseFloat(num) || 0;
+        return parseFloat(num1.toFixed(2));
+    };
 
     return (
-
         <div className="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
             <div className="main-panel">
-
                 <div className="content-wrapper">
                     <h4 class="card-title">Add Faculty Salary</h4>
                     <div className="row">
                         <div className="col-lg-12 grid-margin">
                             <div className="card">
-
-
-                                <div className='container-fluid'>
-                                    <div className='row d-flex justify-content-between'>
-                                        <div className='col-md-6 col-lg-6'>
-                                            <div className='row justify-content-center' >
-                                                <div className='p-3' style={{ width: "100%" }}>
+                                <div className="container-fluid">
+                                    <form onSubmit={handleSubmit} className="row d-flex justify-content-between">
+                                        <div className="col-md-6 col-lg-6">
+                                            <div className="row justify-content-center">
+                                                <div className="p-3" style={{ width: "100%" }}>
                                                     <div>
                                                         <h4 className="card-title titleback">Faculty Details</h4>
                                                     </div>
-                                                    <div className='row'>
+                                                    <div className="row">
                                                         <div className="form-group col-lg-4 ">
-                                                            <lable for="exampleFormControlSelect1">Months<span className="text-danger">*</span></lable>
-                                                            <select class="form-control form-control-lg" id="exampleFormControlSelect1" 
-                                                            value={value.months} name='months' onChange={onhandleChange} >
-                                                                <option>--Select Months--</option>
+                                                            <lable for="exampleFormControlSelect1">
+                                                                Month
+                                                                <span className="text-danger">*</span>
+                                                            </lable>
+                                                            <select
+                                                                class="form-control form-control-lg"
+                                                                id="exampleFormControlSelect1"
+                                                                name="Sal_Month"
+                                                                value={formState.Sal_Month}
+                                                                onChange={handleChange}
+                                                            >
+                                                                <option value={""}>--Select Month--</option>
 
+                                                                {months.map((month, i) => (
+                                                                    <option value={month} key={i}>
+                                                                        {month}
+                                                                    </option>
+                                                                ))}
                                                             </select>
-                                                            {<span className='text-danger'> {error.months} </span>}
+                                                            {error.Sal_Month && (
+                                                                <span className="text-danger">{error.Sal_Month}</span>
+                                                            )}
                                                         </div>
 
                                                         <div class="form-group col-lg-4">
-                                                            <lable for="exampleFormControlSelect1">Year<span className="text-danger">*</span></lable>
-                                                            <select class="form-control form-control-lg" id="exampleFormControlSelect"
-                                                             value={value.year} name='year' onChange={onhandleChange}>
-                                                                <option>--Select Year--</option>
-                                                                <option>2024</option>
-
+                                                            <lable for="exampleFormControlSelect1">
+                                                                Year
+                                                                <span className="text-danger">*</span>
+                                                            </lable>
+                                                            <select
+                                                                class="form-control form-control-lg"
+                                                                id="exampleFormControlSelect"
+                                                                name="Sal_Year"
+                                                                value={formState.Sal_Year}
+                                                                onChange={handleChange}
+                                                            >
+                                                                <option value={""}>--Select Year--</option>
+                                                                {years.map((year, i) => (
+                                                                    <option value={year} key={i}>
+                                                                        {year}
+                                                                    </option>
+                                                                ))}
                                                             </select>
-                                                            {<span className='text-danger'> {error.year} </span>}
+                                                            {error.Sal_Year && (
+                                                                <span className="text-danger">{error.Sal_Year}</span>
+                                                            )}
                                                         </div>
 
                                                         <div class="form-group col-lg-4">
-                                                            <lable for="exampleFormControlSelect1">Faculty Name<span className="text-danger">*</span></lable>
-                                                            <select class="form-control Form-control-lg" id="exampleFormControlSelect1"
-                                                             value={value.facultyname} name='facultyname' onChange={onhandleChange}>
-                                                                <option>--Faculti Name--</option>
-                                                                <option>A. G. Belwalkar</option>
-                                                                <option>Aadhar Classes</option>
+                                                            <lable for="exampleFormControlSelect1">
+                                                                Faculty Name
+                                                                <span className="text-danger">*</span>
+                                                            </lable>
+                                                            <select
+                                                                class="form-control Form-control-lg"
+                                                                id="exampleFormControlSelect1"
+                                                                name="Faculty_Id"
+                                                                value={formState.Faculty_Id}
+                                                                onChange={handleChange}
+                                                            >
+                                                                <option value="">--Faculty Name--</option>
+                                                                {facultyList.map((row) => (
+                                                                    <option key={row.Faculty_Id} value={row.Faculty_Id}>
+                                                                        {row.Faculty_Name}
+                                                                    </option>
+                                                                ))}
                                                             </select>
-                                                            {<span className='text-danger'> {error.facultyname} </span>}
+                                                            {error.Faculty_Id && (
+                                                                <span className="text-danger">{error.Faculty_Id}</span>
+                                                            )}
                                                         </div>
 
                                                         <div class="form-group col-lg-4">
                                                             <lable for="exampleInputUsername1">Employee Type</lable>
-                                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.employeetype} name='employeetype' onChange={onhandleChange} disabled />
+                                                            <input
+                                                                type="text"
+                                                                class="form-control"
+                                                                id="exampleInputUsername1"
+                                                                name="employeetype"
+                                                                value={formState.Faculty_Type}
+                                                                disabled
+                                                            />
                                                         </div>
 
                                                         <div class="form-group col-lg-4">
                                                             <lable for="exampleInputUsername1">Salary Structure</lable>
-                                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.salarystructure} name='salarystructure' onChange={onhandleChange} disabled />
+                                                            <input
+                                                                type="text"
+                                                                class="form-control"
+                                                                id="exampleInputUsername1"
+                                                                name="salarystructure"
+                                                                value={formState.Salary_struct}
+                                                                disabled
+                                                            />
                                                         </div>
 
                                                         <div class="form-group col-lg-4">
                                                             <lable for="exampleInputUsername1">Charges</lable>
-                                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.charges} name='charger' onChange={onhandleChange} disabled />
+                                                            <input
+                                                                type="text"
+                                                                class="form-control"
+                                                                id="exampleInputUsername1"
+                                                                name="charges"
+                                                                value={formState.Rate}
+                                                                disabled
+                                                            />
                                                         </div>
                                                     </div>
-
                                                 </div>
                                             </div>
 
-                                            <div className='row justify-content-center'>
-                                                <div className='p-3' style={{ width: "100%" }}>
+                                            <div className="row justify-content-center">
+                                                <div className="p-3" style={{ width: "100%" }}>
                                                     <div>
                                                         <h4 className="card-title titleback">Lecture Details</h4>
                                                     </div>
-                                                    <div className='row'>
-                                                        <div class="form-group col-lg-12">
-                                                            <label for="exampleTextarea1"></label>
-                                                            <textarea class="form-control form-control-lg" id="exampleTextarea1"
-                                                                value={value.lecturedetails} name='lecturedetails' onChange={onhandleChange} disabled></textarea>
-                                                        </div>
+
+                                                    <div className="table-responsive" style={{ maxHeight: "300px" }}>
+                                                        <table className="table table-bordered table-gen">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>S.No.</th>
+                                                                    <th>Date</th>
+                                                                    <th>Topic</th>
+                                                                    <th>Batch</th>
+                                                                    <th>Start Time</th>
+                                                                    <th>End Time</th>
+                                                                    <th>Total Hrs.</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {lectureList.map((row, i) => (
+                                                                    <tr key={i}>
+                                                                        <td>{i}</td>
+                                                                        <td>{row.Take_Dt}</td>
+                                                                        <td>{row.Lecture_Name}</td>
+                                                                        <td>{row.Batch_code}</td>
+                                                                        <td>{row.Faculty_Start}</td>
+                                                                        <td>{row.Faculty_End}</td>
+                                                                        <td>{row.Duration}</td>
+                                                                    </tr>
+                                                                ))}
+                                                            </tbody>
+                                                        </table>
                                                     </div>
                                                 </div>
                                             </div>
 
-                                            <div className='row justify-content-center'>
-                                                <div className='p-3' style={{ width: "100%" }}>
+                                            <div className="row justify-content-center">
+                                                <div className="p-3" style={{ width: "100%" }}>
                                                     <div>
                                                         <h4 className="card-title titleback">Income Details</h4>
                                                     </div>
-                                                    <div className='row'>
-                                                        <div class="form-group col-lg-8">
-                                                            <label for="exampleTextarea1"></label>
-                                                            <textarea class="form-control form-control-lg" id="exampleTextarea1"
-                                                                value={value.incomedetails} name='incomedetails' onChange={onhandleChange} disabled></textarea>
-                                                        </div>
+                                                    <div className="table-responsive" style={{ maxHeight: "300px" }}>
+                                                        <table className="table table-bordered table-gen">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Tl. Income</th>
+                                                                    <th>Month</th>
+                                                                    <th>Year</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {salaryList.map((row, i) => (
+                                                                    <tr key={i}>
+                                                                        <td>{row.Tot_Inc}</td>
+                                                                        <td>{row.Sal_Month}</td>
+                                                                        <td>{row.Sal_Year}</td>
+                                                                    </tr>
+                                                                ))}
+                                                            </tbody>
+                                                        </table>
                                                     </div>
                                                 </div>
                                             </div>
 
-
-                                            <div className='row justify-content-center' >
-                                                <div className='p-3' style={{ width: "100%" }}>
+                                            <div className="row justify-content-center">
+                                                <div className="p-3" style={{ width: "100%" }}>
                                                     <div>
                                                         <h4 className="card-title titleback">Income</h4>
                                                     </div>
-                                                    <div className='row'>
+                                                    <div className="row">
                                                         <div class="form-group col-lg-4 ">
-                                                            <label for="exampleInputUsername1">Totle Hours</label>
-                                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.totlehours} placeholder="Totle Hours" name='totlehours' onChange={onhandleChange} />
-
+                                                            <label for="exampleInputUsername1">Total Hours</label>
+                                                            <input
+                                                                type="number"
+                                                                class="form-control"
+                                                                id="exampleInputUsername1"
+                                                                placeholder="Totle Hours"
+                                                                name="Total_Hours"
+                                                                value={formState.Total_Hours}
+                                                                onChange={handleChange}
+                                                                step="any"
+                                                                min={0}
+                                                            />
                                                         </div>
 
-                                                        <div class='form-group col-lg-4'>
-                                                            <label for="exampleInputUsername1">Best performance Awards</label>
-                                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.performance} placeholder="Best Performance Awards" name='performance' onChange={onhandleChange} />
+                                                        <div class="form-group col-lg-4">
+                                                            <label for="exampleInputUsername1">
+                                                                Best performance Awards
+                                                            </label>
+                                                            <input
+                                                                type="number"
+                                                                class="form-control"
+                                                                id="exampleInputUsername1"
+                                                                placeholder="Best Performance Awards"
+                                                                name="Award"
+                                                                value={formState.Award}
+                                                                onChange={handleChange}
+                                                                step="any"
+                                                                min={0}
+                                                            />
                                                         </div>
 
-                                                        <div class='form-group col-lg-4'>
+                                                        <div class="form-group col-lg-4">
                                                             <lable for="exampleTextarea1">Other If Any</lable>
-                                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.otherifany} placeholder="Other If Any" name='otherifany' onChange={onhandleChange} />
+                                                            <input
+                                                                type="number"
+                                                                class="form-control"
+                                                                id="exampleInputUsername1"
+                                                                placeholder="Other If Any"
+                                                                name="Other_Inc"
+                                                                value={formState.Other_Inc}
+                                                                onChange={handleChange}
+                                                                step="any"
+                                                                min={0}
+                                                            />
                                                         </div>
 
-                                                        <div class="form-group col-lg-4" >
+                                                        <div class="form-group col-lg-4">
                                                             <lable for="exampleInputUsername1">Bonus</lable>
-                                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.bonus} placeholder="Bonus" name='bonus' onChange={onhandleChange} />
+                                                            <input
+                                                                type="number"
+                                                                class="form-control"
+                                                                id="exampleInputUsername1"
+                                                                placeholder="Bonus"
+                                                                name="Bonus"
+                                                                value={formState.Bonus}
+                                                                onChange={handleChange}
+                                                                step="any"
+                                                                min={0}
+                                                            />
                                                         </div>
 
                                                         <div class="form-group col-lg-4">
                                                             <lable for="exampleInputUsername1">Total Amount</lable>
-                                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.totalamount} placeholder="Total Amount" name='totalamount' onChange={onhandleChange} />
+                                                            <input
+                                                                type="number"
+                                                                class="form-control"
+                                                                id="exampleInputUsername1"
+                                                                placeholder="Total Amount"
+                                                                name="Salary"
+                                                                value={formState.Salary}
+                                                                onChange={handleChange}
+                                                                step="any"
+                                                                min={0}
+                                                            />
                                                         </div>
-
                                                     </div>
-
-
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className='col-md-6 col-lg-6'>
-                                            <div className='row justify-content-center'>
-                                                <div className='p-3' style={{ width: "100%" }}>
+                                        <div className="col-md-6 col-lg-6">
+                                            <div className="row justify-content-center">
+                                                <div className="p-3" style={{ width: "100%" }}>
                                                     <div>
                                                         <h4 className="card-title titleback">Deduction</h4>
                                                     </div>
                                                     <div className="row">
                                                         <div class="form-group col-lg-4">
                                                             <lable for="exampleInputUsername1">TDS%</lable>
-                                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.tds} placeholder='TDS%' name='tds' onChange={onhandleChange} />
+                                                            <input
+                                                                type="number"
+                                                                class="form-control"
+                                                                id="exampleInputUsername1"
+                                                                placeholder="TDS%"
+                                                                name="TDS_Per"
+                                                                value={formState.TDS_Per}
+                                                                onChange={handleChange}
+                                                                step="any"
+                                                                min={0}
+                                                            />
                                                         </div>
 
                                                         <div class="form-group col-lg-4">
                                                             <lable for="exampleInputUsername1">Advance If Any</lable>
-                                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.advanceif} placeholder='Advance' name='advanceif' onChange={onhandleChange} />
+                                                            <input
+                                                                type="number"
+                                                                class="form-control"
+                                                                id="exampleInputUsername1"
+                                                                placeholder="Advance"
+                                                                name="Advance"
+                                                                value={formState.Advance}
+                                                                onChange={handleChange}
+                                                                step="any"
+                                                                min={0}
+                                                            />
                                                         </div>
 
                                                         <div class="form-group col-lg-4">
                                                             <lable for="exampleInputUsername">Other If Any</lable>
-                                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.otherifany} placeholder='Other If Any' name='otherifany' onChange={onhandleChange} />
+                                                            <input
+                                                                type="number"
+                                                                class="form-control"
+                                                                id="exampleInputUsername1"
+                                                                placeholder="Other If Any"
+                                                                name="Other_Ded"
+                                                                value={formState.Other_Ded}
+                                                                onChange={handleChange}
+                                                                step="any"
+                                                                min={0}
+                                                            />
                                                         </div>
 
                                                         <div class="form-group col-lg-4">
                                                             <lable for="exampleInputUsername1">TDS Amount</lable>
-                                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.tdsamount} placeholder='TDS Amount' name='tdsamount' onChange={onhandleChange} />
+                                                            <input
+                                                                type="number"
+                                                                class="form-control"
+                                                                id="exampleInputUsername1"
+                                                                placeholder="TDS Amount"
+                                                                name="TDS"
+                                                                value={formState.TDS}
+                                                                onChange={handleChange}
+                                                                step="any"
+                                                                min={0}
+                                                            />
                                                         </div>
-
                                                     </div>
                                                 </div>
                                             </div>
 
-                                            <div className='row justify-content-center' >
-                                                <div className='p-3' style={{ width: "100%" }}>
+                                            <div className="row justify-content-center">
+                                                <div className="p-3" style={{ width: "100%" }}>
                                                     <div>
                                                         <h4 className="card-title titleback">Net Payment</h4>
                                                     </div>
-                                                    <div className='row'>
+                                                    <div className="row">
                                                         <div className="form-group col-lg-4 ">
                                                             <label for="exampleInputUsername1">Total Income</label>
-                                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.totleincome} placeholder="Totle Income" name='totleincome' onChange={onhandleChange} />
-
+                                                            <input
+                                                                type="number"
+                                                                class="form-control"
+                                                                id="exampleInputUsername1"
+                                                                placeholder="Total Income"
+                                                                name="Tot_Inc"
+                                                                value={formState.Tot_Inc}
+                                                                onChange={handleChange}
+                                                                step="any"
+                                                                min={0}
+                                                            />
                                                         </div>
-                                                        <div className='form-group col-lg-4'>
+                                                        <div className="form-group col-lg-4">
                                                             <label for="exampleInputUsername1">Total Deduction</label>
-                                                            <input type="text" className="form-control" id="exampleInputUsername1" value={value.totlededuction} placeholder="Totle Deducation" name='totlededucation' onChange={onhandleChange} />
+                                                            <input
+                                                                type="number"
+                                                                className="form-control"
+                                                                id="exampleInputUsername1"
+                                                                placeholder="Totle Deducation"
+                                                                name="Total_Ded"
+                                                                value={formState.Total_Ded}
+                                                                onChange={handleChange}
+                                                                step="any"
+                                                                min={0}
+                                                            />
                                                         </div>
 
-                                                        <div className='form-group col-lg-4'>
+                                                        <div className="form-group col-lg-4">
                                                             <lable for="exampleTextarea1">Net Payment</lable>
-                                                            <input type="text" className="form-control" id="exampleInputUsername1" value={value.netpayment} placeholder="Net Payment" name='netpayment' onChange={onhandleChange} />
+                                                            <input
+                                                                type="number"
+                                                                className="form-control"
+                                                                id="exampleInputUsername1"
+                                                                placeholder="Net Payment"
+                                                                name="Net_Payment"
+                                                                value={formState.Net_Payment}
+                                                                onChange={handleChange}
+                                                                step="any"
+                                                                min={0}
+                                                            />
                                                         </div>
-
                                                     </div>
-
                                                 </div>
                                             </div>
-                                            <div className='row justify-content-center' >
-                                                <div className='p-3' style={{ width: "100%" }}>
+                                            <div className="row justify-content-center">
+                                                <div className="p-3" style={{ width: "100%" }}>
                                                     <div>
                                                         <h4 className="card-title titleback">Payment Details</h4>
                                                     </div>
 
-                                                    <div className='row'>
-
+                                                    <div className="row">
                                                         <div class="form-group col-lg-6">
                                                             <lable for="exampleFormControlSelect1">Payment Type</lable>
-                                                            <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.paymenttype} name='paymenttype' onChange={onhandleChange}>
-                                                                <option>--Payment Type--</option>
+                                                            <select
+                                                                class="form-control form-control-lg"
+                                                                id="exampleFormControlSelect1"
+                                                                name="Payment_Type"
+                                                                value={formState.Payment_Type}
+                                                                onChange={handleChange}
+                                                            >
+                                                                <option value="">--Payment Type--</option>
                                                                 <option>Cash</option>
                                                                 <option>Cheque</option>
                                                                 <option>NEFT</option>
                                                             </select>
                                                         </div>
-                                                        <div className='form-group col-lg-6'>
+                                                        <div className="form-group col-lg-6">
                                                             <label for="exampleInputUsername1">Payment Date</label>
-                                                            <input type="date" className="form-control" id="exampleInputUsername1" value={value.paymentdate} placeholder="Payment Date" name='paymentdate' onChange={onhandleChange} />
+                                                            <input
+                                                                type="date"
+                                                                className="form-control"
+                                                                id="exampleInputUsername1"
+                                                                placeholder="Payment Date"
+                                                                name="Payment_Dt"
+                                                                value={formState.Payment_Dt}
+                                                                onChange={handleChange}
+                                                            />
                                                         </div>
 
                                                         <div class="form-group col-lg-12">
                                                             <lable for="exampleTextarea1">Remark</lable>
-                                                            <textarea class="form-control" id="exampleTeaxtarea1" value={value.remark} placeholder='Remark' name='remark' onChange={onhandleChange}></textarea>
+                                                            <textarea
+                                                                class="form-control"
+                                                                id="exampleTeaxtarea1"
+                                                                placeholder="Remark"
+                                                                name="Remark"
+                                                                value={formState.Remark}
+                                                                onChange={handleChange}
+                                                            ></textarea>
                                                         </div>
-
                                                     </div>
-
                                                 </div>
                                             </div>
 
-                                            <div className='row p-2 gap-2'>
-                                                <button className='mr-2 btn btn-primary' onClick={handleSubmit}>Submit</button>
-                                                <button className='col-2'>Close</button>
+                                            <div className="row p-2 gap-2">
+                                                <button type="submit" className="mr-2 btn btn-primary">
+                                                    Submit
+                                                </button>
+                                                <button type="button" className="col-2">
+                                                    Close
+                                                </button>
                                             </div>
-                                            
                                         </div>
-
-                                    </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
-            </div >
-        </div >
+            </div>
+        </div>
+    );
+};
 
-    )
-}
-
-export default AddFacultySalary
+export default AddFacultySalary;
