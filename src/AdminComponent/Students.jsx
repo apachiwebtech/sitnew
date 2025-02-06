@@ -57,6 +57,7 @@ const Students = () => {
 
             .then((response) => {
                 if (response.data) {
+                    console.log(response.data.data)
                     setStudents(response.data.data); // Set fetched student data
                     setLastStudentId(response.data.lastStudentId);
                     setTotalStudent(response.data.totalCount)
@@ -105,7 +106,7 @@ const Students = () => {
         { field: 'Email', headerName: 'Email', flex: 2 },
         { field: 'Present_Mobile', headerName: 'mobile', flex: 2 },
         // { field: 'Qualification', headerName: 'Qualification', flex: 2 },
-        { field: 'Status', headerName: 'Status', flex: 2 },
+        { field: 'Status', headerName: 'Status', flex: 2 , valueGetter:(params)=>'Active'},
         {
             field: 'actions',
             type: 'actions',

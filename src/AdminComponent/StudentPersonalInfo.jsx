@@ -96,7 +96,7 @@ const StudentPersonalInfo = () => {
             .then((res) => {
                 if(res.data && res.data[0]){
 
-                    setPhoto(res.data[0].doc_name)
+                    setPhoto(res.data[0].upload_image)
                 }
             })
     }

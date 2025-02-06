@@ -105,7 +105,10 @@ const Documents = () => {
       field: "View", headerName: "View", flex: 2, renderCell: (params) => {
         return (
           <>
-            <Button onClick={() => handleOpen(params.row.upload_image)}>View</Button>
+            <Button onClick={() =>{
+                
+                handleOpen(params.row.upload_image)
+            }}>View</Button>
 
             <Modal
               open={open2}
@@ -118,14 +121,14 @@ const Documents = () => {
                   {isPdf ? (
                     // Render PDF viewer
                     <iframe
-                      src={`${IMG_URL}/${viewimg}`}
+                      src={`${IMG_URL}/student_document/${admissionid}/${viewimg}`}
                       width="100%"
                       height="500px"
                       title="PDF Viewer"
                     />
                   ) : (
                     // Render image
-                    <img src={`${IMG_URL}/${admissionid}/${viewimg}`} alt="Content" />
+                    <img src={`${IMG_URL}/student_document/${admissionid}/${viewimg}`} alt="Content" />
                   )}
                 </div>
               </Box>
