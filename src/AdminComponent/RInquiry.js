@@ -6,9 +6,9 @@ import React, { useEffect, useState } from "react";
 import { MultiSelect } from "react-multi-select-component";
 import { BASE_URL } from "./BaseUrl";
 import InnerHeader from "./InnerHeader";
-import * as XLSX from 'xlsx';
-import ExcelJS from 'exceljs';
-import { saveAs } from 'file-saver';
+import * as XLSX from "xlsx";
+import ExcelJS from "exceljs";
+import { saveAs } from "file-saver";
 //import FormControlLabel from '@mui/material/FormControlLabel';
 
 const RInquiry = () => {
@@ -186,53 +186,64 @@ const RInquiry = () => {
         }
     };
 
-    const exportToExcel = async()=>{
+    const exportToExcel = async () => {
         const workbook = new ExcelJS.Workbook();
-        const worksheet = workbook.addWorksheet('Inquiry Report');
+        const worksheet = workbook.addWorksheet("Inquiry Report");
 
         const headers = [
-            { header: "Student Name", key: "Student_Name", width:20},
-            { header: "Qualification", key: "Qualification", width:15},
-            { header: "Inquiry Type", key: "Inquiry_type", width:15},
-            { header: "Batch Code", key: "Batch_Code", width: 15},
-            { header: "Inquiry Date", key: "inquiry_DT", width:15},
-            { header: "Email", key: "Email", width: 25},
-            { header: "Present Mobile", key: "Present_Mobile", width: 15},
-            { header: "Course Name", key: "Course_Name", width: 20},
-            { header: "Batch Category", key: "BatchCategory", width: 18},
-            { header: "Status 1", key: "OnlineStatus", width:20},
-            { header: "Status 2", key: "MasterStatus", width:15},
-          ];
+            { header: "Student Name", key: "Student_Name", width: 20 },
+            { header: "Qualification", key: "Qualification", width: 15 },
+            { header: "Inquiry Type", key: "Inquiry_type", width: 15 },
+            { header: "Batch Code", key: "Batch_Code", width: 15 },
+            { header: "Inquiry Date", key: "inquiry_DT", width: 15 },
+            { header: "Email", key: "Email", width: 25 },
+            { header: "Present Mobile", key: "Present_Mobile", width: 15 },
+            { header: "Course Name", key: "Course_Name", width: 20 },
+            { header: "Batch Category", key: "BatchCategory", width: 18 },
+            { header: "Discussion 1", key: "Discussion1", width: 25 },
+            { header: "Discussion 2", key: "Discussion2", width: 25 },
+            { header: "Discussion 3", key: "Discussion3", width: 25 },
+            { header: "Status 1", key: "OnlineStatus", width: 20 },
+            { header: "Status 2", key: "MasterStatus", width: 15 },
+        ];
 
-          worksheet.columns = headers;
+        worksheet.columns = headers;
 
         // Add data rows
-        inquery.forEach((item) => {
-            worksheet.addRow(item);
+        inquery.forEach((item, index) => {
+            let discussion_arr = JSON.parse(item.discussion_arr);
+            let data = {
+                ...item,
+                Discussion1: discussion_arr[0],
+                Discussion2: discussion_arr[1],
+                Discussion3: discussion_arr[2],
+            };
+
+            worksheet.addRow(data);
         });
 
         headers.forEach((_, index) => {
             const cell = worksheet.getRow(1).getCell(index + 1);
-            cell.font = { bold: true, color: { argb: 'FF000000' } };
+            cell.font = { bold: true, color: { argb: "FF000000" } };
             cell.fill = {
-              type: 'pattern',
-              pattern: 'solid',
-              fgColor: { argb: 'FFFFF200' }, // Blue background
+                type: "pattern",
+                pattern: "solid",
+                fgColor: { argb: "FFFFF200" }, // Blue background
             };
-          });
+        });
 
-        try{
-           const buffer = await workbook.xlsx.writeBuffer();
-           saveAs(new Blob([buffer]), 'Inquiry_Report.xlsx');  
+        try {
+            const buffer = await workbook.xlsx.writeBuffer();
+            saveAs(new Blob([buffer]), "Inquiry_Report.xlsx");
         } catch (error) {
-           console.error('Error exporting Excel file', error);
+            console.error("Error exporting Excel file", error);
         }
-    }
+    };
 
     // const exportToExcel = () => {
     //     // Create a new workbook
     //     const workbook = XLSX.utils.book_new();
-    
+
     //     // Convert data to a worksheet
     //     const worksheet = XLSX.utils.json_to_sheet(inquery.map((item)=>({
     //         "Student Name":item.Student_Name,
@@ -247,10 +258,10 @@ const RInquiry = () => {
     //         "Status 1": item.OnlineStatus,
     //         "Status 2": item.MasterStatus
     //     })));
-    
+
     //     // Append the worksheet to the workbook
     //     XLSX.utils.book_append_sheet(workbook, worksheet, "Inquiry Report");
-    
+
     //     // Export the workbook
     //     XLSX.writeFile(workbook, "Inquiry_Report.xlsx");
     //   };
@@ -262,27 +273,54 @@ const RInquiry = () => {
             type: "number",
             align: "center",
             headerAlign: "center",
-            width:100,
+            width: 100,
             filterable: false,
         },
         // { field: 'attendee', headerName: 'Student Code', flex: 2 },
         { field: "Student_Name", headerName: "Student Name", width: 200 },
-        { field: "Qualification", headerName: "Qualification", width: 100},
-        { field: "Inquiry_type", headerName: "Inquiry Type", width: 100},
-        { field: "Batch_Code", headerName: "Batch Code", width: 100},
-        { field: "inquiry_DT", headerName: "inquiry Date", width: 130},
-        { field: "Email", headerName: "Email", width: 150},
-        { field: "Present_Mobile", headerName: "Present Mobile", width: 150},
+        { field: "Qualification", headerName: "Qualification", width: 100 },
+        { field: "Inquiry_type", headerName: "Inquiry Type", width: 100 },
+        { field: "Batch_Code", headerName: "Batch Code", width: 100 },
+        { field: "inquiry_DT", headerName: "inquiry Date", width: 130 },
+        { field: "Email", headerName: "Email", width: 150 },
+        { field: "Present_Mobile", headerName: "Present Mobile", width: 150 },
         { field: "Course_Name", headerName: "Course Name", width: 200 },
-        { field: "BatchCategory", headerName: "Batch Category", width: 150},
+        { field: "BatchCategory", headerName: "Batch Category", width: 150 },
+        {
+            field: "Discussion1",
+            headerName: "Discussion 1",
+            valueGetter: (params) => {
+                let discussion_arr = JSON.parse(params.row.discussion_arr);
+                return discussion_arr[0];
+            },
+            width: 200,
+        },
+        {
+            field: "Discussion2",
+            headerName: "Discussion 2",
+            valueGetter: (params) => {
+                let discussion_arr = JSON.parse(params.row.discussion_arr);
+                return discussion_arr[1];
+            },
+            width: 200,
+        },
+        {
+            field: "Discussion3",
+            headerName: "Discussion 3",
+            valueGetter: (params) => {
+                let discussion_arr = JSON.parse(params.row.discussion_arr);
+                return discussion_arr[2];
+            },
+            width: 200,
+        },
         { field: "OnlineStatus", headerName: "Status 1", width: 130 },
         { field: "MasterStatus", headerName: "Status 2", width: 130 },
-        
+
         {
             field: "actions",
             // type: "actions",
             headerName: "Action",
-            width:100,
+            width: 100,
             renderCell: (params) => {
                 return (
                     <>
