@@ -1,25 +1,24 @@
-import React, { useEffect, useState } from 'react'
-import { BASE_URL } from './BaseUrl'
+import React, { useEffect, useState } from "react";
+import { BASE_URL } from "./BaseUrl";
 import EditIcon from "@mui/icons-material/Edit";
-import { DataGrid, GridToolbar, GridToolbarContainer, GridToolbarFilterButton } from '@mui/x-data-grid';
-import { Link } from 'react-router-dom';
-import InnerHeader from './InnerHeader';
-import axios from 'axios';
-import { Button, Switch } from '@mui/material';
-import Loader from './Loader';
+import { DataGrid, GridToolbar, GridToolbarContainer, GridToolbarFilterButton } from "@mui/x-data-grid";
+import { Link } from "react-router-dom";
+import InnerHeader from "./InnerHeader";
+import axios from "axios";
+import { Button, Switch } from "@mui/material";
+import Loader from "./Loader";
 import * as XLSX from "xlsx";
-import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import { StyledDataGrid } from './StyledDataGrid';
-import { param } from 'jquery';
-import _debounce from 'lodash.debounce';
+import TextField from "@mui/material/TextField";
+import Autocomplete from "@mui/material/Autocomplete";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import { StyledDataGrid } from "./StyledDataGrid";
+import { param } from "jquery";
+import _debounce from "lodash.debounce";
 
 const Students = () => {
-
     const [excelData, setExcelData] = useState([]);
     function CustomToolbar() {
         return (
@@ -29,102 +28,103 @@ const Students = () => {
             </GridToolbarContainer>
         );
     }
-    const [loading, setLoading] = useState(true)
-    const [onlineAdmissions, setOnlineAdmissions] = useState([])
-    const label = { inputProps: { 'aria-label': 'Color switch demo' } };
-    const [age, setAge] = React.useState('');
+    const [loading, setLoading] = useState(true);
+    const [onlineAdmissions, setOnlineAdmissions] = useState([]);
+    const label = { inputProps: { "aria-label": "Color switch demo" } };
+    const [age, setAge] = React.useState("");
     const [students, setStudents] = useState([]);
     const [page, setPage] = useState(0); // Current page
     const [pageSize, setPageSize] = useState(10); // Number of records per page
     const [lastStudentId, setLastStudentId] = useState(null);
-    const [totalstudent, setTotalStudent] = useState('')
+    const [totalstudent, setTotalStudent] = useState("");
     const [selectedStudent, setSelectedStudent] = React.useState(null);
-    const [searchwise, setSearchWise] = useState('')
-    const [searchdata, setSearchData] = useState('')
-    const [searchtext, setText] = useState('')
-    const [expand, setPageExpand] = useState(false)
-    const [data, setData] = useState([])
+    const [searchwise, setSearchWise] = useState("");
+    const [searchdata, setSearchData] = useState("");
+    const [searchtext, setText] = useState("");
+    const [expand, setPageExpand] = useState(false);
+    const [data, setData] = useState([]);
 
-
-    
     async function getOnlineAdmissions(params) {
-        setLoading(true)
+        setLoading(true);
         const data = {
             page: page,
-            pageSize: pageSize
-        }
-        axios.post(`${BASE_URL}/getAllStudent`, data)
+            pageSize: pageSize,
+        };
+        axios
+            .post(`${BASE_URL}/getAllStudent`, data)
 
             .then((response) => {
                 if (response.data) {
-                    console.log(response.data.data)
+                    console.log(response.data.data);
                     setStudents(response.data.data); // Set fetched student data
                     setLastStudentId(response.data.lastStudentId);
-                    setTotalStudent(response.data.totalCount)
-                    setLoading(false)
+                    setTotalStudent(response.data.totalCount);
+                    setLoading(false);
                 }
-
-            })
+            });
     }
-
-
 
     useEffect(() => {
         getOnlineAdmissions();
-    }, [])
+    }, []);
 
     useEffect(() => {
         getOnlineAdmissions(page, pageSize);
     }, [page, pageSize]);
 
-
     const handleswitchchange = (value, Inquiry_Id) => {
-        const newval = value == 0 ? 1 : 0
+        const newval = value == 0 ? 1 : 0;
 
-        axios.post(`${BASE_URL}/data_status`, { status: newval, Inquiry_Id: Inquiry_Id, table_name: "Student_Master" })
+        axios
+            .post(`${BASE_URL}/data_status`, { status: newval, Inquiry_Id: Inquiry_Id, table_name: "Student_Master" })
             .then((res) => {
-                console.log(res)
-                getOnlineAdmissions()
-                setLoading(false)
-            })
-    }
-
+                console.log(res);
+                getOnlineAdmissions();
+                setLoading(false);
+            });
+    };
 
     const columns = [
         {
-            field: 'Student_Id',
-            headerName: 'Student Id',
-            type: 'text',
-            align: 'center',
-            headerAlign: 'center',
+            field: "Student_Id",
+            headerName: "Student Id",
+            type: "text",
+            align: "center",
+            headerAlign: "center",
             flex: 1,
             filterable: false,
         },
-        { field: 'Batch_code', headerName: 'Batch Code', flex: 1 },
-        { field: 'Student_Name', headerName: 'Student Name', flex: 2 },
-        { field: 'Present_Address', headerName: 'Address', flex: 2 },
-        { field: 'Email', headerName: 'Email', flex: 2 },
-        { field: 'Present_Mobile', headerName: 'mobile', flex: 2 },
+        { field: "Batch_code", headerName: "Batch Code", flex: 1 },
+        { field: "Student_Name", headerName: "Student Name", flex: 2 },
+        { field: "Present_Address", headerName: "Address", flex: 2 },
+        { field: "Email", headerName: "Email", flex: 2 },
+        { field: "Present_Mobile", headerName: "mobile", flex: 2 },
         // { field: 'Qualification', headerName: 'Qualification', flex: 2 },
-        { field: 'Status', headerName: 'Status', flex: 2 , valueGetter:(params)=>'Active'},
+        { field: "Status", headerName: "Status", flex: 2, valueGetter: (params) => "Active" },
         {
-            field: 'actions',
-            type: 'actions',
-            headerName: 'Action',
+            field: "actions",
+            type: "actions",
+            headerName: "Action",
             flex: 1,
             renderCell: (params) => {
                 return (
                     <>
-                        <Link to={`/admissionform/personalinfo/${params.row.Student_Id}`}><EditIcon style={{ cursor: "pointer" }} /></Link>
-                        <Switch {...label} onChange={() => handleswitchchange(params.row.isActive, params.row.id)} defaultChecked={params.row.isActive == 0 ? false : true} color="secondary" />
+                        <Link to={`/admissionform/personalinfo/${params.row.Student_Id}`}>
+                            <EditIcon style={{ cursor: "pointer" }} />
+                        </Link>
+                        <Switch
+                            {...label}
+                            onChange={() => handleswitchchange(params.row.isActive, params.row.id)}
+                            defaultChecked={params.row.isActive == 0 ? false : true}
+                            color="secondary"
+                        />
                     </>
-                )
-            }
+                );
+            },
         },
     ];
 
     const rowsWithIds = onlineAdmissions.map((row, index) => ({ index: index + 1, ...row }));
-
 
     const handleFileUpload = (e) => {
         const file = e.target.files[0];
@@ -150,9 +150,7 @@ const Students = () => {
         };
 
         reader.readAsArrayBuffer(file);
-
     };
-
 
     const handleImport = async () => {
         const batchSize = 5000;
@@ -162,113 +160,106 @@ const Students = () => {
         }
     };
 
-
-
     //Search Section
 
-
-
-    async function getstudents() {
-
-        axios.post(`${BASE_URL}/getAdmittedStudent`, { param: searchtext })
-            .then((res) => {
-                setData(res.data)
-            })
+    async function getstudents(searchtext) {
+        axios.post(`${BASE_URL}/getAdmittedStudent`, { param: searchtext }).then((res) => {
+            setData(res.data);
+        });
     }
-    async function getBatchcode() {
-
-
-        axios.post(`${BASE_URL}/getSearchBatch`, { param: searchtext })
-            .then((res) => {
-                setData(res.data)
-            })
-    }
-    
-    async function getEmail() {
-
-
-        axios.post(`${BASE_URL}/getSearchEmail`, { param: searchtext })
-            .then((res) => {
-                setData(res.data)
-            })
+    async function getBatchcode(searchtext) {
+        axios.post(`${BASE_URL}/getSearchBatch`, { param: searchtext }).then((res) => {
+            setData(res.data);
+        });
     }
 
+    async function getEmail(searchtext) {
+        axios.post(`${BASE_URL}/getSearchEmail`, { param: searchtext }).then((res) => {
+            setData(res.data);
+        });
+    }
 
+    async function getCourse(searchtext) {
+        axios.post(`${BASE_URL}/getSearchInquiryCourse`, { param: searchtext }).then((res) => {
+            setData(res.data);
+        });
+    }
+    async function getMobile(searchtext) {
+        axios.post(`${BASE_URL}/getSearchMobile`, { param: searchtext }).then((res) => {
+            setData(res.data);
+        });
+    }
 
     const onsearchformSumbit = (e) => {
-        e.preventDefault()
+        e.preventDefault();
 
         const data = {
             searchwise: searchwise,
-            search: searchdata
-        }
+            search: searchdata,
+        };
 
-        axios.post(`${BASE_URL}/getserchresult`, data)
-            .then((res) => {
-                setStudents(res.data)
-            })
-
-
-    }
+        axios.post(`${BASE_URL}/getserchresult`, data).then((res) => {
+            setStudents(res.data);
+        });
+    };
 
     const handlesearchselect = (value) => {
-        setSearchWise(value)
-  
+        setSearchWise(value);
 
-        if (value == 'BatchWise') {
-            getBatchcode()
+        if (value == "BatchWise") {
+            getBatchcode();
         }
-        if (value == 'EmailWise') {
-            getEmail()
+        if (value == "EmailWise") {
+            getEmail();
         }
-    }
+    };
 
     const handleSearchChange = (newValue) => {
         setSelectedStudent(newValue); // Update state
 
-        if (searchwise == 'NameWise') {
-            setSearchData(newValue?.Student_Id)
+        if (searchwise == "NameWise") {
+            setSearchData(newValue?.Student_Id);
         }
-        if (searchwise == 'BatchWise') {
-            setSearchData(newValue?.Batch_code)
+        if (searchwise == "BatchWise") {
+            setSearchData(newValue?.Batch_code);
         }
-        if (searchwise == 'EmailWise') {
-            setSearchData(newValue?.Email)
+        if (searchwise == "EmailWise") {
+            setSearchData(newValue?.Email);
         }
-        
-
-
+        if (searchwise == "MobileWise") {
+            setSearchData(newValue?.Present_Mobile);
+        }
+        if (searchwise == "CourseWise") {
+            setSearchData(newValue?.Course_Id);
+        }
     };
 
-
     const handleInputChange = _debounce((newValue) => {
-        console.log(newValue)
-        setText(newValue)
+        console.log(newValue);
+        setText(newValue);
 
-        if (searchwise == 'BatchWise') {
-            getBatchcode()
+        if (searchwise == "BatchWise") {
+            getBatchcode(newValue);
         }
-        if (searchwise == 'NameWise') {
-            getstudents()
-
+        if (searchwise == "NameWise") {
+            getstudents(newValue);
         }
-        if (searchwise == 'EmailWise') {
-            getEmail()
-
+        if (searchwise == "EmailWise") {
+            getEmail(newValue);
         }
-
+        if (searchwise == "MobileWise") {
+            getMobile(newValue);
+        }
+        if (searchwise == "CourseWise") {
+            getCourse(newValue);
+        }
     }, 500);
-
-
-
-
-
 
     return (
         <div className="container-fluid page-body-wrapper ">
             <InnerHeader />
             {loading && <Loader />}
-            <div className="main-pannel" style={{ display: loading ? "none" : "block" }} >
+            <div className="main-pannel" style={{ display: loading ? "none" : "block" }}>
                 <div className="content-wrapper ">
                     <div className="row">
                         {/* <input className="mx-2" type="file" onChange={handleFileUpload}  />
@@ -281,22 +272,22 @@ const Students = () => {
                         <div className="col-lg-12">
                             <div className="card">
                                 <div className="card-body">
-                                    <div className='row ' style={{ width: "100%", padding: "10px 0" }}>
-                                        <div className='col-lg-7 ' >
-                                            <form className='row align-items-center' onSubmit={onsearchformSumbit} >
+                                    <div className="row " style={{ width: "100%", padding: "10px 0" }}>
+                                        <div className="col-lg-7 ">
+                                            <form className="row align-items-center" onSubmit={onsearchformSumbit}>
                                                 {/* <h4 class="card-title">Student Information</h4> */}
 
                                                 <div class="form-group col-lg-3">
-
                                                     <FormControl fullWidth size="small">
-                                                        <InputLabel id="demo-simple-select-label">Select Search</InputLabel>
+                                                        <InputLabel id="demo-simple-select-label">
+                                                            Select Search
+                                                        </InputLabel>
                                                         <Select
                                                             labelId="demo-simple-select-label"
                                                             id="demo-simple-select"
                                                             value={searchwise}
                                                             label="Select Search"
                                                             onChange={(e) => handlesearchselect(e.target.value)}
-
                                                         >
                                                             <MenuItem value={`Select`}>Select</MenuItem>
                                                             <MenuItem value={`NameWise`}>Name Wise</MenuItem>
@@ -309,58 +300,82 @@ const Students = () => {
                                                 </div>
 
                                                 <div class="form-group col-lg-5">
-
                                                     <Autocomplete
                                                         size="small"
                                                         disablePortal
                                                         options={data} // Pass the array of student objects
-                                                        getOptionLabel={(option) =>
-                                                            searchwise === 'NameWise'
-                                                                ? option.Student_Name
-                                                                : searchwise === 'BatchWise'
+                                                        getOptionLabel={
+                                                            (option) =>
+                                                                searchwise === "NameWise"
+                                                                    ? option.Student_Name
+                                                                    : searchwise === "BatchWise"
                                                                     ? option.Batch_code
-                                                                    : searchwise === 'EmailWise' ?  option.Email : '' // Provide a default fallback
+                                                                    : searchwise === "EmailWise"
+                                                                    ? option.Email
+                                                                    : searchwise === "MobileWise"
+                                                                    ? option.Present_Mobile
+                                                                    : searchwise === "CourseWise"
+                                                                    ? option.Course_Name
+                                                                    : "" // Provide a default fallback
                                                         } // Dynamically display the label based on `searchdata`
                                                         value={selectedStudent} // Use a state to manage the selected value
                                                         onChange={(e, newValue) => handleSearchChange(newValue)} // `newValue` is the selected object
-                                                        onInputChange={(e, newInputValue) => handleInputChange(newInputValue)} // Capture typed input
+                                                        onInputChange={(e, newInputValue) =>
+                                                            handleInputChange(newInputValue)
+                                                        } // Capture typed input
                                                         renderOption={(props, option) => (
                                                             <li {...props} key={option.Student_Id}>
-                                                                {searchwise === 'NameWise'
+                                                                {searchwise === "NameWise"
                                                                     ? option.Student_Name
-                                                                    : searchwise === 'BatchWise'
-                                                                        ? option.Batch_code
-                                                                        : searchwise === 'EmailWise' ? option.Email : ''} {/* Dynamically render the option */}
+                                                                    : searchwise === "BatchWise"
+                                                                    ? option.Batch_code
+                                                                    : searchwise === "EmailWise"
+                                                                    ? option.Email
+                                                                    : searchwise === "MobileWise"
+                                                                    ? option.Present_Mobile
+                                                                    : searchwise === "CourseWise"
+                                                                    ? option.Course_Name
+                                                                    : ""}{" "}
+                                                                {/* Dynamically render the option */}
                                                             </li>
                                                         )}
-                                                        renderInput={(params) => <TextField {...params} label="Enter.." />} // Render the input field
+                                                        renderInput={(params) => (
+                                                            <TextField {...params} label="Enter.." />
+                                                        )} // Render the input field
                                                     />
-
-
-
-
                                                 </div>
 
                                                 <div class="form-group col-lg-2">
-
-                                                    <Button type='submit' onClick={() =>{
-                                                        setPageExpand()
-                                                    }} variant="contained">Search</Button>
+                                                    <Button
+                                                        type="submit"
+                                                        onClick={() => {
+                                                            setPageExpand();
+                                                        }}
+                                                        variant="contained"
+                                                    >
+                                                        Search
+                                                    </Button>
                                                 </div>
-                                                <div className='form-group col-lg-2'>
-                                                    <Button type='submit' onClick={() => {
-                                                        window.location.reload()
-                                                    }} variant="contained">Clear</Button>
+                                                <div className="form-group col-lg-2">
+                                                    <Button
+                                                        type="submit"
+                                                        onClick={() => {
+                                                            window.location.reload();
+                                                        }}
+                                                        variant="contained"
+                                                    >
+                                                        Clear
+                                                    </Button>
                                                 </div>
                                             </form>
                                         </div>
 
-                                        <div className='col-lg-5'>
-                                            <p className='float-right'><b>Total Student :</b>{totalstudent}</p>
+                                        <div className="col-lg-5">
+                                            <p className="float-right">
+                                                <b>Total Student :</b>
+                                                {totalstudent}
+                                            </p>
                                         </div>
-
-
-
                                     </div>
 
                                     <div>
@@ -403,9 +418,9 @@ const Students = () => {
                                                     paginationModel: { pageSize: 100, page: 0 },
                                                 },
                                             }}
-                                        // Any other DataGrid props you need
+                                            // Any other DataGrid props you need
                                         />
-                                        <div className='float-right py-2'>
+                                        <div className="float-right py-2">
                                             <button
                                                 onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
                                                 disabled={page === 0} // Disable the "Previous" button on the first page
@@ -422,22 +437,15 @@ const Students = () => {
                                                 Next
                                             </button>
                                         </div>
-
-
-
                                     </div>
-
-
-
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
-    )
-}
+    );
+};
 
-export default Students
+export default Students;
