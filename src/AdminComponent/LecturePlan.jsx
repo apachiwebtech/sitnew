@@ -257,20 +257,6 @@ const LecturePlan = () => {
 
   const columns = [
     {
-      field: 'actions',
-      type: 'actions',
-      headerName: 'Action',
-      width: 100,
-      renderCell: (params) => {
-        return (
-          <>
-            <EditIcon style={{ cursor: "pointer" }} onClick={() => getupdatedata(params.row.id)} />
-            <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
-          </>
-        )
-      }
-    },
-    {
       field: "index",
       headerName: "Id",
       type: "number",
@@ -292,7 +278,20 @@ const LecturePlan = () => {
     { field: "documents", headerName: "Documents", width: 150 },
     { field: "unitname", headerName: "Unit Test", width: 150 },
     { field: "publish", headerName: "Publish", width: 100 },
-
+    {
+        field: 'actions',
+        type: 'actions',
+        headerName: 'Action',
+        width: 100,
+        renderCell: (params) => {
+          return (
+            <>
+              <EditIcon style={{ cursor: "pointer" }} onClick={() => getupdatedata(params.row.id)} />
+              <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
+            </>
+          )
+        }
+      },
   ];
 
   const rowsWithIds = onlineAdmissions.map((row, index) => ({

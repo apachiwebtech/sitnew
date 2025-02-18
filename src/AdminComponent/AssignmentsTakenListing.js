@@ -1,60 +1,54 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { BASE_URL } from './BaseUrl';
-import InnerHeader from './InnerHeader';
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { BASE_URL } from "./BaseUrl";
+import InnerHeader from "./InnerHeader";
 import Loader from "./Loader";
 
 const AssignmentsTakenListing = () => {
-
-    const [uid, setUid] = useState([])
-    const [cid, setCid] = useState("")
-    const [error, setError] = useState({})
+    const [uid, setUid] = useState([]);
+    const [cid, setCid] = useState("");
+    const [error, setError] = useState({});
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
-    const label = { inputProps: { 'aria-label': 'Color switch demo' } };
-    const [loading, setLoading] = useState(true)
-    const [assignmentstakendata, setassignmentstakendata] = useState ([]);
+    const label = { inputProps: { "aria-label": "Color switch demo" } };
+    const [loading, setLoading] = useState(true);
+    const [assignmentstakendata, setassignmentstakendata] = useState([]);
 
     const [value, setValue] = useState({
-        coursename: ' ',
-        batchcode: ' ',
-        assignmentname: ' ',
-        maxmarks: ' ',
-        assignmentdate: ' ',
-        returndate: ' ',
-
-    })
-
-
-
+        coursename: " ",
+        batchcode: " ",
+        assignmentname: " ",
+        maxmarks: " ",
+        assignmentdate: " ",
+        returndate: " ",
+    });
 
     const getInquiryData = async () => {
         const response = await fetch(`${BASE_URL}/getassignmentstakendata`, {
-            method: 'GET',
+            method: "GET",
             headers: {
-                'Content-Type': 'application/json'
-            }
+                "Content-Type": "application/json",
+            },
         });
         const data = await response.json();
-        setLoading(false)
+        setLoading(false);
 
         setassignmentstakendata(data);
-    }
-
+    };
 
     useEffect(() => {
-        getInquiryData()
-        value.title = ""
-        setError({})
-        setUid([])
-    }, [])
+        getInquiryData();
+        value.title = "";
+        setError({});
+        setUid([]);
+    }, []);
 
     const handleClick = (id) => {
-        setCid(id)
+        setCid(id);
         setConfirmationVisibleMap((prevMap) => ({
             ...prevMap,
             [id]: true,
@@ -69,28 +63,27 @@ const AssignmentsTakenListing = () => {
         }));
     };
 
-
     const handleDelete = (id) => {
         const data = {
             delete_id: id,
             tablename: "Assignment_taken",
-            column_name : "Given_Id"
-        }
+            column_name: "Given_Id",
+        };
 
-        axios.post(`${BASE_URL}/new_delete_data`, data)
+        axios
+            .post(`${BASE_URL}/new_delete_data`, data)
             .then((res) => {
-                getInquiryData()
+                getInquiryData();
             })
             .catch((err) => {
-                console.log(err)
-            })
+                console.log(err);
+            });
 
         setConfirmationVisibleMap((prevMap) => ({
             ...prevMap,
             [id]: false,
         }));
-    }
-
+    };
 
     // const handleswitchchange = (value, Inquiry_Id) => {
     //     const newval = value == 0 ? 1 : 0
@@ -102,64 +95,64 @@ const AssignmentsTakenListing = () => {
     //         })
     // }
 
-
-
     const columns = [
         {
-            field: 'index',
-            headerName: 'Id',
-            type: 'number',
-            align: 'center',
-            headerAlign: 'center',
+            field: "index",
+            headerName: "Id",
+            type: "number",
+            align: "center",
+            headerAlign: "center",
             flex: 1,
             filterable: false,
-
         },
-        { field: 'Course_Name', headerName: 'Course Name', flex: 2  },
-        { field: 'Batch_code', headerName: 'Batch Code', flex: 2 },
-        { field: 'Assign_Dt', headerName: 'Assignment Name', flex: 2 },
-        { field: 'Return_Dt', headerName: 'Assignment Date', flex: 2 },
+        { field: "Course_Name", headerName: "Course Name", flex: 2 },
+        { field: "Batch_code", headerName: "Batch Code", flex: 2 },
+        { field: "assignmentname", headerName: "Assignment Name", flex: 2 },
+        { field: "Assign_Dt", headerName: "Assignment Date", flex: 2 },
         {
-            field: 'actions',
-            type: 'actions',
-            headerName: 'Action',
+            field: "actions",
+            type: "actions",
+            headerName: "Action",
             flex: 1,
             renderCell: (params) => {
                 return (
                     <>
-                        <Link to={`/assignmentstaken/${params.row.Given_Id}`} ><EditIcon style={{ cursor: "pointer" }}  /></Link>
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.Given_Id)} />
+                        <Link to={`/assignmentstaken/${params.row.Given_Id}`}>
+                            <EditIcon style={{ cursor: "pointer" }} />
+                        </Link>
+                        <DeleteIcon
+                            style={{ color: "red", cursor: "pointer" }}
+                            onClick={() => handleClick(params.row.Given_Id)}
+                        />
                     </>
-                )
-            }
+                );
+            },
         },
     ];
-
-
 
     const rowsWithIds = assignmentstakendata.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
-
         <div className="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
             {loading && <Loader />}
-            <div className="main-panel" style={{display : loading ? "none" : "block"}} >
-
+            <div className="main-panel" style={{ display: loading ? "none" : "block" }}>
                 <div className="content-wrapper">
-
                     <div className="row">
-
                         <div className="col-lg-12">
                             <div className="card">
                                 <div className="card-body">
-                                    <div className='d-flex justify-content-between gap-3' style={{ width: "100%", padding: "10px 0" }}>
-                                        <div >
+                                    <div
+                                        className="d-flex justify-content-between gap-3"
+                                        style={{ width: "100%", padding: "10px 0" }}
+                                    >
+                                        <div>
                                             <h4 class="card-title">Add Assignmentstaken Details</h4>
                                         </div>
-                                        <Link to='/assignmentstaken/:assignmentstakenid'> <button className='btn btn-success'>Add +</button></Link>
-
-
+                                        <Link to="/assignmentstaken/:assignmentstakenid">
+                                            {" "}
+                                            <button className="btn btn-success">Add +</button>
+                                        </Link>
                                     </div>
 
                                     <div>
@@ -185,25 +178,31 @@ const AssignmentsTakenListing = () => {
                                         />
 
                                         {confirmationVisibleMap[cid] && (
-                                            <div className='confirm-delete'>
+                                            <div className="confirm-delete">
                                                 <p>Are you sure you want to delete?</p>
-                                                <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
-                                                <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
+                                                <button
+                                                    onClick={() => handleDelete(cid)}
+                                                    className="btn btn-sm btn-primary"
+                                                >
+                                                    OK
+                                                </button>
+                                                <button
+                                                    onClick={() => handleCancel(cid)}
+                                                    className="btn btn-sm btn-danger"
+                                                >
+                                                    Cancel
+                                                </button>
                                             </div>
                                         )}
                                     </div>
-
-
-
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div >
-        </div >
+            </div>
+        </div>
+    );
+};
 
-    )
-}
-
-export default AssignmentsTakenListing
+export default AssignmentsTakenListing;
