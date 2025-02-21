@@ -22,7 +22,7 @@ const GenerateResult = () => {
     const [courseid, SetCoursid] = useState("");
     const [child, setChild] = useState([]);
     const [loading, setLoading] = useState(false);
-    
+
     const [value, setValue] = useState({
         course: "",
         batch: "",
@@ -86,10 +86,7 @@ const GenerateResult = () => {
 
         if (id) {
             try {
-                const res = await axios.post(
-                    `${BASE_URL}/getcoursewisebatch`,
-                    data
-                );
+                const res = await axios.post(`${BASE_URL}/getcoursewisebatch`, data);
                 setAnnulBatch(res.data);
             } catch (err) {
                 console.error("Error fetching data:", err);
@@ -175,9 +172,9 @@ const GenerateResult = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         if (validateForm()) {
-            setLoading(true)
+            setLoading(true);
             const data = {
                 course: courseid,
                 batch: value.batch,
@@ -194,7 +191,7 @@ const GenerateResult = () => {
             };
 
             axios.post(`${BASE_URL}/add_generateresult`, data).then((res) => {
-                setLoading(false)
+                setLoading(false);
                 alert("Data Added Successfully");
             });
         }
@@ -215,15 +212,9 @@ const GenerateResult = () => {
         "created_date",
     ];
 
-    const headers =
-        child.length > 0
-            ? Object.keys(child[0]).filter((key) => !excludeKeys.includes(key))
-            : [];
+    const headers = child.length > 0 ? Object.keys(child[0]).filter((key) => !excludeKeys.includes(key)) : [];
 
-    const updatedHeaders =
-        child.length > 0
-            ? headers.filter((header) => child.some((ch) => ch[header]))
-            : [];
+    const updatedHeaders = child.length > 0 ? headers.filter((header) => child.some((ch) => ch[header])) : [];
 
     const [pdfdata, setpdfData] = useState([]);
 
@@ -252,6 +243,7 @@ const GenerateResult = () => {
     };
 
     const fullAttendence = async (data) => {
+        console.log(pdfdata);
         const blob = await pdf(<MyDocument7 data={pdfdata} />).toBlob();
         const url = URL.createObjectURL(blob);
         window.open(url);
@@ -286,67 +278,43 @@ const GenerateResult = () => {
     return (
         <div class="container-fluid page-body-wrapper ">
             <InnerHeader />
-           {loading && <DotLoader/> } 
-            <div class="main-panel" style={{display : loading ? "none" : "block"} }>
+            {loading && <DotLoader />}
+            <div class="main-panel" style={{ display: loading ? "none" : "block" }}>
                 <div class="content-wrapper">
                     <div class="row">
                         <div class="col-lg-12 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">
-                                        Generate Final Result
-                                    </h4>
+                                    <h4 class="card-title">Generate Final Result</h4>
                                     <hr></hr>
-                                    <form
-                                        class="forms-sample py-3"
-                                        onSubmit={handleSubmit}
-                                    >
+                                    <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class="row">
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">
                                                     Course
-                                                    <span className="text-danger">
-                                                        *
-                                                    </span>{" "}
+                                                    <span className="text-danger">*</span>{" "}
                                                 </label>
                                                 <select
                                                     class="form-control form-control-lg"
                                                     id="exampleFormControlSelect1"
                                                     value={courseid}
-                                                    onChange={(e) =>
-                                                        getbatch(e.target.value)
-                                                    }
+                                                    onChange={(e) => getbatch(e.target.value)}
                                                     name="course"
                                                 >
                                                     <option>Select</option>
                                                     {course.map((item) => {
                                                         return (
-                                                            <option
-                                                                value={
-                                                                    item.Course_Id
-                                                                }
-                                                            >
-                                                                {
-                                                                    item.Course_Name
-                                                                }
-                                                            </option>
+                                                            <option value={item.Course_Id}>{item.Course_Name}</option>
                                                         );
                                                     })}
                                                 </select>
-                                                {
-                                                    <span className="text-danger">
-                                                        {" "}
-                                                        {error.course}{" "}
-                                                    </span>
-                                                }
+                                                {<span className="text-danger"> {error.course} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">
                                                     Batch
-                                                    <span className="text-danger">
-                                                        *
-                                                    </span>{" "}
+                                                    <span className="text-danger">*</span>{" "}
                                                 </label>
                                                 <select
                                                     class="form-control form-control-lg"
@@ -357,33 +325,16 @@ const GenerateResult = () => {
                                                 >
                                                     <option>Select</option>
                                                     {batch.map((item) => {
-                                                        return (
-                                                            <option
-                                                                value={
-                                                                    item.Batch_Id
-                                                                }
-                                                            >
-                                                                {
-                                                                    item.Batch_code
-                                                                }
-                                                            </option>
-                                                        );
+                                                        return <option value={item.Batch_Id}>{item.Batch_code}</option>;
                                                     })}
                                                 </select>
-                                                {
-                                                    <span className="text-danger">
-                                                        {" "}
-                                                        {error.batch}{" "}
-                                                    </span>
-                                                }
+                                                {<span className="text-danger"> {error.batch} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">
                                                     Result Date
-                                                    <span className="text-danger">
-                                                        *
-                                                    </span>
+                                                    <span className="text-danger">*</span>
                                                 </label>
                                                 <input
                                                     type="date"
@@ -393,18 +344,11 @@ const GenerateResult = () => {
                                                     name="returndate"
                                                     onChange={onhandleChange}
                                                 />
-                                                {
-                                                    <span className="text-danger">
-                                                        {" "}
-                                                        {error.returndate}{" "}
-                                                    </span>
-                                                }
+                                                {<span className="text-danger"> {error.returndate} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">
-                                                    Print Date
-                                                </label>
+                                                <label for="exampleInputUsername1">Print Date</label>
                                                 <input
                                                     type="date"
                                                     class="form-control"
@@ -423,18 +367,10 @@ const GenerateResult = () => {
                                                     onChange={onhandleChange}
                                                 >
                                                     <option>Select</option>
-                                                    <option value="Prepared">
-                                                        Prepared By
-                                                    </option>
-                                                    <option value="Checked">
-                                                        Checked By
-                                                    </option>
-                                                    <option value="Training">
-                                                        Training Coordinator
-                                                    </option>
-                                                    <option value="Faculty">
-                                                        Faculty
-                                                    </option>
+                                                    <option value="Prepared">Prepared By</option>
+                                                    <option value="Checked">Checked By</option>
+                                                    <option value="Training">Training Coordinator</option>
+                                                    <option value="Faculty">Faculty</option>
                                                 </select>
 
                                                 <select
@@ -447,15 +383,7 @@ const GenerateResult = () => {
                                                     <option>Select</option>
                                                     {faculty.map((item) => {
                                                         return (
-                                                            <option
-                                                                value={
-                                                                    item.Faculty_Id
-                                                                }
-                                                            >
-                                                                {
-                                                                    item.Faculty_Name
-                                                                }
-                                                            </option>
+                                                            <option value={item.Faculty_Id}>{item.Faculty_Name}</option>
                                                         );
                                                     })}
                                                 </select>
@@ -469,18 +397,10 @@ const GenerateResult = () => {
                                                     onChange={onhandleChange}
                                                 >
                                                     <option>Select</option>
-                                                    <option value="Prepared">
-                                                        Prepared By
-                                                    </option>
-                                                    <option value="Checked">
-                                                        Checked By
-                                                    </option>
-                                                    <option value="Training">
-                                                        Training Coordinator
-                                                    </option>
-                                                    <option value="Faculty">
-                                                        Faculty
-                                                    </option>
+                                                    <option value="Prepared">Prepared By</option>
+                                                    <option value="Checked">Checked By</option>
+                                                    <option value="Training">Training Coordinator</option>
+                                                    <option value="Faculty">Faculty</option>
                                                 </select>
 
                                                 <select
@@ -493,15 +413,7 @@ const GenerateResult = () => {
                                                     <option>Select</option>
                                                     {faculty.map((item) => {
                                                         return (
-                                                            <option
-                                                                value={
-                                                                    item.Faculty_Id
-                                                                }
-                                                            >
-                                                                {
-                                                                    item.Faculty_Name
-                                                                }
-                                                            </option>
+                                                            <option value={item.Faculty_Id}>{item.Faculty_Name}</option>
                                                         );
                                                     })}
                                                 </select>
@@ -512,90 +424,52 @@ const GenerateResult = () => {
                                                     <div class="form-group col-lg-3">
                                                         <label for="exampleFormControlSelect1">
                                                             Approved By
-                                                            <span className="text-danger">
-                                                                *
-                                                            </span>{" "}
+                                                            <span className="text-danger">*</span>{" "}
                                                         </label>
                                                         <select
                                                             class="form-control form-control-lg"
                                                             id="exampleFormControlSelect1"
-                                                            value={
-                                                                value.approved
-                                                            }
-                                                            onChange={
-                                                                onhandleChange
-                                                            }
+                                                            value={value.approved}
+                                                            onChange={onhandleChange}
                                                             name="approved"
                                                         >
-                                                            <option>
-                                                                Select
-                                                            </option>
-                                                            {faculty.map(
-                                                                (item) => {
-                                                                    return (
-                                                                        <option
-                                                                            value={
-                                                                                item.Faculty_Id
-                                                                            }
-                                                                        >
-                                                                            {
-                                                                                item.Faculty_Name
-                                                                            }
-                                                                        </option>
-                                                                    );
-                                                                }
-                                                            )}
+                                                            <option>Select</option>
+                                                            {faculty.map((item) => {
+                                                                return (
+                                                                    <option value={item.Faculty_Id}>
+                                                                        {item.Faculty_Name}
+                                                                    </option>
+                                                                );
+                                                            })}
                                                         </select>
-                                                        {
-                                                            <span className="text-danger">
-                                                                {" "}
-                                                                {
-                                                                    error.approved
-                                                                }{" "}
-                                                            </span>
-                                                        }
+                                                        {<span className="text-danger"> {error.approved} </span>}
                                                     </div>
                                                     <div class="form-group col-lg-3">
-                                                        <label for="exampleInputUsername1">
-                                                            Period (Start Date)
-                                                        </label>
+                                                        <label for="exampleInputUsername1">Period (Start Date)</label>
                                                         <input
                                                             type="date"
                                                             class="form-control"
                                                             id="exampleInputUsername1"
-                                                            value={
-                                                                value.startdate
-                                                            }
+                                                            value={value.startdate}
                                                             name="startdate"
-                                                            onChange={
-                                                                onhandleChange
-                                                            }
+                                                            onChange={onhandleChange}
                                                         />
                                                     </div>
 
                                                     <div class="form-group col-lg-3">
-                                                        <label for="exampleInputUsername1">
-                                                            End Date
-                                                        </label>
+                                                        <label for="exampleInputUsername1">End Date</label>
                                                         <input
                                                             type="date"
                                                             class="form-control"
                                                             id="exampleInputUsername1"
-                                                            value={
-                                                                value.enddate
-                                                            }
+                                                            value={value.enddate}
                                                             name="enddate"
-                                                            onChange={
-                                                                onhandleChange
-                                                            }
+                                                            onChange={onhandleChange}
                                                         />
                                                     </div>
 
                                                     <div className="col-lg-3">
-                                                        <button
-                                                            type="submit"
-                                                            class="btn btn-primary mr-2"
-                                                        >
+                                                        <button type="submit" class="btn btn-primary mr-2">
                                                             Generate
                                                         </button>
                                                     </div>
@@ -604,52 +478,25 @@ const GenerateResult = () => {
                                         </div>
                                     </form>
 
-                                    <button
-                                        type="submit"
-                                        class="btn btn-primary mr-2"
-                                    >
+                                    <button type="submit" class="btn btn-primary mr-2">
                                         Save
                                     </button>
-                                    <button
-                                        type="button"
-                                        onClick={withoutabsentrule}
-                                        class="btn btn-primary mr-2"
-                                    >
+                                    <button type="button" onClick={withoutabsentrule} class="btn btn-primary mr-2">
                                         Without Absent Rule
                                     </button>
-                                    <button
-                                        type="button"
-                                        onClick={fullAttendence}
-                                        class="btn btn-primary mr-2"
-                                    >
+                                    <button type="button" onClick={fullAttendence} class="btn btn-primary mr-2">
                                         Without Absent Rule with Full Attendance
                                     </button>
-                                    <button
-                                        type="button"
-                                        onClick={printReportCard}
-                                        class="btn btn-primary mr-2"
-                                    >
+                                    <button type="button" onClick={printReportCard} class="btn btn-primary mr-2">
                                         Print Report Card
                                     </button>
-                                    <button
-                                        type="button"
-                                        onClick={marksheet}
-                                        class="btn btn-primary mr-2"
-                                    >
+                                    <button type="button" onClick={marksheet} class="btn btn-primary mr-2">
                                         MarkSheet
                                     </button>
-                                    <button
-                                        type="button"
-                                        onClick={certificateprint}
-                                        class="btn btn-primary mr-2"
-                                    >
+                                    <button type="button" onClick={certificateprint} class="btn btn-primary mr-2">
                                         Certificate Print
                                     </button>
-                                    <button
-                                        type="button"
-                                        onClick={printSheet}
-                                        class="btn btn-primary mr-2"
-                                    >
+                                    <button type="button" onClick={printSheet} class="btn btn-primary mr-2">
                                         Print Sheet
                                     </button>
                                     <button
@@ -685,18 +532,13 @@ const GenerateResult = () => {
                                                         }
                                                     )} */}
 
-                                                    {updatedHeaders.map(
-                                                        (item, index) => {
-                                                            return (
-                                                                <th
-                                                                    width="10%"
-                                                                    key={index}
-                                                                >
-                                                                    {item}
-                                                                </th>
-                                                            );
-                                                        }
-                                                    )}
+                                                    {updatedHeaders.map((item, index) => {
+                                                        return (
+                                                            <th width="10%" key={index}>
+                                                                {item}
+                                                            </th>
+                                                        );
+                                                    })}
                                                 </tr>
                                             </thead>
 
@@ -720,15 +562,9 @@ const GenerateResult = () => {
                                                 ))} */}
                                                 {child.map((row, rowIndex) => (
                                                     <tr key={rowIndex}>
-                                                        {updatedHeaders.map(
-                                                            (header, index) => (
-                                                                <td key={index}>
-                                                                    {row[
-                                                                        header
-                                                                    ] || "-"}
-                                                                </td>
-                                                            )
-                                                        )}
+                                                        {updatedHeaders.map((header, index) => (
+                                                            <td key={index}>{row[header] || "-"}</td>
+                                                        ))}
                                                         {/* Additional <td> if needed */}
                                                         <td></td>
                                                     </tr>
@@ -736,11 +572,7 @@ const GenerateResult = () => {
                                             </tbody>
                                         </table>
                                     </div>
-                                    <button
-                                        type="button"
-                                        style={{ float: "right" }}
-                                        class="btn btn-primary m-2"
-                                    >
+                                    <button type="button" style={{ float: "right" }} class="btn btn-primary m-2">
                                         Update Sheet
                                     </button>
                                 </div>
