@@ -439,10 +439,10 @@ const FinalExam = () => {
 
                     </div>
 
-                    <button type="submit" className='btn btn-primary mr-2 ' onClick={() => downloadPDF(value.batch)}>
+                    <button type="submit" className='btn btn-primary mr-2 ' >
                       Excel
                     </button>
-                    <button type="submit" className="btn btn-primary mr-2">Show</button>
+                    <button type="submit" className="btn btn-primary mr-2" onClick={() => downloadPDF(value.batch)}>Show</button>
                     <button type='button' onClick={() => {
                       window.location.reload()
                     }} class="btn btn-primary mr-2  ">Back</button>

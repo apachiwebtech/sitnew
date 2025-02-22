@@ -1,5 +1,6 @@
 import React from 'react';
-import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+import { Document, Page, Text, View,Image, StyleSheet } from '@react-pdf/renderer';
+import sitlogo from '../../src/assets/images/sitlogo.png';
 
 // Create styles
 const styles = StyleSheet.create({
@@ -25,10 +26,26 @@ const styles = StyleSheet.create({
   tableCol: {
     borderStyle: 'solid',
     borderWidth: 1,
+    borderBottomWidth: 1,
+    borderLeftWidth: 1,
+    borderTopWidth: 1,
+    minHeight: 40,
+  },
+  tableColavg: {
+    borderStyle: 'solid',
+    borderWidth: 1,
+    borderBottomWidth: 0,
+    borderLeftWidth: 1,
+    borderTopWidth: 1,
+    minHeight: 40,
+  },
+  tableColreport: {
+    borderStyle: 'solid',
+    borderWidth: 1,
     borderBottomWidth: 0,
     borderLeftWidth: 0,
     borderTopWidth: 0,
-    minHeight: 40,
+    minHeight: 30,
   },
   tableCol1: {
     borderStyle: 'solid',
@@ -38,10 +55,26 @@ const styles = StyleSheet.create({
     borderTopWidth: 0,
     minHeight: 40,
   },
+  tableCol11: {
+    borderStyle: 'solid',
+    borderWidth: 1,
+    borderBottomWidth:0,
+    borderLeftWidth: 1,
+    borderTopWidth: 0,
+    minHeight: 40,
+  },
   tableCell: {
     margin: 'auto',
     marginTop: 5,
     fontSize: 10,
+  },
+  tableCellheader: {
+    margin: 'auto',
+    marginTop: 5,
+  },
+  tableCelltrain: {
+    marginLeft: '2%',
+    marginTop: 5,
   },
   tableCellr: {
     margin: 'auto',
@@ -97,15 +130,40 @@ const MyDocument = ({ data }) => {
       <Page size="A1" orientation='landscape' style={styles.page}>
         {/* Header Section */}
         <View style={styles.header}>
-          <Text>Suvidya Institute of Technology Pvt. Ltd.</Text>
-          <Text>REPORT OF FINAL EXAMINATION</Text>
+          <Image style={{width:'100px'}} src = {sitlogo}></Image>
+        </View>
+
+        <View style={{ border: '2px solid black' }}>
+          <View style={[styles.tableColreport, { width: '100%' }]}>
+            <Text style={styles.tableCellheader}>REPORT OF FINAL EXAMINATION</Text>
+          </View>
+        </View>
+        <View style={{ marginTop: '5px' }}>
+
+        </View>
+
+        <View style={{ border: '2px solid black' }}>
+          <View style={styles.tableRow}>
+            <View style={[styles.tableColtrain, { width: '50%' }]}>
+              <Text style={styles.tableCelltrain}>Training Programme:</Text>
+            </View>
+            <View style={[styles.tableColtrain, { width: '50%' }]}>
+              <Text style={styles.tableCelltrain}>Batch No:</Text>
+            </View>
+          </View>
+        </View>
+
+        <View style={{ marginTop: '5px' }}>
+
         </View>
 
         {/* Main Table */}
         <View style={styles.table}>
+
+
           {/* Table Header Row */}
           <View style={styles.tableRow}>
-            <View style={[styles.tableCol, { width: '5%' }]}>
+            <View style={[styles.tableCol, { width: '2%' }]}>
               <Text style={styles.tableCell}>Sr. No.</Text>
             </View>
             <View style={[styles.tableCol, { width: '5%' }]}>
@@ -154,8 +212,8 @@ const MyDocument = ({ data }) => {
               </View>
             </View>
             {/* Average */}
-            <View style={[styles.tableCol, { width: '2%' }]}>
-              <Text style={[styles.sectionTitle, { borderBottom: '0', position: 'relative', top: 10, transform: 'rotate(90deg)' }]}>Average</Text>
+            <View style={[styles.tableColavg, { width: '2%' }]}>
+              <Text style={[styles.sectionTitle, { position: 'absolute', top: 20, transform: 'rotate(90deg)' }]}>Average</Text>
             </View>
 
             {/* Assignment Marks Header */}
@@ -243,7 +301,7 @@ const MyDocument = ({ data }) => {
 
           {/* Empty Data Row for Filling */}
           <View style={styles.tableRow}>
-            <View style={[styles.tableCol1, { width: '5%' }]}>
+            <View style={[styles.tableCol1, { width: '2%' }]}>
               <Text style={styles.tableCellBlank}></Text>
             </View>
             <View style={[styles.tableCol1, { width: '5%' }]}>
@@ -292,7 +350,7 @@ const MyDocument = ({ data }) => {
               </View>
             </View>
             {/* Average */}
-            <View style={[styles.tableCol1, { width: '2%' }]}>
+            <View style={[styles.tableCol11, { width: '2%' }]}>
               <Text style={styles.innerTable}></Text>
             </View>
 
@@ -380,10 +438,10 @@ const MyDocument = ({ data }) => {
             </View>
           </View>
 
-          {data.map((item , index) => {
+          {data.map((item, index) => {
             return (
               <View style={styles.tableRow}>
-                <View style={[styles.tableCol, { width: '5%' }]}>
+                <View style={[styles.tableCol, { width: '2%' }]}>
                   <Text style={styles.tableCell}>{index + 1}</Text>
                 </View>
                 <View style={[styles.tableCol, { width: '5%' }]}>
@@ -535,7 +593,7 @@ const MyDocument = ({ data }) => {
           <Text>PASSING CRITERIA: 90.00% To 100.00% - A+, 80.00% To 89.99% - A, 70.00% To 79.99% - B+, ...</Text>
         </View>
       </Page>
-    </Document>
+    </Document >
   )
 
 
