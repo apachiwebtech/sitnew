@@ -109,24 +109,24 @@ const styles = StyleSheet.create({
     },
 });
 
-const TestDocument = () => {
-    const [data, setData] = useState([]);
+const TestDocument = ({ data }) => {
+    // const [data, setData] = useState([]);
 
-    useEffect(() => {
-        downloadPDF(908);
-    }, []);
+    // useEffect(() => {
+    //     downloadPDF(908);
+    // }, []);
 
-    async function downloadPDF(id) {
-        axios
-            .post(`${BASE_URL}/getfinalreport`, { Batch_Id: id })
-            .then((res) => {
-                console.log(res.data);
-                setData(res.data);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-    }
+    // async function downloadPDF(id) {
+    //     axios
+    //         .post(`${BASE_URL}/getfinalreport`, { Batch_Id: id })
+    //         .then((res) => {
+    //             console.log(res.data);
+    //             setData(res.data);
+    //         })
+    //         .catch((err) => {
+    //             console.log(err);
+    //         });
+    // }
 
     return (
         <Document>
@@ -149,7 +149,6 @@ const TestDocument = () => {
                 <View style={styles.reportTitle}>
                     <Text>REPORT OF FINAL EXAMINATION</Text>
                 </View>
-
                 <View
                     style={{
                         borderStyle: "solid",
@@ -179,14 +178,539 @@ const TestDocument = () => {
                         <Text style={{ fontSize: 10 }}>09065</Text>
                     </View>
                 </View>
+                <View
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        border: "1px solid black",
+                        marginBottom: "10px",
+                    }}
+                >
+                    <View
+                        style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            borderBottom: "1px solid black",
+                        }}
+                    >
+                        <View style={{ padding: 5, borderRight: "1px solid black", width: "2%" }}>
+                            <Text style={{ fontSize: 10, margin: "auto" }}>Sr. No.</Text>
+                        </View>
+                        <View style={{ padding: 5, borderRight: "1px solid black", width: "6%" }}>
+                            <Text style={{ fontSize: 10, margin: "auto" }}>Student Id</Text>
+                        </View>
+                        <View style={{ padding: 5, borderRight: "1px solid black", width: "12%" }}>
+                            <Text style={{ fontSize: 10, marginVertical: "auto", marginHorizontal: "auto" }}>Name</Text>
+                        </View>
+                        <View
+                            style={{
+                                borderRight: "1px solid black",
+                                width: "20%",
+                                display: "flex",
+                                flexDirection: "column",
+                            }}
+                        >
+                            <View style={{ borderBottom: "1px solid black", paddingVertical: 3, flexGrow: 1 }}>
+                                <Text style={{ fontSize: 10, margin: "auto" }}>Unit Test Marks</Text>
+                            </View>
+                            <View style={{ borderBottom: "1px solid black", display: "flex", flexDirection: "row" }}>
+                                {Array.from({ length: 10 }, (_, index) => index + 1).map((index) => (
+                                    <View
+                                        key={index}
+                                        style={{
+                                            ...(index !== 10 ? { borderRight: "1px solid black" } : {}),
+                                            // flexGrow: 1,
+                                            width: 30,
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                            padding: 1,
+                                            minHeight: 13,
+                                        }}
+                                    >
+                                        <Text style={{ fontSize: 10, textAlign: "right" }}>
+                                            {data.length
+                                                ? data[0][`Test${index}_Max`]
+                                                    ? data[0][`Test${index}_Max`]
+                                                    : ""
+                                                : ""}
+                                        </Text>
+                                    </View>
+                                ))}
+                            </View>
+                            <View style={{ borderBottom: "1px solid black", paddingVertical: 3, flexGrow: 1 }}>
+                                <Text style={{ fontSize: 10, margin: "auto" }}>Marks Obtained</Text>
+                            </View>
+                            <View style={{ display: "flex", flexDirection: "row" }}>
+                                {Array.from({ length: 10 }, (_, index) => index + 1).map((index) => (
+                                    <View
+                                        key={index}
+                                        style={{
+                                            ...(index !== 10 ? { borderRight: "1px solid black" } : {}),
+                                            width: 30,
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            padding: 1,
+                                            minHeight: 13,
+                                        }}
+                                    >
+                                        <Text style={{ fontSize: 10, textAlign: "right" }}>
+                                            {data.length ? (data[0][`Test${index}_Max`] ? `U${index}` : "") : ""}
+                                        </Text>
+                                    </View>
+                                ))}
+                            </View>
+                        </View>
+                        <View style={{ padding: 5, borderRight: "1px solid black", width: "2.5%" }}>
+                            <View style={{ flexDirection: "column", alignItems: "center" }}>
+                                {"Average".split("").map((letter, index) => (
+                                    <Text key={index} style={{ fontSize: 9 }}>
+                                        {letter}
+                                    </Text>
+                                ))}
+                            </View>
+                        </View>
+                        <View
+                            style={{
+                                borderRight: "1px solid black",
+                                width: "20%",
+                                display: "flex",
+                                flexDirection: "column",
+                            }}
+                        >
+                            <View style={{ borderBottom: "1px solid black", paddingVertical: 3, flexGrow: 1 }}>
+                                <Text style={{ fontSize: 10, margin: "auto" }}>Assignment Marks</Text>
+                            </View>
+                            <View style={{ borderBottom: "1px solid black", display: "flex", flexDirection: "row" }}>
+                                {Array.from({ length: 10 }, (_, index) => index + 1).map((index) => (
+                                    <View
+                                        key={index}
+                                        style={{
+                                            ...(index !== 10 ? { borderRight: "1px solid black" } : {}),
+                                            width: 30,
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                            padding: 1,
+                                            minHeight: 13,
+                                        }}
+                                    >
+                                        <Text style={{ fontSize: 10, textAlign: "right" }}>
+                                            {data.length
+                                                ? data[0][`Ass${index}_Max`]
+                                                    ? data[0][`Ass${index}_Max`]
+                                                    : ""
+                                                : ""}
+                                        </Text>
+                                    </View>
+                                ))}
+                            </View>
+                            <View style={{ borderBottom: "1px solid black", paddingVertical: 3, flexGrow: 1 }}>
+                                <Text style={{ fontSize: 10, margin: "auto" }}>Marks Obtained</Text>
+                            </View>
+                            <View style={{ display: "flex", flexDirection: "row" }}>
+                                {Array.from({ length: 10 }, (_, index) => index + 1).map((index) => (
+                                    <View
+                                        key={index}
+                                        style={{
+                                            ...(index !== 10 ? { borderRight: "1px solid black" } : {}),
+                                            // flexGrow: 1,
+                                            width: 30,
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            padding: 1,
+                                            minHeight: 13,
+                                        }}
+                                    >
+                                        <Text style={{ fontSize: 10, textAlign: "right" }}>
+                                            {data.length ? (data[0][`Ass${index}_Max`] ? `A${index}` : "") : ""}
+                                        </Text>
+                                    </View>
+                                ))}
+                            </View>
+                        </View>
+                        <View style={{ padding: 5, borderRight: "1px solid black", width: "2.5%" }}>
+                            <View style={{ flexDirection: "column", alignItems: "center" }}>
+                                {"Average".split("").map((letter, index) => (
+                                    <Text key={index} style={{ fontSize: 9 }}>
+                                        {letter}
+                                    </Text>
+                                ))}
+                            </View>
+                        </View>
+                        <View
+                            style={{
+                                borderRight: "1px solid black",
+                                width: "7%",
+                                display: "flex",
+                                flexDirection: "column",
+                            }}
+                        >
+                            <View style={{ borderBottom: "1px solid black", paddingVertical: 3, flexGrow: 1 }}>
+                                <Text style={{ fontSize: 10, margin: "auto" }}>Final Exam</Text>
+                            </View>
+                            <View style={{ borderBottom: "1px solid black", display: "flex", flexDirection: "row" }}>
+                                {Array.from({ length: 3 }, (_, index) => index + 1).map((index) => (
+                                    <View
+                                        key={index}
+                                        style={{
+                                            ...(index !== 3 ? { borderRight: "1px solid black" } : {}),
+                                            width: 30,
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                            padding: 1,
+                                            minHeight: 13,
+                                        }}
+                                    >
+                                        <Text style={{ fontSize: 10, textAlign: "right" }}>
+                                            {data.length
+                                                ? data[0][`Final${index}_Max`]
+                                                    ? data[0][`Final${index}_Max`]
+                                                    : ""
+                                                : ""}
+                                        </Text>
+                                    </View>
+                                ))}
+                            </View>
+                            <View style={{ borderBottom: "1px solid black", paddingVertical: 3, flexGrow: 1 }}>
+                                <Text style={{ fontSize: 10, margin: "auto" }}>Marks Obtained</Text>
+                            </View>
+                            <View style={{ display: "flex", flexDirection: "row" }}>
+                                {Array.from({ length: 3 }, (_, index) => index + 1).map((index) => (
+                                    <View
+                                        key={index}
+                                        style={{
+                                            ...(index !== 3 ? { borderRight: "1px solid black" } : {}),
+                                            // flexGrow: 1,
+                                            width: 30,
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            padding: 1,
+                                            minHeight: 13,
+                                        }}
+                                    >
+                                        <Text style={{ fontSize: 10, textAlign: "right" }}>{index}</Text>
+                                    </View>
+                                ))}
+                            </View>
+                        </View>
+                        <View style={{ padding: 5, borderRight: "1px solid black", width: "2.5%" }}>
+                            <View style={{ flexDirection: "row", gap: "5px" }}>
+                                <View style={{ flexDirection: "column", alignItems: "center" }}>
+                                    {"Final".split("").map((letter, index) => (
+                                        <Text key={index} style={{ fontSize: 9 }}>
+                                            {letter}
+                                        </Text>
+                                    ))}
+                                </View>
+                                <View style={{ flexDirection: "column", alignItems: "center" }}>
+                                    {"Average".split("").map((letter, index) => (
+                                        <Text key={index} style={{ fontSize: 9 }}>
+                                            {letter}
+                                        </Text>
+                                    ))}
+                                </View>
+                            </View>
+                        </View>
+                        <View
+                            style={{
+                                borderRight: "1px solid black",
+                                display: "flex",
+                                width: "3.2%",
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    fontSize: "8px",
+                                    transform: "rotate(270deg)",
+                                    margin: "auto",
+                                }}
+                            >
+                                Discipline
+                            </Text>
+                        </View>
+                        <View
+                            style={{
+                                borderRight: "1px solid black",
+                                display: "flex",
+                                width: "3.8%",
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    fontSize: "8px",
+                                    transform: "rotate(270deg)",
+                                    margin: "auto",
+                                }}
+                            >
+                                Attendance
+                            </Text>
+                        </View>
+                        <View
+                            style={{
+                                borderRight: "1px solid black",
+                                display: "flex",
+                                width: "3.4%",
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    fontSize: "8px",
+                                    transform: "rotate(270deg)",
+                                    margin: "auto",
+                                }}
+                            >
+                                Absent{"(%)"}
+                            </Text>
+                        </View>
+                        <View
+                            style={{
+                                borderRight: "1px solid black",
+                                display: "flex",
+                                width: "3.4%",
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    fontSize: "8px",
+                                    transform: "rotate(270deg)",
+                                    margin: "auto",
+                                }}
+                            >
+                                Absent days
+                            </Text>
+                        </View>
+                        <View
+                            style={{
+                                borderRight: "1px solid black",
+                                display: "flex",
+                                width: "3.4%",
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    fontSize: "8px",
+                                    transform: "rotate(270deg)",
+                                    margin: "auto",
+                                }}
+                            >
+                                FullAttendance
+                            </Text>
+                        </View>
+                        <View style={{ padding: 5, borderRight: "1px solid black", width: "4%" }}>
+                            <Text style={{ fontSize: 10, margin: "auto" }}>Final Total %</Text>
+                        </View>
+                        <View style={{ padding: 5, width: "8%" }}>
+                            <Text style={{ fontSize: 10, margin: "auto" }}>Class Obtained</Text>
+                        </View>
+                    </View>
+                    {data.length &&
+                        data.map((item, index) => (
+                            <View
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    borderBottom: "1px solid black",
+                                }}
+                                key={index}
+                            >
+                                <View style={{ padding: 5, borderRight: "1px solid black", width: "1.95%" }}>
+                                    <Text style={{ fontSize: 10, margin: "auto" }}>{index + 1}</Text>
+                                </View>
+                                <View style={{ padding: 5, borderRight: "1px solid black", width: "5.85%" }}>
+                                    <Text style={{ fontSize: 8, marginVertical: "auto" }}>{item.Student_Code}</Text>
+                                </View>
+                                <View style={{ padding: 5, borderRight: "1px solid black", width: "11.7%" }}>
+                                    <Text style={{ fontSize: 10, marginVertical: "auto", textAlign: "left" }}>
+                                        {item.Student_Name}
+                                    </Text>
+                                </View>
+                                <View
+                                    style={{
+                                        borderRight: "1px solid black",
+                                        width: "19.5%",
+                                        display: "flex",
+                                        flexDirection: "row",
+                                    }}
+                                >
+                                    {Array.from({ length: 10 }, (_, index) => index + 1).map((index) => (
+                                        <View
+                                            key={index}
+                                            style={{
+                                                ...(index !== 10 ? { borderRight: "1px solid black" } : {}),
+                                                width: 32,
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                padding: 1,
+                                                minHeight: 13,
+                                                height: "100%",
+                                            }}
+                                        >
+                                            <Text style={{ fontSize: 10, textAlign: "right" }}>
+                                                {item[`Test${index}_Given`] || ""}
+                                            </Text>
+                                        </View>
+                                    ))}
+                                </View>
+                                <View style={{ padding: 5, borderRight: "1px solid black", width: "2.45%" }}>
+                                    <Text style={{ fontSize: 9 }}>{item.Test_Percent}</Text>
+                                </View>
+                                <View
+                                    style={{
+                                        borderRight: "1px solid black",
+                                        width: "19.5%",
+                                        display: "flex",
+                                        flexDirection: "row",
+                                    }}
+                                >
+                                    {Array.from({ length: 10 }, (_, index) => index + 1).map((index) => (
+                                        <View
+                                            key={index}
+                                            style={{
+                                                ...(index !== 10 ? { borderRight: "1px solid black" } : {}),
+                                                width: 30,
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                minHeight: 13,
+                                                height: "100%",
+                                            }}
+                                        >
+                                            <Text style={{ fontSize: 10, textAlign: "right" }}>
+                                                {item[`Ass${index}_Given`] || ""}
+                                            </Text>
+                                        </View>
+                                    ))}
+                                </View>
+                                <View style={{ padding: 5, borderRight: "1px solid black", width: "2.45%" }}>
+                                    <Text style={{ fontSize: 9 }}>{item.Ass_Percent}</Text>
+                                </View>
+                                <View
+                                    style={{
+                                        borderRight: "1px solid black",
+                                        width: "6.85%",
+                                        display: "flex",
+                                        flexDirection: "row",
+                                    }}
+                                >
+                                    {Array.from({ length: 3 }, (_, index) => index + 1).map((index) => (
+                                        <View
+                                            key={index}
+                                            style={{
+                                                ...(index !== 3 ? { borderRight: "1px solid black" } : {}),
+                                                // flexGrow: 1,
+                                                width: 30,
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                padding: 1,
+                                                minHeight: 13,
+                                            }}
+                                        >
+                                            <Text style={{ fontSize: 10, textAlign: "right" }}>
+                                                {item[`Final${index}_Given`] || ""}
+                                            </Text>
+                                        </View>
+                                    ))}
+                                </View>
+                                <View style={{ padding: 5, borderRight: "1px solid black", width: "2.42%" }}>
+                                    <Text style={{ fontSize: 10 }}>{item.Final_Percent}</Text>
+                                </View>
+                                <View
+                                    style={{
+                                        padding: 5,
+                                        borderRight: "1px solid black",
+                                        width: "3.1%",
+                                    }}
+                                >
+                                    <Text style={{ fontSize: 10, textAlign: "center" }}>{item.Discipline}</Text>
+                                </View>
+                                <View
+                                    style={{
+                                        padding: 5,
+                                        borderRight: "1px solid black",
+                                        width: "3.75%",
+                                    }}
+                                >
+                                    <Text style={{ fontSize: 10 }}>{item.Full_Attend}</Text>
+                                </View>
+                                <View
+                                    style={{
+                                        padding: 5,
+                                        borderRight: "1px solid black",
+                                        width: "3.3%",
+                                    }}
+                                >
+                                    <Text style={{ fontSize: 10, textAlign: "center" }}>0</Text>
+                                </View>
+                                <View
+                                    style={{
+                                        padding: 5,
+                                        borderRight: "1px solid black",
+                                        width: "3.3%",
+                                    }}
+                                >
+                                    <Text style={{ fontSize: 10, textAlign: "center" }}>{item.Absents}</Text>
+                                </View>
+                                <View
+                                    style={{
+                                        padding: 5,
+                                        borderRight: "1px solid black",
+                                        width: "3.32%",
+                                    }}
+                                >
+                                    <Text style={{ fontSize: 10, textAlign: "center" }}>{item.Full_Attendance}</Text>
+                                </View>
+                                <View
+                                    style={{
+                                        padding: 5,
+                                        borderRight: "1px solid black",
+                                        width: "3.92%",
+                                    }}
+                                >
+                                    <Text style={{ fontSize: 10, textAlign: "center" }}>
+                                        {item.Final_Result_Percent}
+                                    </Text>
+                                </View>
+                                <View style={{ width: "7.8%" }}>
+                                    <Text style={{ fontSize: 9, margin: "auto" }}>
+                                        {item.Grade ? item.Grade : "NO CERTIFICATE"}
+                                    </Text>
+                                </View>
+                            </View>
+                        ))}
 
-                <View style={{}}>
-                        
+                    <View
+                        style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                            paddingHorizontal: 5,
+                            paddingVertical: 3,
+                        }}
+                    >
+                        <View>
+                            <Text style={{ fontSize: 10 }}>PASSING CRITERIA</Text>
+                        </View>
+                        <View>
+                            <Text style={{ fontSize: 10 }}>90.00% To 100.00% - A+</Text>
+                        </View>
+                        <View>
+                            <Text style={{ fontSize: 10 }}>80.00% To 89.99% - A</Text>
+                        </View>
+                        <View>
+                            <Text style={{ fontSize: 10 }}>70.00% To 79.99% - B+</Text>
+                        </View>
+                        <View>
+                            <Text style={{ fontSize: 10 }}>60.00% To 69.99% - B</Text>
+                        </View>
+                        <View>
+                            <Text style={{ fontSize: 10 }}>50.00% To 59.99% - C</Text>
+                        </View>
+                        <View>
+                            <Text style={{ fontSize: 10 }}>0.00% To 49.99% - NO CERTIFICATE</Text>
+                        </View>
+                    </View>
                 </View>
-
-                {/* Main Table */}
+                {/*  
                 <View style={styles.table}>
-                    {/* Table Header Row */}
+                   
                     <View style={styles.tableRow}>
                         <View style={[styles.tableCol, { width: "5%" }]}>
                             <Text style={styles.tableCell}>Sr. No.</Text>
@@ -198,7 +722,7 @@ const TestDocument = () => {
                             <Text style={styles.tableCell}>Name</Text>
                         </View>
 
-                        {/* Unit Test Marks Header */}
+      
                         <View style={[styles.tableCol, { width: "25%" }]}>
                             <Text style={styles.sectionTitle}>Unit Test Marks</Text>
                             <View style={styles.innerTable}>
@@ -236,7 +760,7 @@ const TestDocument = () => {
                                 </View>
                             </View>
                         </View>
-                        {/* Average */}
+                       
                         <View style={[styles.tableCol, { width: "2%" }]}>
                             <Text
                                 style={[
@@ -248,7 +772,7 @@ const TestDocument = () => {
                             </Text>
                         </View>
 
-                        {/* Assignment Marks Header */}
+                  
                         <View style={[styles.tableCol, { width: "25%" }]}>
                             <Text style={styles.sectionTitle}>Assignment Marks</Text>
                             <View style={styles.innerTable}>
@@ -287,7 +811,7 @@ const TestDocument = () => {
                             </View>
                         </View>
 
-                        {/* Average */}
+                  
                         <View style={[styles.tableCol, { width: "2%" }]}>
                             <Text
                                 style={[
@@ -299,7 +823,7 @@ const TestDocument = () => {
                             </Text>
                         </View>
 
-                        {/* Final Exam Marks Header */}
+                      
                         <View style={[styles.tableCol, { width: "10%" }]}>
                             <Text style={styles.sectionTitle}>Final Exam</Text>
                             <View style={styles.innerTable}>
@@ -315,7 +839,14 @@ const TestDocument = () => {
                         </View>
 
                         <View style={[styles.tableCol, { width: "5%" }]}>
-                            <Text style={styles.tableCellr}>Discipline</Text>
+                            <Text
+                                style={[
+                                    styles.tableCellr,
+                                    { transform: "rotate(270deg)", position: "relative", top: "50%" },
+                                ]}
+                            >
+                                Discipline
+                            </Text>
                         </View>
                         <View style={[styles.tableCol, { width: "5%" }]}>
                             <Text style={styles.tableCellr}>Attendance</Text>
@@ -337,7 +868,7 @@ const TestDocument = () => {
                         </View>
                     </View>
 
-                    {/* Empty Data Row for Filling */}
+                 
                     <View style={styles.tableRow}>
                         <View style={[styles.tableCol1, { width: "5%" }]}>
                             <Text style={styles.tableCellBlank}></Text>
@@ -349,7 +880,6 @@ const TestDocument = () => {
                             <Text style={styles.tableCellBlank}></Text>
                         </View>
 
-                        {/* Empty Data for Unit Test Marks */}
                         <View style={[styles.tableCol1, { width: "25%" }]}>
                             <Text style={styles.sectionTitle}>Marks Obtained</Text>
                             <View style={styles.innerTable}>
@@ -387,12 +917,12 @@ const TestDocument = () => {
                                 </View>
                             </View>
                         </View>
-                        {/* Average */}
+                    
                         <View style={[styles.tableCol1, { width: "2%" }]}>
                             <Text style={styles.innerTable}></Text>
                         </View>
 
-                        {/* Empty Data for Assignment Marks */}
+                        
                         <View style={[styles.tableCol1, { width: "25%" }]}>
                             <Text style={styles.sectionTitle}>Marks Obtained</Text>
                             <View style={styles.innerTable}>
@@ -431,11 +961,10 @@ const TestDocument = () => {
                             </View>
                         </View>
 
-                        {/* Average */}
                         <View style={[styles.tableCol1, { width: "2%" }]}>
                             <Text style={styles.innerTable}></Text>
                         </View>
-                        {/* Empty Data for Final Exam Marks */}
+
                         <View style={[styles.tableCol1, { width: "10%" }]}>
                             <Text style={styles.sectionTitle}>Marks Obtained</Text>
                             <View style={styles.innerTable}>
@@ -489,7 +1018,6 @@ const TestDocument = () => {
                                     <Text style={styles.tableCell}>{item.Student_Name}</Text>
                                 </View>
 
-                                {/* Unit Test Marks Header */}
                                 <View style={[styles.tableCol, { width: "25%" }]}>
                                     <View style={styles.innerTable}>
                                         <View style={styles.innerTableRow}>
@@ -526,7 +1054,7 @@ const TestDocument = () => {
                                         </View>
                                     </View>
                                 </View>
-                                {/* Average */}
+
                                 <View style={[styles.tableCol, { width: "2%" }]}>
                                     <Text
                                         style={[
@@ -543,7 +1071,6 @@ const TestDocument = () => {
                                     </Text>
                                 </View>
 
-                                {/* Assignment Marks Header */}
                                 <View style={[styles.tableCol, { width: "25%" }]}>
                                     <View style={styles.innerTable}>
                                         <View style={styles.innerTableRow}>
@@ -581,7 +1108,6 @@ const TestDocument = () => {
                                     </View>
                                 </View>
 
-                                {/* Average */}
                                 <View style={[styles.tableCol, { width: "2%" }]}>
                                     <Text
                                         style={[
@@ -598,7 +1124,6 @@ const TestDocument = () => {
                                     </Text>
                                 </View>
 
-                                {/* Final Exam Marks Header */}
                                 <View style={[styles.tableCol, { width: "10%" }]}>
                                     <View style={styles.innerTable}>
                                         <View style={styles.innerTableRow}>
@@ -640,13 +1165,12 @@ const TestDocument = () => {
                         );
                     })}
                 </View>
-
-                {/* Footer Section */}
                 <View style={styles.footer}>
                     <Text>
                         PASSING CRITERIA: 90.00% To 100.00% - A+, 80.00% To 89.99% - A, 70.00% To 79.99% - B+, ...
                     </Text>
                 </View>
+                */}
             </Page>
         </Document>
     );
