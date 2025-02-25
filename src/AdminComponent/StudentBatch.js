@@ -12,6 +12,16 @@ import InnerHeader from "./InnerHeader";
 import FormControl from "@mui/material/FormControl";
 import BlankAttendance from "./Document/Blank_Attendance";
 import { PDFDownloadLink, pdf } from "@react-pdf/renderer";
+import StudentRecordDoc from "./Document/StudentRecordDoc";
+import LecturePlanDoc from "./Document/LecturePlanDoc";
+import AssignmentReceiptDoc from "./Document/AssignmentReceiptDoc";
+import LectureTakenDoc from "./Document/LectureTakenDoc";
+import SessionPlanDoc from "./Document/SessionPlanDoc";
+import StandardLecturePlanDoc from "./Document/StandardLecturePlanDoc";
+import StudentLabelDoc from "./Document/StudentLabelDoc";
+import StudyMaterialDoc from "./Document/StudyMaterialDoc";
+import TestTakenDoc from "./Document/TestTakenDoc";
+import TimeSheetDoc from "./Document/TimeSheetDoc";
 
 const StudentBatch = () => {
     const [uid, setUid] = useState([]);
@@ -78,16 +88,139 @@ const StudentBatch = () => {
                 // category: value.category,
                 uid: uid.id,
             };
+            console.log("onSubmit");
+            console.log(category);
 
-            axios
-                .post(`${BASE_URL}/add_studentbatch`, data)
-                .then((res) => {
-                    console.log(res);
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
+            generatePdf();
+
+            // axios
+            //     .post(`${BASE_URL}/add_studentbatch`, data)
+            //     .then((res) => {
+            //         console.log(res);
+            //     })
+            //     .catch((err) => {
+            //         console.log(err);
+            //     });
         }
+    };
+
+    const generatePdf = () => {
+        switch (category) {
+            case "0102":
+                studentNamePdf();
+                break;
+            case "0104":
+                lecturePlanPdf();
+                break;
+            case "0105":
+                studyMaterialPdf();
+                break;
+            case "0106":
+                standardLecturePlanPdf();
+                break;
+            case "0107":
+                sessionPlanPdf();
+                break;
+            case "0108":
+                timeSheetPdf();
+                break;
+            case "0109":
+                lectureTakenPdf();
+                break;
+            case "Blank_Attend":
+                blankAttendancePdf();
+                break;
+            case "0113":
+                assignmentReceiptPdf();
+                break;
+            case "0114":
+                testTakenPdf();
+                break;
+            case "0118":
+                studentLabelPdf();
+                break;
+        }
+    };
+
+    const studentNamePdf = async () => {
+        const blob = await pdf(<StudentRecordDoc />).toBlob();
+        const url = URL.createObjectURL(blob);
+        window.open(url);
+        URL.revokeObjectURL(url);
+    };
+
+    const lecturePlanPdf = async () => {
+        const blob = await pdf(<LecturePlanDoc />).toBlob();
+        const url = URL.createObjectURL(blob);
+        window.open(url);
+        URL.revokeObjectURL(url);
+    };
+
+    const studyMaterialPdf = async () => {
+        const blob = await pdf(<StudyMaterialDoc />).toBlob();
+        const url = URL.createObjectURL(blob);
+        window.open(url);
+        URL.revokeObjectURL(url);
+    };
+
+    const standardLecturePlanPdf = async () => {
+        const blob = await pdf(<StandardLecturePlanDoc />).toBlob();
+        const url = URL.createObjectURL(blob);
+        window.open(url);
+        URL.revokeObjectURL(url);
+    };
+
+    const sessionPlanPdf = async () => {
+        const blob = await pdf(<SessionPlanDoc />).toBlob();
+        const url = URL.createObjectURL(blob);
+        window.open(url);
+        URL.revokeObjectURL(url);
+    };
+
+    const timeSheetPdf = async () => {
+        const blob = await pdf(<TimeSheetDoc />).toBlob();
+        const url = URL.createObjectURL(blob);
+        window.open(url);
+        URL.revokeObjectURL(url);
+    };
+
+    const lectureTakenPdf = async () => {
+        const blob = await pdf(<LectureTakenDoc />).toBlob();
+        const url = URL.createObjectURL(blob);
+        window.open(url);
+        URL.revokeObjectURL(url);
+    };
+
+    const blankAttendancePdf = async () => {
+        const res = await axios.post(`${BASE_URL}/getattendStudent`, { batch_code: value.batch });
+
+        const data = [{ batchid: value.batch, students: res.data }];
+
+        const blob = await pdf(<BlankAttendance data={data} />).toBlob();
+        const url = URL.createObjectURL(blob);
+        window.open(url);
+        URL.revokeObjectURL(url);
+    };
+
+    const assignmentReceiptPdf = async () => {
+        const blob = await pdf(<AssignmentReceiptDoc />).toBlob();
+        const url = URL.createObjectURL(blob);
+        window.open(url);
+        URL.revokeObjectURL(url);
+    };
+
+    const testTakenPdf = async () => {
+        const blob = await pdf(<TestTakenDoc />).toBlob();
+        const url = URL.createObjectURL(blob);
+        window.open(url);
+        URL.revokeObjectURL(url);
+    };
+
+    const studentLabelPdf = async () => {
+        const blob = await pdf(<StudentLabelDoc />).toBlob();
+        const url = URL.createObjectURL(blob);
+        window.open(url);
+        URL.revokeObjectURL(url);
     };
 
     const onhandleChange = (e) => {
@@ -294,7 +427,7 @@ const StudentBatch = () => {
                                         <button
                                             type="submit"
                                             class="btn btn-primary mr-2"
-                                            onClick={() => downloadPDF(1)}
+                                            // onClick={() => downloadPDF(1)}
                                         >
                                             Submit
                                         </button>
