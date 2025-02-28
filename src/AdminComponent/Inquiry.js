@@ -77,9 +77,14 @@ const Inquiry = () => {
         let isValid = true;
         const newErrors = {};
 
-        if (!value.facultyname) {
+        // if (!value.facultyname) {
+        //     isValid = false;
+        //     newErrors.name = "Name is require";
+        // }
+
+        if (!value.country) {
             isValid = false;
-            newErrors.name = "Name is require";
+            newErrors.country = "Country is required";
         }
 
         setError(newErrors);
@@ -99,8 +104,7 @@ const Inquiry = () => {
     // }
 
     const getDiscipline = async () => {
-        try{
-
+        try {
             const response = await fetch(`${BASE_URL}/getDiscipline`, {
                 method: "GET",
                 headers: {
@@ -109,13 +113,12 @@ const Inquiry = () => {
             });
             const data = await response.json();
             setDescipline(data);
-        }catch(err){
-            console.log('/getDiscipline error', err)
+        } catch (err) {
+            console.log("/getDiscipline error", err);
         }
     };
     const getCourse = async () => {
-        try{
-
+        try {
             const response = await fetch(`${BASE_URL}/getCourses`, {
                 method: "GET",
                 headers: {
@@ -124,13 +127,12 @@ const Inquiry = () => {
             });
             const data = await response.json();
             setCourse(data);
-        }catch(err){
-            console.log('/getCourse error', err)
+        } catch (err) {
+            console.log("/getCourse error", err);
         }
     };
     const getEducation = async () => {
-        try{
-
+        try {
             const response = await fetch(`${BASE_URL}/getEducation`, {
                 method: "GET",
                 headers: {
@@ -139,13 +141,13 @@ const Inquiry = () => {
             });
             const data = await response.json();
             setEducation(data);
-        }catch(err){
-            console.log('/getEducation error', err)
+        } catch (err) {
+            console.log("/getEducation error", err);
         }
     };
 
     const getBtachCategory = async () => {
-        try{
+        try {
             const response = await fetch(`${BASE_URL}/getBtachCategory`, {
                 method: "GET",
                 headers: {
@@ -154,8 +156,8 @@ const Inquiry = () => {
             });
             const data = await response.json();
             setbatchCategory(data);
-        }catch(err){
-            console.log('/getBatchCategory error',err)
+        } catch (err) {
+            console.log("/getBatchCategory error", err);
         }
     };
 
@@ -167,21 +169,23 @@ const Inquiry = () => {
                 inquiry: inquiry,
             };
 
-            axios.post(`${BASE_URL}/inquirysendmail`, data).then((res) => {
-                console.log(res);
-                alert("Mail is sent...");
-                setOpen(false);
-            }).catch((err)=>{
-                console.log('/inquirysendmail err', err)
-            })
+            axios
+                .post(`${BASE_URL}/inquirysendmail`, data)
+                .then((res) => {
+                    console.log(res);
+                    alert("Mail is sent...");
+                    setOpen(false);
+                })
+                .catch((err) => {
+                    console.log("/inquirysendmail err", err);
+                });
         } catch (err) {
             console.log(err);
         }
     };
 
     async function getStudentDetail() {
-        try{
-
+        try {
             const response = await fetch(`${BASE_URL}/studentDetail`, {
                 method: "POST",
                 body: JSON.stringify({
@@ -191,15 +195,15 @@ const Inquiry = () => {
                     "Content-Type": "application/json",
                 },
             });
-    
+
             const data = await response.json();
-    
+
             localStorage.setItem("Student_id", data[0].Student_Id);
-    
+
             setEmailid(data[0].Email);
             setCourseID(data[0].Course_Id);
             setCategoryId(data[0].Batch_Category_id);
-    
+
             setValue((prevState) => ({
                 ...prevState,
                 firstname: data[0].Student_Name,
@@ -224,28 +228,30 @@ const Inquiry = () => {
                 statusdate: data[0].StateChangeDt,
                 status: data[0].OnlineState,
             }));
-    
+
             getBatch(data[0].Batch_Category_id, data[0].Course_Id);
-        }catch(err){
-            console.log('getStudentDetails error', err)
+        } catch (err) {
+            console.log("getStudentDetails error", err);
         }
     }
 
     const getBatch = async (cat_id, courseid) => {
-        try{
-
+        try {
             setCategoryId(cat_id);
             const param = {
                 course_id: courseid || value.selectedProgramme,
                 category_id: cat_id || categoryid,
             };
-            axios.post(`${BASE_URL}/getbatchcategorywise`, param).then((res) => {
-                setBatch(res.data);
-            }).catch((err)=>{
-                console.log('/getBatch err', err)
-            })
-        }catch(err){
-            console.log('/getBatch', err)
+            axios
+                .post(`${BASE_URL}/getbatchcategorywise`, param)
+                .then((res) => {
+                    setBatch(res.data);
+                })
+                .catch((err) => {
+                    console.log("/getBatch err", err);
+                });
+        } catch (err) {
+            console.log("/getBatch", err);
         }
     };
     useEffect(() => {
@@ -264,13 +270,14 @@ const Inquiry = () => {
     }, []);
 
     async function getStatus() {
-        
-        axios.get(`${BASE_URL}/getstatus`).then((res) => {
-            setStatus(res.data);
-        }).catch((err)=>{
-            console.log('/getStatus err',err)
-        })
-        
+        axios
+            .get(`${BASE_URL}/getstatus`)
+            .then((res) => {
+                setStatus(res.data);
+            })
+            .catch((err) => {
+                console.log("/getStatus err", err);
+            });
     }
 
     useEffect(() => {
@@ -282,78 +289,77 @@ const Inquiry = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         let response;
-        // if(validateForm()){
-        if (inquiryid == ":inquiryid") {
-            response = await fetch(`${BASE_URL}/postInquiry`, {
-                method: "POST",
-                body: JSON.stringify({
-                    firstname: value.firstname,
-                    gender: value.gender,
-                    dob: value.dob,
-                    mobile: value.mobile,
-                    whatsapp: value.whatsapp,
-                    email: value.email,
-                    nationality: value.nationality,
-                    discussion: value.discussion,
-                    country: value.country,
-                    InquiryDate: value.InquiryDate,
-                    modeEnquiry: value.modeEnquiry,
-                    advert: value.advert,
-                    programmeEnquired: value.programmeEnquired,
-                    selectedProgramme: value.selectedProgramme,
-                    category: value.category,
-                    batch: value.batch,
-                    qualification: value.qualification,
-                    descipline: value.descipline,
-                    percentage: value.percentage,
-                    statusdate: value.statusdate,
-                    status: value.status,
-                }),
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-        } else {
-            response = await fetch(`${BASE_URL}/updateInquiry`, {
-                method: "POST",
-                body: JSON.stringify({
-                    Enquiry_Id: inquiryid,
-                    firstname: value.firstname,
-                    gender: value.gender,
-                    dob: value.dob,
-                    mobile: value.mobile,
-                    whatsapp: value.whatsapp,
-                    email: value.email,
-                    nationality: value.nationality,
-                    discussion: value.discussion,
-                    country: value.country,
-                    InquiryDate: value.InquiryDate,
-                    modeEnquiry: value.modeEnquiry,
-                    advert: value.advert,
-                    programmeEnquired: value.programmeEnquired,
-                    selectedProgramme: value.selectedProgramme,
-                    category: value.category,
-                    batch: value.batch,
-                    qualification: value.qualification,
-                    descipline: value.descipline,
-                    percentage: value.percentage,
-                    statusdate: value.statusdate,
-                    status: value.status,
-                }),
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
+        if (validateForm()) {
+            if (inquiryid == ":inquiryid") {
+                response = await fetch(`${BASE_URL}/postInquiry`, {
+                    method: "POST",
+                    body: JSON.stringify({
+                        firstname: value.firstname,
+                        gender: value.gender,
+                        dob: value.dob,
+                        mobile: value.mobile,
+                        whatsapp: value.whatsapp,
+                        email: value.email,
+                        nationality: value.nationality,
+                        discussion: value.discussion,
+                        country: value.country,
+                        InquiryDate: value.InquiryDate,
+                        modeEnquiry: value.modeEnquiry,
+                        advert: value.advert,
+                        programmeEnquired: value.programmeEnquired,
+                        selectedProgramme: value.selectedProgramme,
+                        category: value.category || categoryid,
+                        batch: value.batch,
+                        qualification: value.qualification,
+                        descipline: value.descipline,
+                        percentage: value.percentage,
+                        statusdate: value.statusdate,
+                        status: value.status,
+                    }),
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                });
+            } else {
+                response = await fetch(`${BASE_URL}/updateInquiry`, {
+                    method: "POST",
+                    body: JSON.stringify({
+                        Enquiry_Id: inquiryid,
+                        firstname: value.firstname,
+                        gender: value.gender,
+                        dob: value.dob,
+                        mobile: value.mobile,
+                        whatsapp: value.whatsapp,
+                        email: value.email,
+                        nationality: value.nationality,
+                        discussion: value.discussion,
+                        country: value.country,
+                        InquiryDate: value.InquiryDate,
+                        modeEnquiry: value.modeEnquiry,
+                        advert: value.advert,
+                        programmeEnquired: value.programmeEnquired,
+                        selectedProgramme: value.selectedProgramme,
+                        category: value.category,
+                        batch: value.batch,
+                        qualification: value.qualification,
+                        descipline: value.descipline,
+                        percentage: value.percentage,
+                        statusdate: value.statusdate,
+                        status: value.status,
+                    }),
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                });
+            }
+
+            const data = await response.json();
+
+            alert(data.message);
+            //   window.location.pathname = '/inquirylisting'
+
+            navigate("/inquirylisting");
         }
-
-        const data = await response.json();
-
-        alert(data.message);
-        //   window.location.pathname = '/inquirylisting'
-
-        navigate("/inquirylisting");
-
-        // }
     };
 
     const onhandleChange = (e) => {
@@ -408,9 +414,9 @@ const Inquiry = () => {
                                                                 defaultValue={value.gender}
                                                             >
                                                                 <option>Select Gender</option>
-                                                                <option value="Male">Male</option>
-                                                                <option value="Female">Female</option>
-                                                                <option value="Other">Other</option>
+                                                                <option value="male">Male</option>
+                                                                <option value="female">Female</option>
+                                                                <option value="other">Other</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -502,8 +508,8 @@ const Inquiry = () => {
                                                                 name="country"
                                                                 onChange={onhandleChange}
                                                             />
-                                                            {error.facultyname && (
-                                                                <span className="text-danger">{error.name}</span>
+                                                            {error.country && (
+                                                                <span className="text-danger">{error.country}</span>
                                                             )}
                                                         </div>
                                                     </div>

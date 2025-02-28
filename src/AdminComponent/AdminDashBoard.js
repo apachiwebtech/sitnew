@@ -47,7 +47,7 @@ const AdminDashBoard = () => {
                         </a>
                         {/* <a className="navbar-brand brand-logo-mini" href="index.html"><img src="images/logo-mini.svg" alt="logo" /></a> */}
                     </div>
-                    <h4 className="font-weight-bold mb-0 d-none d-md-block mt-1">Welcome back, Brandon Haynes</h4>
+                    {/* <h4 className="font-weight-bold mb-0 d-none d-md-block mt-1">Welcome back, Brandon Haynes</h4> */}
                     <ul className="navbar-nav navbar-nav-right"></ul>
                     <button className="mb-0 font-weight-bold d-none d-xl-block" onClick={() => handlelogout()}>
                         Logout

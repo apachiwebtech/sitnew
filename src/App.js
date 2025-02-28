@@ -215,6 +215,7 @@ import AddConvocation from "./AdminComponent/AddConvocation.js";
 import AddShortlistedBySIT from "./AdminComponent/AddShortlistedBySIT.js";
 import TestDocument from "./AdminComponent/TestDocument.js";
 import { PDFViewer } from "@react-pdf/renderer";
+import StandardLecturePlanDoc from "./AdminComponent/Document/StandardLecturePlanDoc.js";
 
 const Router = createBrowserRouter([
     {
@@ -552,7 +553,7 @@ const Router = createBrowserRouter([
                 element: (
                     <div style={{ width: "100vw", height: "100vh" }}>
                         <PDFViewer style={{ width: "100%", height: "100%" }}>
-                            <TestDocument />
+                            <StandardLecturePlanDoc />
                         </PDFViewer>
                     </div>
                 ),

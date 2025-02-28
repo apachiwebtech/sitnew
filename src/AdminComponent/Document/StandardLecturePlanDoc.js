@@ -1,6 +1,15 @@
 import React from "react";
-import { Document, Page, Text, View } from "@react-pdf/renderer";
+import { Document, Page, Text, View, Image, StyleSheet } from "@react-pdf/renderer";
 
+const styles = StyleSheet.create({
+    page: { padding: 30, fontSize: 10 },
+    cel: {
+        borderRight: "1px solid black",
+        padding: 5,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+});
 const StandardLecturePlanDoc = (props) => {
     return (
         <Document>
