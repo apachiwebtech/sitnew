@@ -25,7 +25,7 @@ app.use(function (req, res, next) {
 
 // Routes use 
 
-app.use('/tax' , page1)
+app.use('/tax', page1)
 
 
 app.use(express.json());
@@ -5611,24 +5611,24 @@ app.post('/nodeapp/add_taxdata', (req, res) => {
   const date = new Date()
 
   let sql;
-  let param ;
+  let param;
 
-  if(uid == undefined) {
+  if (uid == undefined) {
     sql = "insert into awt_tax(`Tax`,`Tax_date`,`created_date`,`created_by`) values(?,?,?,?)"
     param = [Tax, Tax_date, date, user_id]
-  }else{
+  } else {
     sql = "update awt_tax set Tax = ? , Tax_date = ? , updated_date = ? , updated_by = ? where id = ?"
-    param = [Tax, Tax_date, date, user_id,uid]
+    param = [Tax, Tax_date, date, user_id, uid]
   }
 
-  con.query(sql, param , (err, data) => {
+  con.query(sql, param, (err, data) => {
     if (err) {
       return res.json(err)
     } else {
-      if(data.insertId == 0){
+      if (data.insertId == 0) {
         return res.json("Data Updated")
 
-      }else{
+      } else {
         return res.json("Data Inserted")
       }
     }
@@ -5648,7 +5648,7 @@ app.get('/resultchange', (req, res) => {
       const updatePromises = data.map((item) => {
         const { Id, Batch_Id } = item;
         const sql2 = "UPDATE final_result_report SET Result_Id = ? WHERE Batch_Id = ?";
-        
+
         return new Promise((resolve, reject) => {
           con.query(sql2, [Id, Batch_Id], (err, result) => {
             if (err) {
@@ -5667,3 +5667,5 @@ app.get('/resultchange', (req, res) => {
     }
   });
 });
+
+ 

@@ -162,6 +162,21 @@ const styles = StyleSheet.create({
 const MyDocument6 = ({ data }) => {
 
 
+    function formatdate(newdate) {
+        if (!newdate) return ''; // Handle null or undefined values gracefully
+    
+        const date = new Date(newdate);
+        if (isNaN(date.getTime())) return ''; // Handle invalid dates
+    
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = date.toLocaleString('en-US', { month: 'short' }); // Ensure consistent formatting
+        const year = date.getFullYear();
+    
+        return `${day} - ${month} - ${year}`;
+    }
+    
+
+
     return (
 
 
@@ -213,13 +228,7 @@ const MyDocument6 = ({ data }) => {
                                 </View>
                                 <View style={[styles.tableCol1, { width: '25%' }]}>
                                     <Text style={{ fontSize: 10, marginTop: 5, marginLeft: 5, color: '#000' }}>
-                                        Date: {(() => {
-                                            const date = new Date(item.Result_date);
-                                            const day = String(date.getDate()).padStart(2, '0');
-                                            const month = date.toLocaleString('en', { month: 'short' }); // Short month name (e.g., Feb)
-                                            const year = date.getFullYear();
-                                            return `${day} - ${month} - ${year}`;
-                                        })()}
+                                        Date: {formatdate(item.Result_date)}
                                     </Text>
 
 
