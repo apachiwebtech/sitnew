@@ -61,8 +61,8 @@ const AssignmentReceiptDoc = (props) => {
 
                                  <View style={{
                                     marginTop: "2px",
-                                    width: "100%",
-                                    height: "5px",
+                                    // width: "100%",
+                                    // height: "5px",
                                     borderTop: "2px solid black",
                                     borderBottom: "2px solid black",
                                     borderLeft: "2px solid black",
@@ -71,7 +71,7 @@ const AssignmentReceiptDoc = (props) => {
                                 }}>
                                 <View style={{
                                     flexDirection: "row",
-                                    width: "100%",
+                                    // width: "100%",
                                     height: "20%",
                                     borderLeft: "2px solid black",
                                     borderBottom: "2px solid black",
@@ -512,86 +512,99 @@ const AssignmentReceiptDoc = (props) => {
                                 </View>
                                 <View style={{
                                     width:"100%",
-
-                                    
                                     flexDirection: "row",
+                                    height: "100%",
+                                    
 
                                 }}>
                                 <View style={{ 
                                     width:"12%",
                                     height: "5.5%",
+                                    
+                                    // borderLeft: "2px solid black",
+                                    borderBottom: "1px solid black"
+                                }}>
+                                    <Text style={{ fontSize: 9}}></Text>
+                                </View>
+                                <View style={{ 
+                                    width:"9.77%",
+                                    height: "5.5%",
+                                    borderLeft: "2px solid black",
+                                    borderBottom: "1px solid black"
+                                }}>
+                                    <Text style={{ fontSize: 9}}></Text>
+                                </View>
+                                <View style={{ 
+                                    width:"9.77%",
+                                    height: "5.5%",
+                                    borderLeft: "2px solid black",
+                                    borderBottom: "1px solid black"
+                                }}>
+                                    <Text style={{ fontSize: 9}}></Text>
+                                </View>
+                                <View style={{ 
+                                    width:"9.77%",
+                                    height: "5.5%",
+                                    borderLeft: "2px solid black",
+                                    borderBottom: "1px solid black"
+                                }}>
+                                    <Text style={{ fontSize: 9}}></Text>
+                                </View>
+                                <View style={{ 
+                                    width:"9.77%",
+                                    height: "5.5%",
+                                    borderLeft: "2px solid black",
+                                    borderBottom: "1px solid black"
+                                }}>
+                                    <Text style={{ fontSize: 9}}></Text>
+                                </View>
+                                <View style={{ 
+                                    width:"9.77%",
+                                    height: "5.5%",
+                                    borderLeft: "2px solid black",
+                                    borderBottom: "1px solid black"
+                                }}>
+                                    <Text style={{ fontSize: 9}}></Text>
+                                </View>
+                                <View style={{ 
+                                    width:"9.77%",
+                                    height: "5.5%",
+                                    borderLeft: "2px solid black",
+                                    borderBottom: "1px solid black"
+                                }}>
+                                    <Text style={{ fontSize: 9}}></Text>
+                                </View>
+                                <View style={{ 
+                                    width:"9.77%",
+                                    height: "5.5%",
+                                    borderLeft: "2px solid black",
+                                    borderBottom: "1px solid black"
+                                }}>
+                                    <Text style={{ fontSize: 9}}></Text>
+                                </View>
+                                <View style={{ 
+                                    width:"9.77%",
+                                    height: "5.5%",
+                                    borderLeft: "2px solid black",
+                                    borderBottom: "1px solid black"
+                                }}>
+                                    <Text style={{ fontSize: 9}}></Text>
+                                </View>
+                                <View style={{ 
+                                    width:"9.77%",
+                                    height: "5.5%",
+                                    borderLeft: "2px solid black",
                                     borderBottom: "1px solid black",
-                                    borderRight: "2px solid black",
-                                }}>
-                                    <Text style={{ fontSize: 9}}></Text>
-                                </View>
-                                <View style={{ 
-                                    width:"9.77%",
-                                    height: "5.5%",
-                                    borderRight: "2px solid black",
-                                }}>
-                                    <Text style={{ fontSize: 9}}></Text>
-                                </View>
-                                <View style={{ 
-                                    width:"9.77%",
-                                    height: "5.5%",
-                                    borderRight: "2px solid black",
-                                }}>
-                                    <Text style={{ fontSize: 9}}></Text>
-                                </View>
-                                <View style={{ 
-                                    width:"9.77%",
-                                    height: "5.5%",
-                                    borderRight: "2px solid black",
-                                }}>
-                                    <Text style={{ fontSize: 9}}></Text>
-                                </View>
-                                <View style={{ 
-                                    width:"9.77%",
-                                    height: "5.5%",
-                                    borderRight: "2px solid black",
-                                }}>
-                                    <Text style={{ fontSize: 9}}></Text>
-                                </View>
-                                <View style={{ 
-                                    width:"9.77%",
-                                    height: "5.5%",
-                                    borderRight: "2px solid black",
-                                }}>
-                                    <Text style={{ fontSize: 9}}></Text>
-                                </View>
-                                <View style={{ 
-                                    width:"9.77%",
-                                    height: "5.5%",
-                                    borderRight: "2px solid black",
-                                }}>
-                                    <Text style={{ fontSize: 9}}></Text>
-                                </View>
-                                <View style={{ 
-                                    width:"9.77%",
-                                    height: "5.5%",
-                                    borderRight: "2px solid black",
-                                }}>
-                                    <Text style={{ fontSize: 9}}></Text>
-                                </View>
-                                <View style={{ 
-                                    width:"9.77%",
-                                    height: "5.5%",
-                                    borderRight: "2px solid black",
-                                }}>
-                                    <Text style={{ fontSize: 9}}></Text>
-                                </View>
-                                <View style={{ 
-                                    width:"9.77%",
-                                    height: "5.5%",
-                                    borderRight: "2px solid black",
+                                    borderRight: "2px solid black"
                                 }}>
                                     <Text style={{ fontSize: 9}}></Text>
                                 </View>
 
+
                                 </View>
                                 </View>
-                                {/* end part */}
+                                
+                                                                {/* end part */}
                                 <View style={{
                                     flexDirection: "row",
                                     width: "100%",

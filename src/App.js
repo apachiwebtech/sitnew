@@ -216,6 +216,15 @@ import AddShortlistedBySIT from "./AdminComponent/AddShortlistedBySIT.js";
 import TestDocument from "./AdminComponent/TestDocument.js";
 import { PDFViewer } from "@react-pdf/renderer";
 import StandardLecturePlanDoc from "./AdminComponent/Document/StandardLecturePlanDoc.js";
+import AssignmentReceiptDoc from "./AdminComponent/Document/AssignmentReceiptDoc.js";
+import TestTakenDoc from "./AdminComponent/Document/TestTakenDoc.js";
+import StudentLabelDoc from "./AdminComponent/Document/StudentLabelDoc.js";
+import SessionPlanDoc from "./AdminComponent/Document/SessionPlanDoc.js";
+import ID_CardDoc from "./AdminComponent/Document/ID_CardDoc.js";
+import VivaMOCDoc from "./AdminComponent/Document/VivaMOCDoc.js";
+import AnalysisDoc from "./AdminComponent/Document/AnalysisDoc";
+import Acomodation from "./AdminComponent/Document/Acomodation.js";
+import LectureReports from "./AdminComponent/otherDocuments/LectureReport.js";
 
 
 const Router = createBrowserRouter([
@@ -555,7 +564,7 @@ const Router = createBrowserRouter([
                     <div style={{ width: "100vw", height: "100vh" }}>
                         <PDFViewer style={{ width: "100%", height: "100%" }}>
 
-                            <StandardLecturePlanDoc />
+                            <LectureReports/>
 
                         </PDFViewer>
                     </div>

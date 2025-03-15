@@ -42,7 +42,7 @@ const InquiryListing = () => {
     const [lastStudentId, setLastStudentId] = useState(null);
     const [page, setPage] = useState(0);
     const [totalstudent, setTotalStudent] = useState("");
-    const [pageSize, setPageSize] = useState(10);
+    const [pageSize, setPageSize] = useState(50);
     const [value, setValue] = useState({
         from_date: "",
         to_date: "",
@@ -617,7 +617,7 @@ const InquiryListing = () => {
                                     </div>
                                 </div>
 
-                                <div className="card">
+                                <div className="card" style={ { height: "510px", overflow: "scroll"}}>
                                     <StyledDataGrid
                                         rows={rowsWithIds}
                                         columns={columns}
@@ -638,6 +638,8 @@ const InquiryListing = () => {
                                         //   }}
 
                                         sx={{
+                                            
+                                            // background: "red",
                                             "& .MuiDataGrid-cell": {
                                                 whiteSpace: "normal",
                                                 wordWrap: "break-word",
