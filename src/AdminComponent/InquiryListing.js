@@ -103,6 +103,8 @@ const InquiryListing = () => {
     const handleSearchChange = (newValue) => {
         setSelectedStudent(newValue); // Update state
 
+        console.log(newValue, "Value")
+
         if (searchwise == "NameWise") {
             setSearchData(newValue?.Inquiry_Id);
         }
@@ -159,20 +161,28 @@ const InquiryListing = () => {
     const handleInputChange = _debounce((newValue) => {
         setText(newValue);
 
+
+        console.log(newValue , "%$^&*(*")
+
         if (searchwise == "BatchWise") {
             getBatchcode(newValue);
+            setSearchData(newValue)
         }
         if (searchwise == "NameWise") {
             getstudents(newValue);
+            setSearchData(newValue)
         }
         if (searchwise == "EmailWise") {
             getEmail(newValue);
+            setSearchData(newValue)
         }
         if (searchwise == "MobileWise") {
             getMobile(newValue);
+            setSearchData(newValue)
         }
         if (searchwise == "CourseWise") {
             getCourse(newValue);
+            setSearchData(newValue)
         }
     }, 500);
 
