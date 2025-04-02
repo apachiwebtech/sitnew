@@ -10,6 +10,7 @@ import { DataGrid ,GridToolbar } from '@mui/x-data-grid';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import Loader from './Loader';
+import { StyledDataGrid } from './StyledDataGrid';
 
 const CACHE_KEY = 'course_data'; // Key for localStorage caching
 const CACHE_EXPIRY_MS = 1000 * 60 * 15; // Cache expiry time (15 minutes)
@@ -117,7 +118,7 @@ const CourseListing = () => {
             type: 'number',
             align: 'center',
             headerAlign: 'center',
-            flex: 1,
+            flex: 0.5,
             filterable: false,
         },
         { field: 'Course_Name', headerName: 'Course Name', flex: 2 },
@@ -127,7 +128,7 @@ const CourseListing = () => {
             field: 'actions',
             type: 'actions',
             headerName: 'Action',
-            flex: 1,
+            flex: 0.5,
             renderCell: (params) => {
                 return (
                     <>
@@ -144,7 +145,7 @@ const CourseListing = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper col-lg-10">
+        <div class="container-fluid page-body-wrapper ">
             <InnerHeader />
 
            {loading && <Loader /> } 
@@ -156,7 +157,7 @@ const CourseListing = () => {
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <div className='d-flex justify-content-between' style={{ width: "100%", padding: "10px 0" }}>
+                                    <div className='d-flex justify-content-between' style={{ width: "100%", padding: "10px 0",borderBottom: "2px solid #dce4ec", }}>
                                         <div>
                                             <h4 class="card-title">List of Course ({coursedata.length})</h4>
                                             
@@ -165,8 +166,8 @@ const CourseListing = () => {
 
                                     </div>
 
-                                    <div>
-                                        <DataGrid
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                        <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
                                             // disableColumnFilter
@@ -176,7 +177,7 @@ const CourseListing = () => {
                                             getRowId={(row) => row.Course_Id}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                             }}
                                             slots={{ toolbar: GridToolbar }}

@@ -5,6 +5,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { BASE_URL } from "./BaseUrl";
 import InnerHeader from "./InnerHeader";
+import { StyledDataGrid } from "./StyledDataGrid";
 //import FormControlLabel from '@mui/material/FormControlLabel';
 // import ImageList from '@mui/material/ImageList';
 // import { ImageSourcePropType } from 'react-native';
@@ -189,7 +190,7 @@ const UploadBanner = () => {
   }));
 
   return (
-    <div className="container-fluid page-body-wrapper col-lg-10">
+    <div className="container-fluid page-body-wrapper ">
       <InnerHeader />
       <div className="main-panel">
         <div className="content-wrapper">
@@ -255,17 +256,17 @@ const UploadBanner = () => {
               </div>
             </div>
             <div className="col-lg-12">
-              <div className="card">
-                <div className="card-body">
+              <div className="card" style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
+                <div className="card-body" style={ { border: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
                   <h4 className="card-title">View Banner Image</h4>
-                  <DataGrid
+                  <StyledDataGrid
                     rows={rowsWithIds}
                     columns={columns}
                     rowHeight={35}
                     getRowId={(row) => row.id}
                     initialState={{
                       pagination: {
-                        paginationModel: { pageSize: 10, page: 0 },
+                        paginationModel: { pageSize: 50, page: 0 },
                       },
                     }}
                     slots={{ toolbar: GridToolbar }}

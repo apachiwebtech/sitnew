@@ -45,7 +45,7 @@ const PaymentCollectionReport = () => {
 
     return (
 
-        <div class="container-fluid page-body-warpper col-lg-10">
+        <div class="container-fluid page-body-warpper ">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">

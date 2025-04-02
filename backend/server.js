@@ -3947,7 +3947,7 @@ app.post('/nodeapp/updateAdmission', (req, res) => {
 app.get('/nodeapp/getannualbatch', (req, res) => {
 
 
-  const sql = 'select bm.Batch_Id,bm.Course_Id,bm.Batch_code,bm.Category,bm.Timings,bm.SDate,bm.EDate,bm.Duration,bm.Training_Coordinator,cm.Course_Name from `Batch_Mst` as bm left join Course_Mst as cm on cm.Course_Id = bm.Course_Id where bm.IsDelete = 0 order by bm.Batch_Id desc'
+  const sql = 'select bm.Batch_Id,bm.Course_Id,bm.Batch_code,bm.Category,bm.Timings,DATE_FORMAT(bm.SDate, "%d-%m-%Y") as SDate,bm.EDate,bm.Duration,bm.Training_Coordinator,cm.Course_Name from `Batch_Mst` as bm left join Course_Mst as cm on cm.Course_Id = bm.Course_Id where bm.IsDelete = 0 order by bm.Batch_Id desc'
 
   con.query(sql, (err, data) => {
     if (err) {

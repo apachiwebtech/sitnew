@@ -160,7 +160,27 @@ const Assignmentdetails = () => {
     { field: "assignmentname", headerName: "Assignment Name", flex: 2 },
     { field: "subjects", headerName: "Subject", flex: 2 },
     { field: "marks", headerName: "Marks", flex: 2 },
-    { field: "assignmentdate", headerName: "Date", flex: 2 },
+    {
+      field: "assignmentdate",
+      headerName: "Date",
+      flex: 2,
+      valueGetter: (params) => {
+        if (!params.value) return ""; // Handle empty values
+    
+        // Regex to check if the date is already in DD-MM-YYYY format
+        const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+        if (ddmmyyyyRegex.test(params.value)) {
+          return params.value; // Return as-is if already formatted
+        }
+    
+        const date = new Date(params.value);
+        if (isNaN(date.getTime())) return ""; // Handle invalid dates
+    
+        // Convert to DD-MM-YYYY format
+        return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+      },
+    },
+    
     {
       field: 'actions',
       type: 'actions',
@@ -213,7 +233,7 @@ const Assignmentdetails = () => {
   }
 
   return (
-    <div className="container-fluid page-body-wrapper col-lg-10">
+    <div className="container-fluid page-body-wrapper ">
       <InnerHeader />
       <div className="main-pannel">
         <div className="content-wrapper ">

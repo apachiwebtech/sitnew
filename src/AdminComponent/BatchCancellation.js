@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import { data } from "jquery";
+import { StyledDataGrid } from "./StyledDataGrid";
 
 const BatchCancellation = () => {
 
@@ -318,8 +319,28 @@ const BatchCancellation = () => {
 
     const columns = [
         { field: 'Student_Name', headerName: 'To', flex: 2 },
-        { field: 'batchno', headerName: 'Batch No', flex: 2 },
-        { field: 'date', headerName: 'Date', flex: 2 },
+        { field: 'batchno', headerName: 'Batch No', flex: 1.5 },
+        {
+            field: "date",
+            headerName: "Date",
+            flex: 1.5,
+            renderCell: (params) => {
+              if (!params.value) return ""; // Handle empty values
+          
+              // Check if already in DD-MM-YYYY format
+              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+              if (ddmmyyyyRegex.test(params.value)) {
+                return params.value; // Return as-is if already formatted
+              }
+          
+              const date = new Date(params.value);
+              if (isNaN(date.getTime())) return ""; // Handle invalid dates
+          
+              // Convert to DD-MM-YYYY format
+              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+            },
+          },
+          
         { field: 'cancellationammount', headerName: 'Cancel Amount', flex: 2 },
         {
             field: 'actions',
@@ -341,7 +362,7 @@ const BatchCancellation = () => {
 
     return (
 
-    <div class="container-fluid page-body-wrapper col-lg-10">
+    <div class="container-fluid page-body-wrapper ">
         <InnerHeader />
         <div class="content-wrapper">
             <div class="row">
@@ -439,22 +460,22 @@ const BatchCancellation = () => {
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-body">
-                            <div className='d-flex justify-content-between'>
+                            <div className='d-flex justify-content-between' style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
                                 <div>
                                     <h4 class="card-title">View Batch Cancellation</h4>
                                 </div>
 
                             </div>
 
-                            <div>
-                                <DataGrid
+                            <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                <StyledDataGrid
                                     rows={rowsWithIds}
                                     columns={columns}
                                     rowHeight={35}
                                     getRowId={(row) => row.id}
                                     initialState={{
                                         pagination: {
-                                            paginationModel: { pageSize: 10, page: 0 },
+                                            paginationModel: { pageSize: 50, page: 0 },
                                         },
                                     }}
 

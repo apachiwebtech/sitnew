@@ -16,6 +16,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 //import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
+import { StyledDataGrid } from './StyledDataGrid';
 
 const NewFeedback = () => {
 
@@ -362,21 +363,21 @@ const NewFeedback = () => {
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <div className='d-flex justify-content-between'>
+                                    <div className='d-flex justify-content-between' style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
                                         <div>
                                             <h4 class="card-title"></h4>
                                         </div>
 
                                     </div>
 
-                                    <div>
-                                        <DataGrid
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                        <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
                                             getRowId={(row) => row.id}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                             }}
                                         />

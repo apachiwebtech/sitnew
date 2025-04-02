@@ -78,7 +78,7 @@ const LecturePlan = () => {
     const data = {
       batch_id: batchid
     }
-    axios.post(`${BASE_URL}/batch_lecturetaken`, data)
+    axios.post(`${BASE_URL}/batch_`, data)
 
       .then((res) => {
         setOnlineAdmissions(res.data)
@@ -329,7 +329,7 @@ const LecturePlan = () => {
       status :value.status,
     }
 
-    axios.post(`${BASE_URL}/add_batchlecturetaken`, data)
+    axios.post(`${BASE_URL}/add_batch`, data)
       .then((res) => {
 
         setOpen(false)
@@ -339,7 +339,7 @@ const LecturePlan = () => {
   }
 
   return (
-    <div className="container-fluid page-body-wrapper col-lg-10">
+    <div className="container-fluid page-body-wrapper ">
       <InnerHeader />
       <div className="main-pannel">
         <div className="content-wrapper ">

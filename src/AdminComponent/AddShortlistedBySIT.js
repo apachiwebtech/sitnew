@@ -3,7 +3,7 @@ import InnerHeader from "./InnerHeader";
 
 const AddShortlistedBySIT = () => {
     return (
-        <div class="container-fluid page-body-wrapper col-lg-10">
+        <div class="container-fluid page-body-wrapper ">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">

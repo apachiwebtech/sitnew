@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import Loader from "./Loader";
+import { StyledDataGrid } from "./StyledDataGrid";
 
 function CustomToolbar() {
     return (
@@ -131,18 +132,18 @@ const InquiryCorporate = () => {
             type: 'number',
             align: 'center',
             headerAlign: 'center',
-            flex: 1,
+            flex: 0.5,
             filterable: false,
         },
-        { field: 'FullName', headerName: 'Inquirer', flex: 2 },
-        { field: 'Course_Id', headerName: 'Course', flex: 2 },
-        { field: 'Email', headerName: 'Email', flex: 2 },
+        { field: 'FullName', headerName: 'Inquirer', flex: 1.5 },
+        { field: 'Course_Id', headerName: 'Course', flex: 1.5 },
+        { field: 'Email', headerName: 'Email', flex: 1.5 },
         
         {
             field: 'actions',
             type: 'actions',
             headerName: 'Action',
-            flex: 2,
+            flex: 1,
             renderCell: (params) => {
                 return (
                     <>
@@ -173,7 +174,7 @@ const InquiryCorporate = () => {
                         <div className="col-lg-12">
                             <div className="card">
                                 <div className="card-body">
-                                    <div className='d-flex justify-content-between gap-3' style={{ width: "100%", padding: "10px 0" }}>
+                                    <div className='d-flex justify-content-between gap-3' style={{ borderBottom: "2px solid #dce4ec", width: "100%", padding: "10px 0" }}>
                                         <div >
                                             <h4 class="card-title">List Of Corporate Inquiry</h4>
                                         </div>
@@ -182,8 +183,8 @@ const InquiryCorporate = () => {
 
                                     </div>
 
-                                    <div>
-                                        <DataGrid
+                                    <div  style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                        <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
                                             // disableColumnFilter
@@ -193,7 +194,7 @@ const InquiryCorporate = () => {
                                             getRowId={(row) => row.Id}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                             }}
                                             slots={{ toolbar: CustomToolbar }}

@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import AddFacultySalary from "./AddFacultySalary";
+import { StyledDataGrid } from "./StyledDataGrid";
 
 const AddEmployeeSalaryListing = () => {
 
@@ -197,7 +198,27 @@ const AddEmployeeSalaryListing = () => {
 
         { field: 'generatereceipt', headerName: 'Faculty Name', flex: 2 },
         { field: 'coursename', headerName: 'Faculty Code', flex: 2 },
-        { field: 'batchcode', headerName: 'Date', flex: 2 },
+        {
+            field: "batchcode",
+            headerName: "Date",
+            flex: 2,
+            renderCell: (params) => {
+              if (!params.value) return ""; // Handle empty values
+          
+              // Check if already in DD-MM-YYYY format
+              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+              if (ddmmyyyyRegex.test(params.value)) {
+                return params.value; // Return as-is if already formatted
+              }
+          
+              const date = new Date(params.value);
+              if (isNaN(date.getTime())) return params.value; // Return original value if it's not a valid date
+          
+              // Convert valid date to DD-MM-YYYY format
+              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+            },
+          },
+          
         { field: 'studentname', headerName: 'Months', flex: 2 },
         { field: 'deudate', headerName: 'Total Hou.', flex: 2 },
         { field: 'paymenttype', headerName: 'Total Inc. Type', flex: 2 },
@@ -227,7 +248,7 @@ const AddEmployeeSalaryListing = () => {
 
     return (
 
-        <div className="container-fluid page-body-wrapper col-lg-10">
+        <div className="container-fluid page-body-wrapper ">
             <InnerHeader />
             <div className="main-panel">
 
@@ -238,7 +259,7 @@ const AddEmployeeSalaryListing = () => {
                         <div className="col-lg-12">
                             <div className="card">
                                 <div className="card-body">
-                                    <div className='d-flex justify-content-between gap-3' style={{ width: "100%", padding: "10px 0" }}>
+                                    <div className='d-flex justify-content-between gap-3' style={{ borderBottom: "2px solid #dce4ec",width: "100%", padding: "10px 0" }}>
                                         <div >
                                             <h4 class="card-title">View Faculty Salary</h4>
                                         </div>
@@ -247,8 +268,8 @@ const AddEmployeeSalaryListing = () => {
 
                                     </div>
 
-                                    <div>
-                                        <DataGrid
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                        <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
                                             disableColumnFilter
@@ -258,7 +279,7 @@ const AddEmployeeSalaryListing = () => {
                                             getRowId={(row) => row.id}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                             }}
                                             slots={{ toolbar: GridToolbar }}

@@ -7,6 +7,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { BASE_URL } from "./BaseUrl";
 import InnerHeader from "./InnerHeader";
+import { StyledDataGrid } from "./StyledDataGrid";
 
 const AddFacultySalaryListing = () => {
     const [uid, setUid] = useState([]);
@@ -98,21 +99,41 @@ const AddFacultySalaryListing = () => {
     };
 
     const columns = [
-        { field: "Faculty_Name", headerName: "Faculty Name", width: 200 },
-        { field: "Faculty_Code", headerName: "Faculty Code", width: 100 },
-        { field: "Payment_Dt", headerName: "Date", width: 100 },
-        { field: "Sal_Month", headerName: "Month", width: 100 },
-        { field: "Sal_Year", headerName: "Year", width: 100 },
-        { field: "Total_Hours", headerName: "Total Hours", width: 100 },
-        { field: "Tot_Inc", headerName: "Total Inc.", width: 130 },
-        { field: "Total_Ded", headerName: "Total Ded.", width: 130 },
-        { field: "Net_Payment", headerName: "Net Payment", width: 130 },
-        { field: "Payment_Type", headerName: "Payment Type", width: 130 },
-        { field: "Cheque_No", headerName: "Cheque No", width: 130 },
+        { field: "Faculty_Name", headerName: "Faculty Name", flex: 1 },
+        { field: "Faculty_Code", headerName: "Faculty Code", flex: 1 },
+        {
+            field: "Payment_Dt",
+            headerName: "Date",
+            flex: 1,
+            renderCell: (params) => {
+              if (!params.value) return ""; // Handle empty values
+          
+              // Check if already in DD-MM-YYYY format
+              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+              if (ddmmyyyyRegex.test(params.value)) {
+                return params.value; // Return as-is if already formatted
+              }
+          
+              const date = new Date(params.value);
+              if (isNaN(date.getTime())) return ""; // Handle invalid dates
+          
+              // Convert to DD-MM-YYYY format
+              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+            },
+          },
+          
+        { field: "Sal_Month", headerName: "Month", flex: 1 },
+        { field: "Sal_Year", headerName: "Year", flex: 1 },
+        { field: "Total_Hours", headerName: "Total Hours", flex: 1 },
+        { field: "Tot_Inc", headerName: "Total Inc.", flex: 1 },
+        { field: "Total_Ded", headerName: "Total Ded.", flex: 1},
+        { field: "Net_Payment", headerName: "Net Payment", flex: 1 },
+        { field: "Payment_Type", headerName: "Payment Type", flex: 1 },
+        { field: "Cheque_No", headerName: "Cheque No", flex: 1 },
         {
             field: "actions",
             headerName: "Action",
-            flex: 2,
+            flex: 1,
             renderCell: (params) => {
                 return (
                     <>
@@ -141,7 +162,7 @@ const AddFacultySalaryListing = () => {
     }));
 
     return (
-        <div className="container-fluid page-body-wrapper col-lg-10">
+        <div className="container-fluid page-body-wrapper ">
             <InnerHeader />
             <div className="main-panel">
                 <div className="content-wrapper">
@@ -154,6 +175,7 @@ const AddFacultySalaryListing = () => {
                                         style={{
                                             width: "100%",
                                             padding: "10px 0",
+                                            borderBottom: "2px solid #dce4ec",
                                         }}
                                     >
                                         <div>
@@ -165,8 +187,8 @@ const AddFacultySalaryListing = () => {
                                         </Link>
                                     </div>
 
-                                    <div>
-                                        <DataGrid
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                        <StyledDataGrid
                                             rows={facultySalaryData}
                                             columns={columns}
                                             disableColumnFilter
@@ -177,7 +199,7 @@ const AddFacultySalaryListing = () => {
                                             initialState={{
                                                 pagination: {
                                                     paginationModel: {
-                                                        pageSize: 10,
+                                                        pageSize: 50,
                                                         page: 0,
                                                     },
                                                 },

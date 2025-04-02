@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
+import { StyledDataGrid } from "./StyledDataGrid";
 //import AssignmentsTaken from "./AssignmentsTaken";
 
 
@@ -149,17 +150,17 @@ const FacultyListing = () => {
             type: 'number',
             align: 'center',
             headerAlign: 'center',
-            flex: 1,
+            flex: 0.8,
             filterable: false,
 
         },
-        { field: 'Faculty_Name', headerName: 'Faculty Name', flex: 2 },
+        { field: 'Faculty_Name', headerName: 'Faculty Name', flex: 4 },
 
         {
             field: 'actions',
             type: 'actions',
             headerName: 'Action',
-            flex: 1,
+            flex: 0.8,
             renderCell: (params) => {
                 return (
                     <>
@@ -180,7 +181,7 @@ const FacultyListing = () => {
 
     return (
 
-        <div className="container-fluid page-body-wrapper col-lg-10">
+        <div className="container-fluid page-body-wrapper ">
             <InnerHeader />
            
             <div className="main-panel">
@@ -192,7 +193,7 @@ const FacultyListing = () => {
                         <div className="col-lg-12">
                             <div className="card">
                                 <div className="card-body">
-                                    <div className='d-flex justify-content-between gap-3' style={{ width: "100%", padding: "10px 0" }}>
+                                    <div className='d-flex justify-content-between gap-3' style={{ width: "100%", padding: "10px 0",borderBottom: "2px solid #dce4ec", }}>
                                         <div >
                                             <h4 class="card-title">View  Final Result</h4>
                                         </div>
@@ -201,8 +202,8 @@ const FacultyListing = () => {
 
                                     </div>
 
-                                    <div>
-                                        <DataGrid
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                        <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
                                             disableColumnFilter
@@ -212,7 +213,7 @@ const FacultyListing = () => {
                                             getRowId={(row) => row.Faculty_Id}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                             }}
                                             slots={{ toolbar: GridToolbar }}

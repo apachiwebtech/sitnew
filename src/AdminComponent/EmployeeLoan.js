@@ -5,9 +5,12 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
+import { StyledDataGrid } from "./StyledDataGrid";
 //import FormControlLabel from '@mui/material/FormControlLabel';
 // import ImageList from '@mui/material/ImageList';
 // import { ImageSourcePropType } from 'react-native';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const EmployeeLoan = () => {
     
@@ -205,7 +208,18 @@ const EmployeeLoan = () => {
 
         },
         { field: 'employee', headerName: 'Employee', flex: 2 },
-        { field: 'loandate', headerName: 'Loan Date', flex: 2 },
+        {
+            field: "loandate",
+            headerName: "Loan Date",
+            flex: 2,
+            renderCell: (params) =>
+              params.value
+                ? /^\d{2}-\d{2}-\d{4}$/.test(params.value)
+                  ? params.value
+                  : new Date(params.value).toLocaleDateString("en-GB")
+                : "",
+          },
+          
         { field: 'loanamt', headerName: 'Loan Amt.', flex: 2 },
         { field: 'monthly', headerName: '	Total Months', flex: 2 },
         { field: 'totalmonths', headerName: 'Monthly Installment', flex: 2 },
@@ -232,7 +246,7 @@ const EmployeeLoan = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper col-lg-10">
+        <div class="container-fluid page-body-wrapper ">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -258,10 +272,17 @@ const EmployeeLoan = () => {
                                                 </select>
                                             </div>
 
-                                            <div class="form-group col-lg-3">
+                                            <div class="form-group col-lg-3" style={{ display: "flex", flexDirection: "column"}}>
                                                 <lable for="exampleInputUsername1">Loan Date</lable>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" 
-                                                value={value.loandate} name='loandate' onChange={onhandleChange} />
+                                                <DatePicker
+        selected={value.loandate}
+        onChange={(date) => onhandleChange({ target: { name: "loandate", value: date } })}
+        className="form-control"
+        id="loandate"
+        placeholderText="Select Loan Date"
+        dateFormat="yyyy-MM-dd"
+        minDate={new Date()} // Prevents past dates
+      />
                                             </div>
 
                                             <div class="form-group col-lg-3">
@@ -307,15 +328,15 @@ const EmployeeLoan = () => {
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <div className='d-flex justify-content-between'>
+                                    <div className='d-flex justify-content-between' style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
                                         <div>
                                             <h4 class="card-title">View Employee Loan Details</h4>
                                         </div>
 
                                     </div>
 
-                                    <div>
-                                        <DataGrid
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                        <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
                                             disableColumnFilter
@@ -325,7 +346,7 @@ const EmployeeLoan = () => {
                                             getRowId={(row) => row.id}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                             }}
                                             slots={{ toolbar: GridToolbar }}

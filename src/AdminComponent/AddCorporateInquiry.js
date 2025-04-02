@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
-
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const AddCorporateInquiry = () => {
 
@@ -146,7 +147,7 @@ const AddCorporateInquiry = () => {
 
     return (
 
-        <div className="container-fluid page-body-wrapper col-lg-10">
+        <div className="container-fluid page-body-wrapper ">
             <InnerHeader />
             <div className="main-panel">
 
@@ -248,9 +249,18 @@ const AddCorporateInquiry = () => {
                                                             </select>
                                                         </div>
 
-                                                        <div className="form-group col-lg-6">
+                                                        <div className="form-group col-lg-6" style={{ display: 'flex', flexDirection: "column"}}>
                                                             <label for="exampleInputUsername1">Date</label>
-                                                            <input type="date" className="form-control" id="exampleInputUsername1" value={value.InquiryDate} placeholder="Installment Amount" name='InquiryDate' onChange={onhandleChange} />
+                                                            <DatePicker
+        selected={value.InquiryDate ? new Date(value.InquiryDate) : null}
+        onChange={(date) =>
+          onhandleChange({ target: { name: "InquiryDate", value: date } })
+        }
+        className="form-control"
+        id="exampleInputUsername1"
+        dateFormat="dd-MM-yyyy"
+        placeholderText="Select Inquiry Date"
+      />
 
                                                         </div>
 

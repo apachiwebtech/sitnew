@@ -9,7 +9,11 @@ import InnerHeader from "./InnerHeader";
 import * as XLSX from "xlsx";
 import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
+import { StyledDataGrid } from "./StyledDataGrid";
 //import FormControlLabel from '@mui/material/FormControlLabel';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { format } from "date-fns";
 
 const RInquiry = () => {
     const [selected, setSelected] = useState([]);
@@ -184,6 +188,8 @@ const RInquiry = () => {
             setSelected(e); // Update the selected batch values
             setValue((prev) => ({ ...prev, selctbatch: e })); // Save the selected batch values to the state
         }
+        // console.log(e.target.name , e.target.value);
+        
     };
 
     const exportToExcel = async () => {
@@ -281,7 +287,27 @@ const RInquiry = () => {
         { field: "Qualification", headerName: "Qualification", width: 100 },
         { field: "Inquiry_type", headerName: "Inquiry Type", width: 100 },
         { field: "Batch_Code", headerName: "Batch Code", width: 100 },
-        { field: "inquiry_DT", headerName: "inquiry Date", width: 130 },
+        {
+            field: "inquiry_DT",
+            headerName: "Inquiry Date",
+            width: 130,
+            renderCell: (params) => {
+              if (!params.value) return ""; // Handle empty values
+          
+              // Check if already in DD-MM-YYYY format
+              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+              if (ddmmyyyyRegex.test(params.value)) {
+                return params.value; // Return as-is if already formatted
+              }
+          
+              const date = new Date(params.value);
+              if (isNaN(date.getTime())) return ""; // Handle invalid dates
+          
+              // Convert to DD-MM-YYYY format
+              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+            },
+          },
+          
         { field: "Email", headerName: "Email", width: 150 },
         { field: "Present_Mobile", headerName: "Present Mobile", width: 150 },
         { field: "Course_Name", headerName: "Course Name", width: 200 },
@@ -335,7 +361,7 @@ const RInquiry = () => {
     const rowsWithIds = inquery.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
-        <div class="container-fluid page-body-wrapper col-lg-10">
+        <div class="container-fluid page-body-wrapper ">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -347,33 +373,39 @@ const RInquiry = () => {
                                     <hr></hr>
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class="row">
-                                            <div class="form-group col-lg-3">
+                                            <div class="form-group col-lg-3" style={{ display: "flex", flexDirection: 'column'}}>
                                                 <label for="exampleInputUsername1">
                                                     From Date<span className="text-danger">*</span>
                                                 </label>
-                                                <input
-                                                    type="date"
-                                                    class="form-control"
-                                                    id="exampleInputUsername1"
-                                                    value={value.fromdate}
-                                                    name="fromdate"
-                                                    onChange={onhandleChange}
-                                                />
+                                                <DatePicker
+        selected={value.fromdate ? new Date(value.fromdate) : null}
+        onChange={(date) =>
+          onhandleChange({
+            target: { name: "fromdate", value: format(date, "yyyy-MM-dd") },
+          })
+        }
+        className="form-control"
+        id="exampleInputUsername1"
+        dateFormat="dd-MM-yyyy"
+        placeholderText="dd-mm-yyyy"
+      />
                                                 {<span className="text-danger"> {error.fromdate} </span>}
                                             </div>
 
-                                            <div class="form-group col-lg-3">
+                                            <div class="form-group col-lg-3" style={{display: 'flex', flexDirection: "column"}}>
                                                 <label for="exampleInputUsername">
                                                     From To Date<span className="text-danger">*</span>
                                                 </label>
-                                                <input
-                                                    type="date"
-                                                    class="form-control"
-                                                    id="exampleInputUsername"
-                                                    value={value.fromtodate}
-                                                    name="fromtodate"
-                                                    onChange={onhandleChange}
-                                                />
+                                                <DatePicker
+        selected={value.fromtodate ? new Date(value.fromtodate) : null}
+        onChange={(date) =>
+          onhandleChange({ target: { name: "fromtodate", value: date } })
+        }
+        className="form-control"
+        id="exampleInputUsername"
+        dateFormat="dd-MM-yyyy"
+        placeholderText="dd-MM-yyyy"
+      />
                                                 {<span className="text-danger"> {error.fromtodate} </span>}
                                             </div>
 
@@ -489,14 +521,14 @@ const RInquiry = () => {
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <div className="d-flex justify-content-between">
+                                    <div className="d-flex justify-content-between" style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
                                         <div>
                                             <h4 class="card-title">Inquiry Report Details</h4>
                                         </div>
                                     </div>
                                     {
-                                        <div>
-                                            <DataGrid
+                                        <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                            <StyledDataGrid
                                                 rows={rowsWithIds}
                                                 columns={columns}
                                                 disableColumnFilter
@@ -506,7 +538,7 @@ const RInquiry = () => {
                                                 getRowId={(row) => row.id}
                                                 initialState={{
                                                     pagination: {
-                                                        paginationModel: { pageSize: 10, page: 0 },
+                                                        paginationModel: { pageSize: 50, page: 0 },
                                                     },
                                                 }}
                                             />

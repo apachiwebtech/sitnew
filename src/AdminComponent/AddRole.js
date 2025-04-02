@@ -9,6 +9,7 @@ import decryptedUserId from '../Utils/UserID'
 import Cookies from 'js-cookie'
 import { useDispatch, useSelector } from 'react-redux'
 import { getRoleData } from '../Store/Role/role-action'
+import { StyledDataGrid } from './StyledDataGrid'
 
 
 function AddRole() {
@@ -144,7 +145,7 @@ function AddRole() {
             type: 'number',
             align: 'center',
             headerAlign: 'center',
-            flex: 1,
+            flex: 0.5,
             filterable: false,
         },
         { field: 'title', headerName: 'Title', flex: 2 },
@@ -185,7 +186,7 @@ function AddRole() {
 
 
 
-        <div class="container-fluid page-body-wrapper col-lg-10">
+        <div class="container-fluid page-body-wrapper ">
             <InnerHeader />
 
             {roleaccess > 1 ? <div class="main-panel">
@@ -219,7 +220,7 @@ function AddRole() {
                         <div class="col-lg-7 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <div className='d-flex justify-content-between'>
+                                    <div className='d-flex justify-content-between' style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
                                         <div>
                                             <h4 class="card-title">Roles </h4>
                                             <p class="card-description">
@@ -228,11 +229,16 @@ function AddRole() {
                                         </div>
 
                                     </div>
-                                    <div>
-                                        <DataGrid
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                        <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
                                             getRowId={(row) => row.id}
+                                            initialState={{
+                                                pagination: {
+                                                    paginationModel: { pageSize: 50, page: 0 },
+                                                },
+                                            }}
                                         />
 
                                         {

@@ -8,6 +8,7 @@ import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 //import AssignmentsTaken from "./AssignmentsTaken";
 import EmployeeRecord from "./EmployeeRecord";
+import { StyledDataGrid } from "./StyledDataGrid";
 
 const EmployeeRecordListing = () => {
 
@@ -128,14 +129,14 @@ const EmployeeRecordListing = () => {
             type: 'number',
             align: 'center',
             headerAlign: 'center',
-            flex: 1,
+            flex: 0.5,
             filterable: false,
 
         },
-        { field: 'training', headerName: 'Training', flex: 2 },
-        { field: 'attendee', headerName: 'Attendee', flex: 2 },
-        { field: 'instructor', headerName: 'Instructor', flex: 2 },
-        { field: 'description', headerName: 'Description', flex: 2 },
+        { field: 'training', headerName: 'Training', flex: 1.5 },
+        { field: 'attendee', headerName: 'Attendee', flex: 1.5 },
+        { field: 'instructor', headerName: 'Instructor', flex: 1.5 },
+        { field: 'description', headerName: 'Description', flex: 1.5 },
 
         {
             field: 'actions',
@@ -160,7 +161,7 @@ const EmployeeRecordListing = () => {
 
     return (
 
-        <div className="container-fluid page-body-wrapper col-lg-10">
+        <div className="container-fluid page-body-wrapper ">
             <InnerHeader />
             <div className="main-panel">
 
@@ -171,7 +172,7 @@ const EmployeeRecordListing = () => {
                         <div className="col-lg-12">
                             <div className="card">
                                 <div className="card-body">
-                                    <div className='d-flex justify-content-between gap-3' style={{ width: "100%", padding: "10px 0" }}>
+                                    <div className='d-flex justify-content-between gap-3' style={{borderBottom: "2px solid #dce4ec", width: "100%", padding: "10px 0" }}>
                                         <div >
                                             <h4 class="card-title">Employee Training Record</h4>
                                         </div>
@@ -180,8 +181,8 @@ const EmployeeRecordListing = () => {
 
                                     </div>
 
-                                    <div>
-                                        <DataGrid
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                        <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
                                             disableColumnFilter
@@ -191,7 +192,7 @@ const EmployeeRecordListing = () => {
                                             getRowId={(row, index) => row.id}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                             }}
                                             slots={{ toolbar: GridToolbar }}

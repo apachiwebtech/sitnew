@@ -12,6 +12,8 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useDispatch, useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
 import { getRoleData } from '../Store/Role/role-action';
+import { StyledDataGrid } from './StyledDataGrid';
+import { BorderAll } from '@mui/icons-material';
 
 const Discipline = () => {
 
@@ -180,15 +182,16 @@ const Discipline = () => {
             type: 'number',
             align: 'center',
             headerAlign: 'center',
-            flex: 1,
-            filterable: false,
+            flex: 0.5,
+            filterable: false,           
+            
         },
         { field: 'Deciplin', headerName: 'Discipline', flex: 2 },
         {
             field: 'actions',
             type: 'actions',
             headerName: 'Action',
-            flex: 1,
+            flex: 0.5,
             renderCell: (params) => {
                 return (
                     <>
@@ -221,7 +224,7 @@ const Discipline = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper col-lg-10">
+        <div class="container-fluid page-body-wrapper ">
             <InnerHeader />
 
           {roleaccess > 1 ?     <div class="main-panel">
@@ -254,16 +257,19 @@ const Discipline = () => {
                         <div class="col-lg-7">
                             <div class="card">
                                 <div class="card-body">
-                                    <div className='d-flex justify-content-between'>
-                                        <div>
+                                    <div className='d-flex justify-content-between' >
+                                        <div 
+                                        style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
                                             <h4 class="card-title">List of Discipline</h4>
                                             
                                         </div>
 
                                     </div>
 
-                                    <div>
-                                    <DataGrid
+                                    <div 
+                                    style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                   
+                                    <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
                                             disableColumnFilter
@@ -273,7 +279,7 @@ const Discipline = () => {
                                             getRowId={(row) => row.Id}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                             }}
                                             // slots={{ toolbar: GridToolbar }}
@@ -282,6 +288,7 @@ const Discipline = () => {
                                                     showQuickFilter: true,
                                                 },
                                             }}
+                                            
                                         />
 
                                         {confirmationVisibleMap[cid] && (

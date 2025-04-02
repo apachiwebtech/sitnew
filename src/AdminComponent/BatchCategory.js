@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import Loader from './Loader';
+import { StyledDataGrid } from "./StyledDataGrid";
 
 
 const BatchCategory = () => {
@@ -181,7 +182,7 @@ const BatchCategory = () => {
             type: 'number',
             align: 'center',
             headerAlign: 'center',
-            flex: 1,
+            flex: 0.5,
             filterable: false,
         },
         { field: 'BatchCategory', headerName: 'Batch Category', flex: 2 },
@@ -189,7 +190,7 @@ const BatchCategory = () => {
             field: 'actions',
             type: 'actions',
             headerName: 'Action',
-            flex: 1,
+            flex: 0.5,
             renderCell: (params) => {
                 return (
                     <>
@@ -206,7 +207,7 @@ const BatchCategory = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper col-lg-10">
+        <div class="container-fluid page-body-wrapper ">
             <InnerHeader />
 
             {loading && <Loader />}
@@ -265,7 +266,8 @@ const BatchCategory = () => {
                         <div class="col-lg-7">
                             <div class="card">
                                 <div class="card-body">
-                                    <div className='d-flex justify-content-between'>
+                                    <div className='d-flex justify-content-between'
+                                    style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
                                         <div>
                                             <h4 class="card-title">View Batch Category</h4>
                                             
@@ -273,8 +275,8 @@ const BatchCategory = () => {
 
                                     </div>
 
-                                    <div>
-                                    <DataGrid
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                    <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
                                             disableColumnFilter
@@ -284,7 +286,7 @@ const BatchCategory = () => {
                                             getRowId={(row) => row.id}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                             }}
                                             // slots={{ toolbar: GridToolbar }}

@@ -10,6 +10,7 @@ import InnerHeader from './InnerHeader';
 import GenerateResult from "./GenerateResult";
 import Loader from "./Loader";
 import toast, { Toaster } from 'react-hot-toast';
+import { StyledDataGrid } from "./StyledDataGrid";
 
 
 
@@ -143,20 +144,40 @@ const GenerateResultListing = () => {
             type: 'number',
             align: 'center',
             headerAlign: 'center',
-            flex: 1,
+            flex: 0.5,
             filterable: false,
 
         },
-        { field: 'Batch_code', headerName: 'Batch Code', flex: 2 },
-        { field: 'Course_Name', headerName: 'Course Name', flex: 2 },
-        { field: 'Result_date', headerName: 'Result Date', flex: 2 },
-        { field: 'Faculty_Name', headerName: 'Approved By', flex: 2 },
+        { field: 'Batch_code', headerName: 'Batch Code', flex: 1 },
+        { field: 'Course_Name', headerName: 'Course Name', flex: 1 },
+        {
+            field: "Result_date",
+            headerName: "Result Date",
+            flex: 1,
+            valueGetter: (params) => {
+              if (!params.value) return ""; // Handle empty values
+          
+              // Check if already in DD-MM-YYYY format
+              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+              if (ddmmyyyyRegex.test(params.value)) {
+                return params.value; // Return as-is if already formatted
+              }
+          
+              const date = new Date(params.value);
+              if (isNaN(date.getTime())) return ""; // Handle invalid dates
+          
+              // Convert to DD-MM-YYYY format
+              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+            },
+          },
+          
+        { field: 'Faculty_Name', headerName: 'Approved By', flex: 1 },
 
         {
             field: 'actions',
             type: 'actions',
             headerName: 'Action',
-            flex: 1,
+            flex: 0.5,
             renderCell: (params) => {
                 return (
                     <>
@@ -176,7 +197,7 @@ const GenerateResultListing = () => {
 
     return (
 
-        <div className="container-fluid page-body-wrapper col-lg-10">
+        <div className="container-fluid page-body-wrapper ">
             <InnerHeader />
             <Toaster />
             {loading && <Loader />}
@@ -189,7 +210,7 @@ const GenerateResultListing = () => {
                         <div className="col-lg-12">
                             <div className="card">
                                 <div className="card-body">
-                                    <div className='d-flex justify-content-between gap-3' style={{ width: "100%", padding: "10px 0" }}>
+                                    <div className='d-flex justify-content-between gap-3' style={{borderBottom: "2px solid #dce4ec", width: "100%", padding: "10px 0" }}>
                                         <div >
                                             <h4 class="card-title">View  Final Result</h4>
                                         </div>
@@ -198,8 +219,8 @@ const GenerateResultListing = () => {
 
                                     </div>
 
-                                    <div>
-                                        <DataGrid
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                        <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
                                             disableColumnFilter
@@ -209,7 +230,7 @@ const GenerateResultListing = () => {
                                             getRowId={(row) => row.Id}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                             }}
                                             slots={{ toolbar: GridToolbar }}

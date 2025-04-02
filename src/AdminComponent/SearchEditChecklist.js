@@ -4,6 +4,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
+import { StyledDataGrid } from "./StyledDataGrid";
 //import FormControlLabel from '@mui/material/FormControlLabel';
 // import ImageList from '@mui/material/ImageList';
 // import { ImageSourcePropType } from 'react-native';
@@ -192,7 +193,7 @@ const SearchEditChecklist = () => {
             type: 'number',
             align: 'center',
             headerAlign: 'center',
-            flex: 1,
+            flex: 0.5,
             filterable: false,
 
         },
@@ -202,7 +203,7 @@ const SearchEditChecklist = () => {
             field: 'actions',
             type: 'actions',
             headerName: 'Action',
-            flex: 1,
+            flex: 0.5,
             renderCell: (params) => {
                 return (
                     <>
@@ -219,7 +220,7 @@ const SearchEditChecklist = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper col-lg-10">
+        <div class="container-fluid page-body-wrapper ">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -230,8 +231,8 @@ const SearchEditChecklist = () => {
                                 <div class="card-body">
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
 
-                                        <div>
-                                            <DataGrid
+                                        <div style={ { border: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                            <StyledDataGrid
                                                 rows={rowsWithIds}
                                                 columns={columns}
                                                 disableColumnFilter
@@ -241,7 +242,7 @@ const SearchEditChecklist = () => {
                                                 getRowId={(row) => row.id}
                                                 initialState={{
                                                     pagination: {
-                                                        paginationModel: { pageSize: 10, page: 0 },
+                                                        paginationModel: { pageSize: 50, page: 0 },
                                                     },
                                                 }}
                                                 slots={{ toolbar: GridToolbar }}

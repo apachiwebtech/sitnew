@@ -5,6 +5,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { BASE_URL } from "./BaseUrl";
 import InnerHeader from "./InnerHeader";
+import { StyledDataGrid } from "./StyledDataGrid";
 //import FormControlLabel from '@mui/material/FormControlLabel';
 // import ImageList from '@mui/material/ImageList';
 // import { ImageSourcePropType } from 'react-native';
@@ -158,7 +159,27 @@ const ShortlistedBySIT = () => {
 
     const columns = [
         { field: "CompanyName", headerName: "Company Name", flex: 2 },
-        { field: "PostedDate", headerName: "Posted Date", flex: 2 },
+        {
+            field: "PostedDate",
+            headerName: "Posted Date",
+            flex: 2,
+            renderCell: (params) => {
+              if (!params.value) return ""; // Handle empty values
+          
+              // Check if already in DD-MM-YYYY format
+              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+              if (ddmmyyyyRegex.test(params.value)) {
+                return params.value; // Return as-is if already formatted
+              }
+          
+              const date = new Date(params.value);
+              if (isNaN(date.getTime())) return params.value; // Return original value if not a valid date
+          
+              // Convert valid date to DD-MM-YYYY format
+              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+            },
+          },
+          
         { field: "Course_Name", headerName: "Course", flex: 2 },
         { field: "Profile", headerName: "Profile", flex: 2 },
         { field: "Location", headerName: "Location", flex: 2 },
@@ -181,7 +202,7 @@ const ShortlistedBySIT = () => {
     ];
 
     return (
-        <div class="container-fluid page-body-wrapper col-lg-10">
+        <div class="container-fluid page-body-wrapper ">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -189,8 +210,8 @@ const ShortlistedBySIT = () => {
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <div>
-                                        <DataGrid
+                                    <div style={ { border: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                        <StyledDataGrid
                                             rows={companyReqData}
                                             columns={columns}
                                             disableColumnFilter
@@ -201,7 +222,7 @@ const ShortlistedBySIT = () => {
                                             initialState={{
                                                 pagination: {
                                                     paginationModel: {
-                                                        pageSize: 10,
+                                                        pageSize: 50,
                                                         page: 0,
                                                     },
                                                 },

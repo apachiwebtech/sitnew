@@ -9,6 +9,9 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 
 
 const MassWhatsApp = () => {
@@ -271,7 +274,7 @@ log: value.log,
 
 
     return (
-        <div className="container-fluid page-body-wrapper col-lg-10">
+        <div className="container-fluid page-body-wrapper ">
             <InnerHeader />
             <div className="main-panel">
 
@@ -339,16 +342,34 @@ log: value.log,
                                                                 {<span className="text-danger"> {error.batchtype} </span>}
                                                             </div>
 
-                                                            <div class="form-group col-lg-3">
+                                                            <div class="form-group col-lg-3" style={{display: "flex", flexDirection: "column"}}>
                                                                 <lable for="exampleInputUsername1">From Date</lable>
-                                                                <input type="date" class="form-control" id="exampleInputUsername1"
-                                                                    value={value.fromdate} name='fromdate' onChange={onhandleChange} />
+                                                                <DatePicker
+        selected={value.fromdate ? new Date(value.fromdate) : null}
+        onChange={(date) =>
+          onhandleChange({ target: { name: "fromdate", value: date.toISOString().split("T")[0] } })
+        }
+        className="form-control"
+        id="fromdate"
+        placeholderText="Select From Date"
+        dateFormat="dd-MM-yyyy"
+        minDate={new Date()} // Prevents selecting past dates
+      />
                                                             </div>
 
-                                                            <div class="form-group col-lg-3">
+                                                            <div class="form-group col-lg-3" style={{display: "flex", flexDirection: "column"}}>
                                                                 <lable for="exapmleInputUsername1">To Date</lable>
-                                                                <input type="date" class="form-control" id="exampleInputUsername1"
-                                                                    value={value.todate} name="todate" onchange={onhandleChange} />
+                                                                <DatePicker
+        selected={value.todate ? new Date(value.todate) : null}
+        onChange={(date) =>
+          onhandleChange({ target: { name: "todate", value: date.toISOString().split("T")[0] } })
+        }
+        className="form-control"
+        id="todate"
+        placeholderText="Select To Date"
+        dateFormat="dd-MM-yyyy"
+        minDate={value.fromdate ? new Date(value.fromdate) : new Date()} // Ensures todate is after fromdate
+      />
                                                             </div>
 
                                                             <div class="form-group col-lg-3">

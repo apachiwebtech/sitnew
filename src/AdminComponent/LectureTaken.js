@@ -504,7 +504,7 @@ const LectureTaken = () => {
 
     return (
 
-        <div className="container-fluid page-body-wrapper col-lg-10">
+        <div className="container-fluid page-body-wrapper ">
             <InnerHeader />
             {loading && <Loader />}
 
@@ -789,7 +789,7 @@ const LectureTaken = () => {
                                             <div className='row p-2 justify-content-end'>
                                                 <button className='mr-2 btn btn-primary' onClick={handleImport}>Import</button>
                                                 {/* <button className='col-2'>close</button> */}
-                                                <button className='mr-2 btn btn-primary' style={{ float: "right" }} onClick={handleSubmit}>Save</button>
+                                                <button className='mr-2 btn btn-primary' style={{ float: "right"}} onClick={handleSubmit} >Save</button>
                                                 {/* <button className='col-2'>close</button> */}
                                             </div>
 

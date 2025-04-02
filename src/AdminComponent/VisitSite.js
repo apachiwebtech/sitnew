@@ -5,7 +5,11 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
+import { StyledDataGrid } from "./StyledDataGrid";
 //import FormControlLabel from '@mui/material/FormControlLabel';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 
 const VisitSite = () => {
 
@@ -286,19 +290,59 @@ const VisitSite = () => {
             type: 'number',
             align: 'center',
             headerAlign: 'center',
-            flex: 1,
+            flex: 0.5,
             filterable: false,
 
 
         },
-        { field: 'Course_Name', headerName: 'course', flex: 2 },
-        { field: 'Batch_Code', headerName: 'batch', flex: 2 },
-        { field: 'Region', headerName: 'region', flex: 2 },
+        { field: 'Course_Name', headerName: 'course', flex: 1.5 },
+        { field: 'Batch_Code', headerName: 'batch', flex: 1.5 },
+        { field: 'Region', headerName: 'region', flex: 1.5 },
         { field: 'Location', headerName: 'location', flex: 2 },
-        { field: 'Total_Student', headerName: 'student', flex: 2 },
-        { field: 'Visit_Date', headerName: 'date', flex: 2 },
-        { field: 'Visit_Time', headerName: 'time', flex: 2 },
-        { field: 'ConfirmDAte', headerName: 'confirm Date', flex: 2 },
+        { field: 'Total_Student', headerName: 'student', flex: 1 },
+        {
+            field: "Visit_Date",
+            headerName: "Date",
+            flex: 1.5,
+            valueGetter: (params) => {
+              if (!params.value) return ""; // Handle empty values
+          
+              // Check if already in DD-MM-YYYY format
+              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+              if (ddmmyyyyRegex.test(params.value)) {
+                return params.value; // Return as-is if already formatted
+              }
+          
+              const date = new Date(params.value);
+              if (isNaN(date.getTime())) return ""; // Handle invalid dates
+          
+              // Convert to DD-MM-YYYY format
+              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+            },
+          },
+          
+        { field: 'Visit_Time', headerName: 'time', flex: 1.5 },
+        {
+            field: "ConfirmDAte", // Ensure this matches the exact field name from your data source
+            headerName: "Confirm Date",
+            flex: 1.5,
+            renderCell: (params) => {
+              if (!params.value) return ""; // Handle empty values
+          
+              // Check if already in DD-MM-YYYY format
+              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+              if (ddmmyyyyRegex.test(params.value)) {
+                return params.value; // Return as-is if already formatted
+              }
+          
+              const date = new Date(params.value);
+              if (isNaN(date.getTime())) return ""; // Handle invalid dates
+          
+              // Convert to DD-MM-YYYY format
+              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+            },
+          },
+          
 
         {
             field: 'actions',
@@ -321,7 +365,7 @@ const VisitSite = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper col-lg-10">
+        <div class="container-fluid page-body-wrapper ">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -389,9 +433,16 @@ const VisitSite = () => {
                                                 {error.student && <span className='text-danger'>{error.student}</span>}
                                             </div>
 
-                                            <div class="form-group col-lg-3">
+                                            <div class="form-group col-lg-3" style={{ display: 'flex', flexDirection: 'column'}}>
                                                 <label for="exampleInputUsername1">Date</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.date} name='date' onChange={onhandleChange} />
+                                                <DatePicker
+        selected={value.date ? new Date(value.date) : null}
+        onChange={(date) => onhandleChange({ target: { name: "date", value: date } })}
+        className="form-control"
+        id="exampleInputUsername1"
+        dateFormat="dd-MM-yyyy"
+        placeholderText="Select a date"
+      />
                                                 {error.date && <span className='text-danger'>{error.date}</span>}
                                             </div>
 
@@ -401,9 +452,18 @@ const VisitSite = () => {
                                                 {error.time && <span className='text-danger'>{error.time}</span>}
                                             </div>
 
-                                            <div class="form-group col-lg-3">
+                                            <div class="form-group col-lg-3" style={{ display: 'flex', flexDirection: 'column'}}>
                                                 <label for="exampleInputUsername1">Confirm Date</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.confirmdate} name='confirmdate' onChange={onhandleChange} />
+                                                <DatePicker
+        selected={value.confirmdate ? new Date(value.confirmdate) : null}
+        onChange={(date) =>
+          onhandleChange({ target: { name: "confirmdate", value: date } })
+        }
+        className="form-control"
+        id="exampleInputUsername1"
+        dateFormat="dd-MM-yyyy"
+        placeholderText="Select a confirm date"
+      />
                                                 {error.confirmdate && <span className='text-danger'>{error.confirmdate}</span>}
                                             </div>
 
@@ -425,15 +485,15 @@ const VisitSite = () => {
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <div className='d-flex justify-content-between'>
+                                    <div className='d-flex justify-content-between' style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
                                         <div>
                                             <h4 class="card-title">View Site visit</h4>
                                         </div>
 
                                     </div>
 
-                                    <div>
-                                        <DataGrid
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                        <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
                                             disableColumnFilter
@@ -443,7 +503,7 @@ const VisitSite = () => {
                                             getRowId={(row) => row.Visit_Id}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                             }}
                                             slots={{ toolbar: GridToolbar }}

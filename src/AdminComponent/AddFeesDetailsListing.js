@@ -7,6 +7,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { BASE_URL } from "./BaseUrl";
 import InnerHeader from "./InnerHeader";
+import { StyledDataGrid } from "./StyledDataGrid";
 
 const AddFeesDetailsListing = () => {
     const [cid, setCid] = useState("");
@@ -90,18 +91,58 @@ const AddFeesDetailsListing = () => {
 
     const columns = [
         { field: "Fees_Code", headerName: "Receipt No", width: 100 },
-        { field: "RDate", headerName: "Receipt Date", width: 100 },
-        { field: "Course_Name", headerName: "Course Name", width: 200 },
+        {
+            field: "RDate",
+            headerName: "Receipt Date",
+            width: 100,
+            renderCell: (params) => {
+              if (!params.value) return ""; // Handle empty values
+          
+              // Check if already in DD-MM-YYYY format
+              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+              if (ddmmyyyyRegex.test(params.value)) {
+                return params.value; // Return as-is if already formatted
+              }
+          
+              const date = new Date(params.value);
+              if (isNaN(date.getTime())) return ""; // Handle invalid dates
+          
+              // Convert to DD-MM-YYYY format
+              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+            },
+          },
+          
+        { field: "Course_Name", headerName: "Course Name", width: 400 },
         { field: "Batch_code", headerName: "Batch Code", width: 100 },
-        { field: "Student_Name", headerName: "Student Name", width: 200 },
-        { field: "Date_Added", headerName: "Date", width: 100 },
+        { field: "Student_Name", headerName: "Student Name", width: 250 },
+        {
+            field: "Date_Added",
+            headerName: "Date",
+            width: 100,
+            renderCell: (params) => {
+              if (!params.value) return ""; // Handle empty values
+          
+              // Check if already in DD-MM-YYYY format
+              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+              if (ddmmyyyyRegex.test(params.value)) {
+                return params.value; // Return as-is if already formatted
+              }
+          
+              const date = new Date(params.value);
+              if (isNaN(date.getTime())) return ""; // Handle invalid dates
+          
+              // Convert to DD-MM-YYYY format
+              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+            },
+          },
+          
         { field: "Payment_Type", headerName: "Payment Type", width: 100 },
         { field: "Amount", headerName: "Amount", width: 130 },
-        { field: "Notes", headerName: "Particular", width: 200 },
+        { field: "Notes", headerName: "Particular", width: 350 },
         {
             field: "actions",
             headerName: "Action",
-            width: 100,
+            width: 150,
             renderCell: (params) => {
                 return (
                     <>
@@ -127,7 +168,7 @@ const AddFeesDetailsListing = () => {
     // const rowsWithIds = feesdetail.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
-        <div className="container-fluid page-body-wrapper col-lg-10">
+        <div className="container-fluid page-body-wrapper ">
             <InnerHeader />
             <div className="main-panel">
                 <div className="content-wrapper">
@@ -137,7 +178,7 @@ const AddFeesDetailsListing = () => {
                                 <div className="card-body">
                                     <div
                                         className="d-flex justify-content-between gap-3"
-                                        style={{ width: "100%", padding: "10px 0" }}
+                                        style={{ borderBottom: "2px solid #dce4ec", width: "100%", padding: "10px 0",  }}
                                     >
                                         <div>
                                             <h4 class="card-title">List Of Admission</h4>
@@ -148,8 +189,8 @@ const AddFeesDetailsListing = () => {
                                         </Link>
                                     </div>
 
-                                    <div>
-                                        <DataGrid
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                        <StyledDataGrid
                                             rows={feesDetailsList}
                                             columns={columns}
                                             disableColumnFilter
@@ -159,7 +200,7 @@ const AddFeesDetailsListing = () => {
                                             getRowId={(row) => row.Fees_Id}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                             }}
                                             slots={{ toolbar: GridToolbar }}

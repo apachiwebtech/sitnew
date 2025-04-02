@@ -16,6 +16,8 @@ import RadioGroup from '@mui/material/RadioGroup';
 //import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const CollogeFollowUp = () => {
 
@@ -274,15 +276,35 @@ const CollogeFollowUp = () => {
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
 
-                                            <div class="form-group col-lg-2">
+                                            <div class="form-group col-lg-2" style={{ display:"flex", flexDirection:"column"}}>
                                                 <label for="exampleInputUsername1">From Date</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.date} placeholder="From Year" name='date' onChange={onhandleChange} />
+                                                <DatePicker
+        selected={value.date ? new Date(value.date) : null}
+        onChange={(date) =>
+          onhandleChange({ target: { name: "date", value: date } })
+        }
+        className="form-control"
+        id="exampleInputUsername1"
+        showYearPicker
+        dateFormat="dd-MM-yyyy"
+        placeholderText="Select Year"
+      />
 
                                             </div>
 
-                                            <div class="form-group col-lg-2">
+                                            <div class="form-group col-lg-2" style={{ display:"flex", flexDirection:"column"}}>
                                                 <label for="exampleInputUsername1">To Date</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.date} placeholder="From Year" name='date' onChange={onhandleChange} />
+                                                <DatePicker
+        selected={value.date ? new Date(value.date) : null}
+        onChange={(date) =>
+          onhandleChange({ target: { name: "date", value: date } })
+        }
+        className="form-control"
+        id="exampleInputUsername1"
+        showYearPicker  // 👈 Enables year selection only
+        dateFormat="dd-MM-yyyy"  // 👈 Formats output as YYYY
+        placeholderText="Select Year"
+      />
 
                                             </div>
 

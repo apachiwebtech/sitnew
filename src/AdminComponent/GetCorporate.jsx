@@ -63,7 +63,7 @@ const GetCorporate = () => {
     const rowsWithIds = corporate.map((row, index) => ({ index: index + 1, ...row }));
     console.log(rowsWithIds);
   return (
-    <div className="container-fluid page-body-wrapper col-lg-10">
+    <div className="container-fluid page-body-wrapper ">
         <div className="main-pannel">
             <div className="content-wrapper">
             <DataGrid

@@ -5,9 +5,12 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
+import { StyledDataGrid } from "./StyledDataGrid";
 //import FormControlLabel from '@mui/material/FormControlLabel';
 // import ImageList from '@mui/material/ImageList';
 // import { ImageSourcePropType } from 'react-native';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const SalaryMaster = () => {
 
@@ -214,13 +217,73 @@ const SalaryMaster = () => {
             filterable: false,
 
         },
-        { field: 'formdate', headerName: 'Form Date', flex: 2 },
-        { field: 'todate', headerName: 'To Date', flex: 2 },
+        {
+            field: "formdate",
+            headerName: "Form Date",
+            flex: 2,
+            renderCell: (params) => {
+              if (!params.value) return ""; // Handle empty values
+          
+              // Check if already in DD-MM-YYYY format
+              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+              if (ddmmyyyyRegex.test(params.value)) {
+                return params.value; // Return as-is if already formatted
+              }
+          
+              const date = new Date(params.value);
+              if (isNaN(date.getTime())) return params.value; // Return original value if not a valid date
+          
+              // Convert valid date to DD-MM-YYYY format
+              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+            },
+          },
+          
+        {
+            field: "todate",
+            headerName: "To Date",
+            flex: 2,
+            renderCell: (params) => {
+              if (!params.value) return ""; // Handle empty values
+          
+              // Check if already in DD-MM-YYYY format
+              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+              if (ddmmyyyyRegex.test(params.value)) {
+                return params.value; // Return as-is if already formatted
+              }
+          
+              const date = new Date(params.value);
+              if (isNaN(date.getTime())) return params.value; // Return original value if it's not a valid date
+          
+              // Convert valid date to DD-MM-YYYY format
+              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+            },
+          },
+          
         { field: 'service', headerName: 'Service', flex: 2 },
         { field: 'empcontri', headerName: 'Empcontri', flex: 2 },
         { field: 'salaryda', headerName: 'DA', flex: 2 },
         { field: 'minbasic', headerName: 'Min. Basic', flex: 2 },
-        { field: 'created_date', headerName: 'Date', flex: 2 },
+        {
+            field: "created_date",
+            headerName: "Date",
+            flex: 2,
+            renderCell: (params) => {
+              if (!params.value) return ""; // Handle empty values
+          
+              // Check if already in DD-MM-YYYY format
+              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+              if (ddmmyyyyRegex.test(params.value)) {
+                return params.value; // Return as-is if already formatted
+              }
+          
+              const date = new Date(params.value);
+              if (isNaN(date.getTime())) return params.value; // Return original value if not a valid date
+          
+              // Convert valid date to DD-MM-YYYY format
+              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+            },
+          },
+          
         
 
         {
@@ -244,7 +307,7 @@ const SalaryMaster = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper col-lg-10">
+        <div class="container-fluid page-body-wrapper ">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -257,17 +320,31 @@ const SalaryMaster = () => {
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
 
-                                            <div class="form-group col-lg-3">
+                                            <div class="form-group col-lg-3" style={{display: "flex", flexDirection: "column"}}>
                                                 <label for="exampleInputUsername1">Form Date<span className="text-danger">*</span></label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1"
-                                                    value={value.formdate} name='formdate' onChange={onhandleChange} />
+                                                <DatePicker
+        selected={value.formdate}
+        onChange={(date) => onhandleChange({ target: { name: "formdate", value: date } })}
+        className="form-control"
+        id="formdate"
+        placeholderText="Select Form Date"
+        dateFormat="yyyy-MM-dd"
+        minDate={new Date()} // Prevents past dates
+      />
                                                 {<span className='text-danger'> {error.formdate} </span>}
                                             </div>
 
-                                            <div class="form-group col-lg-3">
+                                            <div class="form-group col-lg-3" style={{display: "flex", flexDirection: "column"}}>
                                                 <label for="exampleInputUsername1">To Date<span className="text-danger">*</span></label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1"
-                                                    value={value.todate} name='todate' onChange={onhandleChange} />
+                                                <DatePicker
+        selected={value.todate}
+        onChange={(date) => onhandleChange({ target: { name: "todate", value: date } })}
+        className="form-control"
+        id="todate"
+        placeholderText="Select To Date"
+        dateFormat="yyyy-MM-dd"
+        minDate={new Date()} // Prevents past dates
+      />
                                                 {<span className='text-danger'> {error.todate} </span>}
 
                                             </div>
@@ -318,15 +395,15 @@ const SalaryMaster = () => {
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <div className='d-flex justify-content-between'>
+                                    <div className='d-flex justify-content-between' style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
                                         <div>
                                             <h4 class="card-title">View Salary Structure Details</h4>
                                         </div>
 
                                     </div>
 
-                                    <div>
-                                        <DataGrid
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                        <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
                                             disableColumnFilter
@@ -336,7 +413,7 @@ const SalaryMaster = () => {
                                             getRowId={(row) => row.id}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                             }}
                                             slots={{ toolbar: GridToolbar }}

@@ -6,6 +6,9 @@ import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 
 
 const TaskAdd  = () => {
@@ -169,7 +172,7 @@ const TaskAdd  = () => {
 
     return (
 
-        <div className="container-fluid page-body-wrapper col-lg-10">
+        <div className="container-fluid page-body-wrapper ">
             <InnerHeader />
             <div className="main-panel">
 
@@ -190,11 +193,16 @@ const TaskAdd  = () => {
                                                     </div>
                                                     <div className='row'>
 
-                                                    <div class="form-group col-lg-4">
+                                                    <div class="form-group col-lg-4" style={{ display: "flex", flexDirection: "column"}}>
                                                         <lable htmlfor="exampleInputUsername1">Date</lable>
-                                                        <input type="date" class="form-control" id="exampleInputUsername1" value={value.date} name='date'
-                                                        onChange={(e) => {}}
-                                                        disabled />
+                                                        <DatePicker
+        selected={value.date ? new Date(value.date) : null}
+        className="form-control"
+        id="date"
+        dateFormat="dd-MM-yyyy"
+        disabled // This keeps the input disabled
+        placeholderText='dd-MM-yyyy'
+      />
                                                     </div>
 
                                                     <div class="form-group col-lg-4">
@@ -257,16 +265,28 @@ const TaskAdd  = () => {
                                                             </FormControl>
                                                         </div>
 
-                                                        <div class="form-group col-lg-4">
+                                                        <div class="form-group col-lg-4" style={{ display: "flex", flexDirection: "column"}}>
                                                         <lable for="exampleInputUsername1">Target Date</lable>
-                                                        <input type="date" class="form-control" id="exampleInputUsername1" value={value.target}
-                                                        name='target' onChange={onhandleChange} disabled />
+                                                        <DatePicker
+        selected={value.target ? new Date(value.target) : null}
+        className="form-control"
+        id="target"
+        dateFormat="dd-MM-yyyy"
+        disabled // Disables the input field
+        placeholderText='dd-MM-yyyy'
+      />
                                                     </div>
 
-                                                    <div class="form-group col-lg-4">
+                                                    <div class="form-group col-lg-4" style={{ display: "flex", flexDirection: "column"}}>
                                                         <lable for="exampleInputUsername1">Remind On</lable>
-                                                        <input type="date" class="form-control" id="exampleInputUsername1" value={value.remind}
-                                                        name='remind' onChange={onhandleChange} disabled />
+                                                        <DatePicker
+        selected={value.remind ? new Date(value.remind) : null}
+        className="form-control"
+        id="remind"
+        dateFormat="dd-MM-yyyy"
+        disabled // Disables the input field
+        placeholderText='dd-MM-yyyy'
+      />
                                                     </div>
 
                                                     <div class="form-group col-lg-6">

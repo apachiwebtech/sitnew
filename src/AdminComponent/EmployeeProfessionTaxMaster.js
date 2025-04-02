@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import Loader from './Loader';
+import { StyledDataGrid } from "./StyledDataGrid";
 
 const EmployeeProfessionTaxMaster = () => {
 
@@ -208,7 +209,7 @@ const EmployeeProfessionTaxMaster = () => {
     const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
-        <div className="container-fluid page-body-wrapper col-lg-10">
+        <div className="container-fluid page-body-wrapper ">
             <InnerHeader />
 
             {loading && <Loader />}
@@ -279,14 +280,14 @@ const EmployeeProfessionTaxMaster = () => {
                         <div className="col-lg-7">
                             <div className="card">
                                 <div className="card-body">
-                                    <div className='d-flex justify-content-between'>
+                                    <div className='d-flex justify-content-between' style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
                                         <div>
                                             <h4 className="card-title">Employee Profession Tax Master</h4>
                                         </div>
                                     </div>
 
-                                    <div>
-                                        <DataGrid
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                        <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
                                             disableColumnFilter
@@ -296,7 +297,7 @@ const EmployeeProfessionTaxMaster = () => {
                                             getRowId={(row) => row.id}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                             }}
                                             slotProps={{

@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import { data } from "jquery";
+import { StyledDataGrid } from "./StyledDataGrid";
 
 const BatchTransfer = () => {
 
@@ -301,15 +302,35 @@ const BatchTransfer = () => {
             type: 'number',
             align: 'center',
             headerAlign: 'center',
-            flex: 1,
+            flex: 0.5,
             filterable: false,
 
         },
-        { field: 'Student_Name', headerName: 'Student Name', flex: 2 },
-        { field: 'oldbatch_code', headerName: 'Old Batch Code', flex: 2 },
-        { field: 'trans_batchcode', headerName: 'Tranfer Batch', flex: 2 },
-        { field: 'created_date', headerName: 'Date', flex: 2 },
-        { field: 'transferammount', headerName: 'Transfer Amount', flex: 2 },
+        { field: 'Student_Name', headerName: 'Student Name', flex: 1.5 },
+        { field: 'oldbatch_code', headerName: 'Old Batch Code', flex: 1.5 },
+        { field: 'trans_batchcode', headerName: 'Tranfer Batch', flex: 1.5 },
+        {
+            field: "created_date",
+            headerName: "Date",
+            flex: 1.5,
+            renderCell: (params) => {
+              if (!params.value) return ""; // Handle empty values
+          
+              // Check if already in DD-MM-YYYY format
+              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+              if (ddmmyyyyRegex.test(params.value)) {
+                return params.value; // Return as-is if already formatted
+              }
+          
+              const date = new Date(params.value);
+              if (isNaN(date.getTime())) return ""; // Handle invalid dates
+          
+              // Convert to DD-MM-YYYY format
+              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+            },
+          },
+          
+        { field: 'transferammount', headerName: 'Transfer Amount', flex: 1.5 },
 
         {
             field: 'actions',
@@ -332,7 +353,7 @@ const BatchTransfer = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper col-lg-10">
+        <div class="container-fluid page-body-wrapper ">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -444,15 +465,15 @@ const BatchTransfer = () => {
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <div className='d-flex justify-content-between'>
+                                    <div className='d-flex justify-content-between'style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
                                         <div>
                                             <h4 class="card-title">View Batch Transfer</h4>
                                         </div>
 
                                     </div>
 
-                                    <div>
-                                        <DataGrid
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                        <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
                                             disableColumnFilter
@@ -462,7 +483,7 @@ const BatchTransfer = () => {
                                             getRowId={(row) => row.id}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                             }}
                                             slots={{ toolbar: GridToolbar }}

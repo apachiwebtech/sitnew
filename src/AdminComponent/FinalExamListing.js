@@ -95,7 +95,27 @@ const FinalExamListing = () => {
         },
         { field: 'Course_Name', headerName: 'Course Name', flex: 2 },
         { field: 'Batch_code', headerName: 'Batch Code', flex: 2 },
-        { field: 'Test_Dt', headerName: 'Exam Date', flex: 2 },
+        {
+            field: "Test_Dt",
+            headerName: "Exam Date",
+            flex: 2,
+            valueGetter: (params) => {
+              if (!params.value) return ""; // Handle empty values
+          
+              // Check if already in DD-MM-YYYY format
+              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+              if (ddmmyyyyRegex.test(params.value)) {
+                return params.value; // Return as-is if already formatted
+              }
+          
+              const date = new Date(params.value);
+              if (isNaN(date.getTime())) return ""; // Handle invalid dates
+          
+              // Convert to DD-MM-YYYY format
+              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+            },
+          },
+          
 
         {
             field: 'actions',
@@ -118,7 +138,7 @@ const FinalExamListing = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper col-lg-10">
+        <div class="container-fluid page-body-wrapper ">
             <InnerHeader />
             {loading && <Loader />}
             <div class="main-panel" style={{display : loading ? "none" : "block"}}>

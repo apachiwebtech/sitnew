@@ -228,7 +228,7 @@ const StockView = () => {
     const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
-        <div class="container-fluid page-body-wrapper col-lg-10">
+        <div class="container-fluid page-body-wrapper ">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">

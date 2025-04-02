@@ -9,6 +9,7 @@ import InnerHeader from "./InnerHeader";
 //import FormGroup from '@mui/material/FormGroup';
 //import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import { StyledDataGrid } from "./StyledDataGrid";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     "& .MuiDialogContent-root": {
@@ -57,7 +58,7 @@ const FacultySalaryReport = () => {
             field: 'actions',
             type: 'actions',
             headerName: 'Action',
-            flex: 1,
+            flex: 2,
             renderCall:(param) => {
                 return (
                     <>
@@ -74,7 +75,7 @@ const FacultySalaryReport = () => {
 
     return (
 
-        <div class="container-fluid page-body-warpper col-lg-10">
+        <div class="container-fluid page-body-warpper ">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -136,7 +137,7 @@ const FacultySalaryReport = () => {
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <div className="d-flex justify-content-wrrper">
+                                    <div className="d-flex justify-content-wrrper" style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
                                         <div>
                                             <h4 class="card-title">
                                                 Details
@@ -144,8 +145,8 @@ const FacultySalaryReport = () => {
                                         </div>
                                     </div>
 
-                                    {hide && <div>
-                                        <DataGrid
+                                    {hide && <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                        <StyledDataGrid
                                         rows={rowsWithIds}
                                         columns={columns}
                                         disableColumnFilter
@@ -155,7 +156,7 @@ const FacultySalaryReport = () => {
                                         getRowId={(row) => row.Batch_Id}
                                         initialState={{
                                             pagination: {
-                                                paginationModel: {pageSize: 10, page: 0},
+                                                paginationModel: {pageSize: 50, page: 0},
                                             },
                                         }}
                                         />

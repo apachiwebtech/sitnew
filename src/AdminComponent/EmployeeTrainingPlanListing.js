@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
+import { StyledDataGrid } from "./StyledDataGrid";
 //import AssignmentsTaken from "./AssignmentsTaken";
 
 const EmployeeTrainingPlanListing = () => {
@@ -126,14 +127,34 @@ const EmployeeTrainingPlanListing = () => {
             type: 'number',
             align: 'center',
             headerAlign: 'center',
-            flex: 1,
+            flex: 0.5,
             filterable: false,
 
         },
-        { field: 'subject', headerName: 'Subject', flex: 2 },
-        { field: 'internal', headerName: 'Internal', flex: 2 },
-        { field: 'identified', headerName: 'Identified', flex: 2 },
-        { field: 'date', headerName: 'Data', flex: 2 },
+        { field: 'subject', headerName: 'Subject', flex: 1.5 },
+        { field: 'internal', headerName: 'Internal', flex: 1.5 },
+        { field: 'identified', headerName: 'Identified', flex: 1.5 },
+        {
+            field: "date",
+            headerName: "Date",
+            flex: 1.5,
+            renderCell: (params) => {
+              if (!params.value) return ""; // Handle empty values
+          
+              // Check if already in DD-MM-YYYY format
+              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+              if (ddmmyyyyRegex.test(params.value)) {
+                return params.value; // Return as-is if already formatted
+              }
+          
+              const date = new Date(params.value);
+              if (isNaN(date.getTime())) return ""; // Handle invalid dates
+          
+              // Convert to DD-MM-YYYY format
+              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+            },
+          },
+          
 
         {
             field: 'actions',
@@ -158,7 +179,7 @@ const EmployeeTrainingPlanListing = () => {
 
     return (
 
-        <div className="container-fluid page-body-wrapper col-lg-10">
+        <div className="container-fluid page-body-wrapper ">
             <InnerHeader />
             <div className="main-panel">
 
@@ -169,7 +190,7 @@ const EmployeeTrainingPlanListing = () => {
                         <div className="col-lg-12">
                             <div className="card">
                                 <div className="card-body">
-                                    <div className='d-flex justify-content-between gap-3' style={{ width: "100%", padding: "10px 0" }}>
+                                    <div className='d-flex justify-content-between gap-3' style={{borderBottom: "2px solid #dce4ec", width: "100%", padding: "10px 0" }}>
                                         <div >
                                             <h4 class="card-title">Employee Training Plan</h4>
                                         </div>
@@ -178,8 +199,8 @@ const EmployeeTrainingPlanListing = () => {
 
                                     </div>
 
-                                    <div>
-                                        <DataGrid
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                        <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
                                             disableColumnFilter
@@ -189,7 +210,7 @@ const EmployeeTrainingPlanListing = () => {
                                             getRowId={(row, index) => row.id}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                             }}
                                             slots={{ toolbar: GridToolbar }}

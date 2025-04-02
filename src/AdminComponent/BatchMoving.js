@@ -5,6 +5,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
+import { StyledDataGrid } from "./StyledDataGrid";
 //import FormControlLabel from '@mui/material/FormControlLabel';
 // import ImageList from '@mui/material/ImageList';
 // import { ImageSourcePropType } from 'react-native';
@@ -301,14 +302,14 @@ const BatchMoving = () => {
             type: 'number',
             align: 'center',
             headerAlign: 'center',
-            flex: 1,
+            flex: 0.5,
             filterable: false,
 
         },
-        { field: 'Course_Name', headerName: 'Select Course', flex: 2 },
-        { field: 'batch_code', headerName: 'Batch No.', flex: 2 },
-        { field: 'Student_Name', headerName: 'Student', flex: 2 },
-        { field: 'newbatch_code', headerName: 'New Batch', flex: 2 },
+        { field: 'Course_Name', headerName: 'Select Course', flex: 1.5 },
+        { field: 'batch_code', headerName: 'Batch No.', flex: 1.5 },
+        { field: 'Student_Name', headerName: 'Student', flex: 1.5 },
+        { field: 'newbatch_code', headerName: 'New Batch', flex: 1.5 },
 
         {
             field: 'actions',
@@ -331,7 +332,7 @@ const BatchMoving = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper col-lg-10">
+        <div class="container-fluid page-body-wrapper ">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -420,15 +421,15 @@ const BatchMoving = () => {
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <div className='d-flex justify-content-between'>
+                                    <div className='d-flex justify-content-between'style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
                                         <div>
                                             <h4 class="card-title">View Moving Batch Details</h4>
                                         </div>
 
                                     </div>
 
-                                    <div>
-                                        <DataGrid
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                        <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
                                             disableColumnFilter
@@ -438,7 +439,7 @@ const BatchMoving = () => {
                                             getRowId={(row) => row.id}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                             }}
                                             slots={{ toolbar: GridToolbar }}

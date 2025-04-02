@@ -9,7 +9,8 @@ import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
-
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const FeesReport = () => {
     
@@ -233,7 +234,7 @@ const FeesReport = () => {
 
 
     return (
-        <div className="container-fluid page-body-wrapper col-lg-10">
+        <div className="container-fluid page-body-wrapper ">
             <InnerHeader />
             <div className="main-panel">
 
@@ -257,17 +258,33 @@ const FeesReport = () => {
                                                     <form class="form-sample py-3" onSubmit={handleSubmit}>
                                                         <div class="row">
 
-                                                            <div class="form-group col-lg-3">
+                                                            <div class="form-group col-lg-3" style={{ display: 'flex', flexDirection:"column"}}>
                                                                 <label for="exampleInputUsername1">From Date<span className="text-danger"></span></label>
-                                                                <input type="date" class="form-control" id="exampleInputUsename1" value={value.fromdate}
-                                                                name="fromdate" onChange={onhandleChange} />
+                                                                <DatePicker
+        selected={value.fromdate ? new Date(value.fromdate) : null}
+        onChange={(date) =>
+          onhandleChange({ target: { name: "fromdate", value: date } })
+        }
+        className="form-control"
+        id="exampleInputUsername1"
+        dateFormat="dd-MM-yyyy"  // 👈 Ensures proper formatting
+        placeholderText="Select Date"
+      />
                                                                 {<span className="text-danger"> {error.fromdate} </span>}
                                                             </div>
 
-                                                            <div class="form-group col-lg-3">
+                                                            <div class="form-group col-lg-3" style={{ display: 'flex', flexDirection:"column"}}>
                                                                 <lable for="exampleInputUsername1">From To Date<span className="text-danger">*</span></lable>
-                                                                <input type="date" class="form-control" id="exampleInpuUsername1" value={value.fromtodate}
-                                                                name="fromtodate" onChange={onhandleChange} />
+                                                                <DatePicker
+        selected={value.fromtodate ? new Date(value.fromtodate) : null}
+        onChange={(date) =>
+          onhandleChange({ target: { name: "fromtodate", value: date } })
+        }
+        className="form-control"
+        id="exampleInputUsername1"
+        dateFormat="dd-MM-yyyy"  // 👈 Ensures proper formatting
+        placeholderText="Select Date"
+      />
                                                                 {<span className="text-danger"> {error.fromtodate} </span>}
                                                             </div>
                                                             <div className="p-4">

@@ -13,6 +13,7 @@ import decryptedUserId from '../Utils/UserID';
 import Loader from './Loader';
 import { useDispatch, useSelector } from 'react-redux';
 import { getRoleData } from '../Store/Role/role-action';
+import { StyledDataGrid } from './StyledDataGrid';
 const AdminUser = () => {
 
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
@@ -114,20 +115,20 @@ const AdminUser = () => {
             type: 'number',
             align: 'left',
             headerAlign: 'left',
-            flex: 1,
+            flex: 0.5,
 
         },
         { field: 'username', headerName: 'Name', flex: 1 },
         {
             field: 'email',
             headerName: 'Email',
-            flex: 3
+            flex: 2.5
         },
         {
             field: 'actions',
             type: 'actions',
             headerName: 'Actions',
-            flex: 1,
+            flex: 0.5,
             renderCell: (params) => {
                 return (
                     <>
@@ -163,7 +164,7 @@ const AdminUser = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper col-lg-10">
+        <div class="container-fluid page-body-wrapper ">
             <InnerHeader />
             {loader && <Loader />}
 
@@ -175,7 +176,7 @@ const AdminUser = () => {
                         <div class="col-lg-12 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <div className='d-flex justify-content-between'>
+                                    <div className='d-flex justify-content-between'style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
                                         <div>
                                             <h4 class="card-title">Admin User </h4>
                                             <p class="card-description">
@@ -188,13 +189,13 @@ const AdminUser = () => {
 
                                     </div>
 
-                                    <div class="table-responsive pt-3">
-                                        <DataGrid
+                                    <div class="table-responsive pt-3" style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                        <StyledDataGrid
                                             rows={rows}
                                             columns={columns}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                             }}
                                         />

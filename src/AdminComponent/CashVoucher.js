@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import AddCashVoucher from "./AddCashVoucher";
+import { StyledDataGrid } from "./StyledDataGrid";
 
 const CashVoucher = () => {
 
@@ -102,7 +103,27 @@ const CashVoucher = () => {
         },
 
 
-        { field: 'date', headerName: 'Date', flex: 2 },
+        {
+            field: "date",
+            headerName: "Date",
+            flex: 2,
+            renderCell: (params) => {
+              if (!params.value) return ""; // Handle empty values
+          
+              // Check if already in DD-MM-YYYY format
+              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+              if (ddmmyyyyRegex.test(params.value)) {
+                return params.value; // Return as-is if already formatted
+              }
+          
+              const date = new Date(params.value);
+              if (isNaN(date.getTime())) return ""; // Handle invalid dates
+          
+              // Convert to DD-MM-YYYY format
+              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+            },
+          },
+          
         { field: 'voucherno', headerName: 'Cash Id', flex: 2 },
         { field: 'paidto', headerName: 'Employee', flex: 2 },
         { field: 'prepaired_by', headerName: 'Prepaired By', flex: 2 },
@@ -128,7 +149,7 @@ const CashVoucher = () => {
 
     return (
 
-        <div className="container-fluid page-body-wrapper col-lg-10">
+        <div className="container-fluid page-body-wrapper ">
             <InnerHeader />
             <div className="main-panel">
 
@@ -139,7 +160,7 @@ const CashVoucher = () => {
                         <div className="col-lg-12">
                             <div className="card">
                                 <div className="card-body">
-                                    <div className='d-flex justify-content-between gap-3' style={{ width: "100%", padding: "10px 0" }}>
+                                    <div className='d-flex justify-content-between gap-3' style={{ width: "100%", padding: "10px 0", borderBottom: "2px solid #dce4ec", }}>
                                         <div >
                                             <h4 class="card-title">View Cash Voucher</h4>
                                         </div>
@@ -148,8 +169,8 @@ const CashVoucher = () => {
 
                                     </div>
 
-                                    <div>
-                                        <DataGrid
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                        <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
                                             disableColumnFilter
@@ -159,7 +180,7 @@ const CashVoucher = () => {
                                             getRowId={(row) => row.id}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                             }}
                                             slots={{ toolbar: GridToolbar }}

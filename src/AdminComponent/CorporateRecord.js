@@ -16,6 +16,8 @@ import RadioGroup from '@mui/material/RadioGroup';
 //import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const CorporateRecord = () => {
 
@@ -296,15 +298,33 @@ const CorporateRecord = () => {
                                                 </select>
                                             </div>
 
-                                            <div class="form-group col-lg-3">
+                                            <div class="form-group col-lg-3" style={{display: "flex", flexDirection:'column'}}>
                                                 <label for="exampleInputUsername1">From Date</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.fromdate} name='fromdate' onChange={onhandleChange} />
+                                                <DatePicker
+        selected={value.fromdate ? new Date(value.fromdate) : null}
+        onChange={(date) =>
+          onhandleChange({ target: { name: "fromdate", value: date } })
+        }
+        className="form-control"
+        id="exampleInputUsername1"
+        dateFormat="dd-MM-yyyy"
+        placeholderText="Select From Date"
+      />
                                                 
                                             </div>
 
-                                            <div class="form-group col-lg-3">
+                                            <div class="form-group col-lg-3" style={{display: "flex", flexDirection:'column'}}>
                                                 <label for="exampleInputUsername1">To Date</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.todate} name='todate' onChange={onhandleChange} />
+                                                <DatePicker
+        selected={value.todate ? new Date(value.todate) : null}
+        onChange={(date) =>
+          onhandleChange({ target: { name: "todate", value: date } })
+        }
+        className="form-control"
+        id="exampleInputUsername1"
+        dateFormat="dd-MM-yyyy"
+        placeholderText="Select To Date"
+      />
                                                 
                                             </div>
 

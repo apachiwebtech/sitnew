@@ -9,6 +9,7 @@ import InnerHeader from './InnerHeader';
 //import AssignmentsTaken from "./AssignmentsTaken";
 import VivaMOCTaken from "./VivaMOCTaken";
 import Loader from "./Loader";
+import { StyledDataGrid } from "./StyledDataGrid";
 
 const VivaMOCTakenListing = () => {
 
@@ -112,20 +113,40 @@ const VivaMOCTakenListing = () => {
             type: 'number',
             align: 'center',
             headerAlign: 'center',
-            flex: 1,
+            flex: 0.5,
             filterable: false,
 
         },
-        { field: 'Batch_code', headerName: 'Batch Code', flex: 2 },
-        { field: 'Course_Name', headerName: 'Course Name', flex: 2 },
-        { field: 'vivamocname', headerName: 'Viva/Moc Name', flex: 2 },
-        { field: 'Take_Dt', headerName: 'Date', flex: 2 },
+        { field: 'Batch_code', headerName: 'Batch Code', flex: 1 },
+        { field: 'Course_Name', headerName: 'Course Name', flex: 1 },
+        { field: 'vivamocname', headerName: 'Viva/Moc Name', flex: 1 },
+        {
+            field: "Take_Dt",
+            headerName: "Date",
+            flex: 1,
+            valueGetter: (params) => {
+              if (!params.value) return ""; // Handle empty values
+          
+              // Check if already in DD-MM-YYYY format
+              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+              if (ddmmyyyyRegex.test(params.value)) {
+                return params.value; // Return as-is if already formatted
+              }
+          
+              const date = new Date(params.value);
+              if (isNaN(date.getTime())) return ""; // Handle invalid dates
+          
+              // Convert to DD-MM-YYYY format
+              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+            },
+          },
+          
 
         {
             field: 'actions',
             type: 'actions',
             headerName: 'Action',
-            flex: 1,
+            flex: 0.5,
             renderCell: (params) => {
                 return (
                     <>
@@ -143,7 +164,7 @@ const VivaMOCTakenListing = () => {
 
     return (
 
-        <div className="container-fluid page-body-wrapper col-lg-10">
+        <div className="container-fluid page-body-wrapper ">
             <InnerHeader />
             {loading && <Loader />}
             <div className="main-panel" style={{display : loading ? "none" : "block"}} >
@@ -155,7 +176,7 @@ const VivaMOCTakenListing = () => {
                         <div className="col-lg-12">
                             <div className="card">
                                 <div className="card-body">
-                                    <div className='d-flex justify-content-between gap-3' style={{ width: "100%", padding: "10px 0" }}>
+                                    <div className='d-flex justify-content-between gap-3' style={{borderBottom: "2px solid #dce4ec", width: "100%", padding: "10px 0" }}>
                                         <div >
                                             <h4 class="card-title">Viva / MOC Taken</h4>
                                         </div>
@@ -164,8 +185,8 @@ const VivaMOCTakenListing = () => {
 
                                     </div>
 
-                                    <div>
-                                        <DataGrid
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                        <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
                                             disableColumnFilter
@@ -175,7 +196,7 @@ const VivaMOCTakenListing = () => {
                                             getRowId={(row) => row.Take_Id}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                             }}
                                             slots={{ toolbar: GridToolbar }}

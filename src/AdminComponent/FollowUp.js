@@ -212,7 +212,7 @@ const FollowUp = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper col-lg-10">
+        <div class="container-fluid page-body-wrapper ">
             <InnerHeader />
 
             {loading && <Loader />}

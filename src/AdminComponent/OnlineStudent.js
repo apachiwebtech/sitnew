@@ -5,6 +5,9 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
+import { StyledDataGrid } from "./StyledDataGrid";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 
 const OnlineStudent = () => {
@@ -209,8 +212,48 @@ const OnlineStudent = () => {
         },
         { field: 'course', headerName: 'Course', flex: 2 },
         { field: 'admission', headerName: 'Admission', flex: 2 },
-        { field: 'fromdate', headerName: 'From Date', flex: 2 },
-        { field: 'todate', headerName: 'To Date', flex: 2 },
+        {
+            field: "fromdate",
+            headerName: "From Date",
+            flex: 2,
+            renderCell: (params) => {
+              if (!params.value) return ""; // Handle empty values
+          
+              // Check if already in DD-MM-YYYY format
+              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+              if (ddmmyyyyRegex.test(params.value)) {
+                return params.value; // Return as-is if already formatted
+              }
+          
+              const date = new Date(params.value);
+              if (isNaN(date.getTime())) return ""; // Handle invalid dates
+          
+              // Convert to DD-MM-YYYY format
+              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+            },
+          },
+          
+        {
+            field: "todate",
+            headerName: "To Date",
+            flex: 2,
+            renderCell: (params) => {
+              if (!params.value) return ""; // Handle empty values
+          
+              // Check if already in DD-MM-YYYY format
+              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+              if (ddmmyyyyRegex.test(params.value)) {
+                return params.value; // Return as-is if already formatted
+              }
+          
+              const date = new Date(params.value);
+              if (isNaN(date.getTime())) return ""; // Handle invalid dates
+          
+              // Convert to DD-MM-YYYY format
+              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+            },
+          },
+          
 
         {
             field: 'actions',
@@ -233,7 +276,7 @@ const OnlineStudent = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper col-lg-10">
+        <div class="container-fluid page-body-wrapper ">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -268,17 +311,29 @@ const OnlineStudent = () => {
 
                                                 {<span className="text-danger"> {error.admission} </span>}
                                             </div>
-                                            <div class="form-group col-lg-3">
+                                            <div class="form-group col-lg-3" style={{display: 'flex', flexDirection:'column'}}>
                                                 <label for="exampleInputUsername1">From Date<span className='text-danger'>*</span></label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.fromdate}
-                                                    name='fromdate' onChange={onhandleChange} />
+                                                <DatePicker
+        selected={value.fromdate ? new Date(value.fromdate) : null}
+        onChange={(date) => onhandleChange({ target: { name: "fromdate", value: date } })}
+        className="form-control"
+        id="exampleInputUsername1"
+        dateFormat="dd-MM-yyyy"
+        placeholderText="Select a date"
+      />
                                                 {<span className="text-danger"> {error.fromdate} </span>}
                                             </div>
 
-                                            <div class="form-group col-lg-3">
+                                            <div class="form-group col-lg-3" style={{display: 'flex', flexDirection:'column'}}>
                                                 <label for="exampleInputUsername1">To Date <span className='text-danger'>*</span></label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.todate}
-                                                    name='todate' onChange={onhandleChange} />
+                                                <DatePicker
+        selected={value.todate ? new Date(value.todate) : null}
+        onChange={(date) => onhandleChange({ target: { name: "todate", value: date } })}
+        className="form-control"
+        id="exampleInputUsername1"
+        dateFormat="dd-MM-yyyy"
+        placeholderText="Select a date"
+      />
                                                 {<span className="text-danger"> {error.todate} </span>}
                                             </div>
 
@@ -302,15 +357,15 @@ const OnlineStudent = () => {
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <div className='d-flex justify-content-between'>
+                                    <div className='d-flex justify-content-between'style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
                                         <div>
                                             <h4 class="card-title">Employee Training Record</h4>
                                         </div>
 
                                     </div>
 
-                                    <div>
-                                        <DataGrid
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                        <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
                                             disableColumnFilter
@@ -320,7 +375,7 @@ const OnlineStudent = () => {
                                             getRowId={(row) => row.id}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                             }}
                                             slots={{ toolbar: GridToolbar }}

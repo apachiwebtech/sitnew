@@ -15,6 +15,7 @@ import InnerHeader from "./InnerHeader";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Link, useNavigate } from "react-router-dom";
+import { StyledDataGrid } from "./StyledDataGrid";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -166,13 +167,34 @@ const Convocation = () => {
   }
 
   const columns = [
-    { field: "Batch_Code", headerName: "Batch Code", flex:2 },
-    { field: "DateAdded", headerName: "Convocation Date", flex: 1 },
+    { field: "Batch_Code", headerName: "Batch Code", flex:2, },
+    {
+      field: "DateAdded",
+      headerName: "Convocation Date",
+      flex: 1,
+      renderCell: (params) => {
+        if (!params.value) return ""; // Handle empty values
+    
+        // Check if already in DD-MM-YYYY format
+        const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+        if (ddmmyyyyRegex.test(params.value)) {
+          return params.value; // Return as-is if already formatted
+        }
+    
+        const date = new Date(params.value);
+        if (isNaN(date.getTime())) return params.value; // Return original value if not a valid date
+    
+        // Convert valid date to DD-MM-YYYY format
+        return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+      },
+    },
+    
     { field: "Combined_FName", headerName: "Faculty Name", flex: 2 },
     {
       field: 'actions',
       headerName: 'Action',
-      flex:1,
+      flex:0.8,
+      align: 'center',
       renderCell: (params) => {
         return (
           <>
@@ -214,7 +236,7 @@ const Convocation = () => {
   }
 
   return (
-    <div className="container-fluid page-body-wrapper col-lg-10">
+    <div className="container-fluid page-body-wrapper ">
       <InnerHeader />
       <div className="main-pannel">
         <div className="content-wrapper ">
@@ -224,7 +246,7 @@ const Convocation = () => {
                 <div className="card-body">
                   <div
                     className="d-flex justify-content-between gap-3"
-                    style={{ width: "100%", padding: "10px 0" }}
+                    style={{borderBottom: "2px solid #dce4ec", width: "100%", padding: "10px 0" }}
                   >
                     <div>
                       <h4 class="card-title">Convocation</h4>
@@ -240,8 +262,8 @@ const Convocation = () => {
                     </Link>
                   </div>
 
-                  <div>
-                    <DataGrid
+                  <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                    <StyledDataGrid
                       rows={convocationDataM}
                       columns={columns}
                       disableColumnFilter
@@ -251,7 +273,7 @@ const Convocation = () => {
                       getRowId={(row) => row.Id}
                       initialState={{
                         pagination: {
-                          paginationModel: { pageSize: 10, page: 0 },
+                          paginationModel: { pageSize: 50, page: 0 },
                         },
                       }}
                       slots={{ toolbar: GridToolbar }}

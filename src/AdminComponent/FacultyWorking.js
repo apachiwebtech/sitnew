@@ -5,7 +5,10 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
+import { StyledDataGrid } from "./StyledDataGrid";
 //import FormControlLabel from '@mui/material/FormControlLabel';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const FacultyWorking = () => {
 
@@ -285,17 +288,37 @@ const FacultyWorking = () => {
             type: 'number',
             align: 'center',
             headerAlign: 'center',
-            flex: 1,
+            flex: 0.5,
             filterable: false,
 
         },
-        { field: 'date', headerName: 'Date', flex: 2 },
-        { field: 'Course_Name', headerName: 'Course', flex: 2 },
-        { field: 'Batch_code', headerName: 'Batch', flex: 2 },
-        { field: 'faculty', headerName: 'Faculty', flex: 2 },
-        { field: 'facultytime', headerName: 'Facultytime', flex: 2 },
-        { field: 'to', headerName: 'To', flex: 2 },
-        { field: 'work', headerName: 'Work', flex: 2 },
+        {
+            field: "date",
+            headerName: "Date",
+            flex: 1.5,
+            valueGetter: (params) => {
+              if (!params.value) return ""; // Handle empty values
+          
+              // Check if already in DD-MM-YYYY format
+              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+              if (ddmmyyyyRegex.test(params.value)) {
+                return params.value; // Return as-is if already formatted
+              }
+          
+              const date = new Date(params.value);
+              if (isNaN(date.getTime())) return ""; // Handle invalid dates
+          
+              // Convert to DD-MM-YYYY format
+              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+            },
+          },
+          
+        { field: 'Course_Name', headerName: 'Course', flex: 1.5 },
+        { field: 'Batch_code', headerName: 'Batch', flex: 1.5 },
+        { field: 'faculty', headerName: 'Faculty', flex: 1.5 },
+        { field: 'facultytime', headerName: 'Facultytime', flex: 1.5 },
+        { field: 'to', headerName: 'To', flex: 1.5 },
+        { field: 'work', headerName: 'Work', flex: 1.5 },
 
 
         {
@@ -319,7 +342,7 @@ const FacultyWorking = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper col-lg-10">
+        <div class="container-fluid page-body-wrapper ">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -332,9 +355,16 @@ const FacultyWorking = () => {
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
 
-                                            <div class="form-group col-lg-3">
+                                            <div class="form-group col-lg-3" style={{ display: 'flex', flexDirection:'column'}}>
                                                 <label for="exampleInputUsername1">Date</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.date} name='date' onChange={onhandleChange} />
+                                                <DatePicker
+        selected={value.date ? new Date(value.date) : null}
+        onChange={(date) => onhandleChange({ target: { name: "date", value: date } })}
+        className="form-control"
+        id="exampleInputUsername1"
+        dateFormat="dd-MM-yyyy"
+        placeholderText="Select a date"
+      />
                                                 {error.date && <span className='text-danger'>{error.date}</span>}
                                             </div>
 
@@ -420,15 +450,15 @@ const FacultyWorking = () => {
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <div className='d-flex justify-content-between'>
+                                    <div className='d-flex justify-content-between'style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
                                         <div>
                                             <h4 class="card-title">View Faculty Working Hours</h4>
                                         </div>
 
                                     </div>
 
-                                    <div>
-                                        <DataGrid
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                        <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
                                             disableColumnFilter
@@ -438,7 +468,7 @@ const FacultyWorking = () => {
                                             getRowId={(row) => row.id}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                             }}
                                             slots={{ toolbar: GridToolbar }}

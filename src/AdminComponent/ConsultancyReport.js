@@ -3,7 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { StyledDataGrid } from './StyledDataGrid';
 //import FormControlLabel from '@mui/material/FormControlLabel';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const ConsultancyReport = () => {
 
@@ -84,7 +87,27 @@ const ConsultancyReport = () => {
             filterable: false,
 
         },
-        { field: 'Date_Added', headerName: 'Created Date', width: 150 },
+        {
+            field: "Date_Added",
+            headerName: "Created Date",
+            width: 150,
+            renderCell: (params) => {
+              if (!params.value) return ""; // Handle empty values
+          
+              // Check if already in DD-MM-YYYY format
+              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+              if (ddmmyyyyRegex.test(params.value)) {
+                return params.value; // Return as-is if already formatted
+              }
+          
+              const date = new Date(params.value);
+              if (isNaN(date.getTime())) return params.value; // Return original value if not a valid date
+          
+              // Convert valid date to DD-MM-YYYY format
+              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+            },
+          },
+          
         { field: 'Comp_Name', headerName: 'Company Name', width: 250  },
         { field: 'Contact_Person', headerName: 'Contact Person Name', width: 200  },
         { field: 'Address', headerName: 'Address', width: 500  },
@@ -170,15 +193,29 @@ const ConsultancyReport = () => {
                                                 </select>
                                             </div>
 
-                                            <div class="form-group col-lg-2">
+                                            <div class="form-group col-lg-2" style={{ display: "flex", flexDirection: "column"}}>
                                                 <label for="exampleInputUsername1">From Date</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.fromdate} name='fromdate' onChange={onhandleChange} />
+                                                <DatePicker
+        selected={value.fromdate ? new Date(value.fromdate) : null}
+        onChange={(date) => onhandleChange({ target: { name: "fromdate", value: date } })}
+        className="form-control"
+        id="fromdate"
+        dateFormat="dd-MM-yyyy"
+        placeholderText="Select From Date"
+      />
 
                                             </div>
 
-                                            <div class="form-group col-lg-2">
+                                            <div class="form-group col-lg-2" style={{ display: "flex", flexDirection: "column"}}>
                                                 <label for="exampleInputUsername1">To Date</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.todate} name='todate' onChange={onhandleChange} />
+                                                <DatePicker
+        selected={value.todate ? new Date(value.todate) : null}
+        onChange={(date) => onhandleChange({ target: { name: "todate", value: date } })}
+        className="form-control"
+        id="todate"
+        dateFormat="dd-MM-yyyy"
+        placeholderText="Select To Date"
+      />
                                             </div>
 
                                         </div>
@@ -198,15 +235,15 @@ const ConsultancyReport = () => {
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <div className='d-flex justify-content-between'>
+                                    <div className='d-flex justify-content-between'style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
                                         <div>
                                             <h4 class="card-title">Details</h4>
                                         </div>
 
                                     </div>
 
-                                    <div>
-                                        <DataGrid
+                                    <div  style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                        <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
                                             disableColumnFilter
@@ -216,7 +253,7 @@ const ConsultancyReport = () => {
                                             getRowId={(row) => row.Const_Id}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                             }}
                                             slots={{ toolbar: GridToolbar }}

@@ -7,6 +7,7 @@ import { BASE_URL } from "./BaseUrl";
 import InnerHeader from "./InnerHeader";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
+import { StyledDataGrid } from "./StyledDataGrid";
 
 const UploadEventPhoto = () => {
   const [brand, setBrand] = useState([]);
@@ -200,7 +201,7 @@ const UploadEventPhoto = () => {
   }));
 
   return (
-    <div class="container-fluid page-body-wrapper col-lg-10">
+    <div class="container-fluid page-body-wrapper ">
       <InnerHeader />
       <div class="main-panel">
         <div class="content-wrapper">
@@ -263,8 +264,8 @@ const UploadEventPhoto = () => {
                     </div>
                   )}
 
-                  <div class="table-responsive">
-                    <DataGrid
+                  <div class="table-responsive" style={ { border: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                    <StyledDataGrid
                       rows={rowsWithIds}
                       columns={columns}
                       autoHeight

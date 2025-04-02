@@ -8,6 +8,7 @@ import React, { useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from "./InnerHeader";
 import { type } from "@testing-library/user-event/dist/type";
+import { StyledDataGrid } from "./StyledDataGrid";
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     "& .MuiDialogContent-root": {
         padding: theme.spacing(2),
@@ -55,7 +56,7 @@ const FacultyMonthlyStatement = () => {
             field: 'actions',
             type: 'actions',
             headerName: 'Action',
-            flex: 1,
+            flex: 2,
             renderCall:(param) => {
                 return (
                     <>
@@ -72,7 +73,7 @@ const FacultyMonthlyStatement = () => {
 
     return (
 
-        <div class="container-fluid page-body-warpper col-lg-10">
+        <div class="container-fluid page-body-warpper ">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -127,8 +128,8 @@ const FacultyMonthlyStatement = () => {
                                         </div>
                                     </div>
 
-                                    {hide && <div>
-                                        <DataGrid
+                                    {hide && <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                        <StyledDataGrid
                                         rows={rowsWithIds}
                                         columns={columns}
                                         disableColumnFilter
@@ -138,7 +139,7 @@ const FacultyMonthlyStatement = () => {
                                         getRowId={(row) => row.Batch_Id}
                                         initialState={{
                                             pagination: {
-                                                paginationModel: {pageSize: 10, page: 0},
+                                                paginationModel: {pageSize: 50, page: 0},
                                             },
                                         }}
                                         />

@@ -216,7 +216,7 @@ const UnitTest = () => {
   }
 
   return (
-    <div className="container-fluid page-body-wrapper col-lg-10">
+    <div className="container-fluid page-body-wrapper ">
       <InnerHeader />
       <div className="main-pannel">
         <div className="content-wrapper ">

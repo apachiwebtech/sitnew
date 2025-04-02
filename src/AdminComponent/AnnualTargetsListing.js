@@ -120,7 +120,7 @@ const AnnualTargetsListing = () => {
             <div className="col-12">
                 <div className="card">
                     <div className="card-body">
-                        <h4 className="card-title">Annual Targets</h4>
+                        <h4 className="card-title">Annual Targets </h4>
                         <div className="custom-header">
                             <DataGrid
                                 rows={annualTargetsList}

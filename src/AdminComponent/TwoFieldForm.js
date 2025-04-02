@@ -7,6 +7,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
 import decryptedUserId from '../Utils/UserID';
 import { DataGrid } from '@mui/x-data-grid';
+import { StyledDataGrid } from './StyledDataGrid';
 
 
 const TwoFieldForm = () => {
@@ -178,16 +179,16 @@ const TwoFieldForm = () => {
             type: 'number',
             align: 'center',
             headerAlign: 'center',
-            flex: 1,
+            flex: 0.5,
             filterable: false,
         },
-        { field: `${text1}`, headerName: `${text1}`, flex: 2 },
-        { field: `${text2}`, headerName: `${text2}`, flex: 2 },
+        { field: `${text1}`, headerName: `${text1}`, flex: 1 },
+        { field: `${text2}`, headerName: `${text2}`, flex: 1 },
         {
             field: 'actions',
             type: 'actions',
             headerName: 'Action',
-            flex: 1,
+            flex: 0.5,
             renderCell: (params) => {
                 return (
                     <>
@@ -239,7 +240,7 @@ const TwoFieldForm = () => {
                         <div class="col-lg-7 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <div className='d-flex justify-content-between'>
+                                    <div className='d-flex justify-content-between'style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
                                         <div>
                                             <h4 class="card-title">{fieldname}</h4>
                                             <p class="card-description">
@@ -249,14 +250,14 @@ const TwoFieldForm = () => {
 
                                     </div>
                                     
-                                    <div>
-                                    <DataGrid
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                    <StyledDataGrid
                                             rows= {rowsWithIds}
                                             columns={columns}
                                             getRowId={(row) => row.id}
                                             initialState={{
                                                 pagination: {
-                                                  paginationModel: { pageSize: 10, page: 0 },
+                                                  paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                               }}
                                         />

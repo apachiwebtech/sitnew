@@ -5,6 +5,9 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { BASE_URL } from "./BaseUrl";
 import InnerHeader from "./InnerHeader";
+import { StyledDataGrid } from "./StyledDataGrid";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const PurchaseMaterial = () => {
     const [purchase, setpurchase] = useState([]);
@@ -315,7 +318,27 @@ const PurchaseMaterial = () => {
         },
         { field: "company", headerName: "Company", flex: 2 },
         { field: "Category", headerName: "Item", flex: 2 },
-        { field: "purchase_date", headerName: "Purchase Date", flex: 2 },
+        {
+            field: "purchase_date",
+            headerName: "Purchase Date",
+            flex: 2,
+            renderCell: (params) => {
+              if (!params.value) return ""; // Handle empty values
+          
+              // Check if already in DD-MM-YYYY format
+              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+              if (ddmmyyyyRegex.test(params.value)) {
+                return params.value; // Return as-is if already formatted
+              }
+          
+              const date = new Date(params.value);
+              if (isNaN(date.getTime())) return ""; // Handle invalid dates
+          
+              // Convert to DD-MM-YYYY format
+              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+            },
+          },
+          
         { field: "vendorname", headerName: "Vender", flex: 2 },
         { field: "Faculty_Name", headerName: "Who Purchased", flex: 2 },
         { field: "voucherno", headerName: "Vouchar No." },
@@ -345,7 +368,7 @@ const PurchaseMaterial = () => {
     const rowsWithIds = purchasematerialdata.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
-        <div class="container-fluid page-body-wrapper col-lg-10">
+        <div class="container-fluid page-body-wrapper ">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -392,18 +415,27 @@ const PurchaseMaterial = () => {
                                                         {<span className="text-danger"> {error.item} </span>}
                                                     </div>
 
-                                                    <div className="form-group col-lg-6">
+                                                    <div className="form-group col-lg-6" style={{ display: "flex", flexDirection: "column"}}>
                                                         <label htmlFor="exampleInputUsername1">
                                                             Purchase Date <span className="text-danger">*</span>
                                                         </label>
-                                                        <input
+                                                        {/* <input
                                                             type="date"
                                                             className="form-control"
                                                             id="exampleInputUsername1"
                                                             value={value.purchase_date}
                                                             name="purchase_date"
                                                             onChange={onhandleChange}
-                                                        />
+                                                        /> */}
+                                                         <DatePicker
+        selected={value.purchase_date}
+        onChange={(date) => onhandleChange({ target: { name: "purchase_date", value: date } })}
+        className="form-control"
+        id="purchase_date"
+        placeholderText="Select Purchase Date"
+        dateFormat="dd-MM-yyyy"
+        maxDate={new Date()} // Prevents future dates
+      />
                                                         {<span className="text-danger"> {error.purchase_date} </span>}
                                                     </div>
 
@@ -537,19 +569,19 @@ const PurchaseMaterial = () => {
                                                         </div>
                                                     )}
 
-                                                    <div class="form-group col-lg-6">
+                                                    <div class="form-group col-lg-6" style={{ display: "flex", flexDirection: "column"}}>
                                                         <label for="exampleInputUsername1">
                                                             Required Date<span className="text-danger">*</span>
                                                         </label>
-                                                        <input
-                                                            type="date"
-                                                            class="form-control"
-                                                            id="exampleInputUsername1"
-                                                            value={value.requireddate}
-                                                            placeholder="Required Date"
-                                                            name="requireddate"
-                                                            onChange={onhandleChange}
-                                                        />
+                                                        <DatePicker
+        selected={value.requireddate}
+        onChange={(date) => onhandleChange({ target: { name: "requireddate", value: date } })}
+        className="form-control"
+        id="requireddate"
+        placeholderText="Select Required Date"
+        dateFormat="dd-MM-yyyy"
+        minDate={new Date()} // Prevents past dates
+      />
                                                         {<span className="text-danger"> {error.requireddate} </span>}
                                                     </div>
                                                 </div>
@@ -626,14 +658,14 @@ const PurchaseMaterial = () => {
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <div className="d-flex justify-content-between">
+                                    <div className="d-flex justify-content-between" style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
                                         <div>
                                             <h4 class="card-title">Purchase Material</h4>
                                         </div>
                                     </div>
 
-                                    <div>
-                                        <DataGrid
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                        <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
                                             disableColumnFilter
@@ -643,7 +675,7 @@ const PurchaseMaterial = () => {
                                             getRowId={(row) => row.id}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                             }}
                                             slots={{ toolbar: GridToolbar }}

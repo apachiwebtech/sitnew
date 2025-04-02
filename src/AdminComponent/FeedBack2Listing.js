@@ -131,14 +131,14 @@ const FeedBack2Listing = () => {
             type: 'number',
             align: 'center',
             headerAlign: 'center',
-            flex: 1,
+            flex: 0.5,
             filterable: false,
 
         },
-        { field: 'facultyname', headerName: 'Student Name', flex: 2 },
-        { field: 'facultyname', headerName: 'Date', flex: 2 },
-        { field: 'facultyname', headerName: 'Course Name', flex: 2 },
-        { field: 'facultyname', headerName: 'Batch No.', flex: 2 },
+        { field: 'facultyname', headerName: 'Student Name', flex:1.5 },
+        { field: 'facultyname', headerName: 'Date', flex:1.5 },
+        { field: 'facultyname', headerName: 'Course Name', flex: 1.5},
+        { field: 'facultyname', headerName: 'Batch No.', flex:1.5 },
 
         {
             field: 'actions',
@@ -164,7 +164,7 @@ const FeedBack2Listing = () => {
 
     return (
 
-        <div className="container-fluid page-body-wrapper col-lg-10">
+        <div className="container-fluid page-body-wrapper ">
             <InnerHeader />
            
             <div className="main-panel">
@@ -176,7 +176,7 @@ const FeedBack2Listing = () => {
                         <div className="col-lg-12">
                             <div className="card">
                                 <div className="card-body">
-                                    <div className='d-flex justify-content-between gap-3' style={{ width: "100%", padding: "10px 0" }}>
+                                    <div className='d-flex justify-content-between gap-3' style={{borderBottom: "2px solid #dce4ec", width: "100%", padding: "10px 0" }}>
                                         <div >
                                             <h4 class="card-title">VVIEW STUDENT FEEDBACK ON TRAINING CO-ORDINATION - 2</h4>
                                         </div>
@@ -185,7 +185,7 @@ const FeedBack2Listing = () => {
 
                                     </div>
 
-                                    <div>
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
                                         <DataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
@@ -196,7 +196,7 @@ const FeedBack2Listing = () => {
                                             getRowId={(row) => row.id}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                             }}
                                             slots={{ toolbar: GridToolbar }}

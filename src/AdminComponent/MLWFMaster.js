@@ -5,6 +5,9 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
+import { StyledDataGrid } from "./StyledDataGrid";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const MLWFMaster = () => {
 
@@ -201,8 +204,30 @@ const MLWFMaster = () => {
             filterable: false,
 
         },
-        { field: 'formdate', headerName: 'From Date', flex: 2 },
-        { field: 'todate', headerName: 'To Date', flex: 2 },
+        {
+            field: "formdate",
+            headerName: "From Date",
+            flex: 2,
+            renderCell: (params) =>
+              params.value
+                ? /^\d{2}-\d{2}-\d{4}$/.test(params.value) // Check if already in DD-MM-YYYY format
+                  ? params.value
+                  : new Date(params.value).toLocaleDateString("en-GB") // Convert valid dates
+                : "",
+          },
+          
+          {
+            field: "todate",
+            headerName: "To Date",
+            flex: 2,
+            renderCell: (params) =>
+              params.value
+                ? /^\d{2}-\d{2}-\d{4}$/.test(params.value) // Check if already in DD-MM-YYYY format
+                  ? params.value
+                  : new Date(params.value).toLocaleDateString("en-GB") // Convert valid dates
+                : "",
+          },
+          
         { field: 'grossupto', headerName: 'Gross', flex: 2 },
         { field: 'chargeswill', headerName: 'Min Charge', flex: 2 },
         { field: 'otherwise', headerName: 'Max Charge', flex: 2 },
@@ -230,7 +255,7 @@ const MLWFMaster = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper col-lg-10">
+        <div class="container-fluid page-body-wrapper ">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -243,17 +268,31 @@ const MLWFMaster = () => {
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
 
-                                            <div class="form-group col-lg-3">
+                                            <div class="form-group col-lg-3" style={{display: "flex", flexDirection: "column"}}>
                                                 <label for="exampleInputUsername1">From Date</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" 
-                                                value={value.formdate} name='formdate' onChange={onhandleChange} />
+                                                <DatePicker
+        selected={value.formdate ? new Date(value.formdate) : null}
+        onChange={(date) => onhandleChange({ target: { name: "formdate", value: date.toISOString().split("T")[0] } })}
+        className="form-control"
+        id="formdate"
+        placeholderText="Select Form Date"
+        dateFormat="dd-MM-yyyy"
+        minDate={new Date()} // Prevents past dates
+      />
                                                 
                                             </div>
 
-                                            <div class="form-group col-lg-3">
+                                            <div class="form-group col-lg-3" style={{display: "flex", flexDirection: "column"}}>
                                                 <label for="exampleInputUsername1">To Date</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" 
-                                                value={value.todate} name='todate' onChange={onhandleChange} />
+                                                <DatePicker
+        selected={value.todate ? new Date(value.todate) : null}
+        onChange={(date) => onhandleChange({ target: { name: "todate", value: date.toISOString().split("T")[0] } })}
+        className="form-control"
+        id="todate"
+        placeholderText="Select To Date"
+        dateFormat="dd-MM-yyyy"
+        minDate={new Date()} // Prevents past dates
+      />
                                                 
                                             </div>
 
@@ -293,15 +332,15 @@ const MLWFMaster = () => {
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <div className='d-flex justify-content-between'>
+                                    <div className='d-flex justify-content-between' style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
                                         <div>
                                             <h4 class="card-title">MLWF Master Details</h4>
                                         </div>
 
                                     </div>
 
-                                    <div>
-                                        <DataGrid
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                        <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
                                             disableColumnFilter
@@ -311,7 +350,7 @@ const MLWFMaster = () => {
                                             getRowId={(row) => row.id}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                             }}
                                             slots={{ toolbar: GridToolbar }}

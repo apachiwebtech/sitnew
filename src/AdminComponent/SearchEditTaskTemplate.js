@@ -4,6 +4,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
+import { StyledDataGrid } from "./StyledDataGrid";
 //import FormControlLabel from '@mui/material/FormControlLabel';
 // import ImageList from '@mui/material/ImageList';
 // import { ImageSourcePropType } from 'react-native';
@@ -220,7 +221,27 @@ const SearchEditTaskTemplate = () => {
         { field: 'nominalcompletiontime', headerName: 'Nominal Completion Time', flex: 2 },
         { field: 'repetitive', headerName: 'Repetitive', flex: 2 },
         { field: 'createdby', headerName: 'Created By', flex: 2 },
-        { field: 'createddate', headerName: 'Created Date', flex: 2 },
+        {
+            field: "createddate",
+            headerName: "Created Date",
+            flex: 2,
+            renderCell: (params) => {
+              if (!params.value) return ""; // Handle empty values
+          
+              // Check if already in DD-MM-YYYY format
+              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+              if (ddmmyyyyRegex.test(params.value)) {
+                return params.value; // Return as-is if already formatted
+              }
+          
+              const date = new Date(params.value);
+              if (isNaN(date.getTime())) return params.value; // Return original value if not a valid date
+          
+              // Convert valid date to DD-MM-YYYY format
+              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+            },
+          },
+          
 
         {
             field: 'actions',
@@ -243,7 +264,7 @@ const SearchEditTaskTemplate = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper col-lg-10">
+        <div class="container-fluid page-body-wrapper ">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -264,8 +285,8 @@ const SearchEditTaskTemplate = () => {
 
                                         </div>
 
-                                        <div>
-                                            <DataGrid
+                                        <div style={ { border: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                            <StyledDataGrid
                                                 rows={rowsWithIds}
                                                 columns={columns}
                                                 disableColumnFilter
@@ -275,7 +296,7 @@ const SearchEditTaskTemplate = () => {
                                                 getRowId={(row) => row.id}
                                                 initialState={{
                                                     pagination: {
-                                                        paginationModel: { pageSize: 10, page: 0 },
+                                                        paginationModel: { pageSize: 50, page: 0 },
                                                     },
                                                 }}
                                                 slots={{ toolbar: GridToolbar }}

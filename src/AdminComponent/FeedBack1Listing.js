@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
+import { StyledDataGrid } from "./StyledDataGrid";
 //import AssignmentsTaken from "./AssignmentsTaken";
 
 const FeedBack1Listing = () => {
@@ -131,14 +132,14 @@ const FeedBack1Listing = () => {
             type: 'number',
             align: 'center',
             headerAlign: 'center',
-            flex: 1,
+            flex: 0.5,
             filterable: false,
 
         },
-        { field: 'facultyname', headerName: 'Student Name', flex: 2 },
-        { field: 'facultyname', headerName: 'Date', flex: 2 },
-        { field: 'facultyname', headerName: 'Course Name', flex: 2 },
-        { field: 'facultyname', headerName: 'Batch No.', flex: 2 },
+        { field: 'facultyname', headerName: 'Student Name', flex: 1.5 },
+        { field: 'facultyname', headerName: 'Date', flex: 1.5 },
+        { field: 'facultyname', headerName: 'Course Name', flex: 1.5 },
+        { field: 'facultyname', headerName: 'Batch No.', flex: 1.5 },
 
         {
             field: 'actions',
@@ -164,7 +165,7 @@ const FeedBack1Listing = () => {
 
     return (
 
-        <div className="container-fluid page-body-wrapper col-lg-10">
+        <div className="container-fluid page-body-wrapper ">
             <InnerHeader />
            
             <div className="main-panel">
@@ -176,7 +177,7 @@ const FeedBack1Listing = () => {
                         <div className="col-lg-12">
                             <div className="card">
                                 <div className="card-body">
-                                    <div className='d-flex justify-content-between gap-3' style={{ width: "100%", padding: "10px 0" }}>
+                                    <div className='d-flex justify-content-between gap-3' style={{borderBottom: "2px solid #dce4ec", width: "100%", padding: "10px 0" }}>
                                         <div >
                                             <h4 class="card-title">VIEW STUDENT FEEDBACK ON TRAINING CO-ORDINATION - 1</h4>
                                         </div>
@@ -185,8 +186,8 @@ const FeedBack1Listing = () => {
 
                                     </div>
 
-                                    <div>
-                                        <DataGrid
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                        <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
                                             disableColumnFilter
@@ -196,7 +197,7 @@ const FeedBack1Listing = () => {
                                             getRowId={(row) => row.id}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                             }}
                                             slots={{ toolbar: GridToolbar }}

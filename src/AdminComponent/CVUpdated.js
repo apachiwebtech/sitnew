@@ -10,6 +10,8 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 
 const CVUpdated = () => {
@@ -133,9 +135,16 @@ const CVUpdated = () => {
                                     <form class="forms-sample py-3">
                                         <div class='row'>
 
-                                            <div class="form-group col-lg-3">
+                                            <div class="form-group col-lg-3" style={{ display: "flex", flexDirection: "column"}}>
                                                 <label for="exampleInputUsername1">Date</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.date} placeholder="Purpose" name='date' onChange={onhandleChange} />
+                                                <DatePicker
+        selected={value.date ? new Date(value.date) : null}
+        onChange={(date) => onhandleChange({ target: { name: "date", value: date } })}
+        className="form-control"
+        id="date"
+        dateFormat="yyyy-MM-dd"
+        placeholderText="Purpose" // Placeholder for empty value
+      />
 
                                             </div>
 

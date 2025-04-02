@@ -6,6 +6,9 @@ import { Link } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { StyledDataGrid } from "./StyledDataGrid";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 
 const ServiceTaxReportonfees = () => {
@@ -229,7 +232,7 @@ const ServiceTaxReportonfees = () => {
 
 
     return (
-        <div className="container-fluid page-body-wrapper col-lg-10">
+        <div className="container-fluid page-body-wrapper ">
             <InnerHeader />
             <div className="main-panel">
 
@@ -251,18 +254,33 @@ const ServiceTaxReportonfees = () => {
                                                     <form class="form-sample py-3" onSubmit={handleSubmit}>
                                                         <div class="row">
 
-                                                            <div className="form-group col-lg-3">
+                                                            <div className="form-group col-lg-3" style={{display:"flex", flexDirection:"column"}}>
                                                                 <lable for="exampleInputUsername1">From Date<span className="text-danger">*</span></lable>
-                                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.fromdate}
-                                                                    name='fromdate' onChange={onhandleChange} />
-
+                                                                <DatePicker
+        selected={value.fromdate ? new Date(value.fromdate) : null}
+        onChange={(date) =>
+          onhandleChange({ target: { name: "fromdate", value: date } })
+        }
+        className="form-control"
+        id="exampleInputUsername1"
+        dateFormat="dd-MM-yyyy"
+        placeholderText="Select From Date"
+      />
                                                                 {<span className='text-danger'> {error.fromdate} </span>}
                                                             </div>
 
-                                                            <div class="form-group col-lg-3">
+                                                            <div class="form-group col-lg-3" style={{ display:"flex", flexDirection:'column'}}>
                                                                 <lable for="exampleInputUsername1">To Date<span className="text-danger">*</span></lable>
-                                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.todate}
-                                                                    name='todate' onChange={onhandleChange} />
+                                                                <DatePicker
+        selected={value.todate ? new Date(value.todate) : null}
+        onChange={(date) =>
+          onhandleChange({ target: { name: "todate", value: date } })
+        }
+        className="form-control"
+        id="exampleInputUsername1"
+        dateFormat="dd-MM-yyyy"
+        placeholderText="Select To Date"
+      />
 
                                                                 {<span className='text-danger'> {error.todate} </span>}
                                                             </div>
@@ -282,16 +300,16 @@ const ServiceTaxReportonfees = () => {
                                         <div class="col-lg-12">
                                             <div class="card">
                                                 <div class="card-body">
-                                                    <div className='d-flex justify-content-between'>
+                                                    <div className='d-flex justify-content-between' style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
                                                         <div>
                                                             <h4 class="card-title">Details</h4>
                                                         </div>
 
                                                     </div>
 
-                                                    {<div>
+                                                    {<div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
 
-                                                        <DataGrid
+                                                        <StyledDataGrid
                                                             rows={rowsWithIds}
                                                             columns={columns}
                                                             disableColumnFilter
@@ -301,7 +319,7 @@ const ServiceTaxReportonfees = () => {
                                                             getRowId={(row) => row.id}
                                                             initialState={{
                                                                 pagination: {
-                                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                                    paginationModel: { pageSize: 50, page: 0 },
                                                                 },
                                                             }}
 

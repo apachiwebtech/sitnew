@@ -10,6 +10,7 @@ import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import { useNavigate, Link } from 'react-router-dom';
 import Loader from "./Loader";
+import { StyledDataGrid } from "./StyledDataGrid";
 
 const CVShortListed = () => {
     const [CVShortlistedList, setCVShortlistedList] = useState([])
@@ -47,10 +48,30 @@ const CVShortListed = () => {
     };
 
     const columns = [
-        { field: 'Batch_code', headerName: 'Batch Code', flex:2 },
+        { field: 'Batch_code', headerName: 'Batch Code', flex:1.6 },
         { field: 'Course_Name', headerName: 'Course Name', flex:3 },
         { field: 'CompanyName', headerName: 'Company Name', flex:3 },
-        { field: 'TDate', headerName: 'Date', flex: 2 },
+        {
+            field: "TDate",
+            headerName: "Date",
+            flex: 2,
+            renderCell: (params) => {
+              if (!params.value) return ""; // Handle empty values
+          
+              // Check if already in DD-MM-YYYY format
+              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+              if (ddmmyyyyRegex.test(params.value)) {
+                return params.value; // Return as-is if already formatted
+              }
+          
+              const date = new Date(params.value);
+              if (isNaN(date.getTime())) return params.value; // Return original value if not a valid date
+          
+              // Convert valid date to DD-MM-YYYY format
+              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+            },
+          },
+          
 
         {
             field: 'actions',
@@ -73,7 +94,7 @@ const CVShortListed = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper col-lg-10">
+        <div class="container-fluid page-body-wrapper ">
             <InnerHeader />
             {loading && <Loader />}
             <div class="main-panel">
@@ -82,13 +103,13 @@ const CVShortListed = () => {
                         <div class="col-lg-12 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <div className='d-flex justify-content-between align-items-center gap-3' style={{ width: "100%", padding: "10px 0" }}>
+                                    <div className='d-flex justify-content-between align-items-center gap-3' style={{borderBottom: "2px solid #dce4ec", width: "100%", padding: "10px 0" }}>
                                         <h4 class="card-title">CV Shortlisted </h4>
                                         <Link to='/cvshortlisted/:cvid' className="btn btn-success">Add +</Link>
                                     </div>
                                     <div>
-                                        <div>
-                                            <DataGrid
+                                        <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                            <StyledDataGrid
                                                 rows={CVShortlistedList}
                                                 columns={columns}
                                                 disableColumnFilter
@@ -98,7 +119,7 @@ const CVShortListed = () => {
                                                 getRowId={(row) => row.id}
                                                 initialState={{
                                                         pagination: {
-                                                        paginationModel: { pageSize: 10, page: 0 },
+                                                        paginationModel: { pageSize: 50, page: 0 },
                                                     },
                                                 }}
                                                 slots={{ toolbar: GridToolbar }}

@@ -7,6 +7,7 @@ import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import Loader from "./Loader";
 import { block } from "@mui/icons-material";
+import { StyledDataGrid } from "./StyledDataGrid";
 
 
 const Status = () => {
@@ -180,7 +181,7 @@ const Status = () => {
             type: 'number',
             align: 'center',
             headerAlign: 'center',
-            flex: 1,
+            flex: 0.5,
             filterable: false,
         },
         { field: 'Status', headerName: 'Status', flex: 2 },
@@ -189,7 +190,7 @@ const Status = () => {
             field: 'actions',
             type: 'actions',
             headerName: 'Action',
-            flex: 1,
+            flex: 0.5,
             renderCell: (params) => {
                 return (
                     <>
@@ -206,7 +207,7 @@ const Status = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper col-lg-10">
+        <div class="container-fluid page-body-wrapper ">
             <InnerHeader />
 
             {loading && <Loader /> }
@@ -252,7 +253,8 @@ const Status = () => {
                         <div class="col-lg-7">
                             <div class="card">
                                 <div class="card-body">
-                                    <div className='d-flex justify-content-between'>
+                                    <div className='d-flex justify-content-between'
+                                    style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
                                         <div>
                                             <h4 class="card-title">List of Status</h4>
                                             
@@ -260,8 +262,8 @@ const Status = () => {
 
                                     </div>
 
-                                    <div>
-                                    <DataGrid
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                    <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
                                             disableColumnFilter
@@ -271,7 +273,7 @@ const Status = () => {
                                             getRowId={(row) => row.id}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                             }}
                                             // slots={{ toolbar: GridToolbar }}

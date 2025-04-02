@@ -7,6 +7,7 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import InnerHeader from './InnerHeader';
 import { Link } from 'react-router-dom';
 import Loader from './Loader';
+import { StyledDataGrid } from './StyledDataGrid';
 
 const CACHE_KEY = 'annulbatch_data'; // Key for localStorage caching
 const CACHE_EXPIRY_MS = 1000 * 60 * 15; // Cache expiry time (15 minutes)
@@ -99,16 +100,28 @@ const Batch = () => {
             type: 'number',
             align: 'center',
             headerAlign: 'center',
-            flex: 1,
+            flex: 0.5,
             filterable: false,
         },
         { field: 'Batch_code', headerName: 'Batch No.', flex: 1 },
-        { field: 'Course_Name', headerName: 'Course Name', flex: 3 },
-        { field: 'Category', headerName: 'Category', flex: 2 },
-        { field: 'Timings', headerName: 'Timings', flex: 2 },
-        { field: 'SDate', headerName: 'Planned Start Date', flex: 2 },
-        { field: 'EDate', headerName: 'Last Date of Admission', flex: 2 },
-        { field: 'Training_Coordinator', headerName: 'Training Coordinator', flex: 2 },
+        { field: 'Course_Name', headerName: 'Course Name', flex: 1.5 },
+        { field: 'Category', headerName: 'Category', flex: 1.5 },
+        { field: 'Timings', headerName: 'Timings', flex: 1.5 },
+        {
+            field: 'SDate', 
+            headerName: 'Planned Start Date', 
+            flex: 2, 
+            valueGetter: (params) => params.value ? new Date(params.value).toISOString().split('T')[0].split('-').reverse().join('-') : ''
+          },
+          
+          {
+            field: 'EDate', 
+            headerName: 'Last Date of Admission', 
+            flex: 1.5, 
+            valueGetter: (params) => params.value ? new Date(params.value).toISOString().split('T')[0].split('-').reverse().join('-') : ''
+          },
+          
+        { field: 'Training_Coordinator', headerName: 'Training Coordinator', flex: 1.5 },
         {
             field: 'actions',
             type: 'actions',
@@ -128,7 +141,7 @@ const Batch = () => {
     const rowsWithIds = annulbatch.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
-        <div className="container-fluid page-body-wrapper col-lg-10">
+        <div className="container-fluid page-body-wrapper ">
             <InnerHeader />
 
             {loading && <Loader />}
@@ -141,7 +154,7 @@ const Batch = () => {
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <div className='d-flex justify-content-between gap-3' style={{ width: "100%", padding: "10px 0" }}>
+                                    <div className='d-flex justify-content-between gap-3' style={{ width: "100%", padding: "10px 0", borderBottom: "2px solid #dce4ec", }}>
                                         <div>
                                             <h4 class="card-title">List of Batch ({annulbatch.length})</h4>
                              
@@ -149,8 +162,8 @@ const Batch = () => {
 
                                     </div>
 
-                                    <div>
-                                        <DataGrid
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                        <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
                                             // disableColumnFilter
@@ -160,7 +173,7 @@ const Batch = () => {
                                             getRowId={(row) => row.Batch_Id}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                             }}
                                             slots={{ toolbar: GridToolbar }}

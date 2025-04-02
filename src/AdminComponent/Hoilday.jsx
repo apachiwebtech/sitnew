@@ -9,6 +9,11 @@ import decryptedUserId from '../Utils/UserID';
 import { DataGrid ,GridToolbar} from '@mui/x-data-grid';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { StyledDataGrid } from './StyledDataGrid';
+import { formatDate } from "../Utils/dateFormat";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 
 
 const Holiday = () => {
@@ -186,16 +191,36 @@ const Holiday = () => {
             type: 'number',
             align: 'center',
             headerAlign: 'center',
-            flex: 1,
+            flex: 0.5,
             filterable: false,
         },
-        { field: 'Holiday', headerName: 'Hoilday', flex: 2 },
-        { field: 'Date_of_Holiday', headerName: 'Date', flex: 2 },
+        { field: 'Holiday', headerName: 'Hoilday', flex: 1 },
+        {
+            field: 'Date_of_Holiday',
+            headerName: 'Date',
+            flex: 1,
+            renderCell: (params) => {
+              if (!params.value) return ""; // Handle empty values
+          
+              // Check if already in DD-MM-YYYY format
+              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+              if (ddmmyyyyRegex.test(params.value)) {
+                return params.value; // Return as-is if already formatted
+              }
+          
+              const date = new Date(params.value);
+              if (isNaN(date.getTime())) return params.value; // Return original value if not a valid date
+          
+              // Convert valid date to DD-MM-YYYY format
+              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+            },
+          },
+          
         {
             field: 'actions',
             type: 'actions',
             headerName: 'Action',
-            flex: 1,
+            flex: 0.5,
             renderCell: (params) => {
                 return (
                     <>
@@ -212,13 +237,13 @@ const Holiday = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper col-lg-10">
+        <div class="container-fluid page-body-wrapper ">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
-                    <div class="row">
+                    <div class="row" >
                         <div class="col-lg-5 grid-margin stretch-card">
-                            <div class="card">
+                            <div class="card"style={{marginTop: '30px'}}>
                                 <div class="card-body">
                                     <h4 class="card-title">Hoilday</h4>
                                     <hr></hr>
@@ -229,9 +254,16 @@ const Holiday = () => {
                                                 <input type="text" class="form-control" id="exampleInputUsername1" value={value.hoilday} placeholder="Fees Note" name='hoilday' onChange={onhandleChange} />
                                                 {error.hoilday && <span className='text-danger'>{error.hoilday}</span>}
                                             </div>
-                                            <div class="form-group col-lg-12">
+                                            <div class="form-group col-lg-12" style={{ display: 'flex', flexDirection: "column"}}>
                                                 <label for="exampleInputUsername2">Date<span className='text-danger'>*</span></label>
-                                                <input type="Date" class="form-control" id="exampleInputUsername2" value={value.date} placeholder="Fees Note" name='date' onChange={onhandleChange} />
+                                                <DatePicker
+        selected={value.date ? new Date(value.date) : null}
+        onChange={(date) => onhandleChange({ target: { name: "date", value: date } })}
+        className="form-control"
+        id="exampleInputUsername2"
+        dateFormat="dd-MM-yyyy"
+        placeholderText="dd-MM-yyyy"
+      />
                                                 {error.date && <span className='text-danger'>{error.date}</span>}
                                             </div>
                                         </div>
@@ -249,7 +281,8 @@ const Holiday = () => {
                         <div class="col-lg-7">
                             <div class="card">
                                 <div class="card-body">
-                                    <div className='d-flex justify-content-between'>
+                                    <div className='d-flex justify-content-between'
+                                    style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
                                         <div>
                                             <h4 class="card-title">List of Hoilday</h4>
                                             
@@ -257,8 +290,8 @@ const Holiday = () => {
 
                                     </div>
 
-                                    <div>
-                                    <DataGrid
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                    <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
                                             disableColumnFilter
@@ -268,7 +301,7 @@ const Holiday = () => {
                                             getRowId={(row) => row.Id}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                             }}
                                             // slots={{ toolbar: GridToolbar }}

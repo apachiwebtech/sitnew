@@ -7,6 +7,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
 import decryptedUserId from '../Utils/UserID';
 import { DataGrid } from '@mui/x-data-grid';
+import { StyledDataGrid } from './StyledDataGrid';
 
 
 const ThreeFieldForm = () => {
@@ -222,17 +223,17 @@ const ThreeFieldForm = () => {
             type: 'number',
             align: 'center',
             headerAlign: 'center',
-            flex: 1,
+            flex: 0.5,
             filterable: false,
         },
-        { field: `${text1}`, headerName: `${text1}`, flex: 2 },
-        { field: `${text2}`, headerName: `${text2}`, flex: 2 },
-        { field: `${text3}`, headerName: `${text3}`, flex: 2 },
+        { field: `${text1}`, headerName: `${text1}`, flex: 1 },
+        { field: `${text2}`, headerName: `${text2}`, flex: 1 },
+        { field: `${text3}`, headerName: `${text3}`, flex: 1 },
         {
             field: 'actions',
             type: 'actions',
             headerName: 'Action',
-            flex: 1,
+            flex: 0.5,
             renderCell: (params) => {
                 return (
                     <>
@@ -319,13 +320,13 @@ const ThreeFieldForm = () => {
                                     </div>
 
                                     <div>
-                                        <DataGrid
+                                        <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
                                             getRowId={(row) => row.id}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                             }}
                                         />

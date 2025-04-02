@@ -7,6 +7,10 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
 import decryptedUserId from '../Utils/UserID';
 import { DataGrid } from '@mui/x-data-grid';
+import { StyledDataGrid } from './StyledDataGrid';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 
 
 const Taxmaster = () => {
@@ -178,8 +182,49 @@ const Taxmaster = () => {
             flex: 1,
             filterable: false,
         },
-        { field: `Tax`, headerName: `Tax_date`, flex: 2 },
-        { field: `Tax_date`, headerName: `Tax_date`, flex: 2 },
+        // two same field 
+        {
+            field: "Tax",
+            headerName: "Tax Date",
+            flex: 2,
+            renderCell: (params) => {
+              if (!params.value) return ""; // Handle empty values
+          
+              // Check if already in DD-MM-YYYY format
+              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+              if (ddmmyyyyRegex.test(params.value)) {
+                return params.value; // Return as-is if already formatted
+              }
+          
+              const date = new Date(params.value);
+              if (isNaN(date.getTime())) return ""; // Handle invalid dates
+          
+              // Convert to DD-MM-YYYY format
+              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+            },
+          },
+          
+        {
+            field: "Tax_date",
+            headerName: "Tax Date",
+            flex: 2,
+            renderCell: (params) => {
+              if (!params.value) return ""; // Handle empty values
+          
+              // Check if already in DD-MM-YYYY format
+              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+              if (ddmmyyyyRegex.test(params.value)) {
+                return params.value; // Return as-is if already formatted
+              }
+          
+              const date = new Date(params.value);
+              if (isNaN(date.getTime())) return ""; // Handle invalid dates
+          
+              // Convert to DD-MM-YYYY format
+              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+            },
+          },
+          
         {
             field: 'actions',
             type: 'actions',
@@ -217,9 +262,16 @@ const Taxmaster = () => {
                                             <input type="text" class="form-control" id="exampleInputUsername1" value={value.Tax} placeholder={`Enter Tax Name `} name='Tax' onChange={onhandleChange} />
                                             {error.tax && <span className='text-danger'>{error.tax}</span>}
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group " style={{display:"flex", flexDirection: 'column'}}>
                                             <label for="exampleInputUsername1">Tax date <span className='text-danger'>*</span></label>
-                                            <input type="date" class="form-control" id="exampleInputUsername1" value={value.Tax_date} placeholder={`Enter Date `} name='Tax_date' onChange={onhandleChange} />
+                                            <DatePicker
+        selected={value.Tax_date ? new Date(value.Tax_date) : null}
+        onChange={(date) => onhandleChange({ target: { name: "Tax_date", value: date } })}
+        className="form-control"
+        id="exampleInputUsername1"
+        dateFormat="dd-MM-yyyy"
+        placeholderText="Enter Date"
+      />
                                             {error.taxdate && <span className='text-danger'>{error.taxdate}</span>}
                                         </div>
                                    
@@ -236,7 +288,7 @@ const Taxmaster = () => {
                         <div class="col-lg-7 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <div className='d-flex justify-content-between'>
+                                    <div className='d-flex justify-content-between'style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
                                         <div>
                                             <h4 class="card-title">Tax</h4>
                                             <p class="card-description">
@@ -246,14 +298,14 @@ const Taxmaster = () => {
 
                                     </div>
                                     
-                                    <div>
-                                    <DataGrid
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                    <StyledDataGrid
                                             rows= {rowsWithIds}
                                             columns={columns}
                                             getRowId={(row) => row.id}
                                             initialState={{
                                                 pagination: {
-                                                  paginationModel: { pageSize: 10, page: 0 },
+                                                  paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                               }}
                                         />

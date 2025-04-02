@@ -7,6 +7,8 @@ import { MultiSelect } from "react-multi-select-component";
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 //import FormControlLabel from '@mui/material/FormControlLabel';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const AddEmployeeAttendance = () => {
     const [selected, setSelected] = useState([]);
@@ -207,7 +209,7 @@ const AddEmployeeAttendance = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper col-lg-10">
+        <div class="container-fluid page-body-wrapper ">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -242,16 +244,30 @@ const AddEmployeeAttendance = () => {
                                             </select>
                                             </div>
 
-                                            <div class="form-group col-lg-3">
+                                            <div class="form-group col-lg-3" style={{ display: "flex", flexDirection:"column"}}>
                                                 <label for="exampleInputUsername1">From Date</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.fromdate}
-                                                    name="fromdate" onChange={onhandleChange} />
+                                                <DatePicker
+        selected={value.fromdate}
+        onChange={(date) => onhandleChange({ target: { name: "fromdate", value: date } })}
+        className="form-control"
+        id="fromdate"
+        placeholderText="Select From Date"
+        dateFormat="dd-MM-yyyy"
+        minDate={new Date()} // Prevents past dates
+      />
                                             </div>
 
-                                            <div class="form-group col-lg-3">
+                                            <div class="form-group col-lg-3" style={{ display: "flex", flexDirection:"column"}}>
                                                 <label for="exampleInputUsername">From To Date</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername" value={value.fromtodate}
-                                                    name="fromtodate" onChange={onhandleChange} />  
+                                                <DatePicker
+        selected={value.fromtodate}
+        onChange={(date) => onhandleChange({ target: { name: "fromtodate", value: date } })}
+        className="form-control"
+        id="fromtodate"
+        placeholderText="Select Date"
+        dateFormat="dd-MM-yyyy"
+        minDate={new Date()} // Prevents past dates
+      />
                                             </div>
 
                                             <div class="form-group col-lg-3">

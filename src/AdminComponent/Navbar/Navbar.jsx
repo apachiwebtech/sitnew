@@ -7,7 +7,7 @@ const NavbarWithDropdowns = () => {
     return (
         <nav className="navbar navbar-expand-lg navbar-light px-2 text-light">
             <div className="container-fluid ">
-                <Link className="navbar-brand" to="/" style={{fontWeight :"800"}}>SIT MANAGER</Link>
+                <Link className="navbar-brand" to="/" style={{fontWeight :"800", color: "white", fontFamily: "Montserrat"}}>SIT MANAGER</Link>
                 <button
                     className="navbar-toggler"
                     type="button"

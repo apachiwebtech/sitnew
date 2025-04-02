@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
+import { StyledDataGrid } from "./StyledDataGrid";
 
 const AddConsultancyMasterListing = () => {
     const [deleteId, setDeleteId] = useState(null)
@@ -50,10 +51,10 @@ const AddConsultancyMasterListing = () => {
     };
     
     const columns = [
-        { field: 'Comp_Name', headerName: 'Consultancy Name', width:200 },
+        { field: 'Comp_Name', headerName: 'Consultancy Name', flex: 1 },
         { field: 'Contact_Person', headerName: 'Contact Person', width: 150 },
         { field: 'Designation', headerName: 'Designation', width: 200 },
-        { field: 'Address', headerName: 'Address', width: 250 },
+        { field: 'Address', headerName: 'Address', width: 350 },
         { field: 'City', headerName: 'City', width: 100 },
         { field: 'Tel', headerName: 'Telephone', width: 150 },
         { field: 'EMail', headerName: 'Email', width: 200 },
@@ -80,7 +81,7 @@ const AddConsultancyMasterListing = () => {
 
 
     return (
-        <div className="container-fluid page-body-wrapper col-lg-10">
+        <div className="container-fluid page-body-wrapper ">
             <InnerHeader />
             <div className="main-panel">
                 <div className="content-wrapper">
@@ -88,12 +89,12 @@ const AddConsultancyMasterListing = () => {
                         <div className="col-lg-12">
                             <div className="card">
                                 <div className="card-body">
-                                    <div className='d-flex justify-content-between gap-3' style={{ width: "100%", padding: "10px 0" }}>
+                                    <div className='d-flex justify-content-between gap-3' style={{borderBottom: "2px solid #dce4ec", width: "100%", padding: "10px 0" }}>
                                         <h4 className="card-title">View Consultancy</h4>
                                         <Link to='/consultancymaster/:consultancymasterid'><button className='btn btn-success'>Add +</button></Link>
                                     </div>
-                                    <div>
-                                        <DataGrid
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                        <StyledDataGrid
                                             rows={consultancyData}
                                             columns={columns}
                                             disableColumnFilter
@@ -101,7 +102,7 @@ const AddConsultancyMasterListing = () => {
                                             disableDensitySelector
                                             rowHeight={37}
                                             getRowId={(row) => row.Const_Id}
-                                            initialState={{ pagination: { paginationModel: { pageSize: 10, page: 0 } } }}
+                                            initialState={{ pagination: { paginationModel: { pageSize: 50, page: 0 } } }}
                                             slots={{ toolbar: GridToolbar }}
                                             slotProps={{ toolbar: { showQuickFilter: true } }}
                                         />

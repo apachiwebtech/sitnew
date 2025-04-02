@@ -16,6 +16,9 @@ import RadioGroup from '@mui/material/RadioGroup';
 //import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
+import { StyledDataGrid } from './StyledDataGrid';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const SmsEmailReport = () => {
 
@@ -307,15 +310,35 @@ const SmsEmailReport = () => {
                                             </div>
 
                                             
-                                            <div class="form-group col-lg-3">
+                                            <div class="form-group col-lg-3" style={{ display: "flex", flexDirection:"column"}}>
                                                 <label for="exampleInputUsername1">Date</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.fromdate} placeholder="From Year" name='fromdate' onChange={onhandleChange} />
+                                                <DatePicker
+        selected={value.fromdate ? new Date(value.fromdate) : null}
+        onChange={(date) =>
+          onhandleChange({ target: { name: "fromdate", value: date } })
+        }
+        className="form-control"
+        id="exampleInputUsername1"
+        dateFormat="dd-MM-yyyy" // Ensures proper formatting
+        placeholderText="Select Year"
+        showYearPicker  // 👈 Only show years
+       
+      />
                                                 
                                             </div>
 
-                                            <div class="form-group col-lg-3">
+                                            <div class="form-group col-lg-3" style={{ display:"flex", flexDirection:'column'}}>
                                                 <label for="exampleInputUsername1">To</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.todate} placeholder="To Date" name='todate' onChange={onhandleChange} />
+                                                <DatePicker
+        selected={value.todate ? new Date(value.todate) : null}
+        onChange={(date) =>
+          onhandleChange({ target: { name: "todate", value: date } })
+        }
+        className="form-control"
+        id="exampleInputUsername1"
+        dateFormat="dd-MM-yyyy"
+        placeholderText="Select To Date"
+      />
                                                 
                                             </div>
 
@@ -335,15 +358,15 @@ const SmsEmailReport = () => {
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <div className='d-flex justify-content-between'>
+                                    <div className='d-flex justify-content-between'style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
                                         <div>
                                             <h4 class="card-title"></h4>
                                         </div>
 
                                     </div>
 
-                                    <div>
-                                        <DataGrid
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                        <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
                                             disableColumnFilter
@@ -353,7 +376,7 @@ const SmsEmailReport = () => {
                                             getRowId={(row) => row.id}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                             }}
                                             slots={{ toolbar: GridToolbar }}

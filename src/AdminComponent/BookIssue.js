@@ -5,6 +5,9 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
+import { StyledDataGrid } from "./StyledDataGrid";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 
 const BookIssue = () => {
@@ -198,14 +201,54 @@ const BookIssue = () => {
             type: 'number',
             align: 'center',
             headerAlign: 'center',
-            flex: 1,
+            flex: 0.5,
             filterable: false,
         },
         { field: 'student', headerName: 'Student Name', flex: 2 },
         { field: 'book', headerName: 'Book', flex: 2 },
         { field: 'bookcode', headerName: 'Book Code', flex: 2 },
-        { field: 'issuedate', headerName: 'Issue Date', flex: 2 },
-        { field: 'returndate', headerName: 'Return Date.', flex: 2 },
+        {
+            field: "issuedate",
+            headerName: "Issue Date",
+            flex: 1.5,
+            renderCell: (params) => {
+              if (!params.value) return ""; // Handle empty values
+          
+              // Check if already in DD-MM-YYYY format
+              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+              if (ddmmyyyyRegex.test(params.value)) {
+                return params.value; // Return as-is if already formatted
+              }
+          
+              const date = new Date(params.value);
+              if (isNaN(date.getTime())) return ""; // Handle invalid dates
+          
+              // Convert to DD-MM-YYYY format
+              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+            },
+          },
+          
+        {
+            field: "returndate",
+            headerName: "Return Date",
+            flex: 1.5,
+            renderCell: (params) => {
+              if (!params.value) return ""; // Handle empty values
+          
+              // Check if already in DD-MM-YYYY format
+              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+              if (ddmmyyyyRegex.test(params.value)) {
+                return params.value; // Return as-is if already formatted
+              }
+          
+              const date = new Date(params.value);
+              if (isNaN(date.getTime())) return ""; // Handle invalid dates
+          
+              // Convert to DD-MM-YYYY format
+              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+            },
+          },
+          
 
         {
             field: 'actions',
@@ -228,7 +271,7 @@ const BookIssue = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper col-lg-10">
+        <div class="container-fluid page-body-wrapper ">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -257,14 +300,28 @@ const BookIssue = () => {
                                                 <input type="text" class="form-control" id="exampleInputUsername1" value={value.bookcode} 
                                                 placeholder="Book Code*" name='bookcode' onChange={onhandleChange} />
                                             </div>
-                                            <div class="form-group col-lg-3">
+                                            <div class="form-group col-lg-3" style={{display:"flex", flexDirection:"column"}}>
                                                 <label for="exampleInputUsername1">Issue Date</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.issuedate} name='issuedate' onChange={onhandleChange} />
+                                                <DatePicker
+        selected={value.issuedate ? new Date(value.issuedate) : null}
+        onChange={(date) => onhandleChange({ target: { name: "issuedate", value: date } })}
+        className="form-control"
+        id="exampleInputUsername1"
+        dateFormat="dd-MM-yyyy"
+        placeholderText="Select Issue Date"
+      />
 
                                             </div>
-                                            <div class="form-group col-lg-3">
+                                            <div class="form-group col-lg-3" style={{display:"flex", flexDirection:"column"}}>
                                                 <label for="exampleInputUsername1">Return Date</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.returndate} name='returndate' onChange={onhandleChange} />
+                                                <DatePicker
+        selected={value.returndate ? new Date(value.returndate) : null}
+        onChange={(date) => onhandleChange({ target: { name: "returndate", value: date } })}
+        className="form-control"
+        id="exampleInputUsername1"
+        dateFormat="dd-MM-yyyy"
+        placeholderText="Select Return Date"
+      />
 
                                             </div>
 
@@ -288,21 +345,21 @@ const BookIssue = () => {
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <div className='d-flex justify-content-between'>
+                                    <div className='d-flex justify-content-between'style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
                                         <div>
                                             <h4 class="card-title">Book Issue</h4>
                                         </div>
 
                                     </div>
 
-                                    <div>
-                                        <DataGrid
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                        <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
                                             getRowId={(row) => row.id}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                             }}
                                         />

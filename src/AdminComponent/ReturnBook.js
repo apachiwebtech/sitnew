@@ -11,6 +11,10 @@ import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { LibraryBooks } from '@mui/icons-material';
+import { StyledDataGrid } from './StyledDataGrid';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 
 
 const ReturnBook = () => {
@@ -21,7 +25,7 @@ const ReturnBook = () => {
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-
+    const [isDisabled, setIsDisabled] = useState(true); // Define isDisabled
     const [date, setDate] = useState('');
 
     useEffect(() => {
@@ -216,14 +220,25 @@ const ReturnBook = () => {
             type: 'number',
             align: 'center',
             headerAlign: 'center',
-            flex: 1,
+            flex: 0.5,
             filterable: false,
         },
         { field: 'student', headerName: 'Student Name', flex: 2},
         { field: 'book', headerName: 'Book', flex: 2},
         { field: 'bookcode', headerName: 'Book Code', flex: 2},
-        { field: 'returndate', headerName: 'Return Date', flex: 2},
-        { field: 'fine', headerName: 'Fine', flex: 2},
+        {
+            field: "returndate",
+            headerName: "Return Date",
+            flex: 1.5,
+            renderCell: (params) =>
+              params.value
+                ? /^\d{2}-\d{2}-\d{4}$/.test(params.value)
+                  ? params.value
+                  : new Date(params.value).toLocaleDateString("en-GB").replace(/\//g, "-")
+                : ""
+          },
+          
+        { field: 'fine', headerName: 'Fine', flex: 1.5},
         
         {
             field: 'actions',
@@ -246,7 +261,7 @@ const ReturnBook = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper col-lg-10">
+        <div class="container-fluid page-body-wrapper ">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -273,13 +288,17 @@ const ReturnBook = () => {
                                                 {<span className='text-danger'>{error.book}</span>}
                                             </div>
                                             
-                                            <div class="form-group col-lg-3">
+                                            <div class="form-group col-lg-3" style={{display: "flex", flexDirection: 'column'}}>
                                                 <lable htmlfor="exampleInputUsername1">Return Date </lable>
-                                                <input type="date" class="form-control" 
-                                                id="exampleInputUsername1" 
-                                                value={date}
-                                                name='date' 
-                                                onChange={(e) => { }} disabled />
+                                                <DatePicker
+        selected={date ? new Date(date) : null}
+        onChange={(selectedDate) => setDate(selectedDate)}
+        className="form-control"
+        id="exampleInputUsername1"
+        dateFormat="dd-MM-yyyy"
+        placeholderText="Select a date"
+        disabled={isDisabled} // Disables the date picker
+      />
 
                                             </div>
 
@@ -312,15 +331,15 @@ const ReturnBook = () => {
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <div className='d-flex justify-content-between'>
+                                    <div className='d-flex justify-content-between'style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
                                         <div>
                                             <h4 class="card-title">Return Book</h4>
                                         </div>
 
                                     </div>
 
-                                    <div>
-                                        <DataGrid
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                        <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
                                             disableColumnFilter
@@ -330,7 +349,7 @@ const ReturnBook = () => {
                                             getRowId={(row) => row.id}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                             }}
                                             slots={{ toolbar: GridToolbar }}

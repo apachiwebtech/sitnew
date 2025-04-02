@@ -12,6 +12,7 @@ import { PDFDownloadLink, pdf } from '@react-pdf/renderer';
 import MyDocument1 from "./MyDocument1";
 import Loader from "./Loader";
 import { BASE_URL } from './BaseUrl';
+import { StyledDataGrid } from './StyledDataGrid';
 
 function CustomToolbar() {
     return (
@@ -108,14 +109,34 @@ const AdmissionListing = () => {
     };
 
     const columns = [
-        { field: 'index', headerName: 'Id', type: 'number', align: 'center', headerAlign: 'center', flex: 1, filterable: false },
-        { field: 'Student_Name', headerName: 'Student Name', flex: 3 },
-        { field: 'Course_Name', headerName: 'Course Name', flex: 3 },
-        { field: 'Admission_Date', headerName: 'Admission Date', flex: 2 },
-        { field: 'Batch_code', headerName: 'Batch Code', flex: 2 },
-        { field: 'Payment_Type', headerName: 'Payment Type', flex: 2 },
-        { field: 'Amount', headerName: 'Total Fees', flex: 2 },
-        { field: 'Status', headerName: 'Status', flex: 2, renderCell: () => <p>Active</p> },
+        { field: 'index', headerName: 'Id', type: 'number', align: 'center', headerAlign: 'center', flex: 0.5, filterable: false },
+        { field: 'Student_Name', headerName: 'Student Name', flex: 2 },
+        { field: 'Course_Name', headerName: 'Course Name', flex: 2 },
+        {
+            field: 'Admission_Date', 
+            headerName: 'Admission Date', 
+            flex: 1, 
+            valueGetter: (params) => {
+              if (!params.value) return ''; // Handle null/undefined values
+          
+              // Regex to check if the date is already in dd-mm-yyyy format
+              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+              if (ddmmyyyyRegex.test(params.value)) {
+                return params.value; // Return as-is if already formatted
+              }
+          
+              const date = new Date(params.value);
+              if (isNaN(date.getTime())) return ''; // Handle invalid dates
+          
+              // Convert to dd-mm-yyyy format
+              return `${String(date.getDate()).padStart(2, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${date.getFullYear()}`;
+            }
+          },
+          
+        { field: 'Batch_code', headerName: 'Batch Code', flex: 1 },
+        { field: 'Payment_Type', headerName: 'Payment Type', flex: 1 },
+        { field: 'Amount', headerName: 'Total Fees', flex: 1 },
+        { field: 'Status', headerName: 'Status', flex: 0.5, renderCell: () => <p>Active</p> },
         {
             field: 'actions',
             type: 'actions',
@@ -150,18 +171,19 @@ const AdmissionListing = () => {
                         <div className="col-lg-12">
                             <div className="card">
                                 <div className="card-body">
-                                    <div className='d-flex justify-content-between gap-3' style={{ width: "100%", padding: "10px 0" }}>
+                                    <div className='d-flex justify-content-between gap-3' style={{ width: "100%", padding: "10px 0", borderBottom: "2px solid #dce4ec", }}>
                                         <h4 className="card-title">List Of Admission</h4>
                                     </div>
-                                    <div className="table-responsive">
+                                    <div className="table-responsive"
+                                    style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
                                         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
-                                            <DataGrid
+                                            <StyledDataGrid
                                                 rows={rowsWithIds}
                                                 columns={columns}
                                                 disableColumnSelector
                                                 rowHeight={37}
                                                 getRowId={(row) => row.Admission_Id}
-                                                initialState={{ pagination: { paginationModel: { pageSize: 10, page: 0 } } }}
+                                                initialState={{ pagination: { paginationModel: { pageSize: 50, page: 0 } } }}
                                                 slots={{ toolbar: CustomToolbar }}
                                                 slotProps={{ toolbar: { showQuickFilter: true } }}
                                             />

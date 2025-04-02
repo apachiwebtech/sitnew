@@ -6,6 +6,9 @@ import React, { useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import Loader from './Loader';
+import { StyledDataGrid } from "./StyledDataGrid";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 
 const LibraryBook = () => {
@@ -225,20 +228,26 @@ const LibraryBook = () => {
             type: 'number',
             align: 'center',
             headerAlign: 'center',
-            flex: 1,
+            flex: 0.5,
             filterable: false,
         },
-        { field: 'bookname', headerName: 'Book Name', flex: 2 },
-        { field: 'booknumber', headerName: 'Book Number', flex: 2 },
-        { field: 'coursename', headerName: 'Course Name', flex: 2},
-        { field: 'purchasedate', headerName: 'Purchase Date', flex: 2},
-        { field: 'rackno', headerName: 'Rach No.', flex: 2},
+        { field: 'bookname', headerName: 'Book Name', flex: 1 },
+        { field: 'booknumber', headerName: 'Book Number', flex: 1 },
+        { field: 'coursename', headerName: 'Course Name', flex: 1},
+        {
+            field: 'purchasedate', 
+            headerName: 'Purchase Date', 
+            flex: 1, 
+            valueGetter: (params) => params.value ? new Date(params.value).toISOString().split('T')[0].split('-').reverse().join('-') : ''
+          },
+          
+        { field: 'rackno', headerName: 'Rach No.', flex: 1},
         
         {
             field: 'actions',
             type: 'actions',
             headerName: 'Action',
-            flex: 1,
+            flex: 0.5,
             renderCell: (params) => {
                 return (
                     <>
@@ -255,7 +264,7 @@ const LibraryBook = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper col-lg-10">
+        <div class="container-fluid page-body-wrapper ">
             <InnerHeader />
 
             {loading && <Loader />}
@@ -317,9 +326,16 @@ const LibraryBook = () => {
                                                 <input type="text" class="form-control" id="exampleInputUsername1" value={value.author} placeholder="Author" name='author' onChange={onhandleChange} />
                                                 
                                             </div>
-                                            <div class="form-group col-lg-2">
+                                            <div class="form-group col-lg-2" style={{ display: "flex", flexDirection:"column"}}>
                                                 <label for="exampleInputUsername1">Purchase Date</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" value={value.purchasedate} placeholder="Purchase Date" name='purchasedate' onChange={onhandleChange} />
+                                                <DatePicker
+        selected={value.purchasedate ? new Date(value.purchasedate) : null}
+        onChange={(date) => onhandleChange({ target: { name: "purchasedate", value: date } })}
+        className="form-control"
+        id="exampleInputUsername1"
+        dateFormat="dd-MM-yyyy"
+        placeholderText="Purchase Date"
+      />
                                                 
                                             </div>
 
@@ -361,15 +377,16 @@ const LibraryBook = () => {
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <div className='d-flex justify-content-between'>
+                                    <div className='d-flex justify-content-between'
+                                    style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
                                         <div>
                                             <h4 class="card-title">View Library Book Details</h4>
                                         </div>
 
                                     </div>
 
-                                    <div>
-                                        <DataGrid
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                        <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
                                             disableColumnFilter
@@ -379,7 +396,7 @@ const LibraryBook = () => {
                                             getRowId={(row) => row.id}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                             }}
                                             slots={{ toolbar: GridToolbar }}

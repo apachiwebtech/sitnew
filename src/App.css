@@ -2,6 +2,27 @@
   text-align: center;
 }
 
+
+
+* {
+  font-family: "Open Sans", sans-serif !important ;
+  font-weight: 400 !important ;
+  font-style: normal !important ;
+}
+
+.libre-baskerville-bold {
+  font-family: "Libre Baskerville", serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.libre-baskerville-regular-italic {
+  font-family: "Libre Baskerville", serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;

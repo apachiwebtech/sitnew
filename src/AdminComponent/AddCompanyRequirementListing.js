@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
+import { StyledDataGrid } from "./StyledDataGrid";
 
 const AddCompanyRequirementListing = () => {
 
@@ -140,16 +141,16 @@ const AddCompanyRequirementListing = () => {
 
 
  const columns = [
-    { field: 'CompanyName', headerName: 'Company Name', width:200 },
-    { field: 'Profile', headerName: 'Profile', width: 200 },
-    { field: 'Location', headerName: 'Location', width:100 },
-    { field: 'Eligibility', headerName: 'Eligibility', width: 200 },
-    { field: 'Responsibility', headerName: 'Responsibilities', width: 200 },
-    { field: 'Course_Name', headerName: 'Course', width:150 },
+    { field: 'CompanyName', headerName: 'Company Name', flex: 1 },
+    { field: 'Profile', headerName: 'Profile', flex: 1 },
+    { field: 'Location', headerName: 'Location', flex: 1 },
+    { field: 'Eligibility', headerName: 'Eligibility', flex: 1 },
+    { field: 'Responsibility', headerName: 'Responsibilities', flex: 1 },
+    { field: 'Course_Name', headerName: 'Course', flex: 1 },
     {
         field: 'actions',
         headerName: 'Action',
-        width: 150,
+        flex: 1,
         renderCell: (params) => {
             return (
                 <>
@@ -167,7 +168,7 @@ const AddCompanyRequirementListing = () => {
 
     return (
 
-        <div className="container-fluid page-body-wrapper col-lg-10">
+        <div className="container-fluid page-body-wrapper ">
             <InnerHeader />
             <div className="main-panel">
 
@@ -178,7 +179,7 @@ const AddCompanyRequirementListing = () => {
                         <div className="col-lg-12">
                             <div className="card">
                                 <div className="card-body">
-                                    <div className='d-flex justify-content-between gap-3' style={{ width: "100%", padding: "10px 0" }}>
+                                    <div className='d-flex justify-content-between gap-3' style={{borderBottom: "2px solid #dce4ec", width: "100%", padding: "10px 0" }}>
                                         <div >
                                             <h4 class="card-title">Company Requirement</h4>
                                         </div>
@@ -188,8 +189,8 @@ const AddCompanyRequirementListing = () => {
 
                                     </div>
 
-                                    <div>
-                                        <DataGrid
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                        <StyledDataGrid
                                             rows={companyReqData}
                                             columns={columns}
                                             disableColumnFilter
@@ -199,7 +200,7 @@ const AddCompanyRequirementListing = () => {
                                             getRowId={(row) => row.CompReqId}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                             }}
                                             slots={{ toolbar: GridToolbar }}

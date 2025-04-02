@@ -9,6 +9,7 @@ import decryptedUserId from '../Utils/UserID';
 import { DataGrid ,GridToolbar} from '@mui/x-data-grid';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { StyledDataGrid } from './StyledDataGrid';
 
 
 const Location = () => {
@@ -178,7 +179,7 @@ const Location = () => {
             type: 'number',
             align: 'center',
             headerAlign: 'center',
-            flex: 1,
+            flex: 0.5,
             filterable: false,
         },
         { field: 'LocationMaster', headerName: 'Location', flex: 2 },
@@ -186,7 +187,7 @@ const Location = () => {
             field: 'actions',
             type: 'actions',
             headerName: 'Action',
-            flex: 1,
+            flex: 0.5,
             renderCell: (params) => {
                 return (
                     <>
@@ -203,7 +204,7 @@ const Location = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper col-lg-10">
+        <div class="container-fluid page-body-wrapper ">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -235,7 +236,8 @@ const Location = () => {
                         <div class="col-lg-7">
                             <div class="card">
                                 <div class="card-body">
-                                    <div className='d-flex justify-content-between'>
+                                    <div className='d-flex justify-content-between'
+                                    style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
                                         <div>
                                             <h4 class="card-title">List of location</h4>
                                             
@@ -243,8 +245,8 @@ const Location = () => {
 
                                     </div>
 
-                                    <div>
-                                    <DataGrid
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                    <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
                                             disableColumnFilter
@@ -254,7 +256,7 @@ const Location = () => {
                                             getRowId={(row) => row.id}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 160 },
+                                                    paginationModel: { pageSize: 50, page: 160 },
                                                 },
                                             }}
                                             // slots={{ toolbar: GridToolbar }}

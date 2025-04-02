@@ -7,6 +7,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
 import decryptedUserId from '../Utils/UserID';
 import { DataGrid } from '@mui/x-data-grid';
+import { StyledDataGrid } from './StyledDataGrid';
 
 
 const OneFieldForm = () => {
@@ -166,7 +167,7 @@ const OneFieldForm = () => {
             type: 'number',
             align: 'center',
             headerAlign: 'center',
-            flex: 1,
+            flex: 0.5,
             filterable: false,
         },
         { field: 'title', headerName: 'Title', flex: 2 },
@@ -174,7 +175,7 @@ const OneFieldForm = () => {
             field: 'actions',
             type: 'actions',
             headerName: 'Action',
-            flex: 1,
+            flex: 0.5,
             renderCell: (params) => {
                 return (
                     <>
@@ -221,7 +222,8 @@ const OneFieldForm = () => {
                         <div class="col-lg-7 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <div className='d-flex justify-content-between'>
+                                    <div className='d-flex justify-content-between'
+                                    style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
                                         <div>
                                             <h4 class="card-title">{fieldname}</h4>
                                             <p class="card-description">
@@ -231,14 +233,14 @@ const OneFieldForm = () => {
 
                                     </div>
                                     
-                                    <div>
-                                    <DataGrid
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                    <StyledDataGrid
                                             rows= {rowsWithIds}
                                             columns={columns}
                                             getRowId={(row) => row.id}
                                             initialState={{
                                                 pagination: {
-                                                  paginationModel: { pageSize: 10, page: 0 },
+                                                  paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                               }}
                                         />

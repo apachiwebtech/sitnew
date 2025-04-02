@@ -13,6 +13,8 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import { Button, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import AddBoxIcon from '@mui/icons-material/AddBox';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 
 const CorporateInquiryForm = () => {
@@ -287,7 +289,7 @@ const CorporateInquiryForm = () => {
 
     return (
 
-        <div className="container-fluid page-body-wrapper col-lg-10">
+        <div className="container-fluid page-body-wrapper ">
             <InnerHeader />
             <div className="main-panel">
 
@@ -374,9 +376,19 @@ const CorporateInquiryForm = () => {
                                                             <option>Other</option>
                                                         </select>
                                                     </div> */}
-                                                    <div className="form-group col-lg-12 p-0">
+                                                    <div className="form-group col-lg-12 p-0" style={{ display: 'flex', flexDirection: "column"}}>
                                                         <label for="exampleInputUsername1">Date Of Brith</label>
-                                                        <input type="date" class="form-control" id="exampleInputUsername1" value={value.dob} placeholder="Contact Person" name='dob' onChange={onhandleChange} />
+                                                        <DatePicker
+        selected={value.dob ? new Date(value.dob) : null}
+        onChange={(date) => onhandleChange({ target: { name: "dob", value: date } })}
+        className="form-control"
+        id="exampleInputUsername1"
+        dateFormat="dd-MM-yyyy"
+        placeholderText="Select DOB"
+        showYearDropdown
+        scrollableYearDropdown
+        yearDropdownItemNumber={100} // Shows past 100 years
+      />
 
                                                     </div>
                                                  
@@ -398,9 +410,16 @@ const CorporateInquiryForm = () => {
                                                     <div>
                                                         <h4 className="card-title">Status Details</h4>
                                                     </div>
-                                                    <div class="form-group col-lg-12 p-0">
+                                                    <div class="form-group col-lg-12 p-0" style={{display: "flex", flexDirection:'column'}}>
                                                         <label for="exampleInputUsername1">Date</label>
-                                                        <input type="date" className="form-control" id="exampleInputUsername1" value={value.dob} placeholder="Contact Person" name='dob' onChange={onhandleChange} disabled />
+                                                        <DatePicker
+  selected={value.dob ? new Date(value.dob) : null}
+  className="form-control"
+  id="exampleInputUsername1"
+  dateFormat="dd-MM-yyyy"
+  placeholderText="Select DOB"
+  readOnly // Prevents editing but keeps it visible
+/>
 
                                                     </div>
                                                     <div className="form-group col-lg-12 p-0">

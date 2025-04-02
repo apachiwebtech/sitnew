@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import Loader from './Loader';
+import { StyledDataGrid } from "./StyledDataGrid";
 
 const OnlineAdmissions = () => {
 
@@ -95,13 +96,29 @@ const OnlineAdmissions = () => {
                 </>
             )
         } },
-        { field: 'Admission_Dt', headerName: 'Admission Date', flex: 2 , renderCell: (params) => {
-            return (
+        {
+            field: 'Admission_Dt',
+            headerName: 'Admission Date',
+            flex: 2,
+            renderCell: (params) => {
+              const formattedDate = params.row.Admission_Dt 
+                ? new Date(params.row.Admission_Dt).toISOString().split('T')[0].split('-').reverse().join('-') 
+                : '';
+          
+              return (
                 <>
-                    {params.row.Status == 'Closed' ? <p className='text-danger'>{params.row.Admission_Dt}</p> : params.row.Status == 'Accepted' ? <p className='text-success'>{params.row.Admission_Dt}</p> : <p>{params.row.Admission_Dt}</p>}
+                  {params.row.Status === 'Closed' ? (
+                    <p className="text-danger">{formattedDate}</p>
+                  ) : params.row.Status === 'Accepted' ? (
+                    <p className="text-success">{formattedDate}</p>
+                  ) : (
+                    <p>{formattedDate}</p>
+                  )}
                 </>
-            )
-        } },
+              );
+            }
+          },
+          
         {
             field: 'Status', headerName: 'Status', flex: 2, renderCell: (params) => {
                 return (
@@ -142,7 +159,7 @@ const OnlineAdmissions = () => {
 
                         <div className="col-lg-12">
                             {/* <div className="card"> */}
-                            <div className="">
+                            <div className="" style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
                                 {/* <div className='d-flex justify-content-between gap-3' style={{ width: "100%", padding: "10px 0" }}>
                                         <div >
                                             <h4 class="card-title">Online Admission</h4>
@@ -151,8 +168,8 @@ const OnlineAdmissions = () => {
 
                                     </div> */}
 
-                                <div className="card">
-                                    <DataGrid
+                                <div className="card" style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                    <StyledDataGrid
                                         rows={rowsWithIds}
                                         columns={columns}
                                         // disableColumnFilter
@@ -162,7 +179,7 @@ const OnlineAdmissions = () => {
                                         getRowId={(row) => row.Student_Id}
                                         initialState={{
                                             pagination: {
-                                                paginationModel: { pageSize: 10, page: 0 },
+                                                paginationModel: { pageSize: 50, page: 0 },
                                             },
                                         }}
                                         slots={{ toolbar: CustomToolbar }}

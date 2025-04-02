@@ -215,7 +215,27 @@ const LectureTakenListing = () => {
             filterable: false,
         },
         { field: "Topic", headerName: "Lecture", flex: 2 },
-        { field: "Take_Dt", headerName: "Date", flex: 2 },
+        {
+            field: "Take_Dt",
+            headerName: "Date",
+            flex: 2,
+            valueGetter: (params) => {
+              if (!params.value) return ""; // Handle empty values
+          
+              // Regex to check if the date is already in DD-MM-YYYY format
+              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+              if (ddmmyyyyRegex.test(params.value)) {
+                return params.value; // Return as-is if already formatted
+              }
+          
+              const date = new Date(params.value);
+              if (isNaN(date.getTime())) return ""; // Handle invalid dates
+          
+              // Convert to DD-MM-YYYY format
+              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+            },
+          },
+          
         { field: "Batch_Id", headerName: "Batch Code", flex: 2 },
         { field: "Topic", headerName: "Topic", flex: 2 },
         { field: "Faculty_Id", headerName: "Faculty Name", flex: 2 },
@@ -244,7 +264,7 @@ const LectureTakenListing = () => {
     const rowsWithIds = lecturetakendata.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
-        <div className="container-fluid page-body-wrapper col-lg-10">
+        <div className="container-fluid page-body-wrapper ">
             <InnerHeader />
 
             {loading && <Loader />}
@@ -256,7 +276,7 @@ const LectureTakenListing = () => {
                             <div className="card">
                                 <div className="card-body">
                                     <div className="row " style={{ width: "100%", padding: "10px 0" }}>
-                                        <div className="col-lg-7 ">
+                                        <div className="col-lg-7 " >
                                             <form className="row align-items-center" onSubmit={onsearchformSumbit}>
                                                 {/* <h4 class="card-title">Student Information</h4> */}
 
@@ -329,7 +349,7 @@ const LectureTakenListing = () => {
                                                         Search
                                                     </Button>
                                                 </div>
-                                                <div className="form-group col-lg-2">
+                                                <div className="form-group col-lg-2" >
                                                     <Button
                                                         type="submit"
                                                         onClick={() => {
@@ -419,7 +439,7 @@ const LectureTakenListing = () => {
                                         )}
 
                                         {confirmationVisibleMap[cid] && (
-                                            <div className="confirm-delete">
+                                            <div className="confirm-delete" >
                                                 <p>Are you sure you want to delete?</p>
                                                 <button
                                                     onClick={() => handleDelete(cid)}
@@ -430,6 +450,7 @@ const LectureTakenListing = () => {
                                                 <button
                                                     onClick={() => handleCancel(cid)}
                                                     className="btn btn-sm btn-danger"
+                                                    
                                                 >
                                                     Cancel
                                                 </button>

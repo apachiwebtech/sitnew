@@ -7,6 +7,9 @@ import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
+import { StyledDataGrid } from "./StyledDataGrid";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const NoticeBoard = () => {
 
@@ -222,8 +225,20 @@ const NoticeBoard = () => {
             filterable: false,
                                               
         },
-        { field: 'startdate', headerName: 'Start Date', flex: 2},
-        { field: 'enddate', headerName: 'End Date', flex: 2},
+        { 
+            field: "startdate", 
+            headerName: "Start Date", 
+            flex: 2, 
+            renderCell: ({ value }) => value ? new Date(value).toLocaleDateString("en-GB") : "" 
+          },
+          
+          { 
+            field: "enddate", 
+            headerName: "End Date", 
+            flex: 2, 
+            renderCell: ({ value }) => value ? new Date(value).toLocaleDateString("en-GB") : "" 
+          },
+          
         { field: 'specification', headerName: 'Description', flex: 2, renderCell : (params) => {
             return (
                 <>
@@ -253,7 +268,7 @@ const NoticeBoard = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper col-lg-10">
+        <div class="container-fluid page-body-wrapper ">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -266,17 +281,31 @@ const NoticeBoard = () => {
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
 
-                                            <div class="form-group col-lg-3">
+                                            <div class="form-group col-lg-3" style={{ display: "flex", flexDirection:"column"}}>
                                                 <label for="exampleInputUsername1">Start Date<span className="text-danger" >*</span></label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1"
-                                                 value={value.startdate} name='startdate' onChange={onhandleChange} />
+                                                <DatePicker
+        selected={value.startdate ? new Date(value.startdate) : null}
+        onChange={(date) => onhandleChange({ target: { name: "startdate", value: date.toISOString().split("T")[0] } })}
+        className="form-control"
+        id="startdate"
+        placeholderText="Select Start Date"
+        dateFormat="dd-MM-yyyy"
+        minDate={new Date()} // Prevents selecting past dates
+      />
                                                 {<span className='text-danger'> {error.startdate} </span>}
                                             </div>
 
-                                            <div class="form-group col-lg-3">
+                                            <div class="form-group col-lg-3" style={{ display: "flex", flexDirection:"column"}}>
                                                 <label for="exampleInputUsername1">End Date<span className="text-danger">*</span></label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" 
-                                                value={value.enddate} name='enddate' onChange={onhandleChange} />
+                                                <DatePicker
+        selected={value.enddate ? new Date(value.enddate) : null}
+        onChange={(date) => onhandleChange({ target: { name: "enddate", value: date.toISOString().split("T")[0] } })}
+        className="form-control"
+        id="enddate"
+        placeholderText="Select End Date"
+        dateFormat="dd-MM-yyyy"
+        minDate={value.startdate ? new Date(value.startdate) : new Date()} // Prevents selecting before start date
+      />
                                                 {<span className='text-danger'> {error.enddate} </span>}
                                             </div>
 
@@ -321,15 +350,15 @@ const NoticeBoard = () => {
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <div className='d-flex justify-content-between'>
+                                    <div className='d-flex justify-content-between' style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
                                         <div>
                                             <h4 class="card-title">View Notice Board</h4>
                                         </div>
 
                                     </div>
 
-                                    <div>
-                                        <DataGrid
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                        <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
                                             disableColumnFilter
@@ -339,7 +368,7 @@ const NoticeBoard = () => {
                                             getRowId={(row) => row.id}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                             }}
                                             slots={{ toolbar: GridToolbar }}

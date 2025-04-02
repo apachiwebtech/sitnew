@@ -15,6 +15,7 @@ import FormControl from "@mui/material/FormControl";
 import { pdf } from "@react-pdf/renderer";
 import MyDocument3 from "./MyDocument3";
 import TestDocument from "./TestDocument";
+import { StyledDataGrid } from "./StyledDataGrid";
 const FinalExam = () => {
     const [brand, setBrand] = useState([]);
     const [vendordata, setVendorData] = useState([]);
@@ -338,7 +339,7 @@ const FinalExam = () => {
     const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
-        <div class="container-fluid page-body-wrapper col-lg-10">
+        <div class="container-fluid page-body-wrapper ">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -469,7 +470,7 @@ const FinalExam = () => {
                                     </div>
 
                                     <div>
-                                        <DataGrid
+                                        <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
                                             disableColumnFilter
@@ -479,7 +480,7 @@ const FinalExam = () => {
                                             getRowId={(row) => row.id}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                             }}
                                             slots={{ toolbar: GridToolbar }}

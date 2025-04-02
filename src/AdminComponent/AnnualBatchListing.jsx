@@ -8,6 +8,9 @@ import InnerHeader from './InnerHeader';
 import { Link } from 'react-router-dom';
 import { param } from 'jquery';
 import Loader from './Loader';
+import { StyledDataGrid } from './StyledDataGrid';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const CACHE_KEY = 'annual_data'; // Key for localStorage caching
 const CACHE_EXPIRY_MS = 1000 * 60 * 15; // Cache expiry time (15 minutes)
@@ -32,6 +35,7 @@ const AnnualBatchListing = () => {
     axios.get(`${BASE_URL}/getannualbatch`)
       .then((res) => {
         console.log(res.data)
+        
         setAnnulBatch(res.data)
         localStorage.setItem(CACHE_KEY, JSON.stringify({
           data: res.data,
@@ -192,39 +196,43 @@ const AnnualBatchListing = () => {
       type: 'number',
       align: 'center',
       headerAlign: 'center',
-      width: 10,
+      width: 100,
       filterable: false,
     },
-    { field: 'Course_Name', headerName: 'Course Name', width: 200 },
-    { field: 'Batch_code', headerName: 'Batch No.', width: 100 },
-    { field: 'Category', headerName: 'Category', width: 160 },
-    { field: 'Timings', headerName: 'Timings', width: 130 },
+    { field: 'Course_Name', headerName: 'Course Name', width: 260 },
+    { field: 'Batch_code', headerName: 'Batch No.', width: 90 },
+    { field: 'Category', headerName: 'Category', width: 140 },
+    { field: 'Timings', headerName: 'Timings', width: 250 },
 
-    { field: 'SDate', headerName: 'Planned Start Date', width: 130 },
+    { field: 'SDate', headerName: 'Planned Start Date', width: 140, valueGetter: (params) => params.value ? new Date(params.value).toISOString().split('T')[0].split('-').reverse().join('-') : ''},
     {
-      field: 'StartDate', headerName: 'Actual Start Date', width: 130, renderCell: (param) => {
-        return (
-          <p>{param.row.SDate}</p>
-        )
-      }
-    },
+  field: 'StartDate', 
+  headerName: 'Actual Start Date', 
+  width: 140, 
+  renderCell: (param) => (
+    <p>{param.row.SDate ? new Date(param.row.SDate).toISOString().split('T')[0].split('-').reverse().join('-') : ''}</p>
+  )
+},
 
-    { field: 'EDate', headerName: 'Last Date of Admission', width: 130 },
+
+    { field: 'EDate', headerName: 'Last Date of Admission', width: 150 , valueGetter: (params) => params.value ? new Date(params.value).toISOString().split('T')[0].split('-').reverse().join('-') : ''},
     {
-      field: 'EndDate', headerName: 'Training Completion Date', width: 130, renderCell: (param) => {
-        return (
-          <p>{param.row.EDate}</p>
-        )
-      }
+      field: 'EndDate', 
+      headerName: 'Training Completion Date', 
+      width: 170, 
+      renderCell: (param) => (
+        <p>{param.row.EDate ? new Date(param.row.EDate).toISOString().split('T')[0].split('-').reverse().join('-') : ''}</p>
+      )
     },
+    
 
-    { field: 'Duration', headerName: 'Duration', width: 130 },
+    { field: 'Duration', headerName: 'Duration', width: 90 },
     { field: 'Training_Coordinator', headerName: 'Training Coordinator', width: 150 },
     {
       field: 'actions',
       type: 'actions',
       headerName: 'Action',
-      width: 150,
+      width: 100,
       renderCell: (params) => {
         return (
           <>
@@ -243,7 +251,7 @@ const AnnualBatchListing = () => {
   }
 
   return (
-    <div className="container-fluid page-body-wrapper col-lg-10">
+    <div className="container-fluid page-body-wrapper ">
       <InnerHeader />
 
       {loading && <Loader />}
@@ -263,40 +271,61 @@ const AnnualBatchListing = () => {
                     <Link to='/annualbatch/:batch_id'> <button className='btn btn-success'>Add +</button></Link>
 
                   </div>
-                  <div className='card' >
-                    <div className="card-body">
-                      <form class="forms-sample row py-3 " onSubmit={handleSubmit}>
-                        <div class="form-group col-lg-3">
-                          <label for="exampleFormControlSelect1">Course <span className='text-danger'>*</span></label>
-                          <select class="form-control form-control-lg" id="exampleFormControlSelect1" name='selectcourse' onChange={onhandleChange} >
-                            <option value={''}>Select</option>
-                            {course.map((item) => {
-                              return (
+                  <div className="card" style={{ borderBottom: "2px solid #dce4ec", width: "100%" }}>
+  <div className="card-body">
+    <form className="forms-sample row py-3 d-flex align-items-center flex-wrap" onSubmit={handleSubmit} style={{ gap: "15px" }}>
+      
+      {/* Course Dropdown */}
+      <div className="form-group" style={{ display: "flex", flexDirection: "column" }}>
+        <label htmlFor="exampleFormControlSelect1">Course <span className="text-danger">*</span></label>
+        <select className="form-control form-control-lg" id="exampleFormControlSelect1" name="selectcourse" onChange={onhandleChange}>
+          <option value="">Select</option>
+          {course.map((item) => (
+            <option key={item.Course_Id} value={item.Course_Id}>{item.Course_Name}</option>
+          ))}
+        </select>
+      </div>
 
-                                <option value={item.Course_Id}>{item.Course_Name}</option>
-                              )
-                            })}
-                          </select>
-                        </div>
-                        <div class="form-group col-lg-3">
-                          <label for="exampleInputUsername1">From Date <span className='text-danger'>*</span></label>
-                          <input type="date" class="form-control" id="exampleInputUsername1" placeholder="from_date" name='from_date'
-                          value={value.from_date} onChange={onhandleChange} />
-                        </div>
-                        <div class="form-group col-lg-3">
-                          <label for="exampleInputUsername1">To Date <span className='text-danger'>*</span></label>
-                          <input type="date" class="form-control" id="exampleInputUsername1" placeholder="to_date" name='to_date' value={value.to_date}onChange={onhandleChange} />
-                        </div>
-                        <div className='d-flex align-items-center mt-3' >
-                          <button type="submit" class="btn btn-sm btn-primary mr-2">Submit</button>
-                          <button type='reset' onClick={() => getAnnualData()} class="btn btn-sm btn-primary mr-2">Clear</button>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
+      {/* From Date Picker */}
+      <div className="form-group" style={{ display: "flex", flexDirection: "column" }}>
+        <label htmlFor="from_date">From Date <span className="text-danger">*</span></label>
+        <DatePicker
+          selected={value.from_date}
+          onChange={(date) => onhandleChange({ target: { name: "from_date", value: date } })}
+          className="form-control"
+          id="from_date"
+          placeholderText="Select From Date"
+          dateFormat="dd-MM-yyyy"
+        />
+      </div>
 
-                  <div >
-                    <DataGrid
+      {/* To Date Picker */}
+      <div className="form-group" style={{ display: "flex", flexDirection: "column" }}>
+        <label htmlFor="to_date">To Date <span className="text-danger">*</span></label>
+        <DatePicker
+          selected={value.to_date}
+          onChange={(date) => onhandleChange({ target: { name: "to_date", value: date } })}
+          className="form-control"
+          id="to_date"
+          placeholderText="Select To Date"
+          dateFormat="dd-MM-yyyy"
+          minDate={value.from_date}
+        />
+      </div>
+
+      {/* Buttons */}
+      <div className="d-flex align-items-center" style={{ display: "flex", flexDirection: "row", marginTop: "12px" }}>
+        <button type="submit" className="btn btn-sm btn-primary mr-2">Submit</button>
+        <button type="reset" onClick={() => getAnnualData()} className="btn btn-sm btn-primary mr-2">Clear</button>
+      </div>
+    
+    </form>
+  </div>
+</div>
+
+
+                  <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                    <StyledDataGrid
                       rows={rowsWithIds}
                       columns={columns}
                       // disableColumnFilter
@@ -306,7 +335,7 @@ const AnnualBatchListing = () => {
                       getRowId={(row) => row.Batch_Id}
                       initialState={{
                         pagination: {
-                          paginationModel: { pageSize: 10, page: 0 },
+                          paginationModel: { pageSize: 50, page: 0 },
                         },
                       }}
                       slots={{ toolbar: GridToolbar }}

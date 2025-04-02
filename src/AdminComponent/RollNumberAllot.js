@@ -7,6 +7,7 @@ import Loader from "./Loader";
 import { error } from 'jquery';
 // import { Toast } from 'bootstrap';
 import toast, { Toaster } from 'react-hot-toast';
+import { StyledDataGrid } from './StyledDataGrid';
 //import FormControlLabel from '@mui/material/FormControlLabel';
 
 const RollNumberAllot = () => {
@@ -124,13 +125,33 @@ const RollNumberAllot = () => {
             type: 'number',
             align: 'center',
             headerAlign: 'center',
-            flex: 1,
+            flex: 0.5,
             filterable: false,
 
         },
         { field: 'Student_Code', headerName: 'Student Code', flex: 2 },
         { field: 'Student_Name', headerName: 'Student Name', flex: 2 },
-        { field: 'Admission_Date', headerName: 'Admission Date', flex: 2 },
+        {
+            field: 'Admission_Date', 
+            headerName: 'Admission Date', 
+            flex: 2, 
+            valueGetter: (params) => {
+              if (!params.value) return ''; // Handle null/undefined values
+          
+              // Regex to check if the date is already in dd-mm-yyyy format
+              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+              if (ddmmyyyyRegex.test(params.value)) {
+                return params.value; // Return as-is if already formatted
+              }
+          
+              const date = new Date(params.value);
+              if (isNaN(date.getTime())) return ''; // Handle invalid dates
+          
+              // Convert to dd-mm-yyyy format
+              return `${String(date.getDate()).padStart(2, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${date.getFullYear()}`;
+            }
+          },
+          
         {
             field: 'Phase', headerName: 'Phase', flex: 2, renderCell: (param) => {
                 return (
@@ -158,7 +179,7 @@ const RollNumberAllot = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper col-lg-10">
+        <div class="container-fluid page-body-wrapper ">
             <InnerHeader />
             <Toaster />
             {loading && <Loader />}
@@ -220,15 +241,16 @@ const RollNumberAllot = () => {
                             <div class="col-lg-12">
                                 <div class="card">
                                     <div class="card-body">
-                                        <div className='d-flex justify-content-between'>
+                                        <div className='d-flex justify-content-between'
+                                        style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
                                             <div>
                                                 <h4 class="card-title">Allot Roll Number List</h4>
                                             </div>
 
                                         </div>
-                                        <div>
+                                        <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
 
-                                            <DataGrid
+                                            <StyledDataGrid
                                                 rows={rowsWithIds}
                                                 columns={columns}
                                                 disableColumnFilter
@@ -238,7 +260,7 @@ const RollNumberAllot = () => {
                                                 getRowId={(row) => row.Student_Id}
                                                 initialState={{
                                                     pagination: {
-                                                        paginationModel: { pageSize: 10, page: 0 },
+                                                        paginationModel: { pageSize: 50, page: 0 },
                                                     },
                                                 }}
 

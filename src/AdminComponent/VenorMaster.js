@@ -7,6 +7,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
 import decryptedUserId from '../Utils/UserID';
 import { DataGrid ,GridToolbar } from '@mui/x-data-grid';
+import { StyledDataGrid } from './StyledDataGrid';
 
 
 const VendorMaster = () => {
@@ -225,19 +226,19 @@ const VendorMaster = () => {
             type: 'number',
             align: 'center',
             headerAlign: 'center',
-            flex: 1,
+            flex: 0.5,
             filterable: false,
         },
-        { field: 'vendorname', headerName: 'Vendor Name', flex: 2 },
-        { field: 'email', headerName: 'E-Mail', flex: 2 },
-        { field: 'city', headerName: 'City', flex: 2},
-        { field: 'mobile', headerName: 'Contact', flex: 2},
-        { field: 'pin', headerName: 'Pin', flex: 2},
+        { field: 'vendorname', headerName: 'Vendor Name', flex: 1 },
+        { field: 'email', headerName: 'E-Mail', flex: 1 },
+        { field: 'city', headerName: 'City', flex: 1},
+        { field: 'mobile', headerName: 'Contact', flex: 1},
+        { field: 'pin', headerName: 'Pin', flex: 1},
         {
             field: 'actions',
             type: 'actions',
             headerName: 'Action',
-            flex: 1,
+            flex: 0.5,
             renderCell: (params) => {
                 return (
                     <>
@@ -254,7 +255,7 @@ const VendorMaster = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper col-lg-10">
+        <div class="container-fluid page-body-wrapper ">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -373,7 +374,7 @@ const VendorMaster = () => {
                             <div class="card">
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
-                                        <div>
+                                        <div  style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
                                             <h4 class="card-title">Vendor</h4>
                                             <p class="card-description">
                                                 List Of Vendor
@@ -382,8 +383,8 @@ const VendorMaster = () => {
 
                                     </div>
 
-                                    <div>
-                                    <DataGrid
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                    <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
                                             disableColumnFilter
@@ -393,7 +394,7 @@ const VendorMaster = () => {
                                             getRowId={(row) => row.id}
                                             initialState={{
                                                 pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 50, page: 0 },
                                                 },
                                             }}
                                             slots={{ toolbar: GridToolbar }}

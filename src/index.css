@@ -12655,6 +12655,7 @@ input[type="button"].btn-block {
 }
 
 .navbar-brand {
+  color: #008452;
   display: inline-block;
   padding-top: 0.3125rem;
   padding-bottom: 0.3125rem;
@@ -19712,11 +19713,12 @@ code {
 }
 
 .card .card-title {
+
   color: #001737;
   margin-bottom: .6rem;
   text-transform: capitalize;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 600 !important; 
  
 }
 .titleback{
