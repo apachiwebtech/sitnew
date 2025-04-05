@@ -199,7 +199,8 @@ const Students = () => {
         };
 
         axios.post(`${BASE_URL}/getserchresult`, data).then((res) => {
-            setStudents(res.data);
+            setStudents(res.data.data);
+            setTotalStudent(res.data.totalCount);
         });
     };
 
@@ -413,11 +414,11 @@ const Students = () => {
                                             disableColumnSelector
                                             disableDensitySelector
                                             getRowId={(row) => row.Admission_Id}
-                                            initialState={{
-                                                pagination: {
-                                                    paginationModel: { pageSize: 100, page: 0 },
-                                                },
-                                            }}
+                                            // initialState={{
+                                            //     pagination: {
+                                            //         paginationModel: { pageSize: 100, page: 0 },
+                                            //     },
+                                            // }}
                                             // Any other DataGrid props you need
                                         />
                                         <div className="float-right py-2">

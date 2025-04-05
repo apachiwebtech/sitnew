@@ -599,10 +599,9 @@ const Inquiry = () => {
                                                     <div>
                                                         <b>Admission_url :</b>{" "}
                                                         <Link
-                                                            to={`https://sitsuvidya.in/addmission_form.php?course=${courseid}&id=${inquiryid}`}
+                                                            to={`https://sitsuvidya.in/addmission_form.php?id=${inquiryid}`}
                                                         >
-                                                            https://sitsuvidya.in/addmission_form.php?course={courseid}
-                                                            &id={inquiryid}
+                                                            https://sitsuvidya.in/addmission_form.php?id={inquiryid}
                                                         </Link>
                                                     </div>
                                                     <div className="my-3">

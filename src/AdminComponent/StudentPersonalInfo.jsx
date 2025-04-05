@@ -16,6 +16,8 @@ const StudentPersonalInfo = () => {
     const location = useLocation();
     const [personalInfo, setPersonalInfo] = useState({
         studentName: "",
+        Student_Id: "",
+        Email: "",
         Batch_Code: "",
         gender: "",
         nationality: "",
@@ -118,6 +120,8 @@ const StudentPersonalInfo = () => {
             ...prevState,
             Batch_Code: data[0].Batch_Code,
             studentName: data[0].Student_Name,
+            Student_Id: data[0].Student_Id,
+            Email: data[0].Email,
             gender: data[0].Sex,
             nationality: data[0].Nationality,
             dob: data[0].DOB,
@@ -134,8 +138,8 @@ const StudentPersonalInfo = () => {
             category: data[0].Batch_Category_id,
             Referby: data[0].Refered_By,
             admission_dt: data[0].Admission_Dt,
-            prestatus: data[0].Status_id,
-            changestatus: data[0].OnlineState,
+            prestatus: data[0].Status,
+            changestatus: data[0].Status_id,
             date: data[0].Status_date,
             prestatusdate: data[0].StateChangeDt,
             permanentAdress: data[0].Permanent_Address,
@@ -169,6 +173,7 @@ const StudentPersonalInfo = () => {
             body: JSON.stringify({
                 Student_Id: localStorage.getItem(`Admissionid`),
                 studentName: personalInfo.studentName,
+                Email: personalInfo.Email,
                 Batch_Code: personalInfo.Batch_Code,
                 gender: personalInfo.gender,
                 nationality: personalInfo.nationality,
@@ -255,10 +260,11 @@ const StudentPersonalInfo = () => {
                                                                 type="text"
                                                                 class="form-control"
                                                                 id="exampleInputUsername1"
-                                                                value={personalInfo.online_stud_id}
-                                                                placeholder="Name*"
-                                                                name="online_stud_id"
+                                                                value={personalInfo.Student_Id}
+                                                                placeholder="Id*"
+                                                                name="Student_Id"
                                                                 onChange={handleChange}
+                                                                disabled
                                                             />
                                                         </div>
 
@@ -335,6 +341,20 @@ const StudentPersonalInfo = () => {
                                                                 }
                                                                 placeholder="Name*"
                                                                 name="password"
+                                                                onChange={handleChange}
+                                                            />
+                                                        </div>
+                                                        <div className="form-group col-lg-4 ">
+                                                            <label for="exampleInputUsername1">
+                                                                Email
+                                                            </label>
+                                                            <input
+                                                                type="text"
+                                                                className="form-control"
+                                                                id="exampleInputUsername1"
+                                                                value={personalInfo.Email}
+                                                                placeholder="Name*"
+                                                                name="Email"
                                                                 onChange={handleChange}
                                                             />
                                                         </div>

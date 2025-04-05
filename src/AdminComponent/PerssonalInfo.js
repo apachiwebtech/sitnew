@@ -140,7 +140,7 @@ const PerssonalInfo = () => {
             .then((res) => {
                 console.log(res)
 
-                if(res.data && res.data[0].upload_image){
+                if(res.data[0] && res.data[0].upload_image){
 
                     setProfile(res.data[0].upload_image)
                 }
@@ -645,7 +645,7 @@ const PerssonalInfo = () => {
                                                 </div>
 
                                                 <div className='student-img text-center'>
-                                                    <img style={{ width: "150px" }} src={`${IMG_URL}/${admissionid}/` + profilephoto} alt='' />
+                                                    <img style={{ width: "150px" }} src={`${IMG_URL}/student_document/${admissionid}/` + profilephoto} alt='' />
                                                 </div>
 
                                             </div>
