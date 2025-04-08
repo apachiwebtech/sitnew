@@ -308,7 +308,7 @@ const PerssonalInfo = () => {
 
                 // Generate the student code
                 const year = new Date().getFullYear().toString().slice(2);
-                const countStr = String(existingCount).padStart(3, '0');
+                const countStr = String(existingCount).padStart(4, '0');
                 const studentCode = `${year}${batchCode}${countStr}`;
 
 

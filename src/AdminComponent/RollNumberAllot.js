@@ -83,7 +83,7 @@ const RollNumberAllot = () => {
 
         if (confirm) {
             const data = {
-                batch_code: value.rollnumberallot,
+                batch_Id: value.rollnumberallot,
             }
             axios.post(`${BASE_URL}/allocatedrollno`, data)
                 .then((res) => {
@@ -103,14 +103,14 @@ const RollNumberAllot = () => {
     const getstudentlisitng = (id) => {
         setHide(true)
         const data = {
-            batch_code: id
+            batch_Id: id
         }
 
-        axios.post(`${BASE_URL}/getbatchwisestudent`, data)
+        axios.post(`${BASE_URL}/getbatchstudent`, data)
             .then((res) => {
                 setStudent(res.data)
 
-                if(res.data && res.data[0].IsDone){
+                if(res.data && res.data.length > 0){
                     
                     setDone(res.data[0].IsDone)
                 }
@@ -221,7 +221,7 @@ const RollNumberAllot = () => {
 
                                                     {batch.map((item) => {
                                                         return (
-                                                            <option value={item.Batch_code}>{item.Batch_code}</option>
+                                                            <option value={item.Batch_Id}>{item.Batch_code}</option>
                                                         )
                                                     })}
                                                 </select>

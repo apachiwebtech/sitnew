@@ -243,7 +243,7 @@ const Inquiry = () => {
                 category_id: cat_id || categoryid,
             };
             axios
-                .post(`${BASE_URL}/getbatchcategorywise`, param)
+                .post(`${BASE_URL}/getupcominhgbatch`, param)
                 .then((res) => {
                     setBatch(res.data);
                 })
