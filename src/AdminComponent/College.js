@@ -118,7 +118,7 @@ const College = () => {
             .catch((err) => {
                 console.log(err)
             })
-
+            
     }
 
 

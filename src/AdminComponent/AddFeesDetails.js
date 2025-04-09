@@ -10,6 +10,8 @@ import axios from "axios";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { ToWords } from "to-words";
+import Receipt from "./Receipt";
+import { pdf } from "@react-pdf/renderer";
 
 const AddFeesDetails = () => {
     const [page, setPage] = useState(1);
@@ -318,6 +320,26 @@ const AddFeesDetails = () => {
 
     const handleChange = (e) => {
         setFormState((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    };
+    const [pdfdata, setpdfData] = useState([]);
+
+    async function getDetails(params) {
+      
+
+        axios.post(`${BASE_URL}/getprintinfo`).then((res) => {
+            setpdfData(res.data);
+        });
+    }
+
+    useEffect(() => {
+        getDetails();
+    }, []);
+
+    const printReceipt = async (data) => {
+        const blob = await pdf(<Receipt data={pdfdata} />).toBlob();
+        const url = URL.createObjectURL(blob);
+        window.open(url);
+        URL.revokeObjectURL(url);
     };
 
     return (
@@ -905,7 +927,7 @@ const AddFeesDetails = () => {
                                                         <button typr="submit" class="btn btn-primary mr-2">
                                                             Print Tax Receipt
                                                         </button>
-                                                        <button type="submit" class="btn btn-primary mr-2">
+                                                        <button type="button"  onClick={printReceipt} class="btn btn-primary mr-2">
                                                             Print Receipt
                                                         </button>
                                                         <button type="submit" class="btn btn-primary mr-2">
