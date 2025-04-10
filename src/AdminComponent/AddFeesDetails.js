@@ -27,6 +27,7 @@ const AddFeesDetails = () => {
     const [feesNotesList, setFeesNotesList] = useState([]);
     const [feesDetailsList, setFeesDetailsList] = useState([]);
     const [isEdit, setIsEdit] = useState(false);
+    const [FeesDetailsById, setFeesDetailsById] = useState({});
 
     const [formState, setFormState] = useState({
         Student_Name: "",
@@ -118,7 +119,7 @@ const AddFeesDetails = () => {
             const response = await axios.post(`${BASE_URL}/getFeesDetailsById`, {
                 Fees_Id,
             });
-
+            setFormState(response.data)
             console.log(response.data);
         } catch (err) {
             console.log("getFeesDetailsById err", err);
@@ -324,10 +325,15 @@ const AddFeesDetails = () => {
     const [pdfdata, setpdfData] = useState([]);
 
     async function getDetails(params) {
+        const param = {
+            Fees_Id: addfeesdetailsid,
+        };
       
 
-        axios.post(`${BASE_URL}/getprintinfo`).then((res) => {
-            setpdfData(res.data);
+        axios.post(`${BASE_URL}/getFeesdetailspdf`,param).then((res) => {
+            setpdfData(res.data[0]);
+            console.log(res.data[0]);
+            
         });
     }
 

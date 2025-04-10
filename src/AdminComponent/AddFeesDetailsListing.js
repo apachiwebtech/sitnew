@@ -88,6 +88,18 @@ const AddFeesDetailsListing = () => {
                 console.log(res);
             });
     };
+        const getFeesDetailsById = async (Fees_Id) => {
+            try {
+                const response = await axios.post(`${BASE_URL}/getFeesDetailsById`, {
+                    Fees_Id,
+                });
+    
+                console.log(response.data);
+            } catch (err) {
+                console.log("getFeesDetailsById err", err);
+            }
+        };
+        
 
     const columns = [
         { field: "Fees_Code", headerName: "Receipt No", width: 100 },
@@ -147,7 +159,8 @@ const AddFeesDetailsListing = () => {
                 return (
                     <>
                         <Link to={`/addfeesdetails/${params.row.Fees_Id}`}>
-                            <EditIcon style={{ cursor: "pointer" }} />
+                            <EditIcon style={{ cursor: "pointer" }}
+                            onClick={() => getFeesDetailsById(params.Fees_Id)} />
                         </Link>
                         <DeleteIcon
                             style={{ color: "red", cursor: "pointer" }}

@@ -52,16 +52,16 @@ const styles = StyleSheet.create({
         textAlign: 'center',
 
         flex: "13"
-       
-       
+
+
     },
     tableCol1: {
-        
+
         textAlign: 'right',
         flex: '13 '
     },
     tableCol2: {
-        display:'flex',
+        display: 'flex',
         flexDirection: 'row',
         textAlign: 'right',
         flex: '13 '
@@ -72,6 +72,19 @@ const styles = StyleSheet.create({
 const Receipt = ({ data }) => {
 
 
+    function formatdate(newdate) {
+        if (!newdate) return ''; // Handle null or undefined values gracefully
+
+        const date = new Date(newdate);
+        if (isNaN(date.getTime())) return ''; // Handle invalid dates
+
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = date.toLocaleString('en-US', { month: 'short' }); // Ensure consistent formatting
+        const year = date.getFullYear();
+
+        return `${day} - ${month} - ${year}`;
+    }
+
 
 
     return (
@@ -81,15 +94,15 @@ const Receipt = ({ data }) => {
             return (
             <Page size="A4" style={styles.page}>
                 <View>
-                <View style={styles.header2}>
-                            <Text style={{ fontSize: 10, marginTop: 25, fontWeight: '800', color: "#000", textDecorationLine: 'underline'}}>Student Copy</Text>
-                        </View>
+                    <View style={styles.header2}>
+                        <Text style={{ fontSize: 10, marginTop: 25, fontWeight: '800', color: "#000", textDecorationLine: 'underline' }}>Student Copy</Text>
+                    </View>
                     <View style={styles.header}>
-                        <Image style={{ width: '150px',marginTop:25,marginLeft:15 }} src={sitlogo}></Image>
+                        <Image style={{ width: '150px', marginTop: 25, marginLeft: 15 }} src={sitlogo}></Image>
                     </View>
                     <View style={styles.header}>
                         <View style={styles.headerRight}>
-                            <Text style={{ fontSize: '10px', marginTop: 5, fontWeight: '800', color: "#000"}}>PAYMENT RECEIPT</Text>
+                            <Text style={{ fontSize: '10px', marginTop: 5, fontWeight: '800', color: "#000" }}>PAYMENT RECEIPT</Text>
                         </View>
                     </View>
                     <View style={styles.Course}>
@@ -107,8 +120,8 @@ const Receipt = ({ data }) => {
 
                         </div>
                         <View style={[styles.tableCol]}>
-                            <Text style={{ fontSize: '10px',  marginLeft: 5, color: '#000' }}>Regd. Office : 18/140 Anand Nagar, Nehru Road, Vakola, Santacruz (E), </Text>
-                            <Text style={{ fontSize: '10px',  marginLeft: 5, color: '#000' }}>Mumbai – 400 055. Mob:, 9324670725 </Text>
+                            <Text style={{ fontSize: '10px', marginLeft: 5, color: '#000' }}>Regd. Office : 18/140 Anand Nagar, Nehru Road, Vakola, Santacruz (E), </Text>
+                            <Text style={{ fontSize: '10px', marginLeft: 5, color: '#000' }}>Mumbai – 400 055. Mob:, 9324670725 </Text>
 
                         </View>
 
@@ -118,8 +131,8 @@ const Receipt = ({ data }) => {
 
                         </div>
                         <View style={[styles.tableCol1]}>
-                            <Text style={{ fontSize: '10px', marginTop: 5, marginLeft: 5, color: '#000' }}>Date:     01st Apr-2025 </Text>
-                           
+                            <Text style={{ fontSize: '10px', marginTop: 5, marginLeft: 5, color: '#000' }}>Date:     {formatdate(data.Date_Added)} </Text>
+
 
                         </View>
 
@@ -129,9 +142,9 @@ const Receipt = ({ data }) => {
 
                         </div>
                         <View style={[styles.tableCol]}>
-                            <Text style={{ fontSize: '10px', marginTop: 5, marginLeft: 5, color: '#000' }}> Received with thank from Prajakta Prashant Tambole ………………………………………………… </Text>
-                            <Text style={{ fontSize: '10px', marginTop: 5, marginLeft: 5, color: '#000' }}>the sum of rupees Five Thousand Eight Hundred Ninety Nine Only…………………………………… </Text>
-                            <Text style={{ fontSize: '10px', marginTop: 5, marginLeft: 5, color: '#000' }}>Course fees for Engineering Design & Drafting Fees by Cash …………………………………………
+                            <Text style={{ fontSize: '10px', marginTop: 5, marginLeft: 5, color: '#000' }}> Received with thank from {data.Student_Name} ………………………………………………… </Text>
+                            <Text style={{ fontSize: '10px', marginTop: 5, marginLeft: 5, color: '#000' }}>the sum of rupees {data.Amt_Word} …………………………………… </Text>
+                            <Text style={{ fontSize: '10px', marginTop: 5, marginLeft: 5, color: '#000' }}>Course fees for {data.Course_Name} Fees by {data.Payment_Type} …………………………………………
                             </Text>
 
                         </View>
@@ -143,9 +156,9 @@ const Receipt = ({ data }) => {
 
                         </div>
                         <View style={[styles.tableCol2]}>
-                        <Text style={{ fontSize: '10px', marginTop: 5, marginRight: 50, color: '#000',width:'70%' }}></Text>
-                        <Text style={{ fontSize: '10px', marginTop: 5, marginRight: 25, color: '#000',border:'1px solid black',padding:'2px' }}>Rs. 5,899.00</Text>
-                           
+                            <Text style={{ fontSize: '10px', marginTop: 5, marginRight: 50, color: '#000', width: '70%' }}></Text>
+                            <Text style={{ fontSize: '10px', marginTop: 5, marginRight: 25, color: '#000', border: '1px solid black', padding: '2px' }}>Rs. {data.Amount}</Text>
+
 
                         </View>
 
@@ -162,15 +175,15 @@ const Receipt = ({ data }) => {
 
                     </View>
                     <View style={styles.Course}>
-                        
+
                         <View style={[styles.tableCol]}>
-                           
+
 
                         </View>
 
                     </View>
-                    
-                   
+
+
 
 
 
