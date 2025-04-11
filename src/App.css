@@ -380,7 +380,9 @@ li{
 .header-acc{
   margin-left: 1.5rem;
 }
-
+.MuiDataGrid-footerContainer {
+  display: flex !important;
+}
 /* HTML: <div class="loader"></div> */
 .loader {
   display: inline-grid;

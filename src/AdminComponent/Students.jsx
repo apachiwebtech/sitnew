@@ -28,6 +28,10 @@ const Students = () => {
             </GridToolbarContainer>
         );
     }
+    const [paginationModel, setPaginationModel] = useState({
+            pageSize: 50,
+            page: 0,
+          });
     const [loading, setLoading] = useState(true);
     const [onlineAdmissions, setOnlineAdmissions] = useState([]);
     const label = { inputProps: { "aria-label": "Color switch demo" } };
@@ -410,7 +414,7 @@ const Students = () => {
                                             pageSize={pageSize}
                                             page={page}
                                             rowHeight={37}
-                                            pagination={false}
+                                            // pagination={false}
                                             disableColumnSelector
                                             disableDensitySelector
                                             getRowId={(row) => row.Admission_Id}
@@ -420,8 +424,24 @@ const Students = () => {
                                             //     },
                                             // }}
                                             // Any other DataGrid props you need
+                                            pagination
+                                            paginationModel={paginationModel}
+                                            onPaginationModelChange={setPaginationModel}
+                                            pageSizeOptions= {[50]}
+                                            autoHeight={false}
+                                            sx={{
+                                              height: 500, // Ensure enough height for pagination controls
+                                              '& .MuiDataGrid-footerContainer': {
+                                                justifyContent: 'flex-end',
+                                              },
+                                            }}
+                                            slotProps={{
+                                              toolbar: {
+                                                showQuickFilter: true,
+                                              },
+                                            }}
                                         />
-                                        <div className="float-right py-2">
+                                        {/* <div className="float-right py-2">
                                             <button
                                                 onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
                                                 disabled={page === 0} // Disable the "Previous" button on the first page
@@ -437,7 +457,7 @@ const Students = () => {
                                             >
                                                 Next
                                             </button>
-                                        </div>
+                                        </div> */}
                                     </div>
                                 </div>
                             </div>

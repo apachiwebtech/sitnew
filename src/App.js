@@ -225,6 +225,7 @@ import VivaMOCDoc from "./AdminComponent/Document/VivaMOCDoc.js";
 import AnalysisDoc from "./AdminComponent/Document/AnalysisDoc";
 import Acomodation from "./AdminComponent/Document/Acomodation.js";
 import LectureReports from "./AdminComponent/otherDocuments/LectureReport.js";
+import StudentReports from "./AdminComponent/Document/StudentReports.js";
 
 
 const Router = createBrowserRouter([
@@ -564,7 +565,7 @@ const Router = createBrowserRouter([
                     <div style={{ width: "100vw", height: "100vh" }}>
                         <PDFViewer style={{ width: "100%", height: "100%" }}>
 
-                            <LectureReports/>
+                            <StudentReports/>
 
                         </PDFViewer>
                     </div>

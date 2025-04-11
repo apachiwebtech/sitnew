@@ -9,6 +9,10 @@ const Faculty = () => {
     const { facultyid } = useParams();
     const [uid, setUid] = useState([])
     const [error, setError] = useState({})
+    const [paginationModel, setPaginationModel] = useState({
+            pageSize: 50,
+            page: 0,
+          });
 
 
     const [value, setValue] = useState({

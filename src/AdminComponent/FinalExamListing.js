@@ -18,6 +18,11 @@ const FinalExamListing = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
 
     const [loading, setLoading] = useState(true)
+    const [paginationModel, setPaginationModel] = useState({
+            pageSize: 50,
+            page: 0,
+          });
+          
 
 
 
@@ -166,16 +171,21 @@ const FinalExamListing = () => {
                                             disableDensitySelector
                                             rowHeight={35}
                                             getRowId={(row) => row.Take_Id}
-                                            initialState={{
-                                                pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
-                                                },
+                                            pagination
+                                            paginationModel={paginationModel}
+                                            onPaginationModelChange={setPaginationModel}
+                                            pageSizeOptions= {[50]}
+                                            autoHeight={false}
+                                            sx={{
+                                              height: 500, // Ensure enough height for pagination controls
+                                              '& .MuiDataGrid-footerContainer': {
+                                                justifyContent: 'flex-end',
+                                              },
                                             }}
-                                            slots={{ toolbar: GridToolbar }}
                                             slotProps={{
-                                                toolbar: {
-                                                    showQuickFilter: true,
-                                                },
+                                              toolbar: {
+                                                showQuickFilter: true,
+                                              },
                                             }}
                                         />
 

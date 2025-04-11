@@ -18,6 +18,10 @@ const RollNumberAllot = () => {
     const [uid, setUid] = useState([])
     const [hide, setHide] = useState(false)
     const [loading, setLoading] = useState(true)
+    const [paginationModel, setPaginationModel] = useState({
+            pageSize: 50,
+            page: 0,
+          });
     const [done, setDone] = useState('')
 
     const getbatch = async (id) => {
@@ -248,7 +252,7 @@ const RollNumberAllot = () => {
                                             </div>
 
                                         </div>
-                                        <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                        <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "hidden"}}>
 
                                             <StyledDataGrid
                                                 rows={rowsWithIds}
@@ -258,11 +262,22 @@ const RollNumberAllot = () => {
                                                 disableDensitySelector
                                                 rowHeight={35}
                                                 getRowId={(row) => row.Student_Id}
-                                                initialState={{
-                                                    pagination: {
-                                                        paginationModel: { pageSize: 50, page: 0 },
-                                                    },
-                                                }}
+                                                pagination
+                                            paginationModel={paginationModel}
+                                            onPaginationModelChange={setPaginationModel}
+                                            pageSizeOptions= {[50]}
+                                            autoHeight={false}
+                                            sx={{
+                                              height: 500, // Ensure enough height for pagination controls
+                                              '& .MuiDataGrid-footerContainer': {
+                                                justifyContent: 'flex-end',
+                                              },
+                                            }}
+                                            slotProps={{
+                                              toolbar: {
+                                                showQuickFilter: true,
+                                              },
+                                            }}
 
 
                                             />

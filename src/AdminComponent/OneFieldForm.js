@@ -233,16 +233,17 @@ const OneFieldForm = () => {
 
                                     </div>
                                     
-                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "hidden"}}>
                                     <StyledDataGrid
                                             rows= {rowsWithIds}
                                             columns={columns}
                                             getRowId={(row) => row.id}
-                                            initialState={{
-                                                pagination: {
-                                                  paginationModel: { pageSize: 50, page: 0 },
-                                                },
-                                              }}
+                                            pagination
+  initialState={{
+    pagination: {
+      paginationModel: { pageSize: 10, page: 0 }, // Set your desired page size here
+    },
+  }}
                                         />
 
                                         {confirmationVisibleMap[cid] && (

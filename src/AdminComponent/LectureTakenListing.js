@@ -37,6 +37,10 @@ const LectureTakenListing = () => {
     const [selectedStudent, setSelectedStudent] = React.useState(null);
     const [totalstudent, setTotalStudent] = useState("");
     const [isSearchResult, setIsSearchResult] = useState(false);
+    const [paginationModel, setPaginationModel] = useState({
+            pageSize: 50,
+            page: 0,
+          });
 
     const getLectureTakenData = async () => {
         setLoading(true); // Set loading to true before the request
@@ -389,28 +393,29 @@ const LectureTakenListing = () => {
                                             columns={columns}
                                             // pageSize={pageSize}
                                             // page={page}
-                                            pagination={isSearchResult}
+                                            // pagination={isSearchResult}
                                             disableColumnFilter
                                             disableColumnSelector
                                             disableDensitySelector
                                             rowHeight={37}
                                             getRowId={(row, index) => row.Take_Id}
                                             autoHeight
-                                            initialState={{
-                                                pagination: {
-                                                    paginationModel: {
-                                                        pageSize: 100,
-                                                        page: 0,
-                                                    },
-                                                },
+                                            pagination
+                                            paginationModel={paginationModel}
+                                            onPaginationModelChange={setPaginationModel}
+                                            pageSizeOptions= {[50]}
+                                            // autoHeight={false}
+                                            sx={{
+                                              height: 500, // Ensure enough height for pagination controls
+                                              '& .MuiDataGrid-footerContainer': {
+                                                justifyContent: 'flex-end',
+                                              },
                                             }}
-                                            sx={
-                                                !isSearchResult && {
-                                                    "& .MuiDataGrid-footerContainer": {
-                                                        display: "none",
-                                                    },
-                                                }
-                                            }
+                                            slotProps={{
+                                              toolbar: {
+                                                showQuickFilter: true,
+                                              },
+                                            }}
                                             // slots={{ toolbar: GridToolbar }}
                                             // slotProps={{
                                             //     toolbar: {
@@ -418,7 +423,7 @@ const LectureTakenListing = () => {
                                             //     },
                                             // }}
                                         />
-                                        {!isSearchResult && (
+                                        {/* {!isSearchResult && (
                                             <div className="float-right py-2">
                                                 <button
                                                     onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
@@ -436,7 +441,7 @@ const LectureTakenListing = () => {
                                                     Next
                                                 </button>
                                             </div>
-                                        )}
+                                        )} */}
 
                                         {confirmationVisibleMap[cid] && (
                                             <div className="confirm-delete" >

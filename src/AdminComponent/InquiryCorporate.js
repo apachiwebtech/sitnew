@@ -29,6 +29,10 @@ const InquiryCorporate = () => {
     const label = { inputProps: { 'aria-label': 'Color switch demo' } };
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true)
+    const [paginationModel, setPaginationModel] = useState({
+            pageSize: 50,
+            page: 0,
+          });
 
 
   async function getlisting(){
@@ -183,7 +187,7 @@ const InquiryCorporate = () => {
 
                                     </div>
 
-                                    <div  style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                    <div  style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "hidden"}}>
                                         <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
@@ -192,16 +196,21 @@ const InquiryCorporate = () => {
                                             disableDensitySelector
                                             rowHeight={37}
                                             getRowId={(row) => row.Id}
-                                            initialState={{
-                                                pagination: {
-                                                    paginationModel: { pageSize: 50, page: 0 },
-                                                },
+                                            pagination
+                                            paginationModel={paginationModel}
+                                            onPaginationModelChange={setPaginationModel}
+                                            pageSizeOptions= {[50]}
+                                            autoHeight={false}
+                                            sx={{
+                                              height: 500, // Ensure enough height for pagination controls
+                                              '& .MuiDataGrid-footerContainer': {
+                                                justifyContent: 'flex-end',
+                                              },
                                             }}
-                                            slots={{ toolbar: CustomToolbar }}
                                             slotProps={{
-                                                toolbar: {
-                                                    showQuickFilter: true,
-                                                },
+                                              toolbar: {
+                                                showQuickFilter: true,
+                                              },
                                             }}
                                         />
 

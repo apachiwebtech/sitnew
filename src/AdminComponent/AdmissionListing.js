@@ -27,6 +27,10 @@ const AdmissionListing = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [admission, setadmissionData] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [paginationModel, setPaginationModel] = useState({
+            pageSize: 50,
+            page: 0,
+          });
     const [data, setData] = useState([])
     const getInquiryData = async () => {
         const response = await fetch(`${BASE_URL}/admissiondata`, {
@@ -175,17 +179,30 @@ const AdmissionListing = () => {
                                         <h4 className="card-title">List Of Admission</h4>
                                     </div>
                                     <div className="table-responsive"
-                                    style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
-                                        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+                                    style={ { borderLeft: "1px solid #dce4ec", height: "510px",}}>
+                                        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' ,height: "510px", overflow: "hidden"}}>
                                             <StyledDataGrid
                                                 rows={rowsWithIds}
                                                 columns={columns}
                                                 disableColumnSelector
                                                 rowHeight={37}
                                                 getRowId={(row) => row.Admission_Id}
-                                                initialState={{ pagination: { paginationModel: { pageSize: 50, page: 0 } } }}
-                                                slots={{ toolbar: CustomToolbar }}
-                                                slotProps={{ toolbar: { showQuickFilter: true } }}
+                                                pagination
+                                            paginationModel={paginationModel}
+                                            onPaginationModelChange={setPaginationModel}
+                                            pageSizeOptions= {[50]}
+                                            autoHeight={false}
+                                            sx={{
+                                              height: 500, // Ensure enough height for pagination controls
+                                              '& .MuiDataGrid-footerContainer': {
+                                                justifyContent: 'flex-end',
+                                              },
+                                            }}
+                                            slotProps={{
+                                              toolbar: {
+                                                showQuickFilter: true,
+                                              },
+                                            }}
                                             />
                                         </Box>
                                         {confirmationVisibleMap[cid] && (

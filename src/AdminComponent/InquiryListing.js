@@ -24,6 +24,9 @@ import { formatDate } from "../Utils/dateFormat";
 
 
 
+
+
+
 const InquiryListing = () => {
     const [uid, setUid] = useState([]);
     const [cid, setCid] = useState("");
@@ -47,6 +50,10 @@ const InquiryListing = () => {
         from_date: "",
         to_date: "",
     });
+    const [paginationModel, setPaginationModel] = useState({
+            pageSize: 50,
+            page: 0,
+          });
 
     const getInquiryData = async () => {
         setLoading(true);
@@ -469,9 +476,9 @@ const InquiryListing = () => {
 
     const rowsWithIds = inquiryData.map((row, index) => ({ index: index + 1, ...row }));
 
-    const paginationModel = (param) => {
-        console.log(param);
-    };
+    // const paginationModel = (param) => {
+    //     console.log(param);
+    // };
 
     return (
         <div className={`container-fluid page-body-wrapper `}>
@@ -617,7 +624,7 @@ const InquiryListing = () => {
                                     </div>
                                 </div>
 
-                                <div className="card" style={ { height: "510px", overflow: "scroll"}}>
+                                <div className="card" style={ { height: "510px", overflow: "hidden"}}>
                                     <StyledDataGrid
                                         rows={rowsWithIds}
                                         columns={columns}
@@ -626,7 +633,7 @@ const InquiryListing = () => {
                                         rowHeight={40}
                                         // pageSizeOptions={[5]}
                                         // paginationMode="server"
-                                        onPaginationModelChange={paginationModel}
+                                        // onPaginationModelChange={paginationModel}
                                         getRowId={(row) => row.id}
                                         // sx={{
                                         //     "& .MuiDataGrid-cell": {
@@ -637,19 +644,24 @@ const InquiryListing = () => {
                                         //     },
                                         //   }}
 
-                                        sx={{
-                                            
-                                            // background: "red",
-                                            "& .MuiDataGrid-cell": {
-                                                whiteSpace: "normal",
-                                                wordWrap: "break-word",
-                                                overflowWrap: "break-word",
-                                                lineHeight: 2,
-                                                display: "block",
-                                            },
-                                        }}
+                                        pagination
+                                            paginationModel={paginationModel}
+                                            onPaginationModelChange={setPaginationModel}
+                                            pageSizeOptions= {[50]}
+                                            autoHeight={false}
+                                            sx={{
+                                              height: 500, // Ensure enough height for pagination controls
+                                              '& .MuiDataGrid-footerContainer': {
+                                                justifyContent: 'flex-end',
+                                              },
+                                            }}
+                                            slotProps={{
+                                              toolbar: {
+                                                showQuickFilter: true,
+                                              },
+                                            }}
                                     />
-                                    <div className="float-right py-2">
+                                    {/* <div className="float-right py-2">
                                         <button
                                             onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
                                             disabled={page === 0} // Disable the "Previous" button on the first page
@@ -665,7 +677,7 @@ const InquiryListing = () => {
                                         >
                                             Next
                                         </button>
-                                    </div>
+                                    </div> */}
 
                                     {confirmationVisibleMap[cid] && (
                                         <div className="confirm-delete">
