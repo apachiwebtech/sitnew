@@ -123,34 +123,34 @@ const AddFeesDetailsListing = () => {
               return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
             },
           },
-          
+          { field: "Student_Name", headerName: "Student Name", width: 250 },
         { field: "Course_Name", headerName: "Course Name", width: 400 },
         { field: "Batch_code", headerName: "Batch Code", width: 100 },
-        { field: "Student_Name", headerName: "Student Name", width: 250 },
-        {
-            field: "Date_Added",
-            headerName: "Date",
-            width: 100,
-            renderCell: (params) => {
-              if (!params.value) return ""; // Handle empty values
+        
+        // {
+        //     field: "Date_Added",
+        //     headerName: "Date",
+        //     width: 100,
+        //     renderCell: (params) => {
+        //       if (!params.value) return ""; // Handle empty values
           
-              // Check if already in DD-MM-YYYY format
-              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
-              if (ddmmyyyyRegex.test(params.value)) {
-                return params.value; // Return as-is if already formatted
-              }
+        //       // Check if already in DD-MM-YYYY format
+        //       const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+        //       if (ddmmyyyyRegex.test(params.value)) {
+        //         return params.value; // Return as-is if already formatted
+        //       }
           
-              const date = new Date(params.value);
-              if (isNaN(date.getTime())) return ""; // Handle invalid dates
+        //       const date = new Date(params.value);
+        //       if (isNaN(date.getTime())) return ""; // Handle invalid dates
           
-              // Convert to DD-MM-YYYY format
-              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
-            },
-          },
+        //       // Convert to DD-MM-YYYY format
+        //       return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+        //     },
+        //   },
           
-        { field: "Payment_Type", headerName: "Payment Type", width: 100 },
+        // { field: "Payment_Type", headerName: "Payment Type", width: 100 },
         { field: "Amount", headerName: "Amount", width: 130 },
-        { field: "Notes", headerName: "Particular", width: 350 },
+        // { field: "Notes", headerName: "Particular", width: 350 },
         {
             field: "actions",
             headerName: "Action",

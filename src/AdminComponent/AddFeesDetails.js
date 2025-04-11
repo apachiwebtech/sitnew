@@ -194,6 +194,7 @@ const AddFeesDetails = () => {
             console.log(data);
             setFormState((prev) => ({
                 ...prev,
+                Student_Name: data.Student_Name,
                 Student_Id: data.Student_Id,
                 Course_Id: data.Course_Id,
                 Batch_code: data.Batch_code || "",
@@ -387,6 +388,7 @@ const AddFeesDetails = () => {
                                                                         placeholder="Search"
                                                                         value={formState.Student_Name}
                                                                         onChange={handleChange}
+                                                                        
                                                                         onFocus={() => setDropDownOpen(true)}
                                                                         autoComplete="none"
                                                                     />
