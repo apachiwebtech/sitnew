@@ -55,14 +55,15 @@ const AddFeesDetailsListing = () => {
 
     const handleDelete = (id) => {
         const data = {
-            cat_id: id,
-            tablename: "awt_addfeesdetails",
+            delete_id: id,
+            tablename: "S_Fees_Mst",
+            column_name: "Fees_Id",
         };
 
         axios
-            .post(`${BASE_URL}/delete_inquiry_data`, data)
+            .post(`${BASE_URL}/new_delete_data`, data)
             .then((res) => {
-                // getdetails();
+                getFeesDetails()
                 console.log(res);
             })
             .catch((err) => {
@@ -164,7 +165,7 @@ const AddFeesDetailsListing = () => {
                         </Link>
                         <DeleteIcon
                             style={{ color: "red", cursor: "pointer" }}
-                            onClick={() => handleClick(params.row.id)}
+                            onClick={() => handleClick(params.row.Fees_Id)}
                         />
                         <Switch
                             {...label}

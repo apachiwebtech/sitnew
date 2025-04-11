@@ -12,6 +12,7 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { ToWords } from "to-words";
 import Receipt from "./Receipt";
 import { pdf } from "@react-pdf/renderer";
+import { useNavigate } from "react-router-dom";
 
 const AddFeesDetails = () => {
     const [page, setPage] = useState(1);
@@ -217,6 +218,7 @@ const AddFeesDetails = () => {
         }
     };
 
+    const navigate = useNavigate();
     const addStudentFees = async () => {
         try {
             let data = formState;
@@ -228,21 +230,25 @@ const AddFeesDetails = () => {
             }
             let FeesMonth = parseInt(data.RDate.split("-")[1]);
             let FeesYear = parseInt(data.RDate.split("-")[0]);
-
-            const response = await axios.post(`${BASE_URL}/addFeesDetails`, {
+    
+            const endpoint = isEdit ? "updateFeesDetails" : "addFeesDetails";
+            
+            const response = await axios.post(`${BASE_URL}/${endpoint}`, {
                 ...data,
                 Amount,
                 Amt_Word,
                 FeesMonth,
                 FeesYear,
             });
-
-            alert("Fees Details Added Successfully");
+    
+            alert(`Fees Details ${isEdit ? "Updated" : "Added"} Successfully`);
             getStudentFeesDetails(data.Student_Id);
+            navigate("/addfeesdetails");
         } catch (err) {
-            console.log("/addFeesDetails err", err);
+            console.log("/addStudentFees err", err);
         }
     };
+    
 
     useEffect(() => {
         const handleClickOutside = (e) => {
@@ -329,12 +335,12 @@ const AddFeesDetails = () => {
         const param = {
             Fees_Id: addfeesdetailsid,
         };
-      
 
-        axios.post(`${BASE_URL}/getFeesdetailspdf`,param).then((res) => {
+
+        axios.post(`${BASE_URL}/getFeesdetailspdf`, param).then((res) => {
             setpdfData(res.data[0]);
             console.log(res.data[0]);
-            
+
         });
     }
 
@@ -388,7 +394,6 @@ const AddFeesDetails = () => {
                                                                         placeholder="Search"
                                                                         value={formState.Student_Name}
                                                                         onChange={handleChange}
-                                                                        
                                                                         onFocus={() => setDropDownOpen(true)}
                                                                         autoComplete="none"
                                                                     />
@@ -444,7 +449,7 @@ const AddFeesDetails = () => {
                                                                                                 setDropDownOpen(false);
                                                                                             }}
                                                                                         >
-                                                                                            {option.Student_Name} - {option.Batch_code}
+                                                                                            {option.Student_Name} 
                                                                                         </li>
                                                                                     ))
                                                                                 ) : (
@@ -930,12 +935,13 @@ const AddFeesDetails = () => {
                                                             class="btn btn-primary mr-2"
                                                             onClick={addStudentFees}
                                                         >
-                                                            Save
+                                                            {isEdit ? "Update" : "Add"}
                                                         </button>
+
                                                         <button typr="submit" class="btn btn-primary mr-2">
                                                             Print Tax Receipt
                                                         </button>
-                                                        <button type="button"  onClick={printReceipt} class="btn btn-primary mr-2">
+                                                        <button type="button" onClick={printReceipt} class="btn btn-primary mr-2">
                                                             Print Receipt
                                                         </button>
                                                         <button type="submit" class="btn btn-primary mr-2">
