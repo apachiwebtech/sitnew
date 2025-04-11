@@ -140,7 +140,7 @@ const PerssonalInfo = () => {
             .then((res) => {
                 console.log(res)
 
-                if(res.data[0] && res.data[0].upload_image){
+                if (res.data[0] && res.data[0].upload_image) {
 
                     setProfile(res.data[0].upload_image)
                 }
@@ -218,12 +218,39 @@ const PerssonalInfo = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+
         setPersonalInfo(prevState => ({
             ...prevState,
             [name]: value,
         }
         ))
+
+        if (e.target.name == 'category') {
+            getBatch(value)
+        }
     }
+
+    const getBatch = async (cat_id) => {
+
+        try {
+
+            const param = {
+                course_id: personalInfo.course,
+                category_id: cat_id,
+            };
+            axios
+                .post(`${BASE_URL}/getupcominhgbatch`, param)
+                .then((res) => {
+                    setBatch(res.data);
+                })
+                .catch((err) => {
+                    console.log("/getBatch err", err);
+                });
+        } catch (err) {
+            console.log("/getBatch", err);
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault()
 
@@ -513,19 +540,28 @@ const PerssonalInfo = () => {
                                                             </select>
 
                                                         </div>
-                                                        <div className="form-group col-lg-3 ">
-                                                            <label for="exampleInputUsername1">Category</label>
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={personalInfo.category} name='category' defaultValue={personalInfo.category} onChange={handleChange} >
-                                                                {batchCategoty?.map((item) => {
-                                                                    return <option value={item.id}>{item.BatchCategory}</option>
-                                                                })}
+                                                        <div className="form-group col-lg-3">
+                                                            <label htmlFor="exampleInputUsername1">Category</label>
+                                                            <select
+                                                                className="form-control form-control-lg"
+                                                                value={personalInfo.category}
+                                                                name="category"
+                                                                onChange={handleChange}
+                                                            >
+                                                                <option value="">Select Category</option>
+                                                                {batchCategoty?.map((item) => (
+                                                                    <option key={item.id} value={item.id}>
+                                                                        {item.BatchCategory}
+                                                                    </option>
+                                                                ))}
                                                             </select>
                                                         </div>
 
 
+
                                                         <div className="form-group col-lg-5 ">
                                                             <label for="exampleInputUsername1">Batch Code</label>
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={personalInfo.Batch_Code} name='Batch_Code' onChange={(e) => getBatchwiseamount(e.target.value)} >
+                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={batchcode} name='Batch_Code' onChange={(e) => getBatchwiseamount(e.target.value)} >
 
                                                                 <option value="">Select batch</option>
                                                                 {batch.map((item) => {
