@@ -442,7 +442,7 @@ const AddFeesDetails = () => {
                                                                                                 setDropDownOpen(false);
                                                                                             }}
                                                                                         >
-                                                                                            {option.Student_Name}
+                                                                                            {option.Student_Name} - {option.Batch_code}
                                                                                         </li>
                                                                                     ))
                                                                                 ) : (
