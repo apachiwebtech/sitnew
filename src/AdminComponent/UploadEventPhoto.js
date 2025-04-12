@@ -22,6 +22,10 @@ const UploadEventPhoto = () => {
   const [images, setImages] = useState([]);
   const [imageNames, setImageNames] = useState([]);
   const [eventPhotoId, setEventPhotoId] = useState(null);
+  const [paginationModel, setPaginationModel] = useState({
+          pageSize: 50,
+          page: 0,
+        });
 
   const [value, setValue] = useState({
     event: "" || uid.event,
@@ -264,7 +268,7 @@ const UploadEventPhoto = () => {
                     </div>
                   )}
 
-                  <div class="table-responsive" style={ { border: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                  <div class="table-responsive" style={ { border: "1px solid #dce4ec", height: "510px", overflow: "hidden"}}>
                     <StyledDataGrid
                       rows={rowsWithIds}
                       columns={columns}
@@ -272,6 +276,22 @@ const UploadEventPhoto = () => {
                       density="compact"
                       components={{ Toolbar: GridToolbar }}
                       disableRowSelectionOnClick
+                      pagination
+                                            paginationModel={paginationModel}
+                                            onPaginationModelChange={setPaginationModel}
+                                            pageSizeOptions= {[50]}
+                                            // autoHeight={false}
+                                            sx={{
+                                              height: 500, // Ensure enough height for pagination controls
+                                              '& .MuiDataGrid-footerContainer': {
+                                                justifyContent: 'flex-end',
+                                              },
+                                            }}
+                                            slotProps={{
+                                              toolbar: {
+                                                showQuickFilter: true,
+                                              },
+                                            }}
                     />
                   </div>
 

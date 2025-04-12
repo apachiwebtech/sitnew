@@ -17,6 +17,10 @@ const CVShortListed = () => {
     const navigate = useNavigate()
     const [deleteId, setDeleteId] = useState(null)
     const [loading, setLoading] = useState(false)
+    const [paginationModel, setPaginationModel] = useState({
+            pageSize: 50,
+            page: 0,
+          });
 
 
     const getCVShortlistedData = async()=>{
@@ -108,7 +112,7 @@ const CVShortListed = () => {
                                         <Link to='/cvshortlisted/:cvid' className="btn btn-success">Add +</Link>
                                     </div>
                                     <div>
-                                        <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                        <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "hidden"}}>
                                             <StyledDataGrid
                                                 rows={CVShortlistedList}
                                                 columns={columns}
@@ -117,17 +121,22 @@ const CVShortListed = () => {
                                                 disableDensitySelector
                                                 rowHeight={35}
                                                 getRowId={(row) => row.id}
-                                                initialState={{
-                                                        pagination: {
-                                                        paginationModel: { pageSize: 50, page: 0 },
-                                                    },
-                                                }}
-                                                slots={{ toolbar: GridToolbar }}
-                                                slotProps={{
-                                                    toolbar: {
-                                                                showQuickFilter: true,
-                                                    },
-                                                }}
+                                                pagination
+                                            paginationModel={paginationModel}
+                                            onPaginationModelChange={setPaginationModel}
+                                            pageSizeOptions= {[50]}
+                                            autoHeight={false}
+                                            sx={{
+                                              height: 500, // Ensure enough height for pagination controls
+                                              '& .MuiDataGrid-footerContainer': {
+                                                justifyContent: 'flex-end',
+                                              },
+                                            }}
+                                            slotProps={{
+                                              toolbar: {
+                                                showQuickFilter: true,
+                                              },
+                                            }}
                                                 />
 
                                                 {deleteId && (

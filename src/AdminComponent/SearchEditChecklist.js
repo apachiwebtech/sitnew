@@ -33,6 +33,10 @@ const SearchEditChecklist = () => {
     const handleChange3 = (event) => {
         setChecked([checked[0], event.target.checked]);
     };
+    const [paginationModel, setPaginationModel] = useState({
+            pageSize: 50,
+            page: 0,
+          });
 
     
 
@@ -231,7 +235,7 @@ const SearchEditChecklist = () => {
                                 <div class="card-body">
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
 
-                                        <div style={ { border: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                        <div style={ { border: "1px solid #dce4ec", height: "510px", overflow: "hidden"}}>
                                             <StyledDataGrid
                                                 rows={rowsWithIds}
                                                 columns={columns}
@@ -240,17 +244,22 @@ const SearchEditChecklist = () => {
                                                 disableDensitySelector
                                                 rowHeight={35}
                                                 getRowId={(row) => row.id}
-                                                initialState={{
-                                                    pagination: {
-                                                        paginationModel: { pageSize: 50, page: 0 },
-                                                    },
-                                                }}
-                                                slots={{ toolbar: GridToolbar }}
-                                                slotProps={{
-                                                    toolbar: {
-                                                        showQuickFilter: true,
-                                                    },
-                                                }}
+                                                pagination
+                                            paginationModel={paginationModel}
+                                            onPaginationModelChange={setPaginationModel}
+                                            pageSizeOptions= {[50]}
+                                            autoHeight={false}
+                                            sx={{
+                                              height: 500, // Ensure enough height for pagination controls
+                                              '& .MuiDataGrid-footerContainer': {
+                                                justifyContent: 'flex-end',
+                                              },
+                                            }}
+                                            slotProps={{
+                                              toolbar: {
+                                                showQuickFilter: true,
+                                              },
+                                            }}
                                             />
 
                                             {/* {confirmationVisibleMap[cid] && (

@@ -18,6 +18,10 @@ const AddConsultancyMasterListing = () => {
     useEffect(() => {
         getConsultancyData();
     }, []);
+    const [paginationModel, setPaginationModel] = useState({
+            pageSize: 50,
+            page: 0,
+          });
 
     
     const getConsultancyData = async () => {
@@ -93,7 +97,7 @@ const AddConsultancyMasterListing = () => {
                                         <h4 className="card-title">View Consultancy</h4>
                                         <Link to='/consultancymaster/:consultancymasterid'><button className='btn btn-success'>Add +</button></Link>
                                     </div>
-                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "hidden"}}>
                                         <StyledDataGrid
                                             rows={consultancyData}
                                             columns={columns}
@@ -102,9 +106,22 @@ const AddConsultancyMasterListing = () => {
                                             disableDensitySelector
                                             rowHeight={37}
                                             getRowId={(row) => row.Const_Id}
-                                            initialState={{ pagination: { paginationModel: { pageSize: 50, page: 0 } } }}
-                                            slots={{ toolbar: GridToolbar }}
-                                            slotProps={{ toolbar: { showQuickFilter: true } }}
+                                            pagination
+                                            paginationModel={paginationModel}
+                                            onPaginationModelChange={setPaginationModel}
+                                            pageSizeOptions= {[50]}
+                                            autoHeight={false}
+                                            sx={{
+                                              height: 500, // Ensure enough height for pagination controls
+                                              '& .MuiDataGrid-footerContainer': {
+                                                justifyContent: 'flex-end',
+                                              },
+                                            }}
+                                            slotProps={{
+                                              toolbar: {
+                                                showQuickFilter: true,
+                                              },
+                                            }}
                                         />
 
                                         {deleteId && (

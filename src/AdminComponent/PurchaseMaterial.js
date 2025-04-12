@@ -22,6 +22,10 @@ const PurchaseMaterial = () => {
     const [error, setError] = useState({});
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
+    const [paginationModel, setPaginationModel] = useState({
+            pageSize: 50,
+            page: 0,
+          });
 
     const [value, setValue] = useState({
         company: "" || uid.company,
@@ -664,7 +668,7 @@ const PurchaseMaterial = () => {
                                         </div>
                                     </div>
 
-                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "hidden"}}>
                                         <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
@@ -673,16 +677,21 @@ const PurchaseMaterial = () => {
                                             disableDensitySelector
                                             rowHeight={35}
                                             getRowId={(row) => row.id}
-                                            initialState={{
-                                                pagination: {
-                                                    paginationModel: { pageSize: 50, page: 0 },
-                                                },
+                                            pagination
+                                            paginationModel={paginationModel}
+                                            onPaginationModelChange={setPaginationModel}
+                                            pageSizeOptions= {[50]}
+                                            autoHeight={false}
+                                            sx={{
+                                              height: 500, // Ensure enough height for pagination controls
+                                              '& .MuiDataGrid-footerContainer': {
+                                                justifyContent: 'flex-end',
+                                              },
                                             }}
-                                            slots={{ toolbar: GridToolbar }}
                                             slotProps={{
-                                                toolbar: {
-                                                    showQuickFilter: true,
-                                                },
+                                              toolbar: {
+                                                showQuickFilter: true,
+                                              },
                                             }}
                                         />
 

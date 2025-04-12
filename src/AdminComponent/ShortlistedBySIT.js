@@ -25,6 +25,10 @@ const ShortlistedBySIT = () => {
         enddate: "" || uid.enddate,
         specification: "" || uid.specification,
     });
+    const [paginationModel, setPaginationModel] = useState({
+            pageSize: 50,
+            page: 0,
+          });
 
     useEffect(() => {
         setValue({
@@ -210,7 +214,7 @@ const ShortlistedBySIT = () => {
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <div style={ { border: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                    <div style={ { border: "1px solid #dce4ec", height: "510px", overflow: "hidden"}}>
                                         <StyledDataGrid
                                             rows={companyReqData}
                                             columns={columns}
@@ -219,19 +223,21 @@ const ShortlistedBySIT = () => {
                                             disableDensitySelector
                                             rowHeight={35}
                                             getRowId={(row) => row.CompReqId}
-                                            initialState={{
-                                                pagination: {
-                                                    paginationModel: {
-                                                        pageSize: 50,
-                                                        page: 0,
-                                                    },
-                                                },
+                                            pagination
+                                            paginationModel={paginationModel}
+                                            onPaginationModelChange={setPaginationModel}
+                                            pageSizeOptions= {[50]}
+                                            autoHeight={false}
+                                            sx={{
+                                              height: 500, // Ensure enough height for pagination controls
+                                              '& .MuiDataGrid-footerContainer': {
+                                                justifyContent: 'flex-end',
+                                              },
                                             }}
-                                            slots={{ toolbar: GridToolbar }}
                                             slotProps={{
-                                                toolbar: {
-                                                    showQuickFilter: true,
-                                                },
+                                              toolbar: {
+                                                showQuickFilter: true,
+                                              },
                                             }}
                                         />
 

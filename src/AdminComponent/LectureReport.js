@@ -28,6 +28,10 @@ const LectureReport = () => {
     const [vendordata, setStudent] = useState([])
     const [lecturereport, setLectureReport] = useState([])
     const [loading, setLoading] = useState ([true])
+    const [paginationModel, setPaginationModel] = useState({
+            pageSize: 50,
+            page: 0,
+          });
 
 
 
@@ -215,7 +219,7 @@ const LectureReport = () => {
                                             <h4 class="card-title">Details</h4>
                                         </div>
                                     </div>
-                                    {hide && <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                    {hide && <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "hidden"}}>
                                         <StyledDataGrid
                                         rows={rowsWithIds}
                                         columns={columns}
@@ -224,10 +228,21 @@ const LectureReport = () => {
                                         disableDensitySelector
                                         rowHeight={35}
                                         getRowId={(row) => row.Batch_Id}
-                                        initialState={{
-                                            pagination: {
-                                                paginationModel: {pageSize: 50, page: 0 },
-                                            },
+                                        pagination
+                                        paginationModel={paginationModel}
+                                        onPaginationModelChange={setPaginationModel}
+                                        pageSizeOptions= {[50]}
+                                        autoHeight={false}
+                                        sx={{
+                                          height: 500, // Ensure enough height for pagination controls
+                                          '& .MuiDataGrid-footerContainer': {
+                                            justifyContent: 'flex-end',
+                                          },
+                                        }}
+                                        slotProps={{
+                                          toolbar: {
+                                            showQuickFilter: true,
+                                          },
                                         }}
                                              />
                                     </div>}

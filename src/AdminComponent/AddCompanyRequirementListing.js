@@ -20,6 +20,10 @@ const AddCompanyRequirementListing = () => {
 
     const [inquiryData, setInquiryData] = useState([]);
     const [companyReqData, setCompanyReqData] = useState([])
+    const [paginationModel, setPaginationModel] = useState({
+            pageSize: 50,
+            page: 0,
+          });
     const [deleteId, setDeleteId] = useState(null)
     const [value, setValue] = useState({
         companyname: '',
@@ -189,7 +193,7 @@ const AddCompanyRequirementListing = () => {
 
                                     </div>
 
-                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "hidden"}}>
                                         <StyledDataGrid
                                             rows={companyReqData}
                                             columns={columns}
@@ -198,16 +202,21 @@ const AddCompanyRequirementListing = () => {
                                             disableDensitySelector
                                             rowHeight={37}
                                             getRowId={(row) => row.CompReqId}
-                                            initialState={{
-                                                pagination: {
-                                                    paginationModel: { pageSize: 50, page: 0 },
-                                                },
+                                            pagination
+                                            paginationModel={paginationModel}
+                                            onPaginationModelChange={setPaginationModel}
+                                            pageSizeOptions= {[50]}
+                                            autoHeight={false}
+                                            sx={{
+                                              height: 500, // Ensure enough height for pagination controls
+                                              '& .MuiDataGrid-footerContainer': {
+                                                justifyContent: 'flex-end',
+                                              },
                                             }}
-                                            slots={{ toolbar: GridToolbar }}
                                             slotProps={{
-                                                toolbar: {
-                                                    showQuickFilter: true,
-                                                },
+                                              toolbar: {
+                                                showQuickFilter: true,
+                                              },
                                             }}
                                         />
 

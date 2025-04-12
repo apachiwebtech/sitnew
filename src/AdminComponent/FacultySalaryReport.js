@@ -21,11 +21,16 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 }));
 
 
+
 const FacultySalaryReport = () => {
 
     const [value, setValue] = useState([])
     const [hide, setHide] = useState([])
     const [vendordata, setStudent] = useState([])
+    const [paginationModel, setPaginationModel] = useState({
+            pageSize: 50,
+            page: 0,
+          });
 
 
 
@@ -145,7 +150,7 @@ const FacultySalaryReport = () => {
                                         </div>
                                     </div>
 
-                                    {hide && <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                                    {hide && <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "hidden"}}>
                                         <StyledDataGrid
                                         rows={rowsWithIds}
                                         columns={columns}
@@ -154,11 +159,22 @@ const FacultySalaryReport = () => {
                                         disableDensitySelector
                                         rowHeight={35}
                                         getRowId={(row) => row.Batch_Id}
-                                        initialState={{
-                                            pagination: {
-                                                paginationModel: {pageSize: 50, page: 0},
-                                            },
-                                        }}
+                                        pagination
+                                            paginationModel={paginationModel}
+                                            onPaginationModelChange={setPaginationModel}
+                                            pageSizeOptions= {[50]}
+                                            autoHeight={false}
+                                            sx={{
+                                              height: 500, // Ensure enough height for pagination controls
+                                              '& .MuiDataGrid-footerContainer': {
+                                                justifyContent: 'flex-end',
+                                              },
+                                            }}
+                                            slotProps={{
+                                              toolbar: {
+                                                showQuickFilter: true,
+                                              },
+                                            }}
                                         />
                                         </div>}
 

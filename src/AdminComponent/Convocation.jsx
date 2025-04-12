@@ -31,6 +31,10 @@ const Convocation = () => {
   const [open, setOpen] = React.useState(false);
   const { batchid } = useParams();
   console.log("Batch ID:", batchid);
+  const [paginationModel, setPaginationModel] = useState({
+          pageSize: 50,
+          page: 0,
+        });
   const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
   const [cid, setCid] = useState("")
   const [uid, setUid] = useState([])
@@ -262,7 +266,7 @@ const Convocation = () => {
                     </Link>
                   </div>
 
-                  <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "scroll"}}>
+                  <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "hidden"}}>
                     <StyledDataGrid
                       rows={convocationDataM}
                       columns={columns}
@@ -271,17 +275,22 @@ const Convocation = () => {
                       disableDensitySelector
                       rowHeight={37}
                       getRowId={(row) => row.Id}
-                      initialState={{
-                        pagination: {
-                          paginationModel: { pageSize: 50, page: 0 },
-                        },
-                      }}
-                      slots={{ toolbar: GridToolbar }}
-                      slotProps={{
-                        toolbar: {
-                          showQuickFilter: true,
-                        },
-                      }}
+                      pagination
+                                            paginationModel={paginationModel}
+                                            onPaginationModelChange={setPaginationModel}
+                                            pageSizeOptions= {[50]}
+                                            autoHeight={false}
+                                            sx={{
+                                              height: 500, // Ensure enough height for pagination controls
+                                              '& .MuiDataGrid-footerContainer': {
+                                                justifyContent: 'flex-end',
+                                              },
+                                            }}
+                                            slotProps={{
+                                              toolbar: {
+                                                showQuickFilter: true,
+                                              },
+                                            }}
                     />
                     {deleteId && (
                         <div className='confirm-delete'>

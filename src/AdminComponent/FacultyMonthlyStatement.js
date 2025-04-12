@@ -24,6 +24,10 @@ const FacultyMonthlyStatement = () => {
     const [value, setValue] = useState([])
     const [hide, setHide] = useState([])
     const [vendordata, setStudent] = useState([])
+    const [paginationModel, setPaginationModel] = useState({
+            pageSize: 50,
+            page: 0,
+          });
 
 
 
@@ -137,11 +141,22 @@ const FacultyMonthlyStatement = () => {
                                         disableDensitySelector
                                         rowHeight={35}
                                         getRowId={(row) => row.Batch_Id}
-                                        initialState={{
-                                            pagination: {
-                                                paginationModel: {pageSize: 50, page: 0},
-                                            },
-                                        }}
+                                        pagination
+                                            paginationModel={paginationModel}
+                                            onPaginationModelChange={setPaginationModel}
+                                            pageSizeOptions= {[50]}
+                                            autoHeight={false}
+                                            sx={{
+                                              height: 500, // Ensure enough height for pagination controls
+                                              '& .MuiDataGrid-footerContainer': {
+                                                justifyContent: 'flex-end',
+                                              },
+                                            }}
+                                            slotProps={{
+                                              toolbar: {
+                                                showQuickFilter: true,
+                                              },
+                                            }}
                                         />
                                         </div>}
 
