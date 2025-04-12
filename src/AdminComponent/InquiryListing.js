@@ -631,53 +631,54 @@ const InquiryListing = () => {
                                         disableColumnSelector
                                         disableDensitySelector
                                         rowHeight={40}
-                                        // pageSizeOptions={[5]}
-                                        // paginationMode="server"
-                                        // onPaginationModelChange={paginationModel}
+                                        pageSizeOptions={[5]}
+                                        paginationMode="server"
+                                        onPaginationModelChange={paginationModel}
                                         getRowId={(row) => row.id}
-                                        // sx={{
-                                        //     "& .MuiDataGrid-cell": {
-                                        //       borderRight: "1px solid #ccc", // Add border to cells
-                                        //     },
-                                        //     "& .MuiDataGrid-columnHeaders": {
-                                        //       borderBottom: "2px solid #000", // Add border below header
-                                        //     },
-                                        //   }}
+                                        hideFooter 
+                                        sx={{
+                                            "& .MuiDataGrid-cell": {
+                                              borderRight: "1px solid #ccc", // Add border to cells
+                                            },
+                                            "& .MuiDataGrid-columnHeaders": {
+                                              borderBottom: "2px solid #000", // Add border below header
+                                            },
+                                          }}
 
-                                        pagination
-                                            paginationModel={paginationModel}
-                                            onPaginationModelChange={setPaginationModel}
-                                            pageSizeOptions= {[50]}
-                                            autoHeight={false}
-                                            sx={{
-                                              height: 500, // Ensure enough height for pagination controls
-                                              '& .MuiDataGrid-footerContainer': {
-                                                justifyContent: 'flex-end',
-                                              },
-                                            }}
-                                            slotProps={{
-                                              toolbar: {
-                                                showQuickFilter: true,
-                                              },
-                                            }}
+                                        // pagination
+                                        //     paginationModel={paginationModel}
+                                        //     onPaginationModelChange={setPaginationModel}
+                                        //     pageSizeOptions= {[50]}
+                                        //     autoHeight={false}
+                                        //     sx={{
+                                        //       height: 500, // Ensure enough height for pagination controls
+                                        //       '& .MuiDataGrid-footerContainer': {
+                                        //         justifyContent: 'flex-end',
+                                        //       },
+                                        //     }}
+                                        //     slotProps={{
+                                        //       toolbar: {
+                                        //         showQuickFilter: true,
+                                        //       },
+                                        //     }}
                                     />
-                                    {/* <div className="float-right py-2">
-                                        <button
+                                     <div className="float-right py-2 mt-2 border-top border-dark " style={{display:"flex", flexDirection:"row", justifyContent:"end"}}>
+                                        <button style={{marginRight:"0px"}}
                                             onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
                                             disabled={page === 0} // Disable the "Previous" button on the first page
                                         >
                                             Previous
                                         </button>
 
-                                        <span>Page {page + 1}</span>
+                                        <span style={{marginRight:"0px"}}>Page {page + 1}</span>
 
-                                        <button
+                                        <button style={{marginRight:"50px"}}
                                             onClick={() => setPage((prev) => prev + 1)}
                                             disabled={!lastStudentId} // Disable the "Next" button if there is no lastStudentId (i.e., no data)
                                         >
                                             Next
                                         </button>
-                                    </div> */}
+                                    </div> 
 
                                     {confirmationVisibleMap[cid] && (
                                         <div className="confirm-delete">

@@ -414,34 +414,35 @@ const Students = () => {
                                             pageSize={pageSize}
                                             page={page}
                                             rowHeight={37}
-                                            // pagination={false}
+                                            pagination={false}
                                             disableColumnSelector
                                             disableDensitySelector
                                             getRowId={(row) => row.Admission_Id}
-                                            // initialState={{
-                                            //     pagination: {
-                                            //         paginationModel: { pageSize: 100, page: 0 },
-                                            //     },
+                                            hideFooter 
+                                            initialState={{
+                                                pagination: {
+                                                    paginationModel: { pageSize: 100, page: 0 },
+                                                },
+                                            }}
+                                            Any other DataGrid props you need
+                                            // pagination
+                                            // paginationModel={paginationModel}
+                                            // onPaginationModelChange={setPaginationModel}
+                                            // pageSizeOptions= {[50]}
+                                            // autoHeight={false}
+                                            // sx={{
+                                            //   height: 500, // Ensure enough height for pagination controls
+                                            //   '& .MuiDataGrid-footerContainer': {
+                                            //     justifyContent: 'flex-end',
+                                            //   },
                                             // }}
-                                            // Any other DataGrid props you need
-                                            pagination
-                                            paginationModel={paginationModel}
-                                            onPaginationModelChange={setPaginationModel}
-                                            pageSizeOptions= {[50]}
-                                            autoHeight={false}
-                                            sx={{
-                                              height: 500, // Ensure enough height for pagination controls
-                                              '& .MuiDataGrid-footerContainer': {
-                                                justifyContent: 'flex-end',
-                                              },
-                                            }}
-                                            slotProps={{
-                                              toolbar: {
-                                                showQuickFilter: true,
-                                              },
-                                            }}
+                                            // slotProps={{
+                                            //   toolbar: {
+                                            //     showQuickFilter: true,
+                                            //   },
+                                            // }}
                                         />
-                                        {/* <div className="float-right py-2">
+                                        <div className="float-right py-2 mt-3">
                                             <button
                                                 onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
                                                 disabled={page === 0} // Disable the "Previous" button on the first page
@@ -451,13 +452,13 @@ const Students = () => {
 
                                             <span>Page {page + 1}</span>
 
-                                            <button
+                                            <button style={{marginRight:"50px"}}
                                                 onClick={() => setPage((prev) => prev + 1)}
                                                 disabled={!lastStudentId} // Disable the "Next" button if there is no lastStudentId (i.e., no data)
                                             >
                                                 Next
                                             </button>
-                                        </div> */}
+                                        </div>
                                     </div>
                                 </div>
                             </div>

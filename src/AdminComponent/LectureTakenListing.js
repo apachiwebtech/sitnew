@@ -404,6 +404,7 @@ const LectureTakenListing = () => {
                                             paginationModel={paginationModel}
                                             onPaginationModelChange={setPaginationModel}
                                             pageSizeOptions= {[50]}
+                                            hideFooter
                                             // autoHeight={false}
                                             sx={{
                                               height: 500, // Ensure enough height for pagination controls
@@ -411,11 +412,11 @@ const LectureTakenListing = () => {
                                                 justifyContent: 'flex-end',
                                               },
                                             }}
-                                            slotProps={{
-                                              toolbar: {
-                                                showQuickFilter: true,
-                                              },
-                                            }}
+                                            // slotProps={{
+                                            //   toolbar: {
+                                            //     showQuickFilter: true,
+                                            //   },
+                                            // }}
                                             // slots={{ toolbar: GridToolbar }}
                                             // slotProps={{
                                             //     toolbar: {
@@ -423,7 +424,7 @@ const LectureTakenListing = () => {
                                             //     },
                                             // }}
                                         />
-                                        {/* {!isSearchResult && (
+                                        {!isSearchResult && (
                                             <div className="float-right py-2">
                                                 <button
                                                     onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
@@ -434,14 +435,14 @@ const LectureTakenListing = () => {
 
                                                 <span>Page {page + 1}</span>
 
-                                                <button
+                                                <button style={{marginRight:"50px"}}
                                                     onClick={() => setPage((prev) => prev + 1)}
                                                     disabled={!lastStudentId} // Disable the "Next" button if there is no lastStudentId (i.e., no data)
                                                 >
                                                     Next
                                                 </button>
                                             </div>
-                                        )} */}
+                                        )}
 
                                         {confirmationVisibleMap[cid] && (
                                             <div className="confirm-delete" >
