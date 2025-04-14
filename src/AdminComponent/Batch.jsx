@@ -167,7 +167,7 @@ const Batch = () => {
                                     </div>
 
                                     <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "hidden"}}>
-                                        <StyledDataGrid
+                                        <DataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
                                             // disableColumnFilter
@@ -186,11 +186,13 @@ const Batch = () => {
                                                 justifyContent: 'flex-end',
                                               },
                                             }}
+                                            slots={{ toolbar: GridToolbar }} 
                                             slotProps={{
-                                              toolbar: {
-                                                showQuickFilter: true,
-                                              },
-                                            }}
+                                                toolbar: {
+                                                  showQuickFilter: true,
+                                                },
+                                              }}
+                                           
                                         />
 
                                         {confirmationVisibleMap[cid] && (
