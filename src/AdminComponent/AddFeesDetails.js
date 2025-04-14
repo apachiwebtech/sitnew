@@ -50,6 +50,7 @@ const AddFeesDetails = () => {
         Amount: "",
         RDate: new Date().toISOString().split("T")[0],
         Due_Date: "",
+        generatereceipt: '',
     });
 
     const debit = feesDetailsList.reduce((acc, item) => {
@@ -57,6 +58,8 @@ const AddFeesDetails = () => {
 
         return value + acc;
     }, 0);
+
+    console.log(feesDetailsList , "sauu")
 
     const credit = feesDetailsList.reduce((acc, item) => {
         const value = item.TypeR === "C" ? item.Amount : 0;
@@ -94,6 +97,33 @@ const AddFeesDetails = () => {
     //     setError(newErrors);
     //     return isValid;
     // };
+
+
+    const onCheckboxChange = (e) => {
+        const checked = e.target.checked;
+
+
+        if (checked) {
+            axios.get(`${BASE_URL}/generatereceiptnumber`)
+                .then((res) => {
+                    setFormState((prevData) => ({
+                        ...prevData,
+                        generatereceipt: res.data.receipt_no
+                    }));
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        }else{
+            setFormState((prevData) => ({
+                ...prevData,
+                generatereceipt: ''
+            }));
+        }
+
+
+
+    };
 
     async function getCourse() {
         const data = {
@@ -208,6 +238,7 @@ const AddFeesDetails = () => {
     };
 
     const getStudentFeesDetails = async (Id) => {
+
         try {
             const response = await axios.post(`${BASE_URL}/getFeesDetailsByStudent`, {
                 Student_Id: Id,
@@ -230,9 +261,9 @@ const AddFeesDetails = () => {
             }
             let FeesMonth = parseInt(data.RDate.split("-")[1]);
             let FeesYear = parseInt(data.RDate.split("-")[0]);
-    
+
             const endpoint = isEdit ? "updateFeesDetails" : "addFeesDetails";
-            
+
             const response = await axios.post(`${BASE_URL}/${endpoint}`, {
                 ...data,
                 Amount,
@@ -240,7 +271,7 @@ const AddFeesDetails = () => {
                 FeesMonth,
                 FeesYear,
             });
-    
+
             alert(`Fees Details ${isEdit ? "Updated" : "Added"} Successfully`);
             getStudentFeesDetails(data.Student_Id);
             navigate("/addfeesdetails");
@@ -248,7 +279,7 @@ const AddFeesDetails = () => {
             console.log("/addStudentFees err", err);
         }
     };
-    
+
 
     useEffect(() => {
         const handleClickOutside = (e) => {
@@ -449,7 +480,7 @@ const AddFeesDetails = () => {
                                                                                                 setDropDownOpen(false);
                                                                                             }}
                                                                                         >
-                                                                                            {option.Student_Name} 
+                                                                                            {option.Student_Name}
                                                                                         </li>
                                                                                     ))
                                                                                 ) : (
@@ -599,20 +630,31 @@ const AddFeesDetails = () => {
                                                                         </span>
                                                                     }
                                                                 </div>
-                                                                <div className="form-group col-lg-6 ">
-                                                                    <label for="exampleInputUsername1">
-                                                                        Generate Receipt
+                                                                <div className="form-group col-lg-6">
+                                                                    <label htmlFor="generateReceiptCheckbox" className="d-block mb-2">
+                                                                        Generate Receipt   <span><input
+                                                                            type="checkbox"
+                                                                            className="t"
+                                                                            id="generateReceiptCheckbox"
+                                                                            name="generateReceipt"
+                                                                            onChange={onCheckboxChange} // You'll define this handler
+                                                                        /></span>
                                                                     </label>
+
+                                                                    <div className="form-check mb-2">
+                                                                     
+                                                                    </div>
+
                                                                     <input
                                                                         type="text"
-                                                                        class="form-control"
+                                                                        className="form-control"
                                                                         id="exampleInputUsername1"
-                                                                        // value={value.generatereceipt}
                                                                         name="generatereceipt"
-                                                                        // onChange={onhandleChange}
+                                                                        value={formState.generatereceipt}
                                                                         disabled
                                                                     />
                                                                 </div>
+
                                                             </div>
                                                         </div>
                                                         <div className="col-lg-6">

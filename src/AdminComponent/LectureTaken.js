@@ -488,8 +488,11 @@ const LectureTaken = () => {
                     prevData.map((item) => ({
                         ...item,
                         Student_Atten: item.In_Time ? "Present" : "Absent",
+                        Late : value.lecturefrom <= item.In_Time ? 'NO' : 'Yes'
                     }))
                 );
+
+                console.log(studentdata, "$%")
             })
             .catch((err) => {
                 console.error('Error fetching data:', err);

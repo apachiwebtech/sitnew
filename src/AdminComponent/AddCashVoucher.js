@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -31,7 +31,7 @@ const AddCashVoucher = () => {
     const [batch, setBatch] = useState([])
     const [courseid, setCourseid] = useState('')
     const { voucherid } = useParams()
-    const [loader , setLoader] = useState(false)
+    const [loader, setLoader] = useState(false)
     const rows = Array.from({ length: 8 });
 
     const [value, setValue] = useState({
@@ -167,12 +167,11 @@ const AddCashVoucher = () => {
                     paidby: res.data[0].paidby,
                     prepaired_by: res.data[0].prepaired_by,
                     approved_by: res.data[0].approved_by,
-                    total: res.data[0].total,
                     checked_by: res.data[0].checked_by,
                 })
 
                 setVouncherno(res.data[0].voucherno)
-                
+
             })
             .catch((err) => {
                 console.log(err)
@@ -183,19 +182,24 @@ const AddCashVoucher = () => {
 
 
 
-    const updatechild = () =>{
+    const updatechild = () => {
 
         const data = {
             u_id: voucherid,
             tablename: "awt_cashvoucherchild",
-            uidname :"voucherid"
+            uidname: "voucherid"
         }
 
         axios.post(`${BASE_URL}/new_update_data`, data)
             .then((res) => {
                 const newdata = res.data
                 const initialData = {};
+                let totalAmount = 0;
                 newdata.forEach((item, index) => {
+                    const amount = parseFloat(item.amount) || 0;
+                    totalAmount += amount;
+
+
                     initialData[`row${index + 1}`] = item.id; // For id
                     initialData[`bill${index + 1}`] = item.bill_no; // For bill
                     initialData[`date${index + 1}`] = item.date; // For date
@@ -205,10 +209,18 @@ const AddCashVoucher = () => {
                     initialData[`project${index + 1}`] = item.project; // For project
                     initialData[`trainingprogramme${index + 1}`] = item.training_programee; // For training programme
                     initialData[`batchcode${index + 1}`] = item.batch_code; // For batch code
-
+                    // Add grand total to the same state object
+                    initialData.total = totalAmount;
                 });
                 setrowValue(initialData);
-                
+
+                setValue((prev) =>({
+                    ...prev,
+                    total : totalAmount
+                }))
+
+
+
             })
             .catch((err) => {
                 console.log(err)
@@ -230,6 +242,8 @@ const AddCashVoucher = () => {
         getBatch()
     }, [])
 
+console.log(rowvalue , "DDD")
+    const navigate = useNavigate()
 
 
     const handleSubmit = async (e) => {
@@ -257,6 +271,8 @@ const AddCashVoucher = () => {
                     alert('Data Submitted')
 
                     addrows(res.data.insertId || voucherid)
+
+                    navigate('/cashvoucher')
                 })
         }
 
@@ -271,8 +287,16 @@ const AddCashVoucher = () => {
     }
 
     async function addrows(rowid) {
+        let totalAmount = 0;
+
+
 
         const formattedData = rows.map((_, index) => {
+
+            const amount = parseFloat(rowvalue[`ammount${index + 1}`]) || 0;
+            totalAmount += amount;
+
+
             return {
                 bill: rowvalue[`bill${index + 1}`],
                 date: rowvalue[`date${index + 1}`],
@@ -282,12 +306,16 @@ const AddCashVoucher = () => {
                 project: rowvalue[`project${index + 1}`],
                 trainingprogramme: rowvalue[`trainingprogramme${index + 1}`],
                 batchcode: rowvalue[`batchcode${index + 1}`],
-                uid:rowvalue[`row${index + 1}`],
+                uid: rowvalue[`row${index + 1}`],
                 voucherid: rowid,
             };
+
+
         });
 
-        await axios.post(`${BASE_URL}/add_cashvoucherchild`, { rows: formattedData })
+
+
+        await axios.post(`${BASE_URL}/add_cashvoucherchild`, { rows: formattedData, grandTotal: totalAmount })
             .then((res) => {
                 alert("submitted")
                 setLoader(false)
@@ -304,14 +332,32 @@ const AddCashVoucher = () => {
 
 
 
-
     const onhandleChange = (e) => {
         const { name, value: inputValue } = e.target;
-        setrowValue(prevState => ({
-            ...prevState,
-            [name]: inputValue, // Update the specific field dynamically
-        }));
+
+        setrowValue(prevState => {
+            // Update the changed field
+            const updatedState = {
+                ...prevState,
+                [name]: inputValue,
+            };
+
+            // Recalculate totalAmount for all 'ammount' fields
+            let total = 0;
+            Object.keys(updatedState).forEach(key => {
+                if (key.startsWith('ammount')) {
+                    const val = parseFloat(updatedState[key]);
+                    if (!isNaN(val)) total += val;
+                }
+            });
+
+            // Add total to updated state if needed
+            updatedState.totalAmount = total;
+
+            return updatedState;
+        });
     };
+
 
     const handlechange = (e) => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
@@ -332,6 +378,7 @@ const AddCashVoucher = () => {
                         <div class="col-lg-12 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
+                                    <p>Total Amount: ₹{rowvalue.totalAmount || 0}</p>
                                     <h4 class="card-title">Add Cash Voucher Details</h4>
                                     <hr></hr>
                                     <form class="form-sample py-3" onSubmit={handleSubmit}>
@@ -376,7 +423,7 @@ const AddCashVoucher = () => {
                                                         <td>Bill No</td>
                                                         <td>Date</td>
                                                         <td>Account Head</td>
-                                                        <td>Ammount</td>
+                                                        <td>Amount</td>
                                                         <td>Desciption</td>
                                                         <td>Project</td>
                                                         <td>Training Programme</td>
@@ -421,7 +468,7 @@ const AddCashVoucher = () => {
                                                                     <option>Select</option>
                                                                     {account.map((item) => {
                                                                         return (
-                                                                            <option value={item.id}>{item.title}</option>
+                                                                            <option value={item.title}>{item.title}</option>
                                                                         )
                                                                     })}
 
@@ -487,7 +534,7 @@ const AddCashVoucher = () => {
                                                                     <option>Select</option>
                                                                     {course.map((item) => {
                                                                         return (
-                                                                            <option value={item.Course_Id}>{item.Course_Name}</option>
+                                                                            <option value={item.Course_Name}>{item.Course_Name}</option>
 
                                                                         )
                                                                     })}
@@ -539,7 +586,7 @@ const AddCashVoucher = () => {
                                             </div>
                                             <div class="form-group col-lg-4">
                                                 <label for-="exampleInputUsername1">Total</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.total}
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={rowvalue.totalAmount || value.total}
                                                     placeholder="0" name='total' onChange={handlechange} disabled />
                                             </div>
                                             <div class="form-group col-lg-4">
@@ -550,7 +597,7 @@ const AddCashVoucher = () => {
                                         </div>
 
                                         <div className=' row p-2 gap-2'>
-                                            <button className='mr-2 btn btn-primary' type='submit' onSubmit={handleSubmit}>{loader? "Processing.." : "Save Change"}</button>
+                                            <button className='mr-2 btn btn-primary' type='submit' onSubmit={handleSubmit}>{loader ? "Processing.." : "Save Change"}</button>
                                             <button className='mr-2 btn btn-primary'>Close</button>
                                         </div>
 
