@@ -297,7 +297,7 @@ const InquiryListing = () => {
         {
             field: "Student_Name",
             headerName: "Student Name",
-            width: 150,
+            width: 180,
             renderCell: (params) => {
                 return (
                     <>
@@ -313,7 +313,7 @@ const InquiryListing = () => {
         {
             field: "Course_Name",
             headerName: "Course Name",
-            width: 150,
+            width: 280,
             renderCell: (params) => {
                 return (
                     <>
@@ -345,26 +345,37 @@ const InquiryListing = () => {
         {
             field: "Discussion",
             headerName: "Discussion",
-            width: 320,
+            width: 390,
             renderCell: (params) => {
-                return (
-                    <div
-                        style={{
-                            whiteSpace: "normal",
-                            wordWrap: "break-word",
-                            overflowWrap: "break-word", // Ensure long words break properly
-                            lineHeight: 1,
-                        }}
-                    >
-                        {params.row.IsUnread == 0 ? (
-                            <p className="text-danger font-12">{params.row.Discussion}</p>
-                        ) : (
-                            <p className="font-12">{params.row.Discussion}</p>
-                        )}
-                    </div>
-                );
+              const isUnread = params.row.IsUnread === 0;
+          
+              return (
+                <div
+                  style={{
+                    display: "-webkit-box",
+                    WebkitLineClamp: 2,               // Limit to 2 lines
+                    WebkitBoxOrient: "vertical",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    lineHeight: "1.4",
+                    maxHeight: "2.8em",              // lineHeight * 2
+                  }}
+                >
+                  <p
+                    className={`font-12 ${isUnread ? "text-danger" : ""}`}
+                    style={{
+                      margin: 0,
+                      whiteSpace: "normal",
+                    }}
+                  >
+                    {params.row.Discussion}
+                  </p>
+                </div>
+              );
             },
-        },
+          },
+          
+          
         {
             field: "present_mobile",
             headerName: "Mobile",
@@ -384,7 +395,7 @@ const InquiryListing = () => {
         {
             field: "Email",
             headerName: "Email",
-            width: 200,
+            width: 250,
             renderCell: (params) => {
                 return (
                     <>
@@ -449,6 +460,7 @@ const InquiryListing = () => {
             field: "actions",
             type: "actions",
             headerName: "Action",
+            width: 200,
             renderCell: (params) => {
                 return (
                     <>
@@ -624,7 +636,7 @@ const InquiryListing = () => {
                                     </div>
                                 </div>
 
-                                <div className="card" style={ { height: "510px", overflow: "hidden"}}>
+                                <div className="card" style={ { height: "600px", overflow: "hidden", border:"nono"}}>
                                     <StyledDataGrid
                                         rows={rowsWithIds}
                                         columns={columns}
@@ -641,7 +653,7 @@ const InquiryListing = () => {
                                               borderRight: "1px solid #ccc", // Add border to cells
                                             },
                                             "& .MuiDataGrid-columnHeaders": {
-                                              borderBottom: "2px solid #000", // Add border below header
+                                            //   borderBottom: "2px solid #000", // Add border below header
                                             },
                                           }}
 
@@ -662,7 +674,7 @@ const InquiryListing = () => {
                                         //       },
                                         //     }}
                                     />
-                                     <div className="float-right py-2 mt-2 border-top border-dark " style={{display:"flex", flexDirection:"row", justifyContent:"end"}}>
+                                     <div className="float-right py-2 mt-2  " style={{display:"flex", flexDirection:"row", justifyContent:"end"}}>
                                         <button style={{marginRight:"0px"}}
                                             onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
                                             disabled={page === 0} // Disable the "Previous" button on the first page
