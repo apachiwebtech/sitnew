@@ -387,8 +387,8 @@ const LectureTakenListing = () => {
                                         </Link>
                                     </div>
 
-                                    <div>
-                                        <DataGrid
+                                    <div >
+                                        <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
                                             // pageSize={pageSize}
@@ -399,18 +399,31 @@ const LectureTakenListing = () => {
                                             disableDensitySelector
                                             rowHeight={37}
                                             getRowId={(row, index) => row.Take_Id}
-                                            autoHeight
+                                            // autoHeight
                                             pagination
                                             paginationModel={paginationModel}
                                             onPaginationModelChange={setPaginationModel}
                                             pageSizeOptions= {[50]}
                                             hideFooter
-                                            // autoHeight={false}
+                                            autoHeight={false}
                                             sx={{
                                               height: 500, // Ensure enough height for pagination controls
                                               '& .MuiDataGrid-footerContainer': {
                                                 justifyContent: 'flex-end',
+                                                borderBottom: "1px solid #dce4ec"
                                               },
+                                              "& .MuiDataGrid-cell": {
+                                            //   borderRight: "1px solid #ccc",
+                                              borderLeft: "1px solid #dce4ec"
+                                               // Add border to cells
+                                            },
+                                            "& .MuiDataGrid-columnHeaders": {
+                                                // borderRight: "1px solid #ccc",
+                                                borderTop: "1px solid #dce4ec",
+                                                borderLeft: "1px solid #dce4ec",
+                                                borderRight: "1px solid #dce4ec"
+                                                 // Add border below header
+                                                },
                                             }}
                                             // slotProps={{
                                             //   toolbar: {

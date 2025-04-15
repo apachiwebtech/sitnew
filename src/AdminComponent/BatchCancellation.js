@@ -477,6 +477,8 @@ const BatchCancellation = () => {
                                     columns={columns}
                                     rowHeight={35}
                                     getRowId={(row) => row.id}
+                                    disableColumnSelector
+                                            disableDensitySelector
                                     pagination
                                             paginationModel={paginationModel}
                                             onPaginationModelChange={setPaginationModel}
@@ -487,6 +489,9 @@ const BatchCancellation = () => {
                                               '& .MuiDataGrid-footerContainer': {
                                                 justifyContent: 'flex-end',
                                               },
+                                            }}
+                                            slots={{
+                                                toolbar: GridToolbar
                                             }}
                                             slotProps={{
                                               toolbar: {

@@ -13,6 +13,7 @@ import { ToWords } from "to-words";
 import Receipt from "./Receipt";
 import { pdf } from "@react-pdf/renderer";
 import { useNavigate } from "react-router-dom";
+import Sitpayment from "./Document/payment";
 
 const AddFeesDetails = () => {
     const [page, setPage] = useState(1);
@@ -380,7 +381,7 @@ const AddFeesDetails = () => {
     }, []);
 
     const printReceipt = async (data) => {
-        const blob = await pdf(<Receipt data={pdfdata} />).toBlob();
+        const blob = await pdf(<Sitpayment data={pdfdata} receipt_no={formState.generatereceipt} Cheque_number = {formState.Cheque_No} Cheque_branch = {formState.Cheque_Branch} notes = {formState.Notes}/>).toBlob();
         const url = URL.createObjectURL(blob);
         window.open(url);
         URL.revokeObjectURL(url);

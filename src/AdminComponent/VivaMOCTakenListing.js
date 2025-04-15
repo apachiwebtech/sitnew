@@ -10,6 +10,7 @@ import InnerHeader from './InnerHeader';
 import VivaMOCTaken from "./VivaMOCTaken";
 import Loader from "./Loader";
 import { StyledDataGrid } from "./StyledDataGrid";
+import { G } from "@react-pdf/renderer";
 
 const VivaMOCTakenListing = () => {
 
@@ -194,7 +195,7 @@ const VivaMOCTakenListing = () => {
                                         <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
-                                            disableColumnFilter
+                                            // disableColumnFilter
                                             disableColumnSelector
                                             disableDensitySelector
                                             rowHeight={35}
@@ -209,6 +210,9 @@ const VivaMOCTakenListing = () => {
                                               '& .MuiDataGrid-footerContainer': {
                                                 justifyContent: 'flex-end',
                                               },
+                                            }}
+                                            slots={{
+                                                toolbar: GridToolbar
                                             }}
                                             slotProps={{
                                               toolbar: {
