@@ -22,6 +22,7 @@ import StudentLabelDoc from "./Document/StudentLabelDoc";
 import StudyMaterialDoc from "./Document/StudyMaterialDoc";
 import TestTakenDoc from "./Document/TestTakenDoc";
 import TimeSheetDoc from "./Document/TimeSheetDoc";
+import ID_CardDoc from "./Document/ID_CardDoc";
 
 const StudentBatch = () => {
     const [uid, setUid] = useState([]);
@@ -139,6 +140,9 @@ const StudentBatch = () => {
             case "0118":
                 studentLabelPdf();
                 break;
+            case "0116":
+                Studentidcard();
+                break;
         }
     };
 
@@ -218,6 +222,14 @@ const StudentBatch = () => {
 
     const studentLabelPdf = async () => {
         const blob = await pdf(<StudentLabelDoc />).toBlob();
+        const url = URL.createObjectURL(blob);
+        window.open(url);
+        URL.revokeObjectURL(url);
+    };
+    const Studentidcard = async () => {
+
+        const res = await axios.post(`${BASE_URL}/getidStudent`, { batch_code: value.batch });        
+        const blob = await pdf(<ID_CardDoc student={res.data} />).toBlob();
         const url = URL.createObjectURL(blob);
         window.open(url);
         URL.revokeObjectURL(url);
