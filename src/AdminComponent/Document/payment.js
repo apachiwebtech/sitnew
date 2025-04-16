@@ -7,10 +7,10 @@ import sitlogo from '../../assets/images/sitlogo.png'
 const Sitpayment = ({data,receipt_no, Cheque_number, Cheque_branch, notes}) => {
 
 
-  console.log(data)
-  console.log(Cheque_branch)
-  console.log(Cheque_number)
-  console.log(notes)
+  // console.log(data)
+  // console.log(Cheque_branch)
+  // console.log(Cheque_number)
+  // console.log(notes)
 
   Font.register({
     family: 'Poppins',

@@ -226,6 +226,7 @@ import AnalysisDoc from "./AdminComponent/Document/AnalysisDoc";
 import Acomodation from "./AdminComponent/Document/Acomodation.js";
 import LectureReports from "./AdminComponent/otherDocuments/LectureReport.js";
 import Sitpayment from "./AdminComponent/Document/payment.js";
+import { Voucher } from "./AdminComponent/Document/Voucher.js";
 
 
 const Router = createBrowserRouter([
@@ -564,7 +565,7 @@ const Router = createBrowserRouter([
                 element: (
                     <div style={{ width: "100vw", height: "100vh" }}>
                         <PDFViewer style={{ width: "100%", height: "100%" }}>
-                           <Sitpayment/>
+                           <Voucher/>
                         </PDFViewer>
                     </div>
                 ),

@@ -9,6 +9,10 @@ import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import AddCashVoucher from "./AddCashVoucher";
 import { StyledDataGrid } from "./StyledDataGrid";
+import PrintIcon from '@mui/icons-material/Print';
+import { Voucher } from "./Document/Voucher";
+import { pdf } from "@react-pdf/renderer";
+import { data } from "jquery";
 
 const CashVoucher = () => {
 
@@ -18,11 +22,12 @@ const CashVoucher = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const label = { inputProps: { 'aria-label': 'Color switch demo' } };
     const [voucherdata, setVoucherData] = useState([])
+
     const [paginationModel, setPaginationModel] = useState({
-            pageSize: 50,
-            page: 0,
-          });
-    
+        pageSize: 50,
+        page: 0,
+    });
+
 
     async function getCashVoucher(params) {
 
@@ -66,8 +71,8 @@ const CashVoucher = () => {
 
         axios.post(`${BASE_URL}/delete_data`, data)
             .then((res) => {
-              alert("Deleted")
-              getCashVoucher()
+                alert("Deleted")
+                getCashVoucher()
             })
             .catch((err) => {
                 console.log(err)
@@ -112,22 +117,22 @@ const CashVoucher = () => {
             headerName: "Date",
             flex: 2,
             renderCell: (params) => {
-              if (!params.value) return ""; // Handle empty values
-          
-              // Check if already in DD-MM-YYYY format
-              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
-              if (ddmmyyyyRegex.test(params.value)) {
-                return params.value; // Return as-is if already formatted
-              }
-          
-              const date = new Date(params.value);
-              if (isNaN(date.getTime())) return ""; // Handle invalid dates
-          
-              // Convert to DD-MM-YYYY format
-              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+                if (!params.value) return ""; // Handle empty values
+
+                // Check if already in DD-MM-YYYY format
+                const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+                if (ddmmyyyyRegex.test(params.value)) {
+                    return params.value; // Return as-is if already formatted
+                }
+
+                const date = new Date(params.value);
+                if (isNaN(date.getTime())) return ""; // Handle invalid dates
+
+                // Convert to DD-MM-YYYY format
+                return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
             },
-          },
-          
+        },
+
         { field: 'voucherno', headerName: 'Cash Id', flex: 2 },
         { field: 'paidto', headerName: 'Employee', flex: 2 },
         { field: 'prepaired_by', headerName: 'Prepaired By', flex: 2 },
@@ -142,6 +147,7 @@ const CashVoucher = () => {
                         <Link to={`/cashvoucher/${params.row.id}`}><EditIcon style={{ cursor: "pointer" }} /></Link>
                         <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
                         {/* <Switch {...label} onChange={() => handleswitchchange(params.row.isActive, params.row.id)} defaultChecked={params.row.isActive == 0 ? false : true} color="secondary" /> */}
+                        <PrintIcon style={{ color: "blue", cursor: "pointer" }} onClick={() => printReceipt(params.row)} />
                     </>
                 )
             }
@@ -150,6 +156,38 @@ const CashVoucher = () => {
 
 
     const rowsWithIds = voucherdata.map((row, index) => ({ index: index + 1, ...row }));
+
+
+
+    const printReceipt = async (data) => {
+
+        const payload = {
+            u_id: data.id,
+            tablename: "awt_cashvoucherchild",
+            uidname: "voucherid"
+        }
+
+        axios.post(`${BASE_URL}/new_update_data`, payload)
+            .then((res) => {
+                if(data && res.data.length > 0){
+                    printpdf(data , res.data)
+                }
+                else{
+                    alert("Please add Data")
+                }
+            })
+
+    };
+
+    const printpdf = async (data , pdfdata)  =>{
+   
+        const blob = await pdf(<Voucher data={data} pdfdata={pdfdata} />).toBlob();
+        const url = URL.createObjectURL(blob);
+        window.open(url);
+        URL.revokeObjectURL(url);
+    }
+
+
 
     return (
 
@@ -173,7 +211,7 @@ const CashVoucher = () => {
 
                                     </div>
 
-                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "hidden"}}>
+                                    <div style={{ borderLeft: "1px solid #dce4ec", height: "510px", overflow: "hidden" }}>
                                         <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
@@ -185,28 +223,28 @@ const CashVoucher = () => {
                                             pagination
                                             paginationModel={paginationModel}
                                             onPaginationModelChange={setPaginationModel}
-                                            pageSizeOptions= {[50]}
+                                            pageSizeOptions={[50]}
                                             autoHeight={false}
                                             sx={{
-                                              height: 500, // Ensure enough height for pagination controls
-                                              '& .MuiDataGrid-footerContainer': {
-                                                justifyContent: 'flex-end',
-                                              },
+                                                height: 500, // Ensure enough height for pagination controls
+                                                '& .MuiDataGrid-footerContainer': {
+                                                    justifyContent: 'flex-end',
+                                                },
                                             }}
                                             slotProps={{
-                                              toolbar: {
-                                                showQuickFilter: true,
-                                              },
+                                                toolbar: {
+                                                    showQuickFilter: true,
+                                                },
                                             }}
                                         />
                                     </div>
                                     {confirmationVisibleMap[cid] && (
-                                            <div className='confirm-delete'>
-                                                <p>Are you sure you want to delete?</p>
-                                                <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
-                                                <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
-                                            </div>
-                                        )}
+                                        <div className='confirm-delete'>
+                                            <p>Are you sure you want to delete?</p>
+                                            <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
+                                            <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
+                                        </div>
+                                    )}
 
 
                                 </div>
