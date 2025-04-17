@@ -215,7 +215,7 @@ const CashVoucher = () => {
                                         <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
-                                            disableColumnFilter
+                                            // disableColumnFilter
                                             disableColumnSelector
                                             disableDensitySelector
                                             rowHeight={37}
@@ -230,6 +230,9 @@ const CashVoucher = () => {
                                                 '& .MuiDataGrid-footerContainer': {
                                                     justifyContent: 'flex-end',
                                                 },
+                                            }}
+                                            slots={{
+                                                toolbar: GridToolbar
                                             }}
                                             slotProps={{
                                                 toolbar: {

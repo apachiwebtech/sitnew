@@ -348,6 +348,9 @@ const AnnualBatchListing = () => {
                                                 justifyContent: 'flex-end',
                                               },
                                             }}
+                                            slots={{
+                                              toolbar: GridToolbar
+                                          }}
                                             slotProps={{
                                               toolbar: {
                                                 showQuickFilter: true,

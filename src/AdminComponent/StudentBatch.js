@@ -226,6 +226,7 @@ const StudentBatch = () => {
         window.open(url);
         URL.revokeObjectURL(url);
     };
+    // example
     const Studentidcard = async () => {
 
         const res = await axios.post(`${BASE_URL}/getidStudent`, { batch_code: value.batch });        

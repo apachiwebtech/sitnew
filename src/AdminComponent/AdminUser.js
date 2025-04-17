@@ -7,7 +7,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
 import Cookies from 'js-cookie';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import CryptoJS from 'crypto-js';
 import decryptedUserId from '../Utils/UserID';
 import Loader from './Loader';
@@ -197,6 +197,8 @@ const AdminUser = () => {
                                         <StyledDataGrid
                                             rows={rows}
                                             columns={columns}
+                                            disableColumnSelector
+                                            disableDensitySelector
                                             pagination
                                             paginationModel={paginationModel}
                                             onPaginationModelChange={setPaginationModel}
@@ -207,6 +209,9 @@ const AdminUser = () => {
                                               '& .MuiDataGrid-footerContainer': {
                                                 justifyContent: 'flex-end',
                                               },
+                                            }}
+                                            slots={{
+                                                toolbar: GridToolbar
                                             }}
                                             slotProps={{
                                               toolbar: {

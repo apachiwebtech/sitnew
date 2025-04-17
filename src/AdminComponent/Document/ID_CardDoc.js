@@ -39,6 +39,7 @@ const ID_CardDoc = ({ student }) => {
                     {student.map((item, index) => {
 
                         return (
+                            
 
                             <View style={{
                                 flexDirection: "row",
@@ -51,11 +52,25 @@ const ID_CardDoc = ({ student }) => {
 
                                 </View>
                                 {/* left card */}
+                                
                                 <View style={{
                                     width: "50%",
                                     height: "160px",
                                     border: "1px solid black",
-                                }}></View>
+                                    display:"flex",
+                                    justifyContent:'center',
+                                    alignItems:"center"
+                                }}>
+                                    <Text style={{
+                                        width:"80%",
+                                        height:"auto",
+                                        fontSize: "20",
+                                        fontFamily: 'Poppins',
+                                        fontWeight: 600,
+                                        textAlign:"center",
+                                        whiteSpace: 'nowrap' ,
+                                    }}  wrap={false}>{item.Student_Name}</Text>
+                                </View>
 
 
 

@@ -6,7 +6,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
 import decryptedUserId from '../Utils/UserID';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { StyledDataGrid } from './StyledDataGrid';
 
 
@@ -238,13 +238,18 @@ const OneFieldForm = () => {
                                             rows= {rowsWithIds}
                                             columns={columns}
                                             getRowId={(row) => row.id}
+                                            disableColumnSelector
+                                            disableDensitySelector
                                             pagination
   initialState={{
     pagination: {
       paginationModel: { pageSize: 10, page: 0 }, // Set your desired page size here
     },
   }}
-                                        />
+
+   slots={{
+                                                toolbar: GridToolbar
+                                            }}                                      />
 
                                         {confirmationVisibleMap[cid] && (
                                                                 <div className='confirm-delete'>

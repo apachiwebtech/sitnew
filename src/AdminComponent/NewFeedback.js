@@ -6,7 +6,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
 import decryptedUserId from '../Utils/UserID';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -379,6 +379,8 @@ const NewFeedback = () => {
                                             rows={rowsWithIds}
                                             columns={columns}
                                             getRowId={(row) => row.id}
+                                            disableColumnSelector
+                                            disableDensitySelector
                                             pagination
                                             paginationModel={paginationModel}
                                             onPaginationModelChange={setPaginationModel}
@@ -389,6 +391,9 @@ const NewFeedback = () => {
                                               '& .MuiDataGrid-footerContainer': {
                                                 justifyContent: 'flex-end',
                                               },
+                                            }}
+                                            slots={{
+                                                toolbar: GridToolbar
                                             }}
                                             slotProps={{
                                               toolbar: {

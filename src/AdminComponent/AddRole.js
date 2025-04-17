@@ -1,4 +1,4 @@
-import { DataGrid } from '@mui/x-data-grid'
+import { DataGrid, GridToolbar } from '@mui/x-data-grid'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { BASE_URL } from './BaseUrl'
@@ -238,6 +238,8 @@ function AddRole() {
                                             rows={rowsWithIds}
                                             columns={columns}
                                             getRowId={(row) => row.id}
+                                            disableDensitySelector
+                                            disableColumnSelector
                                             pagination
                                             paginationModel={paginationModel}
                                             onPaginationModelChange={setPaginationModel}
@@ -248,6 +250,9 @@ function AddRole() {
                                               '& .MuiDataGrid-footerContainer': {
                                                 justifyContent: 'flex-end',
                                               },
+                                            }}
+                                            slots={{
+                                                toolbar: GridToolbar
                                             }}
                                             slotProps={{
                                               toolbar: {

@@ -1,6 +1,6 @@
 import EditIcon from "@mui/icons-material/Edit";
 import { Switch } from '@mui/material';
-import { DataGrid, GridToolbarContainer, GridToolbarFilterButton } from '@mui/x-data-grid';
+import { DataGrid, GridToolbarContainer, GridToolbarFilterButton, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -192,6 +192,9 @@ const OnlineAdmissions = () => {
                                           '& .MuiDataGrid-footerContainer': {
                                             justifyContent: 'flex-end',
                                           },
+                                        }}
+                                        slots={{
+                                            toolbar: GridToolbar
                                         }}
                                         slotProps={{
                                           toolbar: {

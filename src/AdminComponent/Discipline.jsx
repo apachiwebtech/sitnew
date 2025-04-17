@@ -275,7 +275,7 @@ const Discipline = () => {
                                     <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
-                                            disableColumnFilter
+                                            // disableColumnFilter
                                             disableColumnSelector
                                             disableDensitySelector
                                             rowHeight={35}
@@ -290,6 +290,9 @@ const Discipline = () => {
                                               '& .MuiDataGrid-footerContainer': {
                                                 justifyContent: 'flex-end',
                                               },
+                                            }}
+                                            slots={{
+                                                toolbar: GridToolbar
                                             }}
                                             slotProps={{
                                               toolbar: {

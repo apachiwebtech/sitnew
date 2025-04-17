@@ -6,7 +6,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
 import decryptedUserId from '../Utils/UserID';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { StyledDataGrid } from './StyledDataGrid';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -307,6 +307,8 @@ const Taxmaster = () => {
                                             rows= {rowsWithIds}
                                             columns={columns}
                                             getRowId={(row) => row.id}
+                                            disableColumnSelector
+                                            disableDensitySelector
                                             pagination
                                             paginationModel={paginationModel}
                                             onPaginationModelChange={setPaginationModel}
@@ -317,6 +319,9 @@ const Taxmaster = () => {
                                               '& .MuiDataGrid-footerContainer': {
                                                 justifyContent: 'flex-end',
                                               },
+                                            }}
+                                            slots={{
+                                                toolbar: GridToolbar
                                             }}
                                             slotProps={{
                                               toolbar: {

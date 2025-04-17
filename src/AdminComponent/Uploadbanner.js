@@ -273,12 +273,17 @@ const UploadBanner = () => {
                     onPaginationModelChange={setPaginationModel}
                     pageSizeOptions= {[50]}
                     autoHeight={false}
+                    disableColumnSelector
+                    disableDensitySelector
                     sx={{
                       height: 500, // Ensure enough height for pagination controls
                       '& .MuiDataGrid-footerContainer': {
                         justifyContent: 'flex-end',
                       },
                     }}
+                    slots={{
+                      toolbar: GridToolbar
+                  }}
                     slotProps={{
                       toolbar: {
                         showQuickFilter: true,

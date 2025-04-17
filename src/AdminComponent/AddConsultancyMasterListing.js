@@ -101,7 +101,7 @@ const AddConsultancyMasterListing = () => {
                                         <StyledDataGrid
                                             rows={consultancyData}
                                             columns={columns}
-                                            disableColumnFilter
+                                            // disableColumnFilter
                                             disableColumnSelector
                                             disableDensitySelector
                                             rowHeight={37}
@@ -116,6 +116,8 @@ const AddConsultancyMasterListing = () => {
                                               '& .MuiDataGrid-footerContainer': {
                                                 justifyContent: 'flex-end',
                                               },
+                                            }}slots={{
+                                                toolbar: GridToolbar
                                             }}
                                             slotProps={{
                                               toolbar: {

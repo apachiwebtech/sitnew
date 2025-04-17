@@ -276,6 +276,8 @@ const UploadEventPhoto = () => {
                       density="compact"
                       components={{ Toolbar: GridToolbar }}
                       disableRowSelectionOnClick
+                      disableColumnSelector
+                      disableDensitySelector
                       pagination
                                             paginationModel={paginationModel}
                                             onPaginationModelChange={setPaginationModel}

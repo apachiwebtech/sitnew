@@ -182,7 +182,7 @@ const EmailMasterListing = () => {
                                         <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
-                                            disableColumnFilter
+                                            // disableColumnFilter
                                             disableColumnSelector
                                             disableDensitySelector
                                             rowHeight={35}
@@ -197,6 +197,9 @@ const EmailMasterListing = () => {
                                               '& .MuiDataGrid-footerContainer': {
                                                 justifyContent: 'flex-end',
                                               },
+                                            }}
+                                            slots={{
+                                                toolbar: GridToolbar
                                             }}
                                             slotProps={{
                                               toolbar: {

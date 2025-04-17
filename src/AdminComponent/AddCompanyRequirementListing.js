@@ -197,7 +197,7 @@ const AddCompanyRequirementListing = () => {
                                         <StyledDataGrid
                                             rows={companyReqData}
                                             columns={columns}
-                                            disableColumnFilter
+                                            // disableColumnFilter
                                             disableColumnSelector
                                             disableDensitySelector
                                             rowHeight={37}
@@ -212,6 +212,9 @@ const AddCompanyRequirementListing = () => {
                                               '& .MuiDataGrid-footerContainer': {
                                                 justifyContent: 'flex-end',
                                               },
+                                            }}
+                                            slots={{
+                                                toolbar: GridToolbar
                                             }}
                                             slotProps={{
                                               toolbar: {

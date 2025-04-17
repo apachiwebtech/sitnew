@@ -270,7 +270,7 @@ const Convocation = () => {
                     <StyledDataGrid
                       rows={convocationDataM}
                       columns={columns}
-                      disableColumnFilter
+                      // disableColumnFilter
                       disableColumnSelector
                       disableDensitySelector
                       rowHeight={37}
@@ -286,6 +286,9 @@ const Convocation = () => {
                                                 justifyContent: 'flex-end',
                                               },
                                             }}
+                                            slots={{
+                                              toolbar: GridToolbar
+                                          }}
                                             slotProps={{
                                               toolbar: {
                                                 showQuickFilter: true,

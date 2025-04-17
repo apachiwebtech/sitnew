@@ -195,7 +195,7 @@ const AddFacultySalaryListing = () => {
                                         <StyledDataGrid
                                             rows={facultySalaryData}
                                             columns={columns}
-                                            disableColumnFilter
+                                            // disableColumnFilter
                                             disableColumnSelector
                                             disableDensitySelector
                                             rowHeight={37}
@@ -210,6 +210,8 @@ const AddFacultySalaryListing = () => {
                                               '& .MuiDataGrid-footerContainer': {
                                                 justifyContent: 'flex-end',
                                               },
+                                            }}slots={{
+                                                toolbar: GridToolbar
                                             }}
                                             slotProps={{
                                               toolbar: {

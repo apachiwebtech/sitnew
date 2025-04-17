@@ -1,6 +1,6 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -394,7 +394,7 @@ const LectureTakenListing = () => {
                                             // pageSize={pageSize}
                                             // page={page}
                                             // pagination={isSearchResult}
-                                            disableColumnFilter
+                                            // disableColumnFilter
                                             disableColumnSelector
                                             disableDensitySelector
                                             rowHeight={37}
@@ -424,6 +424,9 @@ const LectureTakenListing = () => {
                                                 borderRight: "1px solid #dce4ec"
                                                  // Add border below header
                                                 },
+                                            }}
+                                            slots={{
+                                                toolbar: GridToolbar
                                             }}
                                             // slotProps={{
                                             //   toolbar: {

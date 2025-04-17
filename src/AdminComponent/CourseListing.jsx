@@ -190,6 +190,9 @@ const CourseListing = () => {
                                                 justifyContent: 'flex-end',
                                               },
                                             }}
+                                            slots={{
+                                                toolbar: GridToolbar
+                                            }}
                                             slotProps={{
                                               toolbar: {
                                                 showQuickFilter: true,

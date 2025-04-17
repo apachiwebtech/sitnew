@@ -211,7 +211,7 @@ const AddFeesDetailsListing = () => {
                                         <StyledDataGrid
                                             rows={feesDetailsList}
                                             columns={columns}
-                                            disableColumnFilter
+                                            // disableColumnFilter
                                             disableColumnSelector
                                             disableDensitySelector
                                             rowHeight={37}
@@ -226,6 +226,9 @@ const AddFeesDetailsListing = () => {
                                               '& .MuiDataGrid-footerContainer': {
                                                 justifyContent: 'flex-end',
                                               },
+                                            }}
+                                            slots={{
+                                                toolbar: GridToolbar
                                             }}
                                             slotProps={{
                                               toolbar: {

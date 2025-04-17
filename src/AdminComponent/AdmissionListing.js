@@ -185,6 +185,7 @@ const AdmissionListing = () => {
                                                 rows={rowsWithIds}
                                                 columns={columns}
                                                 disableColumnSelector
+                                                disableDensitySelector
                                                 rowHeight={37}
                                                 getRowId={(row) => row.Admission_Id}
                                                 pagination
@@ -197,6 +198,9 @@ const AdmissionListing = () => {
                                               '& .MuiDataGrid-footerContainer': {
                                                 justifyContent: 'flex-end',
                                               },
+                                            }}
+                                            slots={{
+                                                toolbar: GridToolbar
                                             }}
                                             slotProps={{
                                               toolbar: {

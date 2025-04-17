@@ -116,7 +116,7 @@ const CVShortListed = () => {
                                             <StyledDataGrid
                                                 rows={CVShortlistedList}
                                                 columns={columns}
-                                                disableColumnFilter
+                                                // disableColumnFilter
                                                 disableColumnSelector
                                                 disableDensitySelector
                                                 rowHeight={35}
@@ -131,6 +131,9 @@ const CVShortListed = () => {
                                               '& .MuiDataGrid-footerContainer': {
                                                 justifyContent: 'flex-end',
                                               },
+                                            }}
+                                            slots={{
+                                                toolbar: GridToolbar
                                             }}
                                             slotProps={{
                                               toolbar: {

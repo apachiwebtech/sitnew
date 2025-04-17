@@ -218,7 +218,7 @@ const ShortlistedBySIT = () => {
                                         <StyledDataGrid
                                             rows={companyReqData}
                                             columns={columns}
-                                            disableColumnFilter
+                                            // disableColumnFilter
                                             disableColumnSelector
                                             disableDensitySelector
                                             rowHeight={35}
@@ -233,6 +233,9 @@ const ShortlistedBySIT = () => {
                                               '& .MuiDataGrid-footerContainer': {
                                                 justifyContent: 'flex-end',
                                               },
+                                            }}
+                                            slots={{
+                                                toolbar: GridToolbar
                                             }}
                                             slotProps={{
                                               toolbar: {

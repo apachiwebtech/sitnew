@@ -379,7 +379,7 @@ const AddAssets = () => {
                                         <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
-                                            disableColumnFilter
+                                            // disableColumnFilter
                                             disableColumnSelector
                                             disableDensitySelector
                                             rowHeight={35}
@@ -388,6 +388,8 @@ const AddAssets = () => {
                                                 pagination: {
                                                     paginationModel: { pageSize: 50, page: 0 },
                                                 },
+                                            }}slots={{
+                                                toolbar: GridToolbar
                                             }}
                                             // slots={{ toolbar: GridToolbar }}
                                             // slotProps={{

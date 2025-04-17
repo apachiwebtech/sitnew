@@ -357,7 +357,7 @@ const FeedbackAnalysis = () => {
                                         <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
-                                            disableColumnFilter
+                                            // disableColumnFilter
                                             disableColumnSelector
                                             disableDensitySelector
                                             rowHeight={35}
@@ -373,9 +373,14 @@ const FeedbackAnalysis = () => {
                                                 justifyContent: 'flex-end',
                                               },
                                             }}
+                                            slots={{
+                                                toolbar: GridToolbar
+                                            }}
                                             slotProps={{
+                                            
                                               toolbar: {
                                                 showQuickFilter: true,
+                                                
                                               },
                                             }}
                                         />

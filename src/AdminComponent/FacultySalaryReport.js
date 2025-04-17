@@ -3,7 +3,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { FormControlLabel } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import { styled } from "@mui/material/styles";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import React, { useState } from 'react';
 import InnerHeader from "./InnerHeader";
 //import FormGroup from '@mui/material/FormGroup';
@@ -154,7 +154,7 @@ const FacultySalaryReport = () => {
                                         <StyledDataGrid
                                         rows={rowsWithIds}
                                         columns={columns}
-                                        disableColumnFilter
+                                        // disableColumnFilter
                                         disableColumnSelector
                                         disableDensitySelector
                                         rowHeight={35}
@@ -169,6 +169,9 @@ const FacultySalaryReport = () => {
                                               '& .MuiDataGrid-footerContainer': {
                                                 justifyContent: 'flex-end',
                                               },
+                                            }}
+                                            slots={{
+                                                toolbar: GridToolbar
                                             }}
                                             slotProps={{
                                               toolbar: {

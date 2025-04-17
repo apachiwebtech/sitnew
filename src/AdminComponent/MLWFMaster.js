@@ -346,7 +346,7 @@ const MLWFMaster = () => {
                                         <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
-                                            disableColumnFilter
+                                            // disableColumnFilter
                                             disableColumnSelector
                                             disableDensitySelector
                                             rowHeight={35}
@@ -362,6 +362,10 @@ const MLWFMaster = () => {
                                                 justifyContent: 'flex-end',
                                               },
                                             }}
+                                            slots={{
+                                                toolbar: GridToolbar
+                                            }}
+                                            
                                             slotProps={{
                                               toolbar: {
                                                 showQuickFilter: true,
