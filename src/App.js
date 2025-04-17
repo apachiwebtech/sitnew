@@ -569,7 +569,7 @@ const Router = createBrowserRouter([
                         <PDFViewer style={{ width: "100%", height: "100%" }}>
                            {/* <Voucher/> */}
                            {/* <ID_CardDoc/> */}
-                           <StudentReports/>
+                           <StudentLabelDoc/>
                         </PDFViewer>
                     </div>
                 ),
