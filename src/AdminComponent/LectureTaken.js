@@ -172,7 +172,7 @@ const LectureTaken = () => {
                 console.log(res)
                 setStudentdata(res.data)
 
-             
+
             })
     }
 
@@ -438,16 +438,16 @@ const LectureTaken = () => {
     };
 
     const handleImport = () => {
-        
+
         const studentIds = studentdata.map((item) => item.Student_Id);
 
         const data = {
-            date : value.lecturedate
+            date: value.lecturedate
         }
 
         const url = `${BASE_URL}/getAttendence`;
 
-        axios.post(url , data)
+        axios.post(url, data)
             .then((res) => {
                 const logdata = res.data;
 
@@ -484,15 +484,46 @@ const LectureTaken = () => {
                 // Update your state with the formatted data
                 setStudentdata(updatedStudentData);
 
+                const parseTime = (timeStr) => {
+                    const [time, modifier] = timeStr.split(" ");
+                    let [hours, minutes] = time.split(":").map(Number);
+
+                    if (modifier === "PM" && hours < 12) hours += 12;
+                    if (modifier === "AM" && hours === 12) hours = 0;
+
+                    const date = new Date();
+                    date.setHours(hours, minutes, 0, 0);
+                    return date;
+                };
+
+                const formatTimeString = (str) => {
+                    return str.replace(/(AM|PM)$/, ' $1'); // Ensures there's a space before AM/PM
+                };
+
+
                 setStudentdata((prevData) =>
-                    prevData.map((item) => ({
-                        ...item,
-                        Student_Atten: item.In_Time ? "Present" : "Absent",
-                        Late : value.lecturefrom <= item.In_Time ? 'NO' : 'Yes'
-                    }))
+                    prevData.map((item) => {
+
+                        const inTime = item.In_Time ? parseTime(formatTimeString(item.In_Time)) : null;
+                        const lectureStart = parseTime(formatTimeString(value.lecturefrom));
+
+
+                        let lateStatus = "";
+                        if (inTime && lectureStart) {
+                            lateStatus = inTime > lectureStart ? "Yes" : "No";
+                        }
+
+
+                        return {
+                            ...item,
+                            Student_Atten: item.In_Time ? "Present" : "Absent",
+                            Late: lateStatus,
+                            In_Time: item.In_Time, // make sure you keep these
+                            Out_Time: item.Out_Time // and any other fields
+                        };
+                    })
                 );
 
-                console.log(studentdata, "$%")
             })
             .catch((err) => {
                 console.error('Error fetching data:', err);
@@ -502,7 +533,7 @@ const LectureTaken = () => {
     };
 
 
-
+  console.log(studentdata , "$%^&*")
 
 
     return (
@@ -792,7 +823,7 @@ const LectureTaken = () => {
                                             <div className='row p-2 justify-content-end'>
                                                 <button className='mr-2 btn btn-primary' onClick={handleImport}>Import</button>
                                                 {/* <button className='col-2'>close</button> */}
-                                                <button className='mr-2 btn btn-primary' style={{ float: "right"}} onClick={handleSubmit} >Save</button>
+                                                <button className='mr-2 btn btn-primary' style={{ float: "right" }} onClick={handleSubmit} >Save</button>
                                                 {/* <button className='col-2'>close</button> */}
                                             </div>
 
@@ -863,7 +894,7 @@ const LectureTaken = () => {
                                                                                     className="form-control form-control-lg"
                                                                                     name="Student_Reaction"
                                                                                     onChange={(e) => handleInputChange(index, e)}
-                                                                                    value={ item.Student_Reaction} 
+                                                                                    value={item.Student_Reaction}
                                                                                     id="exampleFromControlSelect1"
                                                                                 >
                                                                                     <option value="">Select</option>

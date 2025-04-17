@@ -22,7 +22,7 @@ const style = {
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
-  };
+};
 
 const StudentDocument = () => {
     const [open, setOpen] = useState(false);
@@ -40,7 +40,7 @@ const StudentDocument = () => {
         setOpen(true);
         setViewImg(param)
     }
-    
+
 
     useEffect(() => {
         localStorage.setItem("Admissionid", admissionid);
@@ -78,48 +78,48 @@ const StudentDocument = () => {
         { field: "upload_image", headerName: "Image", flex: 2 },
         {
             field: "View", headerName: "View", flex: 2, renderCell: (params) => {
-              return (
-                <>
-                  <Button onClick={() =>{
-                        console.log(params)
-                        handleOpen(params.row.upload_image)
-                  }}>View</Button>
-      
-                  <Modal
-                    open={open}
-                    onClose={()=>setOpen(false)}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
-                  >
-                    <Box sx={style}>
-                      <div>
-                        {isPdf ? (
-                          // Render PDF viewer
-                          <iframe
-                            src={`${IMG_URL}/student_document/${admissionid}/${viewimg}`}
-                            width="100%"
-                            height="500px"
-                            title="PDF Viewer"
-                          />
-                        ) : (
-                          // Render image
-                          <img src={`${IMG_URL}/student_document/${admissionid}/${viewimg}`} alt="Content" />
-                        )}
-                      </div>
-                    </Box>
-      
-                  </Modal>
-                </>
-              )
+                return (
+                    <>
+                        <Button onClick={() => {
+                            console.log(params)
+                            handleOpen(params.row.upload_image)
+                        }}>View</Button>
+
+                        <Modal
+                            open={open}
+                            onClose={() => setOpen(false)}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description"
+                        >
+                            <Box sx={style}>
+                                <div>
+                                    {isPdf ? (
+                                        // Render PDF viewer
+                                        <iframe
+                                            src={`${IMG_URL}/student_document/${admissionid}/${viewimg}`}
+                                            width="100%"
+                                            height="500px"
+                                            title="PDF Viewer"
+                                        />
+                                    ) : (
+                                        // Render image
+                                        <img src={`${IMG_URL}/student_document/${admissionid}/${viewimg}`} alt="Content" />
+                                    )}
+                                </div>
+                            </Box>
+
+                        </Modal>
+                    </>
+                )
             }
-          },
+        },
     ];
 
     const rowsWithIds = onlineAdmissions.map((row, index) => ({
         index: index + 1,
         ...row,
     }));
-    
+
 
     const handleUpload3 = async (e) => {
         const file = e.target.files[0];
@@ -128,6 +128,14 @@ const StudentDocument = () => {
 
     const handlesubmit = (e) => {
         e.preventDefault();
+
+        const photoUploaded = onlineAdmissions.some(doc => doc.doc_name === "photo");
+
+        if (!photoUploaded && name !== "photo") {
+          alert("Please upload photo first.");
+          return;
+        }
+    
 
         const data = {
             doc_name: name,
@@ -210,14 +218,33 @@ const StudentDocument = () => {
                                                     <label for="exampleInputUsername1">
                                                         Name<span className="text-danger">*</span>
                                                     </label>
-                                                    <input
+                                                    {/* <input
                                                         type="text"
                                                         class="form-control"
                                                         id="exampleInputUsername1"
                                                         placeholder="Name"
                                                         name="remark"
                                                         onChange={(e) => SetName(e.target.value)}
-                                                    />
+                                                    /> */}
+
+                                                    <select
+                                                        className="form-control"
+                                                        id="exampleInputUsername1"
+                                                        name="remark"
+                                                        onChange={(e) => SetName(e.target.value)}
+                                                    >
+                                                        <option value="">Select</option>
+                                                        <option value="photo">Photo</option>
+                                                        <option value="certificate" disabled={!onlineAdmissions.some(doc => doc.doc_name === "photo")}>Certificate</option>
+                                                        <option value="marksheet" disabled={!onlineAdmissions.some(doc => doc.doc_name === "photo")}>Marksheet</option>
+                                                        <option value="passport" disabled={!onlineAdmissions.some(doc => doc.doc_name === "photo")}>Passport</option>
+                                                        <option value="pancard" disabled={!onlineAdmissions.some(doc => doc.doc_name === "photo")}>PanCard</option>
+                                                        <option value="aadhar_card" disabled={!onlineAdmissions.some(doc => doc.doc_name === "photo")}>Aadhar Card</option>
+                                                        <option value="driving_licence" disabled={!onlineAdmissions.some(doc => doc.doc_name === "photo")}>Driving Licence</option>
+                                                        <option value="voter_id" disabled={!onlineAdmissions.some(doc => doc.doc_name === "photo")}>Voter Id</option>
+                                                        <option value="electricity_bill" disabled={!onlineAdmissions.some(doc => doc.doc_name === "photo")}>Electricity Bill</option>
+                                                        <option value="rent_agreement" disabled={!onlineAdmissions.some(doc => doc.doc_name === "photo")}>Rent Agreement</option>
+                                                    </select>
                                                 </div>
                                                 <div className="form-group col-lg-6">
                                                     <label for="exampleInputUsername1">

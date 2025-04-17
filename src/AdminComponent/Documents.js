@@ -105,9 +105,9 @@ const Documents = () => {
       field: "View", headerName: "View", flex: 2, renderCell: (params) => {
         return (
           <>
-            <Button onClick={() =>{
-                
-                handleOpen(params.row.upload_image)
+            <Button onClick={() => {
+
+              handleOpen(params.row.upload_image)
             }}>View</Button>
 
             <Modal
@@ -155,6 +155,15 @@ const Documents = () => {
 
   const handlesubmit = (e) => {
     e.preventDefault()
+
+
+    const photoUploaded = onlineAdmissions.some(doc => doc.doc_name === "photo");
+
+    if (!photoUploaded && name !== "photo") {
+      alert("Please upload photo first.");
+      return;
+    }
+
 
     const data = {
       doc_name: name,
@@ -235,22 +244,31 @@ const Documents = () => {
                     <div className="col-lg-6 " onSubmit={handlesubmit}>
                       <form>                      <div>
                         <h4 className="card-title titleback">
-                          Upload Documents
+                          Upload Document
                         </h4>
                       </div>
                         <div className="form-group col-lg-6">
                           <label for="exampleInputUsername1">
                             Name<span className="text-danger">*</span>
                           </label>
-                          <input
-                            type="text"
-                            class="form-control"
+                          <select
+                            className="form-control"
                             id="exampleInputUsername1"
-
-                            placeholder="Name"
                             name="remark"
                             onChange={(e) => SetName(e.target.value)}
-                          />
+                          >
+                            <option value="">Select</option>
+                            <option value="photo">Photo</option>
+                            <option value="certificate" disabled={!onlineAdmissions.some(doc => doc.doc_name === "photo")}>Certificate</option>
+                            <option value="marksheet" disabled={!onlineAdmissions.some(doc => doc.doc_name === "photo")}>Marksheet</option>
+                            <option value="passport" disabled={!onlineAdmissions.some(doc => doc.doc_name === "photo")}>Passport</option>
+                            <option value="pancard" disabled={!onlineAdmissions.some(doc => doc.doc_name === "photo")}>PanCard</option>
+                            <option value="aadhar_card" disabled={!onlineAdmissions.some(doc => doc.doc_name === "photo")}>Aadhar Card</option>
+                            <option value="driving_licence" disabled={!onlineAdmissions.some(doc => doc.doc_name === "photo")}>Driving Licence</option>
+                            <option value="voter_id" disabled={!onlineAdmissions.some(doc => doc.doc_name === "photo")}>Voter Id</option>
+                            <option value="electricity_bill" disabled={!onlineAdmissions.some(doc => doc.doc_name === "photo")}>Electricity Bill</option>
+                            <option value="rent_agreement" disabled={!onlineAdmissions.some(doc => doc.doc_name === "photo")}>Rent Agreement</option>
+                          </select>
                         </div>
                         <div className="form-group col-lg-6">
                           <label for="exampleInputUsername1">

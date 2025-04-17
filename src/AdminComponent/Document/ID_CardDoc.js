@@ -3,6 +3,7 @@ import React from 'react'
 import { Document, Page, Text, View, Image, Font } from "@react-pdf/renderer";
 import sitlogo from '../../assets/images/sitlogo.png'
 import { IMG_URL } from '../BaseUrl';
+import { formatDate } from '../../Utils/dateFormat';
 
 const ID_CardDoc = ({ student }) => {
 
@@ -42,9 +43,9 @@ const ID_CardDoc = ({ student }) => {
                             <View style={{
                                 flexDirection: "row",
                                 width: "100%",
-                                height: "23%",
+                                height: "160px",
                                 gap: "3px",
-                                marginTop: "20px"
+                                marginTop: "10px"
                             }}>
                                 <View break={index === 4} wrap={false}>
 
@@ -52,7 +53,7 @@ const ID_CardDoc = ({ student }) => {
                                 {/* left card */}
                                 <View style={{
                                     width: "50%",
-                                    height: "100%",
+                                    height: "160px",
                                     border: "1px solid black",
                                 }}></View>
 
@@ -104,10 +105,10 @@ const ID_CardDoc = ({ student }) => {
 
                                                 }}>
 
-                                                {/* <Image
+                                                <Image
                                                                     src={`${IMG_URL}/student_document/${item.Student_Id}/` + item.upload_image} alt=''
-                                                                   style= {{width: "100", height: "50px"}}
-                                                                ></Image> */}
+                                                                   style= {{width: "70px" }}
+                                                                ></Image>
                                             </View>
 
                                         </View>
@@ -147,30 +148,22 @@ const ID_CardDoc = ({ student }) => {
                                                 marginTop: "2px"
                                             }}>
                                                 <View style={{
-                                                    // width: "20%",
-
-                                                    // backgroundColor:"blue",
                                                 }}>
                                                     <Text style={{
                                                         fontSize: 7, fontFamily: 'Poppins',
                                                         fontWeight: 600,
                                                     }}>Name</Text>
                                                 </View>
-                                                {student.map((item, index) => {
-                                                    return (
-                                                        <View
-                                                            // key={index}
-                                                            style={{
-                                                                width: "85%",
-                                                                backgroundColor: "white",
-                                                                borderBottom: "1px solid black",
-                                                            }}>
-                                                            <Text style={{ fontSize: 8, marginLeft: "5px" }}>
-                                                                {/* {item.Student_Name} */}
-                                                            </Text>
-                                                        </View>
-                                                    );
-                                                })}
+                                                <View style={{
+                                                    width: "85%",
+                                                    backgroundColor: "white",
+                                                    borderBottom: "1px solid black"
+                                                }}>
+                                                    <Text style={{ fontSize: 8, marginLeft: "5px" }}>
+                                                        {item.Student_Name}
+                                                    </Text>
+                                                </View>
+                                           
 
                                             </View>
                                             <View style={{
@@ -182,9 +175,7 @@ const ID_CardDoc = ({ student }) => {
                                                 paddingRight: "5px",
                                             }}>
                                                 <View style={{
-                                                    // width: "32%",
-
-                                                    // backgroundColor:"blue",
+                                      
                                                 }}>
                                                     <Text style={{
                                                         fontSize: 7, fontFamily: 'Poppins',
@@ -197,7 +188,7 @@ const ID_CardDoc = ({ student }) => {
                                                     borderBottom: "1px solid black"
                                                 }}>
                                                     <Text style={{ fontSize: 8, marginLeft: "5px" }}>
-                                                        {/* {student.Course_Name} */}
+                                                        {item.Course_Name}
                                                     </Text>
                                                 </View>
                                             </View>
@@ -225,7 +216,7 @@ const ID_CardDoc = ({ student }) => {
                                                     borderBottom: "1px solid black"
                                                 }}>
                                                     <Text style={{ fontSize: 8, marginLeft: "5px" }}>
-                                                        {/* {student.Batch_code} */}
+                                                        {item.Batch_code}
                                                     </Text>
                                                 </View>
                                             </View>
@@ -254,7 +245,7 @@ const ID_CardDoc = ({ student }) => {
                                                     borderBottom: "1px solid black"
                                                 }}>
                                                     <Text style={{ fontSize: 8, }}>
-                                                        {/* {student.Present_Mobile} */}
+                                                        {item.Present_Mobile}
                                                     </Text>
                                                 </View>
                                             </View>
@@ -282,7 +273,7 @@ const ID_CardDoc = ({ student }) => {
                                                     borderBottom: "1px solid black",
                                                     marginRight: "3px"
                                                 }}>
-                                                    <Text style={{ fontSize: 8 }}>15-Mar-2012</Text>
+                                                    <Text style={{ fontSize: 8 }}>{item.Valid_Date ? formatDate(item.Valid_Date): ''}</Text>
                                                 </View>
                                             </View>
                                         </View></View>
