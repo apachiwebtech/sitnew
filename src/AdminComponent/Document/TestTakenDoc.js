@@ -1,20 +1,36 @@
 import React from "react";
 import { Document, Page, Text, View, Image  } from "@react-pdf/renderer";
+import sitlogo from '../../assets/images/sitlogo.png'
 
-const TestTakenDoc = (props) => {
+
+
+
+
+const TestTakenDoc = (student_marks) => {
+
+console.log (student_marks)
+
+
+
+
+
+
+
     return (
         <Document>
             <Page size="A4" style={{ padding: 30, fontSize: 10 }}>
+            
+
             <View 
                                          style={ {
                                                                 flexDirection: 'column',
                                                                 justifyContent: "space-between",
-                                                                        alignItems: "center",
+                                                                        alignItems: "flex-start",
                                                                         
                                                             }}>
                                            
                                                            <Image 
-                                                                           src ={'\public\sitLogo.jpg'}
+                                                                           src ={sitlogo}
                                                                            style= {{width: "60px"}}
                                                                            ></Image>
                                         </View>
@@ -37,7 +53,8 @@ const TestTakenDoc = (props) => {
                                             </View>
                                             
                                         </View>
-
+                                        {student_marks.map((item)=>{
+                                        return (
                                         <View style={{
                                             marginTop: "-0.3px",
                                                 width: "100%",
@@ -289,7 +306,7 @@ const TestTakenDoc = (props) => {
                                                     }}>
                                                         <Text style={{
                                                             fontSize: 9
-                                                        }} >Tonlagha Godspower Roland</Text>
+                                                        }} >{item.Student_Name}</Text>
                                                     </View>
                                                     <View style={{
                                                         justifyContent: "center",
@@ -351,6 +368,7 @@ const TestTakenDoc = (props) => {
                                                 </View>
                                                 </View>
                                             </View>
+ )})} 
 
                                             <View style={{
                                                 width: "100%",
@@ -365,6 +383,7 @@ const TestTakenDoc = (props) => {
                                                             fontSize: 9, 
                                                         }} >1</Text>
                                             </View>
+                                          
             </Page>
         </Document>
     );

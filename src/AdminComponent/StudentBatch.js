@@ -23,6 +23,7 @@ import StudyMaterialDoc from "./Document/StudyMaterialDoc";
 import TestTakenDoc from "./Document/TestTakenDoc";
 import TimeSheetDoc from "./Document/TimeSheetDoc";
 import ID_CardDoc from "./Document/ID_CardDoc";
+import AssignmentDoc from "./Document/AssignmentDoc";
 
 const StudentBatch = () => {
     const [uid, setUid] = useState([]);
@@ -143,6 +144,15 @@ const StudentBatch = () => {
             case "0116":
                 Studentidcard();
                 break;
+            case "0103":
+                assignmentpdf();
+                break;
+            case "0111":
+                viva_mocpdf();
+                break;   
+            case "0117":
+                newlecturemailpdf();
+                break;     
         }
     };
 
@@ -212,10 +222,31 @@ const StudentBatch = () => {
         window.open(url);
         URL.revokeObjectURL(url);
     };
+    const assignmentpdf = async () => {
+        const blob = await pdf(<AssignmentDoc/>).toBlob();
+        const url = URL.createObjectURL(blob);
+        window.open(url);
+        URL.revokeObjectURL(url);
+    };
+
+    const newlecturemailpdf = async () => {
+        const blob = await pdf().toBlob();
+        const url = URL.createObjectURL(blob);
+        window.open(url);
+        URL.revokeObjectURL(url);
+    };
 
     const testTakenPdf = async () => {
-        const res = await axios.post(`${BASE_URL}/`, {batch_code: value.batch});
+        const res = await axios.post(`${BASE_URL}/testtakenpdf`, {batch_code: value.batch});
         const blob = await pdf(<TestTakenDoc student_marks = {res.data}/>).toBlob();
+        const url = URL.createObjectURL(blob);
+        window.open(url);
+        URL.revokeObjectURL(url);
+    };
+
+    const viva_mocpdf = async () => {
+       
+        const blob = await pdf(<viva_moc/>).toBlob();
         const url = URL.createObjectURL(blob);
         window.open(url);
         URL.revokeObjectURL(url);
@@ -273,6 +304,14 @@ const StudentBatch = () => {
         }
     };
 
+    // when you select specific radio button than only the component will be shown
+    
+        const [selectedValue, setSelectedValue] = useState("");
+      
+        // const handleRadioChange = (event) => {
+        //   setSelectedValue(event.target.value);  
+        // };
+
     return (
         <div class="container-fluid page-body-wrapper ">
             <InnerHeader />
@@ -288,12 +327,17 @@ const StudentBatch = () => {
                                         <div class="row">
                                             <div class="from-group col-lg-12">
                                                 <FormControl>
-                                                    <RadioGroup
-                                                        row
-                                                        onChange={(e) => handleradiochange(e)}
-                                                        aria-labelledby="demo-row-radio-buttons-group-label"
-                                                        name="row-radio-buttons-group"
-                                                    >
+                                                <RadioGroup
+  row
+  value={selectedValue}
+  onChange={(e) => {
+    setSelectedValue(e.target.value);
+    handleradiochange(e);
+  }}
+  aria-labelledby="demo-row-radio-buttons-group-label"
+  name="row-radio-buttons-group"
+>
+
                                                         <FormControlLabel
                                                             value="0102"
                                                             control={<Radio />}
@@ -354,6 +398,7 @@ const StudentBatch = () => {
                                                             control={<Radio />}
                                                             label="Assignment Receipt"
                                                         />
+                                                       
                                                         <FormControlLabel
                                                             value="0114"
                                                             control={<Radio />}
@@ -397,7 +442,7 @@ const StudentBatch = () => {
                                                 </FormControl> */}
                                             </div>
 
-                                            <div class="form-group col-lg-4">
+                                            <div class="form-group col-lg-2">
                                                 <label for="exampleFormControlSelect1">
                                                     Select Course<span className="text-danger">*</span>{" "}
                                                 </label>
@@ -417,7 +462,7 @@ const StudentBatch = () => {
                                                 {<span className="text-danger"> {error.course} </span>}
                                             </div>
 
-                                            <div class="form-group col-lg-4">
+                                            <div class="form-group col-lg-2">
                                                 <label for="exampleFormControlSelect1">
                                                     Select Batch<span className="text-danger">*</span>{" "}
                                                 </label>
@@ -437,7 +482,121 @@ const StudentBatch = () => {
                                                 </select>
                                                 {<span className="text-danger"> {error.batch} </span>}
                                             </div>
+                                            {/* select button is added */}
+                                            {selectedValue === "0114" && (
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleFormControlSelect1">
+                                                    Select Test<span className="text-danger">*</span>{" "}
+                                                </label>
+                                                <select
+                                                    class="form-control form-control-lg"
+                                                    id="exampleFormControlSelect1"
+                                                    onChange={onhandleChange}
+                                                    name="batch"
+                                                >
+                                                    <option>Select Test</option>
+
+                                                    {batch.map((item) => {
+                                                        return (
+                                                            <option value={item.Batch_code}>{item.Batch_code}</option>
+                                                        );
+                                                    })}
+                                                </select>
+                                                {<span className="text-danger"> {error.batch} </span>}
+                                            </div>
+                                            )}
+                                            {selectedValue === "0103" && (
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleFormControlSelect1">
+                                                    Select Assignment<span className="text-danger">*</span>{" "}
+                                                </label>
+                                                <select
+                                                    class="form-control form-control-lg"
+                                                    id="exampleFormControlSelect1"
+                                                    onChange={onhandleChange}
+                                                    name="batch"
+                                                >
+                                                    <option>Select Assignment</option>
+
+                                                    {batch.map((item) => {
+                                                        return (
+                                                            <option value={item.Batch_code}>{item.Batch_code}</option>
+                                                        );
+                                                    })}
+                                                </select>
+                                                {<span className="text-danger"> {error.batch} </span>}
+                                            </div>
+                                            )}
+                                            {selectedValue === "0109" && (
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleFormControlSelect1">
+                                                    Select Date<span className="text-danger">*</span>{" "}
+                                                </label>
+                                                <select
+                                                    class="form-control form-control-lg"
+                                                    id="exampleFormControlSelect1"
+                                                    onChange={onhandleChange}
+                                                    name="batch"
+                                                >
+                                                    <option>Select Date</option>
+
+                                                    {batch.map((item) => {
+                                                        return (
+                                                            <option value={item.Batch_code}>{item.Batch_code}</option>
+                                                        );
+                                                    })}
+                                                </select>
+                                                {<span className="text-danger"> {error.batch} </span>}
+                                            </div>
+                                            )}
+
+                                            {selectedValue === "0111" && (
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleFormControlSelect1">
+                                                    Select Viva<span className="text-danger">*</span>{" "}
+                                                </label>
+                                                <select
+                                                    class="form-control form-control-lg"
+                                                    id="exampleFormControlSelect1"
+                                                    onChange={onhandleChange}
+                                                    name="batch"
+                                                >
+                                                    <option>Select Viva</option>
+
+                                                    {batch.map((item) => {
+                                                        return (
+                                                            <option value={item.Batch_code}>{item.Batch_code}</option>
+                                                        );
+                                                    })}
+                                                </select>
+                                                {<span className="text-danger"> {error.batch} </span>}
+                                            </div>
+                                            )}
+                                            {selectedValue === "0117" && (
+                                            <div class="form-group col-lg-2">
+                                                <label for="exampleFormControlSelect1">
+                                                    Select Data<span className="text-danger">*</span>{" "}
+                                                </label>
+                                                <select
+                                                    class="form-control form-control-lg"
+                                                    id="exampleFormControlSelect1"
+                                                    onChange={onhandleChange}
+                                                    name="batch"
+                                                >
+                                                    <option>Select Data</option>
+
+                                                    {batch.map((item) => {
+                                                        return (
+                                                            <option value={item.Batch_code}>{item.Batch_code}</option>
+                                                        );
+                                                    })}
+                                                </select>
+                                                {<span className="text-danger"> {error.batch} </span>}
+                                            </div>
+                                            )}
+                                            
                                         </div>
+                                                
 
                                         <button
                                             type="submit"
