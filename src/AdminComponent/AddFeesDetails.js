@@ -152,6 +152,11 @@ const AddFeesDetails = () => {
                 Fees_Id,
             });
             setFormState(response.data)
+            
+            setFormState((prevData) => ({
+                ...prevData,
+                generatereceipt: response.data.Fees_Code,
+            }))
             console.log(response.data);
         } catch (err) {
             console.log("getFeesDetailsById err", err);
@@ -637,7 +642,7 @@ const AddFeesDetails = () => {
                                                                             type="checkbox"
                                                                             className="t"
                                                                             id="generateReceiptCheckbox"
-                                                                            name="generateReceipt"
+                                                                            name="generatereceipt"
                                                                             onChange={onCheckboxChange} // You'll define this handler
                                                                         /></span>
                                                                     </label>
