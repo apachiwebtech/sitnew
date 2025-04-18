@@ -210,7 +210,7 @@ const totalAmount = pdfdata
                     fontSize: 8,
                 }}>Sr.{"\n"}No.</Text>
             </View>
-            <View style={{width:"13%", 
+            <View style={{width:"15%", 
                 justifyContent:"center",
                 alignItems:'center',
                 borderRight:"1.5px solid black",
@@ -221,7 +221,7 @@ const totalAmount = pdfdata
                     fontSize: 8,
                 }}>Bill Date</Text>
             </View>
-            <View style={{width:"13%", 
+            <View style={{width:"15%", 
                 justifyContent:"center",
                 alignItems:'center',
                 borderRight:"1.5px solid black",
@@ -254,7 +254,7 @@ const totalAmount = pdfdata
                     fontSize: 8,
                 }}>Amount</Text>
             </View>
-            <View style={{width:"61%", 
+            <View style={{width:"57%", 
                 justifyContent:"center",
                 alignItems:'center',
                 
@@ -267,84 +267,74 @@ const totalAmount = pdfdata
             </View>
         </View>
         {/* body part */}
-        {pdfdata.filter((item) => item.account_head != null).map((item, index) => {
-                return (
-                    <View style={{flexDirection:"row", width:'100%',height:'auto',  }}>
-       
-                    <View style={{width:"4%", 
-                        justifyContent:"center",
-                        alignItems:'center',
-                        borderRight:"1.5px solid black",
-                        paddingBottom:"5%",
-                    }}>
-                        <Text style={{
-                            fontFamily: 'Poppins',
-                            // fontWeight: 800,
-                            fontSize: 8,
-                        }}>{index + 1}  {/* This will display the serial number */}</Text>
-                    </View>
-                    <View style={{width:"13%", 
-                        justifyContent:"center",
-                        alignItems:'center',
-                        borderRight:"1.5px solid black",
-                    }}>
-                        <Text style={{
-                            fontFamily: 'Poppins',
-                            // fontWeight: 800,
-                            fontSize: 8,
-                        }}>{item.date ?formatdate(item.date) : ""}</Text>
-                    </View>
-                    <View style={{width:"13%", 
-                        justifyContent:"center",
-                        alignItems:'center',
-                        borderRight:"1.5px solid black",
-                    }}>
-                        <Text style={{
-                            fontFamily: 'Poppins',
-                            // fontWeight: 800,
-                            fontSize: 8,
-                        }}>{item.bill_no}</Text>
-                    </View>
-                    <View style={{width:"18%", 
-                        justifyContent:"center",
-                        alignItems:'center',
-                        borderRight:"1.5px solid black",
-                    }}>
-                        <Text style={{
-                            fontFamily: 'Poppins',
-                            // fontWeight: 800,
-                            fontSize: 8,
-                        }}>{item.account_head}</Text>
-                    </View>
-                    <View style={{width:"13%", 
-                        justifyContent:"center",
-                        alignItems:'center',
-                        borderRight:"1.5px solid black",
-                    }}>
-                        <Text style={{
-                            fontFamily: 'Poppins',
-                            // fontWeight: 800,
-                            fontSize: 8,
-                        }}>{item.amount}</Text>
-                    </View>
-                    <View style={{width:"61%", 
-                        justifyContent:"center",
-                        alignItems:'center',
-                        
-                    }}>
-                        <Text style={{
-                            fontFamily: 'Poppins',
-                            // fontWeight: 800,
-                            fontSize: 8,
-                        }}>{item.description}</Text>
-                    </View>
-                </View>
-                )
-            })}
+        {pdfdata.map((item, index) => (
+    <View key={index} style={{ flexDirection: "row", width: '100%', height: 'auto' }}>
+        
+        {/* Serial Number */}
+        <View style={{
+            width: "4%", justifyContent: "center", alignItems: 'center',
+            borderRight: "1.5px solid black", paddingTop: "2%",
+        }}>
+            <Text style={{ fontFamily: 'Poppins', fontSize: 8 }}>
+                {index + 1}
+            </Text>
+        </View>
+
+        {/* Bill Date */}
+        <View style={{
+            width: "15%", justifyContent: "center", alignItems: 'center',
+            borderRight: "1.5px solid black", paddingTop: "2%",
+        }}>
+            <Text style={{ fontFamily: 'Poppins', fontSize: 8 }}>
+                {item.date ? formatdate(item.date) : ""}
+            </Text>
+        </View>
+
+        {/* Bill No */}
+        <View style={{
+            width: "15%", justifyContent: "center", alignItems: 'center',
+            borderRight: "1.5px solid black", paddingTop: "2%",
+        }}>
+            <Text style={{ fontFamily: 'Poppins', fontSize: 8 }}>
+                {item.bill_no || ""}
+            </Text>
+        </View>
+
+        {/* Account Head */}
+        <View style={{
+            width: "18%", justifyContent: "center", alignItems: 'center',
+            borderRight: "1.5px solid black", paddingTop: "2%",
+        }}>
+            <Text style={{ fontFamily: 'Poppins', fontSize: 8 }}>
+                {item.account_head || ""}
+            </Text>
+        </View>
+
+        {/* Amount */}
+        <View style={{
+            width: "13%", justifyContent: "center", alignItems: 'center',
+            borderRight: "1.5px solid black", paddingTop: "2%",
+        }}>
+            <Text style={{ fontFamily: 'Poppins', fontSize: 8 }}>
+                {item.amount || ""}
+            </Text>
+        </View>
+
+        {/* Description */}
+        <View style={{
+            width: "57%", justifyContent: "center", paddingLeft: "2px", paddingTop: "2%",
+        }}>
+            <Text style={{ fontFamily: 'Poppins', fontSize: 8 }}>
+                {item.description || ""}
+            </Text>
+        </View>
+    </View>
+))}
+
     
         {/* footer part */}
         <View style={{flexDirection:"row", width:'100%',height:'auto', borderTop:"1.5px solid black"}}>
-            <View style={{width:"30%", 
+            <View style={{width:"34%", 
                 justifyContent:"center",
                 alignItems:'center',
                 borderRight:"1.5px solid black",
@@ -394,7 +384,7 @@ const totalAmount = pdfdata
              )
             }
             
-            <View style={{width:"61%", 
+            <View style={{width:"57%", 
                 justifyContent:"center",
                 // alignItems:'center',
                 textAlign:"left"
