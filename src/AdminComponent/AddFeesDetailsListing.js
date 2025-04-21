@@ -263,7 +263,7 @@ const AddFeesDetailsListing = () => {
 
 
     const columns = [
-        { field: "Fees_Code", headerName: "Receipt No", width: 100 },
+        { field: "Fees_Code", headerName: "Receipt No", width: 130 },
         {
             field: "RDate",
             headerName: "Receipt Date",
@@ -431,6 +431,7 @@ const AddFeesDetailsListing = () => {
                                                     onClick={() => {
                                                         setPageExpand();
                                                     }}
+                                                    style={{marginLeft:'50px'}}
                                                     variant="contained"
                                                 >
                                                     Search
@@ -442,6 +443,7 @@ const AddFeesDetailsListing = () => {
                                                     onClick={() => {
                                                         window.location.reload();
                                                     }}
+                                                    style={{marginLeft:'60px'}}
                                                     variant="contained"
                                                 >
                                                     Clear
@@ -471,9 +473,9 @@ const AddFeesDetailsListing = () => {
                                                     paginationModel: { pageSize: 100, page: 0 },
                                                 },
                                             }}
-                                            slots={{
-                                                toolbar: GridToolbar
-                                            }}
+                                            // slots={{
+                                            //     toolbar: GridToolbar
+                                            // }}
 
                                         />
 

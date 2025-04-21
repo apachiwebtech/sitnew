@@ -194,8 +194,6 @@ const BatchTransfer = () => {
 
     useEffect(() => {
         gettransferbatch()
-        getBatch()
-        getStudent()
         getcourse()
         BatchTransfer()
         getassign()

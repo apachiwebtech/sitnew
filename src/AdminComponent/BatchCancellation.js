@@ -79,10 +79,10 @@ const BatchCancellation = () => {
         return isValid
     }
 
-    async function BatchLeft() {
+    async function BatchCancellation() {
 
 
-        axios.get(`${BASE_URL}/getbatchleft`)
+        axios.get(`${BASE_URL}/getbatchcancellation`)
             .then((res) => {
 
                 setData(res.data)
@@ -211,7 +211,7 @@ const BatchCancellation = () => {
 
     useEffect(() => {
         getcourse();
-        BatchLeft(); // Or BatchCancellation()
+        BatchCancellation(); // Or BatchCancellation()
         setError({});
         setUid(null);
     }, []);
@@ -304,40 +304,42 @@ const BatchCancellation = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (validateForm()) {
-            const data = {
-                selectcourse: courseid,
-                batchno: batchid,
-                student: value.student,
-                cancellationammount: value.cancellationammount,
-                date: currentdate,
-                uid: uid ? uid.id : null
-            };
+        const data = {
+            selectcourse: courseid,
+            batchno: batchid,
+            student: value.student,
+            cancellationammount: value.cancellationammount,
+            date: currentdate,
+            uid: uid ? uid.id : null
+        };
 
-            try {
-                await axios.post(`${BASE_URL}/add_batchcancellation`, data);
-                BatchCancellation()
-                alert("Data Submitted Successfully");
-                setValue({
+        // if (validateForm()) {
+     
 
-                    student: "",
-                    cancellationammount: "",
-                    date: ""
-                });
-                setCourseid('')
-                setBatchid('')
+        //     try {
+        //         await axios.post(`${BASE_URL}/add_batchcancellation`, data);
+        //         BatchCancellation()
+        //         alert("Data Submitted Successfully");
+        //         setValue({
 
-            } catch (err) {
-                console.error(err);
-            }
-        }
+        //             student: "",
+        //             cancellationammount: "",
+        //             date: ""
+        //         });
+        //         setCourseid('')
+        //         setBatchid('')
+
+        //     } catch (err) {
+        //         console.error(err);
+        //     }
+        // }
 
 
         axios.post(`${BASE_URL}/add_sit_batchcancellation`, data)
             .then((res) => {
                 console.log(res)
                 alert("Data added successfully")
-                // BatchLeft()
+                 BatchCancellation()
             })
             .catch((err) => {
                 console.log(err)

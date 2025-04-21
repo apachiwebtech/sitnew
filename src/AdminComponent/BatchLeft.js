@@ -180,8 +180,7 @@ const BatchLeft = () => {
 
 
     useEffect(() => {
-        getBatch()
-        getStudent()
+    
         getcourse()
         BatchLeft()
         value.title = ""

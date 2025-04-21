@@ -189,8 +189,6 @@ const BatchMoving = () => {
 
 
     useEffect(() => {
-        getBatch()
-        getStudent()
         getcourse()
         getMovingData()
         value.title = ""

@@ -7,7 +7,7 @@ const NavbarWithDropdowns = () => {
     return (
         <nav className="navbar navbar-expand-lg navbar-light px-2 text-light">
             <div className="container-fluid ">
-                <Link className="navbar-brand" to="/" style={{fontWeight :"800", color: "white", fontFamily: "Montserrat"}}>SIT MANAGER</Link>
+                <Link className="navbar-brand" to="/" style={{ fontWeight: "800", color: "white", fontFamily: "Montserrat" }}>SIT MANAGER</Link>
                 <button
                     className="navbar-toggler"
                     type="button"
@@ -38,7 +38,7 @@ const NavbarWithDropdowns = () => {
                                 <li><Link className="dropdown-item" to="/bank">Bank</Link></li>
                                 <li><Link className="dropdown-item" to="/feesnotes">Fees Notes</Link></li>
                                 <li><Link className="dropdown-item" to="/holiday">Holiday</Link></li>
-                                
+
                                 <li><Link className="dropdown-item" to="/location">Location</Link></li>
                                 <li><Link className="dropdown-item" to={`/onefieldform/${"awt_extention"}/${"Extension"}`}>Extention</Link></li>
                                 <li><Link className="dropdown-item" to={`/onefieldform/${"awt_rack"}/${"Rack"}`}>Rack</Link></li>
@@ -60,7 +60,7 @@ const NavbarWithDropdowns = () => {
                                 Masters
                             </Link>
                             <ul className="dropdown-menu" aria-labelledby="dropdownMenu2">
-                            <li><Link className="dropdown-item" to="/courselisting">Course</Link></li>
+                                <li><Link className="dropdown-item" to="/courselisting">Course</Link></li>
                                 <li><Link className="dropdown-item" to="/annualbatchlisting">Annual Batch</Link></li>
                                 <li><Link className="dropdown-item" to="/batchcategory">Batch Category</Link></li>
                                 <li><Link className="dropdown-item" to="/batchlisting">Batch</Link></li>
@@ -113,10 +113,7 @@ const NavbarWithDropdowns = () => {
                                 <li><Link className="dropdown-item" to="/feedback1">FeedBack1</Link></li>
                                 <li><Link className="dropdown-item" to="/feedback2">FeedBack2</Link></li>
                                 <li><Link className="dropdown-item" to="/visitsite">Site Visit</Link></li>
-                                <li><Link className="dropdown-item" to="/batchleft">Batch Left</Link></li>
-                                <li><Link className="dropdown-item" to="/batchmoving">Batch Moving</Link></li>
-                                <li><Link className="dropdown-item" to="/batchtransfer">Batch Transfer</Link></li>
-                                <li><Link className="dropdown-item" to="/batchcancellation">Batch Cancellation</Link></li>
+
                             </ul>
                         </li>
                         <li className="nav-item dropdown">
@@ -173,7 +170,7 @@ const NavbarWithDropdowns = () => {
                             <ul className="dropdown-menu" aria-labelledby="dropdownMenu6">
                                 <li><Link className="dropdown-item" to="/bookissue">Book Issue</Link></li>
                                 <li><Link className="dropdown-item" to="/returnbook">Return Book</Link></li>
-                        
+
                             </ul>
                         </li>
 
@@ -191,9 +188,9 @@ const NavbarWithDropdowns = () => {
                             <ul className="dropdown-menu" aria-labelledby="dropdownMenu7">
                                 <li><Link className="dropdown-item" to="/addrole">Add Role</Link></li>
                                 <li><Link className="dropdown-item" to="/adminuser">Admin User</Link></li>
-                                <li><Link className="dropdown-item" to="/roleassign">Role Page</Link></li> 
-                
-                        
+                                <li><Link className="dropdown-item" to="/roleassign">Role Page</Link></li>
+
+
                             </ul>
                         </li>
 
@@ -211,7 +208,7 @@ const NavbarWithDropdowns = () => {
                             <ul className="dropdown-menu" aria-labelledby="dropdownMenu8">
                                 <li><Link className="dropdown-item" to="/employeetrainingplan">Employee Training Plan</Link></li>
                                 <li><Link className="dropdown-item" to="/employeerecord">Employee Training Record</Link></li>
-                        
+
                             </ul>
                         </li>
 
@@ -246,7 +243,11 @@ const NavbarWithDropdowns = () => {
                                 <li><Link className="dropdown-item" to="/projectmaster">Project Master</Link></li>
                                 <li><Link className="dropdown-item" to="/mlwfmaster">MLWF Master</Link></li>
                                 <li><Link className="dropdown-item" to="/qmsmaster">QMA Master</Link></li>
-                        
+                                <li><Link className="dropdown-item" to="/batchleft">Batch Left</Link></li>
+                                <li><Link className="dropdown-item" to="/batchmoving">Batch Moving</Link></li>
+                                <li><Link className="dropdown-item" to="/batchtransfer">Batch Transfer</Link></li>
+                                <li><Link className="dropdown-item" to="/batchcancellation">Batch Cancellation</Link></li>
+
                             </ul>
                         </li>
 
@@ -274,7 +275,7 @@ const NavbarWithDropdowns = () => {
                                 <li><Link className="dropdown-item" to="/masswhatsapp">Mass WhatsApp</Link></li>
                                 <li><Link className="dropdown-item" to="/taskmanagements">Task Managements</Link></li>
                                 <li><Link className="dropdown-item" to="/emailmaster">Email Master</Link></li>
-                        
+
                             </ul>
                         </li>
 
@@ -300,11 +301,11 @@ const NavbarWithDropdowns = () => {
                                 <li><Link className="dropdown-item" to="/companyrequirment">Company Requirment Master</Link></li>
                                 <li><Link className="dropdown-item" to="/shortlisted">Shortlisted By SIT</Link></li>
                                 <li><Link className="dropdown-item" to="/shortlistedcompany">Shortlisted By Company</Link></li>
-                        
+
                             </ul>
                         </li>
 
-                        
+
                     </ul>
                 </div>
             </div>
