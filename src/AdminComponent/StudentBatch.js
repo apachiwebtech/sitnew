@@ -196,7 +196,8 @@ const StudentBatch = () => {
     };
 
     const timeSheetPdf = async () => {
-        const blob = await pdf(<TimeSheetDoc />).toBlob();
+        const res = await axios.post(`${BASE_URL}/getidStudent`, { batch_code: value.batch });
+        const blob = await pdf(<TimeSheetDoc timedata = {res.data}/>).toBlob();
         const url = URL.createObjectURL(blob);
         window.open(url);
         URL.revokeObjectURL(url);
@@ -294,6 +295,7 @@ const StudentBatch = () => {
         window.open(url);
         URL.revokeObjectURL(url);
     };
+
 
     // for testing
     const forcardlistpdf = async () => {

@@ -424,9 +424,9 @@ const Students = () => {
                                                     paginationModel: { pageSize: 100, page: 0 },
                                                 },
                                             }}
-                                            slots={{
-                                                toolbar: GridToolbar
-                                            }}
+                                            // slots={{
+                                            //     toolbar: GridToolbar
+                                            // }}
                                             Any other DataGrid props you need
                                             // pagination
                                             // paginationModel={paginationModel}
