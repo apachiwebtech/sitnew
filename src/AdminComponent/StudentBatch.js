@@ -175,7 +175,8 @@ const StudentBatch = () => {
     };
 
     const studyMaterialPdf = async () => {
-        const blob = await pdf(<StudyMaterialDoc />).toBlob();
+        const res = await axios.post(`${BASE_URL}/getidStudent`, { batch_code: value.batch });
+        const blob = await pdf(<StudyMaterialDoc studymaterial = {res.data}/>).toBlob();
         const url = URL.createObjectURL(blob);
         window.open(url);
         URL.revokeObjectURL(url);

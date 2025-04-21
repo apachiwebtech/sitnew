@@ -21,10 +21,51 @@ const styles = StyleSheet.create({
     },
 });
 
-const StudyMaterialDoc = (props) => {
+function chunkArray(array, size) {
+    const result = [];
+    for (let i = 0; i < array.length; i += size) {
+        result.push(array.slice(i, i + size));
+    }
+    return result;
+}
+
+const StudyMaterialDoc = ({studymaterial}) => {
+    console.log(studymaterial)
+    const data = studymaterial
+
+    const pdfheaddetail = data[0]
+
+
+
+    function formatdate(newdate) {
+        if (!newdate) return ''; // Handle null or undefined values gracefully
+    
+        const date = new Date(newdate);
+        if (isNaN(date.getTime())) return ''; // Handle invalid dates
+    
+        const day = date.getDate();
+        const month = date.toLocaleString('en-US', { month: 'short' });
+        const year = date.getFullYear();
+    
+        // Function to get ordinal suffix
+        function getOrdinalSuffix(n) {
+            if (n > 3 && n < 21) return 'th'; // Covers 11th to 13th
+            switch (n % 10) {
+                case 1: return 'st';
+                case 2: return 'nd';
+                case 3: return 'rd';
+                default: return 'th';
+            }
+        }
+    
+        const dayWithSuffix = String(day).padStart(2, '0') + getOrdinalSuffix(day);
+    
+        return `${dayWithSuffix} ${month}-${year}`;
+    }
     return (
         <Document>
-            <Page size="A4" orientation="landscape" style={styles.page}>
+            {chunkArray(data, 15).map((chunk, pageIndex) => (
+            <Page key={pageIndex} size="A4" orientation="landscape" style={styles.page}>
                 <View
                     style={{
                         flexDirection: "row",
@@ -51,7 +92,7 @@ const StudyMaterialDoc = (props) => {
                             <Text>Training Programme :</Text>
                         </View>
                         <View>
-                            <Text>Electrical System Design</Text>
+                            <Text>{pdfheaddetail.Course_Name}</Text>
                         </View>
                     </View>
                     <View
@@ -67,7 +108,7 @@ const StudyMaterialDoc = (props) => {
                             <Text>Batch Code :</Text>
                         </View>
                         <View>
-                            <Text>9065</Text>
+                            <Text>{pdfheaddetail.Batch_code}</Text>
                         </View>
                     </View>
                 </View>
@@ -76,6 +117,7 @@ const StudyMaterialDoc = (props) => {
                         display: "flex",
                         flexDirection: "column",
                         border: "1px solid black",
+                        
                     }}
                 >
                     <View
@@ -156,7 +198,7 @@ const StudyMaterialDoc = (props) => {
                                             minHeight: 16,
                                         }}
                                     >
-                                        <Text style={{}}></Text>
+                                        <Text style={{}}> </Text>
                                     </View>
                                 ))}
                             </View>
@@ -189,6 +231,9 @@ const StudyMaterialDoc = (props) => {
                             </View>
                         </View>
                     </View>
+                    {chunk.map((item, idx) => (
+
+                    
                     <View
                         style={{
                             display: "flex",
@@ -204,7 +249,7 @@ const StudyMaterialDoc = (props) => {
                                 },
                             ]}
                         >
-                            <Text style={{}}>1</Text>
+                            <Text style={{}}>{(pageIndex * 20) + idx + 1}</Text>
                         </View>
                         <View
                             style={{
@@ -213,7 +258,7 @@ const StudyMaterialDoc = (props) => {
                                 width: "27%",
                             }}
                         >
-                            <Text style={{}}>Aditya Jagdish Borade</Text>
+                            <Text style={{}}>{item.Student_Name}</Text>
                         </View>
                         <View
                             style={[
@@ -223,7 +268,7 @@ const StudyMaterialDoc = (props) => {
                                 },
                             ]}
                         >
-                            <Text style={{ textAlign: "center" }}>24-Dec-24</Text>
+                            <Text style={{ textAlign: "center" }}> {item.Admission_Date? formatdate(item.Admission_Date) : ""}</Text>
                         </View>
                         <View
                             style={[
@@ -233,14 +278,14 @@ const StudyMaterialDoc = (props) => {
                                 },
                             ]}
                         >
-                            <Text style={{}}>Yes</Text>
+                            <Text style={{}}>{item.Fees}</Text>
                         </View>
                         <View style={{ display: "flex", flexDirection: "row", width: "50%" }}>
-                            {Array.from({ length: 5 }, (_, index) => index + 1).map((index) => (
+                            {Array.from({ length: 5 }).map((_, index) => (
                                 <View
                                     key={index}
                                     style={{
-                                        ...(index !== 5 ? { borderRight: "1px solid black" } : {}),
+                                        ...(index !== 4 ? { borderRight: "1px solid black" } : {}),
                                         width: 78,
                                         justifyContent: "center",
                                         alignItems: "center",
@@ -248,16 +293,18 @@ const StudyMaterialDoc = (props) => {
                                         minHeight: 16,
                                     }}
                                 >
-                                    <Text style={{}}></Text>
+                                    <Text></Text>
                                 </View>
                             ))}
                         </View>
                     </View>
+                     ))}
                 </View>
                 <View style={styles.footer} fixed>
                     <Text>F/TD/04/00</Text>
                 </View>
             </Page>
+             ))}
         </Document>
     );
 };
