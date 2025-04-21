@@ -10,6 +10,10 @@ import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import FormControl from '@mui/material/FormControl';
 import { StyledDataGrid } from "./StyledDataGrid";
+import Course from "./Course";
+import { pdf } from "@react-pdf/renderer";
+import { Category } from "@mui/icons-material";
+import Forcardlist from "./Document/Forcardlist";
 
 const StudentReport = () => {
 
@@ -19,6 +23,8 @@ const StudentReport = () => {
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
+    const [course, setCourse] = useState([])
+    const [batch, setBatch] = useState([]);
 
     
   
@@ -54,7 +60,30 @@ const StudentReport = () => {
         }
         setError(newErrors)
         return isValid
+    
+    
     }
+
+    async function getCourseData() {
+            axios
+                .get(`${BASE_URL}/getCourse`)
+                .then((res) => {
+                    setCourse(res.data);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
+    
+        useEffect(() => {
+            getCourseData();
+            value.title = "";
+            setError({});
+            setUid([]);
+        }, []);
+
+
+
 
 
     async function getEmployeeData() {
@@ -154,8 +183,16 @@ const StudentReport = () => {
         course : value.course,
         batch : value.batch,
         uid : uid.id
-        }
+        };
 
+        console.log("onSubmit");
+            console.log(Category)
+            generatePdf();
+
+
+            
+
+        
 
         axios.post(`${BASE_URL}/add_employeerecord`, data)
             .then((res) => {
@@ -167,12 +204,15 @@ const StudentReport = () => {
                 console.log(err)
             })
     }
+};
 
-   
-        
-
-
-    }
+    const generatePdf = () => {
+        switch (Category) {
+            case "forcard":
+                forcardlistpdf();
+                break;
+        }
+    };
 
 
     const onhandleChange = (e) => {
@@ -216,6 +256,34 @@ const StudentReport = () => {
         },
     ];
 
+    const handlegetbatch = async (courseid) => {
+        setValue({
+            course: courseid,
+        });
+
+        try {
+            const res = await axios.post(`${BASE_URL}/getcoursewisebatch`, { courseid: courseid });
+            
+            
+            setBatch(res.data);
+        } catch (err) {
+            console.error("Error fetching data:", err);
+        }
+    };
+
+    const forcardlistpdf = async () => {
+        
+            const blob = await pdf(<Forcardlist /> ).toBlob();
+            console.log("Blob created:", blob);
+
+             
+            const url = URL.createObjectURL(blob);
+            console.log("Generated PDF URL:", url);
+            window.open(url);
+            URL.revokeObjectURL(url);
+        };
+
+    
 
     const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
 
@@ -259,8 +327,17 @@ const StudentReport = () => {
                                             <div class="form-group col-lg-4">
                                                 <label for="exampleFormControlSelect1">Select Course<span className='text-danger'>*</span> </label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1" 
-                                                value={value.course} onChange={onhandleChange} name='course'>
-                                                    <option>Select</option>
+                                                onChange={(e) => handlegetbatch(e.target.value)}
+                                                name="course">
+                                                    <option value="">Select</option>
+                                                    {course.map((courses)=>{
+                                                        return(
+                                                            <option value={courses.Course_Id} >
+                                                                {courses.Course_Name}
+                                                            </option>
+                                                        );
+                                                    })}
+                                                        
                                                 </select>
                                                 {<span className="text-danger"> {error.course} </span>}
                                             </div>
@@ -268,9 +345,19 @@ const StudentReport = () => {
 
                                             <div class="form-group col-lg-4">
                                                 <label for="exampleFormControlSelect1">Select Batch<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" 
-                                                value={value.batch} onChange={onhandleChange} name='batch'>
-                                                    <option></option>
+                                                <select
+                                                    class="form-control form-control-lg"
+                                                    id="exampleFormControlSelect1"
+                                                    onChange={onhandleChange}
+                                                    name="batch"
+                                                >
+                                                    <option>Select Batch</option>
+
+                                                    {batch.map((item) => {
+                                                        return (
+                                                            <option value={item.Batch_code}>{item.Batch_code}</option>
+                                                        );
+                                                    })}
                                                 </select>
                                                 {<span className="text-danger"> {error.batch} </span>}
                                             </div>

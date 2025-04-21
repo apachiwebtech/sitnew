@@ -24,6 +24,7 @@ import TestTakenDoc from "./Document/TestTakenDoc";
 import TimeSheetDoc from "./Document/TimeSheetDoc";
 import ID_CardDoc from "./Document/ID_CardDoc";
 import AssignmentDoc from "./Document/AssignmentDoc";
+import Forcardlist from "./Document/Forcardlist";
 
 const StudentBatch = () => {
     const [uid, setUid] = useState([]);
@@ -152,7 +153,10 @@ const StudentBatch = () => {
                 break;   
             case "0117":
                 newlecturemailpdf();
-                break;     
+                break;    
+                case "forcard":
+                    forcardlistpdf();
+                    break; 
         }
     };
 
@@ -291,6 +295,16 @@ const StudentBatch = () => {
         URL.revokeObjectURL(url);
     };
 
+    // for testing
+    const forcardlistpdf = async () => {
+                const res = await axios.post(`${BASE_URL}/getidStudent`, {batch_code: value.batch});
+                const blob = await pdf(<Forcardlist cardlist = {res.data}/> ).toBlob();
+                const url = URL.createObjectURL(blob);
+                console.log("Generated PDF URL:", url);
+                window.open(url);
+                URL.revokeObjectURL(url);
+            };
+
     const handlegetbatch = async (courseid) => {
         setValue({
             course: courseid,
@@ -298,6 +312,8 @@ const StudentBatch = () => {
 
         try {
             const res = await axios.post(`${BASE_URL}/getcoursewisebatch`, { courseid: courseid });
+            
+            
             setBatch(res.data);
         } catch (err) {
             console.error("Error fetching data:", err);
@@ -423,6 +439,12 @@ const StudentBatch = () => {
                                                             value="0118"
                                                             control={<Radio />}
                                                             label="Student Label"
+                                                        />
+                                                        {/* for testing  */}
+                                                        <FormControlLabel
+                                                            value="forcard"
+                                                            control={<Radio />}
+                                                            label="For Card List"
                                                         />
                                                     </RadioGroup>
                                                 </FormControl>

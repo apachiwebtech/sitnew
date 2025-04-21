@@ -229,6 +229,10 @@ import Sitpayment from "./AdminComponent/Document/payment.js";
 import { Voucher } from "./AdminComponent/Document/Voucher.js";
 import TimeSheetDoc from "./AdminComponent/Document/TimeSheetDoc.js";
 import StudentReports from "./AdminComponent/Document/StudentReports.js";
+import Forcardlist from "./AdminComponent/Document/Forcardlist.js";
+
+
+
 
 
 const Router = createBrowserRouter([
@@ -569,7 +573,8 @@ const Router = createBrowserRouter([
                         <PDFViewer style={{ width: "100%", height: "100%" }}>
                            {/* <Voucher/> */}
                            {/* <ID_CardDoc/> */}
-                           <StudentLabelDoc/>
+                           {/* <StudentLabelDoc/> */}
+                           <Forcardlist/>
                         </PDFViewer>
                     </div>
                 ),
