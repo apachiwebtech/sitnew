@@ -37,9 +37,9 @@ const BatchCancellation = () => {
     const [batch, setBatch] = useState([])
     const [student, setStudent] = useState([])
     const [paginationModel, setPaginationModel] = useState({
-            pageSize: 50,
-            page: 0,
-          });
+        pageSize: 50,
+        page: 0,
+    });
 
     const [value, setValue] = useState({
 
@@ -111,63 +111,97 @@ const BatchCancellation = () => {
 
     }
 
-    const getBatch = async (id) => {
-        setCourseid(id)
-        const data = {
-            courseid: id
-        }
+    // const getBatch = async (id) => {
+    //     setCourseid(id)
+    //     const data = {
+    //         courseid: id
+    //     }
 
+
+    //     if (id) {
+    //         axios.post(`${BASE_URL}/getcoursewisebatch`, data)
+    //             .then((res) => {
+
+    //                 setBatch(res.data)
+    //             })
+    //             .catch((err) => {
+    //                 console.log(err)
+    //             })
+    //     } else {
+    //         try {
+    //             const res = await axios.get(`${BASE_URL}/getbatch`, data);
+
+    //             setBatch(res.data);
+
+    //         } catch (err) {
+    //             console.error("Error fetching data:", err);
+    //         }
+    //     }
+
+
+    // }
+
+    const getBatch = async (id) => {
+        setCourseid(id);
+        setBatch([]);  // ✅ Clear old batch data
+        setBatchid(""); // ✅ Reset selected batch
+
+        const data = { courseid: id };
 
         if (id) {
-            axios.post(`${BASE_URL}/getcoursewisebatch`, data)
-                .then((res) => {
-
-                    setBatch(res.data)
-                })
-                .catch((err) => {
-                    console.log(err)
-                })
-        } else {
             try {
-                const res = await axios.get(`${BASE_URL}/getbatch`, data);
-
-                setBatch(res.data);
-
+                const res = await axios.post(`${BASE_URL}/getcoursewisebatch`, data);
+                setBatch(res.data);  // ✅ Set only filtered batch codes
             } catch (err) {
-                console.error("Error fetching data:", err);
+                console.log("Error fetching batches:", err);
             }
         }
+    };
 
 
-    }
+    // const getStudent = async (code) => {
+    //     setBatchid(code)
+    //     const data = {
+    //         batch_code: code
+    //     }
+    //     if (code) {
+    //         axios.post(`${BASE_URL}/getbatchwisestudent`, data)
+    //             .then((res) => {
+
+    //                 setStudent(res.data)
+    //             })
+    //             .catch((err) => {
+    //                 console.log(err)
+    //             })
+    //     } else {
+    //         try {
+    //             const res = await axios.post(`${BASE_URL}/get_new_data`, { tablename: "Student_Master", columnname: "Student_Id,Student_Name" });
+
+    //             setStudent(res.data);
+
+    //         } catch (err) {
+    //             console.error("Error fetching data:", err);
+    //         }
+    //     }
+
+
+    // }
 
     const getStudent = async (code) => {
-        setBatchid(code)
-        const data = {
-            batch_code: code
-        }
+        setBatchid(code);
+        setStudent([]);  // ✅ Clear old students
+        const data = { batch_code: code };
+
         if (code) {
-            axios.post(`${BASE_URL}/getbatchwisestudent`, data)
-                .then((res) => {
-
-                    setStudent(res.data)
-                })
-                .catch((err) => {
-                    console.log(err)
-                })
-        } else {
             try {
-                const res = await axios.post(`${BASE_URL}/get_new_data`, { tablename: "Student_Master", columnname: "Student_Id,Student_Name" });
-
+                const res = await axios.post(`${BASE_URL}/getbatchwisestudent`, data);
                 setStudent(res.data);
-
             } catch (err) {
-                console.error("Error fetching data:", err);
+                console.error("Error fetching students:", err);
             }
         }
+    };
 
-
-    }
 
 
 
@@ -180,7 +214,7 @@ const BatchCancellation = () => {
         BatchLeft(); // Or BatchCancellation()
         setError({});
         setUid(null);
-      }, []);
+    }, []);
 
     const handleClick = (id) => {
         setCid(id)
@@ -266,7 +300,7 @@ const BatchCancellation = () => {
 
     }
 
-    
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -329,22 +363,22 @@ const BatchCancellation = () => {
             headerName: "Date",
             flex: 1.5,
             renderCell: (params) => {
-              if (!params.value) return ""; // Handle empty values
-          
-              // Check if already in DD-MM-YYYY format
-              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
-              if (ddmmyyyyRegex.test(params.value)) {
-                return params.value; // Return as-is if already formatted
-              }
-          
-              const date = new Date(params.value);
-              if (isNaN(date.getTime())) return ""; // Handle invalid dates
-          
-              // Convert to DD-MM-YYYY format
-              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+                if (!params.value) return ""; // Handle empty values
+
+                // Check if already in DD-MM-YYYY format
+                const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+                if (ddmmyyyyRegex.test(params.value)) {
+                    return params.value; // Return as-is if already formatted
+                }
+
+                const date = new Date(params.value);
+                if (isNaN(date.getTime())) return ""; // Handle invalid dates
+
+                // Convert to DD-MM-YYYY format
+                return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
             },
-          },
-          
+        },
+
         { field: 'cancellationammount', headerName: 'Cancel Amount', flex: 2 },
         {
             field: 'actions',
@@ -366,151 +400,151 @@ const BatchCancellation = () => {
 
     return (
 
-    <div class="container-fluid page-body-wrapper ">
-        <InnerHeader />
-        <div class="content-wrapper">
-            <div class="row">
-                <div class="col-lg-12 grid-margin stretch-card">
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title">Batch Cancellation</h4>
-                            <hr></hr>
-                            <form class="forms-sample py-3" onSubmit={handleSubmit}>
-                                <div class='row'>
+        <div class="container-fluid page-body-wrapper ">
+            <InnerHeader />
+            <div class="content-wrapper">
+                <div class="row">
+                    <div class="col-lg-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Batch Cancellation</h4>
+                                <hr></hr>
+                                <form class="forms-sample py-3" onSubmit={handleSubmit}>
+                                    <div class='row'>
 
-                                    <div class="form-group col-lg-3">
-                                        <label for="exampleFormControlSelect1">Select Course<span className="text-danger">*</span></label>
-                                        <select class="form-control form-control-lg" id="exampleFormControlSelect1"
-                                            value={courseid} name='selectcourse' onChange={(e) => getBatch(e.target.value)}>
-                                            <option>--Select Course--</option>
+                                        <div class="form-group col-lg-3">
+                                            <label for="exampleFormControlSelect1">Select Course<span className="text-danger">*</span></label>
+                                            <select class="form-control form-control-lg" id="exampleFormControlSelect1"
+                                                value={courseid} name='selectcourse' onChange={(e) => getBatch(e.target.value)}>
+                                                <option>--Select Course--</option>
 
-                                            {course.map((item) => {
-                                                return (
-                                                    <option value={item.Course_Id}>{item.Course_Name}</option>
+                                                {course.map((item) => {
+                                                    return (
+                                                        <option value={item.Course_Id}>{item.Course_Name}</option>
 
-                                                )
-                                            })}
-                                        </select>
-                                        {<span className='text-danger'> {error.course} </span>}
+                                                    )
+                                                })}
+                                            </select>
+                                            {<span className='text-danger'> {error.course} </span>}
+                                        </div>
+
+                                        <div class="form-group col-lg-3">
+                                            <label for="exampleFormControlSelect1">Batch No.</label>
+                                            <select class="form-control form-control-lg" id="exampleFormControlSelect1"
+                                                value={batchid} name='batchno' onChange={(e) => getStudent(e.target.value)}>
+                                                <option>--Select Batch--</option>
+
+                                                {batch.map((item) => {
+                                                    return (
+                                                        <option value={item.Batch_code}>{item.Batch_code}</option>
+
+                                                    )
+                                                })}
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group col-lg-3">
+                                            <label for="exampleFomrControlSelect1">Student</label>
+                                            <select className='form-control form-control-lg' id="exampleFormControlSelect1"
+                                                value={value.student} name='student' onChange={onhandleChange}>
+                                                <option>Select Student</option>
+                                                {student.map((item) => {
+                                                    return (
+                                                        <option value={item.Student_Id}>{item.Student_Name}</option>
+                                                    )
+                                                })}
+                                            </select>
+                                            {<span className='text-danger'> {error.student} </span>}
+                                        </div>
+
+
+                                        <div class="form-group col-lg-3">
+                                            <lable for="exampleInputUsername1">Cancellation Ammount<span className="text-danger">*</span></lable>
+                                            <input text="text" class="form-control" id="exampleInputUsername1"
+                                                value={value.cancellationammount} placeholder='0' name='cancellationammount'
+                                                onChange={onhandleChange} />
+                                            {<span className='text-danger'> {error.cancellationammount} </span>}
+                                        </div>
+
+
+                                        <div className="form-group col-lg-3">
+                                            <label htmlFor="exampleInputUsername1">Date</label>
+                                            <input
+                                                type="date"
+                                                className="form-control"
+                                                id="exampleInputUsername1"
+                                                value={currentdate}
+                                                name="date"
+                                                onChange={(e) => { }}
+                                                disabled
+                                            />
+                                        </div>
+
+
+
                                     </div>
 
-                                    <div class="form-group col-lg-3">
-                                        <label for="exampleFormControlSelect1">Batch No.</label>
-                                        <select class="form-control form-control-lg" id="exampleFormControlSelect1"
-                                            value={batchid} name='batchno' onChange={(e) => getStudent(e.target.value)}>
-                                            <option>--Select Batch--</option>
 
-                                            {batch.map((item) => {
-                                                return (
-                                                    <option value={item.Batch_code}>{item.Batch_code}</option>
+                                    <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                                    <button type='button' onClick={() => {
+                                        window.location.reload()
+                                    }} class="btn btn-light">Cancel</button>
 
-                                                )
-                                            })}
-                                        </select>
-                                    </div>
+                                </form>
 
-                                    <div class="form-group col-lg-3">
-                                        <label for="exampleFomrControlSelect1">Student</label>
-                                        <select className='form-control form-control-lg' id="exampleFormControlSelect1"
-                                            value={value.student} name='student' onChange={onhandleChange}>
-                                            <option>Select Student</option>
-                                            {student.map((item) => {
-                                                return (
-                                                    <option value={item.Student_Id}>{item.Student_Name}</option>
-                                                )
-                                            })}
-                                        </select>
-                                        {<span className='text-danger'> {error.student} </span>}
-                                    </div>
-                                
-
-                                    <div class="form-group col-lg-3">
-                                        <lable for="exampleInputUsername1">Cancellation Ammount<span className="text-danger">*</span></lable>
-                                        <input text="text" class="form-control" id="exampleInputUsername1"
-                                            value={value.cancellationammount} placeholder='0' name='cancellationammount'
-                                            onChange={onhandleChange} />
-                                        {<span className='text-danger'> {error.cancellationammount} </span>}
-                                    </div>
-
-
-                                    <div className="form-group col-lg-3">
-                                        <label htmlFor="exampleInputUsername1">Date</label>
-                                        <input
-                                            type="date"
-                                            className="form-control"
-                                            id="exampleInputUsername1"
-                                            value={currentdate}
-                                            name="date"
-                                            onChange={(e) => { }}
-                                            disabled
-                                        />
-                                    </div>
-
-
-
-                                </div>
-
-
-                                <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                <button type='button' onClick={() => {
-                                    window.location.reload()
-                                }} class="btn btn-light">Cancel</button>
-
-                            </form>
-
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <div className='d-flex justify-content-between' style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
-                                <div>
-                                    <h4 class="card-title">View Batch Cancellation</h4>
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div className='d-flex justify-content-between' style={{ borderBottom: "2px solid #dce4ec", width: "100%" }}>
+                                    <div>
+                                        <h4 class="card-title">View Batch Cancellation</h4>
+                                    </div>
+
                                 </div>
 
-                            </div>
-
-                            <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "hidden"}}>
-                                <StyledDataGrid
-                                    rows={rowsWithIds}
-                                    columns={columns}
-                                    rowHeight={35}
-                                    getRowId={(row) => row.id}
-                                    disableColumnSelector
-                                            disableDensitySelector
-                                    pagination
-                                            paginationModel={paginationModel}
-                                            onPaginationModelChange={setPaginationModel}
-                                            pageSizeOptions= {[50]}
-                                            autoHeight={false}
-                                            sx={{
-                                              height: 500, // Ensure enough height for pagination controls
-                                              '& .MuiDataGrid-footerContainer': {
+                                <div style={{ borderLeft: "1px solid #dce4ec", height: "510px", overflow: "hidden" }}>
+                                    <StyledDataGrid
+                                        rows={rowsWithIds}
+                                        columns={columns}
+                                        rowHeight={35}
+                                        getRowId={(row) => row.id}
+                                        disableColumnSelector
+                                        disableDensitySelector
+                                        pagination
+                                        paginationModel={paginationModel}
+                                        onPaginationModelChange={setPaginationModel}
+                                        pageSizeOptions={[50]}
+                                        autoHeight={false}
+                                        sx={{
+                                            height: 500, // Ensure enough height for pagination controls
+                                            '& .MuiDataGrid-footerContainer': {
                                                 justifyContent: 'flex-end',
-                                              },
-                                            }}
-                                            slots={{
-                                                toolbar: GridToolbar
-                                            }}
-                                            slotProps={{
-                                              toolbar: {
+                                            },
+                                        }}
+                                        slots={{
+                                            toolbar: GridToolbar
+                                        }}
+                                        slotProps={{
+                                            toolbar: {
                                                 showQuickFilter: true,
-                                              },
-                                            }}
-                                />
+                                            },
+                                        }}
+                                    />
 
-                                {confirmationVisibleMap[cid] && (
-                                    <div className='confirm-delete'>
-                                        <p>Are you sure you want to delete?</p>
-                                        <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
-                                        <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
-                                    </div>
-                                )}
-                            </div>
+                                    {confirmationVisibleMap[cid] && (
+                                        <div className='confirm-delete'>
+                                            <p>Are you sure you want to delete?</p>
+                                            <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
+                                            <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
+                                        </div>
+                                    )}
+                                </div>
 
 
-                            {/* <div>
+                                {/* <div>
                                       <button type='button' onClick={() => {
                                             window.location.reload()
                                         }} class="btn btn-primary mr-2">Excel</button>
@@ -518,14 +552,14 @@ const BatchCancellation = () => {
 
 
 
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div >
+        </div >
 
-        )
-    }
+    )
+}
 
 export default BatchCancellation
