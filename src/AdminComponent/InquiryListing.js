@@ -656,9 +656,9 @@ const InquiryListing = () => {
                                             //   borderBottom: "2px solid #000", // Add border below header
                                             },
                                           }}
-                                          slots={{
-                                            toolbar: GridToolbar
-                                        }}
+                                        //   slots={{
+                                        //     toolbar: GridToolbar
+                                        // }}
                                         // pagination
                                         //     paginationModel={paginationModel}
                                         //     onPaginationModelChange={setPaginationModel}

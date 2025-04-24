@@ -574,7 +574,7 @@ const Router = createBrowserRouter([
                            {/* <Voucher/> */}
                            {/* <ID_CardDoc/> */}
                            {/* <StudentLabelDoc/> */}
-                           <TimeSheetDoc/>
+                           <AnalysisDoc/>
                         </PDFViewer>
                     </div>
                 ),

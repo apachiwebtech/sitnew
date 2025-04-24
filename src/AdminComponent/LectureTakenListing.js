@@ -425,9 +425,9 @@ const LectureTakenListing = () => {
                                                  // Add border below header
                                                 },
                                             }}
-                                            slots={{
-                                                toolbar: GridToolbar
-                                            }}
+                                            // slots={{
+                                            //     toolbar: GridToolbar
+                                            // }}
                                             // slotProps={{
                                             //   toolbar: {
                                             //     showQuickFilter: true,

@@ -1,5 +1,5 @@
 import React from "react";
-import { Document, Page, Text, View, Image, StyleSheet } from "@react-pdf/renderer";
+import { Document, Page, Text, View, Image, StyleSheet, Font } from "@react-pdf/renderer";
 
 const styles = StyleSheet.create({
     page: { padding: 30, fontSize: 10 },
@@ -10,10 +10,65 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
 });
+function chunkArray(array, size) {
+    const result = [];
+    for (let i = 0; i < array.length; i += size) {
+        result.push(array.slice(i, i + size));
+    }
+    return result;
+}
 
-const StudentRecordDoc = (props) => {
+function formatdate(newdate) {
+    if (!newdate) return ''; // Handle null or undefined values gracefully
+
+    const date = new Date(newdate);
+    if (isNaN(date.getTime())) return ''; // Handle invalid dates
+
+    const day = date.getDate();
+    const month = date.toLocaleString('en-US', { month: 'short' });
+    const year = date.getFullYear();
+
+    // Function to get ordinal suffix
+    function getOrdinalSuffix(n) {
+        if (n > 3 && n < 21) return 'th'; // Covers 11th to 13th
+        switch (n % 10) {
+            case 1: return 'st';
+            case 2: return 'nd';
+            case 3: return 'rd';
+            default: return 'th';
+        }
+    }
+
+    const dayWithSuffix = String(day).padStart(2, '0') + getOrdinalSuffix(day);
+
+    return `${dayWithSuffix} ${month}-${year}`;
+}
+
+Font.register({
+        family: 'Poppins',
+        fonts: [
+            {
+                src: '/fonts/Poppins-Regular.ttf',
+                fontWeight: 'normal',
+            },
+            {
+                src: '/fonts/Poppins-SemiBold.ttf',
+                fontWeight: 600,
+            },
+            {
+                src: '/fonts/Poppins-Bold.ttf',
+                fontWeight: 'bold',
+            },
+        ],
+    });
+
+const StudentRecordDoc = ({studentAllInfo}) => {
+    console.log(studentAllInfo)
+    const data = studentAllInfo
+    const headerdata = data[0]
     return (
         <Document>
+            {chunkArray(data, 5).map((chunk, pageIndex) => (
             <Page size="A4" orientation="landscape" style={styles.page}>
                 <View
                     style={{
@@ -25,8 +80,9 @@ const StudentRecordDoc = (props) => {
                 >
                     <Image src={`/sitLogo.jpg`} style={{ width: "70px" }}></Image>
                 </View>
-                <View style={{ textAlign: "center", padding: "5px", border: "1.5px solid black", marginBottom: "5px" }}>
-                    <Text>STUDENT RECORD</Text>
+                <View style={{ textAlign: "center", padding: "5px", border: "1.5px solid black", marginBottom: "3px" }}>
+                    <Text style={{fontFamily: 'Poppins',
+                                        fontWeight: 600,}}>STUDENT RECORD</Text>
                 </View>
                 <View
                     style={{
@@ -34,7 +90,7 @@ const StudentRecordDoc = (props) => {
                         border: "1.5px solid black",
                         flexDirection: "row",
                         gap: 70,
-                        marginBottom: "10px",
+                        marginBottom: "6px",
                     }}
                 >
                     <View
@@ -43,8 +99,9 @@ const StudentRecordDoc = (props) => {
                             gap: "5px",
                         }}
                     >
-                        <Text>Training Programme:</Text>
-                        <Text>Electrical System Design</Text>
+                        <Text style={{fontFamily: 'Poppins',
+                                        fontWeight: 600,}}>Training Programme:</Text>
+                        <Text>{headerdata.Course_Name}</Text>
                     </View>
                     <View
                         style={{
@@ -52,8 +109,9 @@ const StudentRecordDoc = (props) => {
                             gap: "5px",
                         }}
                     >
-                        <Text>Batch No.:</Text>
-                        <Text>09065</Text>
+                        <Text style={{fontFamily: 'Poppins',
+                                        fontWeight: 600,}}>Batch No.:</Text>
+                        <Text>{headerdata.Batch_code}</Text>
                     </View>
                     <View
                         style={{
@@ -61,8 +119,9 @@ const StudentRecordDoc = (props) => {
                             gap: "5px",
                         }}
                     >
-                        <Text>From:</Text>
-                        <Text>06-Jan-2025</Text>
+                        <Text style={{fontFamily: 'Poppins',
+                                        fontWeight: 600,}}>From:</Text>
+                        <Text>{headerdata.SDate? formatdate(headerdata.SDate) : ""}</Text>
                     </View>
                     <View
                         style={{
@@ -70,22 +129,25 @@ const StudentRecordDoc = (props) => {
                             gap: "5px",
                         }}
                     >
-                        <Text>To:</Text>
-                        <Text>08-Feb-2025</Text>
+                        <Text style={{fontFamily: 'Poppins',
+                                        fontWeight: 600,}}>To:</Text>
+                        <Text>{headerdata.EDate? formatdate(headerdata.EDate) : ""}</Text>
                     </View>
                 </View>
                 <View
                     style={{
+                        width:"100%",
+                        height:"80%",
                         display: "flex",
                         flexDirection: "column",
-                        border: "1px solid black",
+                        border: "2px solid black",
                     }}
                 >
                     <View
                         style={{
                             display: "flex",
                             flexDirection: "row",
-                            borderBottom: "1px solid black",
+                            borderBottom: "2px solid black",
                             fontSize: 9,
                         }}
                     >
@@ -97,7 +159,8 @@ const StudentRecordDoc = (props) => {
                                 },
                             ]}
                         >
-                            <Text style={{}}>ID No.</Text>
+                            <Text style={{fontSize: 8,fontFamily: 'Poppins',
+                                        fontWeight: 600,}}>ID No.</Text>
                         </View>
                         <View
                             style={[
@@ -107,7 +170,8 @@ const StudentRecordDoc = (props) => {
                                 },
                             ]}
                         >
-                            <Text style={{}}>Name and Address</Text>
+                            <Text style={{fontSize: 8,fontFamily: 'Poppins',
+                                        fontWeight: 600,}}>Name and Address</Text>
                         </View>
                         <View
                             style={[
@@ -117,7 +181,8 @@ const StudentRecordDoc = (props) => {
                                 },
                             ]}
                         >
-                            <Text style={{}}>Qualification</Text>
+                            <Text style={{fontSize: 8,fontFamily: 'Poppins',
+                                        fontWeight: 600,}}>Qualification</Text>
                         </View>
                         <View
                             style={[
@@ -127,7 +192,8 @@ const StudentRecordDoc = (props) => {
                                 },
                             ]}
                         >
-                            <Text style={{}}>Contact Detail</Text>
+                            <Text style={{fontSize: 8,fontFamily: 'Poppins',
+                                        fontWeight: 600,}}>Contact Detail</Text>
                         </View>
                         <View
                             style={[
@@ -137,7 +203,8 @@ const StudentRecordDoc = (props) => {
                                 },
                             ]}
                         >
-                            <Text style={{}}>Company</Text>
+                            <Text style={{fontSize: 8,fontFamily: 'Poppins',
+                                        fontWeight: 600,}}>Company</Text>
                         </View>
                         <View
                             style={[
@@ -147,12 +214,15 @@ const StudentRecordDoc = (props) => {
                                 },
                             ]}
                         >
-                            <Text style={{}}>Exp.</Text>
+                            <Text style={{fontSize: 8,fontFamily: 'Poppins',
+                                        fontWeight: 600,}}>Exp.</Text>
                         </View>
                         <View style={{ padding: 5, flexGrow: 3, alignItems: "center", justifyContent: "center" }}>
-                            <Text style={{}}>Other Details</Text>
+                            <Text style={{fontSize: 8,fontFamily: 'Poppins',
+                                        fontWeight: 600,}}>Other Details</Text>
                         </View>
                     </View>
+                    {chunk.map((item, idx) => (
                     <View
                         style={{
                             display: "flex",
@@ -165,7 +235,7 @@ const StudentRecordDoc = (props) => {
                             style={{
                                 borderRight: "1px solid black",
                                 display: "flex",
-                                width: "5.47%",
+                                width: "5.25%",
                                 minHeight: 80,
                             }}
                         >
@@ -176,13 +246,13 @@ const StudentRecordDoc = (props) => {
                                     margin: "auto",
                                 }}
                             >
-                                25090650001
+                                {item.Student_Code}
                             </Text>
                         </View>
                         <View
                             style={{
                                 borderRight: "1px solid black",
-                                width: "28.05%",
+                                width: "27.86%",
                                 flexDirection: "column",
                             }}
                         >
@@ -194,7 +264,7 @@ const StudentRecordDoc = (props) => {
                                     justifyContent: "center",
                                 }}
                             >
-                                <Text style={{}}>Aditya Jagdish Borade</Text>
+                                <Text style={{}}>{item.Student_Name}</Text>
                             </View>
                             <View
                                 style={{
@@ -205,18 +275,17 @@ const StudentRecordDoc = (props) => {
                                 }}
                             >
                                 <Text style={{}}>
-                                    Plot no 77 buddhghosh soc b cabin road ambernath East Maharastra, Ambernath -
-                                    421501, India
+                                    {item.Present_Address}
                                 </Text>
                             </View>
                             <View style={{ flexGrow: 1, justifyContent: "center", padding: 2 }}>
-                                <Text style={{}}>boradeaditya15@gmail.com</Text>
+                                <Text style={{}}>{item.Email}</Text>
                             </View>
                         </View>
                         <View
                             style={{
                                 borderRight: "1px solid black",
-                                width: "13.3%",
+                                width: "13.94%",
                                 flexDirection: "column",
                                 justifyContent: "space-between",
                                 padding: 2,
@@ -228,7 +297,7 @@ const StudentRecordDoc = (props) => {
                                     textAlign: "center",
                                 }}
                             >
-                                <Text style={{}}>BE</Text>
+                                <Text style={{}}>{item.Qualification}</Text>
                             </View>
                             <View
                                 style={{
@@ -236,7 +305,7 @@ const StudentRecordDoc = (props) => {
                                     textAlign: "center",
                                 }}
                             >
-                                <Text style={{}}>Electrical</Text>
+                                <Text style={{}}>{item.Discipline}</Text>
                             </View>
                             <View
                                 style={{
@@ -244,7 +313,7 @@ const StudentRecordDoc = (props) => {
                                     textAlign: "center",
                                 }}
                             >
-                                <Text style={{}}>2024</Text>
+                                <Text style={{}}>{item.PassingYear}</Text>
                             </View>
                         </View>
                         <View
@@ -285,7 +354,7 @@ const StudentRecordDoc = (props) => {
                                     justifyContent: "center",
                                 }}
                             >
-                                <Text style={{}}>{"(M)  9028848332"}</Text>
+                                <Text style={{}}>{"(M)  "}{item.Present_Mobile}</Text>
                             </View>
                             <View
                                 style={{
@@ -295,7 +364,7 @@ const StudentRecordDoc = (props) => {
                                     justifyContent: "center",
                                 }}
                             >
-                                <Text style={{}}>{"(DOB)  29-Sep-2000"}</Text>
+                                <Text style={{}}>{"(DOB) "}{item.DOB}</Text>
                             </View>
                         </View>
                         <View
@@ -304,15 +373,15 @@ const StudentRecordDoc = (props) => {
                                 width: "13.35%",
                             }}
                         >
-                            <Text style={{}}></Text>
+                            <Text style={{textAlign:"center"}}>{item.Company}</Text>
                         </View>
                         <View
                             style={{
                                 borderRight: "1px solid black",
-                                width: "6.45%",
+                                width: "6.30%",
                             }}
                         >
-                            <Text style={{}}></Text>
+                            <Text style={{textAlign:"center"}}>{item.Duration}</Text>
                         </View>
                         <View
                             style={{
@@ -369,8 +438,10 @@ const StudentRecordDoc = (props) => {
                             </View>
                         </View>
                     </View>
+                    ))}
                 </View>
             </Page>
+            ))}
         </Document>
     );
 };
