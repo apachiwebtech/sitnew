@@ -230,6 +230,7 @@ import { Voucher } from "./AdminComponent/Document/Voucher.js";
 import TimeSheetDoc from "./AdminComponent/Document/TimeSheetDoc.js";
 import StudentReports from "./AdminComponent/Document/StudentReports.js";
 import Forcardlist from "./AdminComponent/Document/Forcardlist.js";
+import { BatchWiseFeesDetailsNewpdf } from "./AdminComponent/Document/BatchWiseFeesDetailsNewpdf.js";
 
 
 
@@ -574,7 +575,8 @@ const Router = createBrowserRouter([
                            {/* <Voucher/> */}
                            {/* <ID_CardDoc/> */}
                            {/* <StudentLabelDoc/> */}
-                           <AnalysisDoc/>
+                           {/* <AnalysisDoc/> */}
+                           <BatchWiseFeesDetailsNewpdf/>
                         </PDFViewer>
                     </div>
                 ),

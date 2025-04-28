@@ -9,11 +9,14 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
+import { BatchWiseFeesDetailsNewpdf } from "./Document/BatchWiseFeesDetailsNewpdf";
+import { pdf } from "@react-pdf/renderer";
 
 
 const FeesDetails = () => {
 
     const [course, SetCourse] = useState([])
+     const [batch, setBatch] = useState([]);
     const [brand, setBrand] = useState([])
     const [vendordata, setVendorData] = useState([])
     const [uid, setUid] = useState([])
@@ -21,17 +24,20 @@ const FeesDetails = () => {
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
+    const [category, setCat] = useState("");
     const [value, setValue] = useState({
-        course: '',
-        selectbatch: '',
-        amounttype: '',
+        
+        course: "" || uid.course,
+        batch: "" || uid.batch,
     })
 
 
     useEffect(() => {
         setValue({
-            course: uid.course,
-            selectbatch: uid.selectbatch,
+            // course: uid.course,
+            training: uid.training,
+            attendee: uid.attendee,
+            // selectbatch: uid.selectbatch,
             amounttype: uid.amounttype,
 
         })
@@ -54,10 +60,10 @@ const FeesDetails = () => {
         isValid = false;
         newErrors.course = "Course is RequireD"
        }
-        if (!value.selectbatch) {
-            isValid = false;
-            newErrors.selectbatch = "Batch is Required"
-        }
+       if (!value.batch) {
+        isValid = false;
+        newErrors.batch = "Batch is Required";
+    }
         setError(newErrors)
         return isValid
     }
@@ -91,8 +97,21 @@ const FeesDetails = () => {
             })
     }
 
+
+
+    async function getCourseData() {
+            axios
+                .get(`${BASE_URL}/getCourse`)
+                .then((res) => {
+                    SetCourse(res.data);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
     useEffect(() => {
         getEmployeeData()
+        getCourseData();
         value.title = ""
         setError({})
         setUid([])
@@ -158,30 +177,53 @@ const FeesDetails = () => {
             const data = {
 
                 course: value.course,
-                selectbatch: value.selectbatch,
+                batch: value.batch,
+                // selectbatch: value.selectbatch,
                 amounttype: value.amounttype,
                 uid: uid.id
-            }
+            };
+
+            console.log("onSubmit");
+            console.log(category);
+            generatePdf();
 
 
-            axios.post(`${BASE_URL}/add_employeerecord`, data)
-                .then((res) => {
-                    console.log(res)
-                    getEmployeeData()
+            // axios.post(`${BASE_URL}/add_employeerecord`, data)
+            //     .then((res) => {
+            //         console.log(res)
+            //         getEmployeeData()
 
-                })
-                .catch((err) => {
-                    console.log(err)
-                })
+            //     })
+            //     .catch((err) => {
+            //         console.log(err)
+            //     })
             }
             
-
-
-
-
-
     }
 
+    const generatePdf = () => {
+        switch(category){
+            case "batchwise":
+                batchwisefeesdetailsnewpdf();
+                break;  
+
+        }
+    }
+
+    const handlegetbatch = async (courseid) => {
+        setValue({
+            course: courseid,
+        });
+
+        try {
+            const res = await axios.post(`${BASE_URL}/getcoursewisebatch`, { courseid: courseid });
+            
+            
+            setBatch(res.data);
+        } catch (err) {
+            console.error("Error fetching data:", err);
+        }
+    };
 
     const onhandleChange = (e) => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
@@ -190,7 +232,13 @@ const FeesDetails = () => {
 
 
 
-
+    const batchwisefeesdetailsnewpdf = async () => {
+        const res = await axios.post(`${BASE_URL}/getbatchwisefees`, { batch_code: value.batch });
+        const blob = await pdf(<BatchWiseFeesDetailsNewpdf batchwisefee = {res.data}/>).toBlob();
+        const url = URL.createObjectURL(blob);
+        window.open(url);
+        URL.revokeObjectURL(url);
+    };
 
     const columns = [
         {
@@ -257,7 +305,7 @@ const FeesDetails = () => {
 
                                                                         row aria-labelledby='demo-row-radio-button-group-lable'
                                                                         name='row-radio-button-group'>
-                                                                        <FormControlLabel value="batchwise" control={<Radio />} label="Batch Wise Fees Details New" />
+                                                                        <FormControlLabel value="batchwise" control={<Radio />} label="Batch Wise Fees Details New"  onChange={(e) => setCat(e.target.value)}  />
                                                                         <FormControlLabel value="feesrecord" control={<Radio />} label="Fees Record New" />
                                                                         <FormControlLabel value="facultypayment" control={<Radio />} label="Batch Wise Faculty Payment" />
 
@@ -268,31 +316,39 @@ const FeesDetails = () => {
 
                                                             <div class="form-group col-lg-3">
                                                                 <label for="exapmleFormControlSelect1">Course<span className="text-danger">*</span></label>
-                                                                <select class="form-control" id="exampleFormControlSelect1"
-                                                                    value={value.course} name='course' onChange={onhandleChange}>
-                                                                    <option>All</option>
-
-                                                                   {course.map((item) => {
-                                                                    return(
-                                                                        <option value={item.Course_Id}> {item.Course_Name}</option>
-                                                                        
-                                                                    )
-                                                                   })}
-
-                                                                   {<span className='text-danger'> {error.course} </span>}
-
-                                                                </select>
+                                                                <select
+                                                    class="form-control form-control-lg"
+                                                    id="exampleFormControlSelect1"
+                                                    onChange={(e) => handlegetbatch(e.target.value)}
+                                                    name="course"
+                                                >
+                                                    <option>Select Course</option>
+                                                    {course.map((item) => {
+                                                        return (
+                                                            <option value={item.Course_Id}>{item.Course_Name}</option>
+                                                        );
+                                                    })}
+                                                </select>
+                                                {<span className="text-danger"> {error.course} </span>}
                                                             </div>
 
                                                             <div class="form-group col-lg-3">
                                                                 <lable for="exampleFormControlSelect1">Select Batch<span className="text-danger">*</span></lable>
-                                                                <select class="form-control" id="exampleFormControlSelect1" value={value.selectbatch}
-                                                                    name='selectbatch' onChange={onhandleChange}>
-                                                                    <option>All</option>
+                                                                <select
+                                                    class="form-control form-control-lg"
+                                                    id="exampleFormControlSelect1"
+                                                    onChange={onhandleChange}
+                                                    name="batch"
+                                                >
+                                                    <option>Select Batch</option>
 
-                                                                    {<span className='text-danger'> {error.selectbatch} </span>}
-
-                                                                </select>
+                                                    {batch.map((item) => {
+                                                        return (
+                                                            <option value={item.Batch_code}>{item.Batch_code}</option>
+                                                        );
+                                                    })}
+                                                </select>
+                                                {<span className="text-danger"> {error.batch} </span>}
                                                             </div>
 
 
