@@ -52,14 +52,19 @@ const AddFeesDetails = () => {
         RDate: new Date().toISOString().split("T")[0],
         Due_Date: "",
         generatereceipt: '',
+        Fees_Full_Payment: '',
     });
 
-    const debit = feesDetailsList.reduce((acc, item) => {
-        const value = item.TypeR === "D" ? item.Amount : 0;
 
-        return value + acc;
-    }, 0);
+    const debit = Number(formState.Fees_Full_Payment || 0);
+    // const debit = feesDetailsList.reduce((acc, item) => {
+    //     const value = item.TypeR === "D" ? item.Amount: 0;
 
+    //     return value + acc;
+
+    // }, 0);
+
+    
     console.log(feesDetailsList , "sauu")
 
     const credit = feesDetailsList.reduce((acc, item) => {
@@ -237,6 +242,8 @@ const AddFeesDetails = () => {
                 Batch_code: data.Batch_code || "",
                 Present_Mobile: data.Present_Mobile || "",
                 Email: data.Email || "",
+                Fees_Full_Payment: data.Fees_Full_Payment || "",
+
             }));
         } catch (err) {
             console.log("getStudentDetails err", err);
