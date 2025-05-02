@@ -212,7 +212,7 @@ const Admission = () => {
                                                                 {batch.map((item) => {
                                                                     return (
 
-                                                                        <option value={item.Batch_code}>{item.Batch_code}</option>
+                                                                        <option value={item.Batch_Id}>{item.Batch_code}</option>
                                                                     )
                                                                 })}
 

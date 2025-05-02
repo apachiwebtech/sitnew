@@ -47,252 +47,286 @@ function formatdate(newdate) {
 
     return `${dayWithSuffix} ${month}-${year}`;
 }
-export const BatchWiseFeesDetailsNewpdf = ({batchwisefee}) => {
+
+
+function chunkArray(array, size) {
+    const result = [];
+    for (let i = 0; i < array.length; i += size) {
+        result.push(array.slice(i, i + size));
+    }
+    return result;
+}
+
+export const BatchWiseFeesDetailsNewpdf = ({ batchwisefee }) => {
     console.log(batchwisefee)
-  return (
-     <Document>
-        <Page size="A4" style={{ padding: 30, fontSize: 10 }}>
 
-           <View style={{ textAlign: "left", marginLeft: "15px" }}>
-                <Text style={{fontSize: 9, fontFamily: 'Poppins',
-                fontWeight: 600,}}>Suvidya Institute Of Techonology Pvt. Ltd.</Text>
-            </View>
+    const data = batchwisefee
+    return (
+        <Document>
+            {chunkArray(data, 32).map((chunk, pageIndex) => (
+                <Page size="A4" style={{ padding: 30, fontSize: 10 }}>
 
-            <View style={{
-                width:"100%",
-                height:"10%",
-                border:"1px solid black"
-            }}>
-                    <View style={{
-                    width:"100%",
-                    height:"33.33%",
-                    textAlign:"center"
-                }}>
-                <Text style={{fontSize: 9, 
-                fontFamily: 'Poppins',
-                fontWeight: 600,
-                }}>
-                   Batch Wise Fees Report
-                      </Text>
+                    <View style={{ textAlign: "left", marginLeft: "15px" }}>
+                        <Text style={{
+                            fontSize: 9, fontFamily: 'Poppins',
+                            fontWeight: 600,
+                        }}>Suvidya Institute Of Techonology Pvt. Ltd.</Text>
                     </View>
-                <View style={{
-                width:"100%",
-                height:"33.33%",
-                
-                flexDirection:"row"
-            }}>
-                <View style={{
-                width:"50%",
-                height:"100%",
-                
-            }}>
-                <Text style={{fontSize: 8, 
-                fontFamily: 'Poppins',
-                marginLeft:"25px"
-                }}>
-                   Training Programme :
-                      </Text>
-            </View>
-            <View style={{
-                width:"50%",
-                height:"100%",
-            }}>
-                <Text style={{fontSize: 8, 
-                fontFamily: 'Poppins',
-                marginLeft:"40%"
-                }}>
-                   Batch Start Date : 
-                      </Text>
-            </View>
-            </View>
-            <View style={{
-                width:"100%",
-                height:"33.33%",
-                
-                flexDirection:"row"
-            }}>
-                <View style={{
-                width:"50%",
-                height:"100%",
-                
-            }}>
-                <Text style={{fontSize: 8, 
-                fontFamily: 'Poppins',
-                marginLeft:"25px"
-                }}>
-                   Batch Code :
-                      </Text>
-            </View>
-            <View style={{
-                width:"50%",
-                height:"100%",
-            }}>
-                <Text style={{fontSize: 8, 
-                fontFamily: 'Poppins',
-                marginLeft:"40%"
-                }}>
-                   Batch End Date : 
-                      </Text>
-            </View>
-            </View>
-            </View>
 
-            <View style={{
-                width:"100%",
-                height:"85%",
-                marginTop:"5px",
-                border:"1px solid black"
-            }}>
-                <View style={{
-                    width:"100%",
-                    height:"3%",
-                    borderBottom:"1px solid black",
-                    flexDirection:"row"
-                }}>
                     <View style={{
-                        width:"7%",
-                        height:"100%",
-                        justifyContent:"center",
-                        alignItems:"center",
-                        borderRight:"1px solid black"
+                        width: "100%",
+                        height: "10%",
+                        border: "1px solid black"
                     }}>
-                        <Text style={{
-                            fontSize: 8, 
-                            fontFamily: 'Poppins',
-                            fontWeight: 600
-                        }}>S.No.</Text>
-                    </View>
-                    <View style={{
-                        width:"49%",
-                        height:"100%",
-                        justifyContent:"center",
-                        alignItems:"center",
-                        borderRight:"1px solid black"
-                    }}>
-                        <Text style={{
-                            fontSize: 8, 
-                            fontFamily: 'Poppins',
-                            fontWeight: 600
-                        }}>Student Name</Text>
-                    </View>
-                    <View style={{
-                        width:"14.66%",
-                        height:"100%",
-                        justifyContent:"center",
-                        alignItems:"center",
-                        borderRight:"1px solid black"
-                    }}>
-                        <Text style={{
-                            fontSize: 8, 
-                            fontFamily: 'Poppins',
-                            fontWeight: 600
-                        }}>Amount</Text>
-                    </View>
-                    <View style={{
-                        width:"14.66%",
-                        height:"100%",
-                        justifyContent:"center",
-                        alignItems:"center",
-                        borderRight:"1px solid black"
-                    }}>
-                        <Text style={{
-                            fontSize: 8, 
-                            fontFamily: 'Poppins',
-                            fontWeight: 600
-                        }}>Paid Amount</Text>
-                    </View>
-                    <View style={{
-                        width:"14.66%",
-                        height:"100%",
-                        justifyContent:"center",
-                        alignItems:"center",
-                    }}>
-                        <Text style={{
-                            fontSize: 8, 
-                            fontFamily: 'Poppins',
-                            fontWeight: 600
-                        }}>Rem Amount</Text>
-                    </View>
-                </View>
-                {/* output data randor */}
+                        <View style={{
+                            width: "100%",
+                            height: "33.33%",
+                            textAlign: "center"
+                        }}>
+                            <Text style={{
+                                fontSize: 9,
+                                fontFamily: 'Poppins',
+                                fontWeight: 600,
+                            }}>
+                                Batch Wise Fees Report
+                            </Text>
+                        </View>
+                        <View style={{
+                            width: "100%",
+                            height: "33.33%",
 
-                <View style={{
-                    width:"100%",
-                    height:"3%",
-                    borderBottom:"1px solid black",
-                    flexDirection:"row"
-                }}>
-                    <View style={{
-                        width:"7%",
-                        height:"100%",
-                        justifyContent:"center",
-                        alignItems:"center",
-                        borderRight:"1px solid black"
-                    }}>
-                        <Text style={{
-                            fontSize: 8, 
-                            fontFamily: 'Poppins',
-                            fontWeight: 600
-                        }}></Text>
+                            flexDirection: "row"
+                        }}>
+                            <View style={{
+                                width: "50%",
+                                height: "100%",
+
+                            }}>
+                                <Text style={{
+                                    fontSize: 8,
+                                    fontFamily: 'Poppins',
+                                    marginLeft: "25px"
+                                }}>
+                                    Training Programme :
+                                </Text>
+                            </View>
+                            <View style={{
+                                width: "50%",
+                                height: "100%",
+                            }}>
+                                <Text style={{
+                                    fontSize: 8,
+                                    fontFamily: 'Poppins',
+                                    marginLeft: "40%"
+                                }}>
+                                    Batch Start Date :
+                                </Text>
+                            </View>
+                        </View>
+                        <View style={{
+                            width: "100%",
+                            height: "33.33%",
+
+                            flexDirection: "row"
+                        }}>
+                            <View style={{
+                                width: "50%",
+                                height: "100%",
+
+                            }}>
+                                <Text style={{
+                                    fontSize: 8,
+                                    fontFamily: 'Poppins',
+                                    marginLeft: "25px"
+                                }}>
+                                    Batch Code :
+                                </Text>
+                            </View>
+                            <View style={{
+                                width: "50%",
+                                height: "100%",
+                            }}>
+                                <Text style={{
+                                    fontSize: 8,
+                                    fontFamily: 'Poppins',
+                                    marginLeft: "40%"
+                                }}>
+                                    Batch End Date :
+                                </Text>
+                            </View>
+                        </View>
                     </View>
+
                     <View style={{
-                        width:"49%",
-                        height:"100%",
-                        justifyContent: "center",
-                        paddingLeft: "5px",
-                        
-                        borderRight:"1px solid black"
+                        width: "100%",
+                        height: "83%",
+                        marginTop: "5px",
+                        border: "1px solid black"
                     }}>
-                        <Text style={{
-                            fontSize: 8, 
-                            fontFamily: 'Poppins',
-                            fontWeight: 600
-                        }}></Text>
+
+
+                        <View style={{
+                            width: "100%",
+                            height: "3%",
+                            borderBottom: "1px solid black",
+                            flexDirection: "row"
+                        }}>
+                            <View style={{
+                                width: "7%",
+                                height: "100%",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                borderRight: "1px solid black"
+                            }}>
+                                <Text style={{
+                                    fontSize: 8,
+                                    fontFamily: 'Poppins',
+                                    fontWeight: 600
+                                }}>S.No.</Text>
+                            </View>
+                            <View style={{
+                                width: "49%",
+                                height: "100%",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                borderRight: "1px solid black"
+                            }}>
+                                <Text style={{
+                                    fontSize: 8,
+                                    fontFamily: 'Poppins',
+                                    fontWeight: 600
+                                }}>Student Name</Text>
+                            </View>
+                            <View style={{
+                                width: "14.66%",
+                                height: "100%",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                borderRight: "1px solid black"
+                            }}>
+                                <Text style={{
+                                    fontSize: 8,
+                                    fontFamily: 'Poppins',
+                                    fontWeight: 600
+                                }}>Amount</Text>
+                            </View>
+                            <View style={{
+                                width: "14.66%",
+                                height: "100%",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                borderRight: "1px solid black"
+                            }}>
+                                <Text style={{
+                                    fontSize: 8,
+                                    fontFamily: 'Poppins',
+                                    fontWeight: 600
+                                }}>Paid Amount</Text>
+                            </View>
+                            <View style={{
+                                width: "14.66%",
+                                height: "100%",
+                                justifyContent: "center",
+                                alignItems: "center",
+                            }}>
+                                <Text style={{
+                                    fontSize: 8,
+                                    fontFamily: 'Poppins',
+                                    fontWeight: 600
+                                }}>Rem Amount</Text>
+                            </View>
+                        </View>
+                        {/* output data randor */}
+
+
+                        {chunk.map((item, index) => {
+                            return (
+                                <View style={{
+                                    width: "100%",
+                                    height: "3%",
+                                    borderBottom: "1px solid black",
+                                    flexDirection: "row"
+
+
+                                }} wrap={true} key={index}>
+                                    {/* <View break={index === 4} wrap={false} /> */}
+                                    <View style={{
+                                        width: "7%",
+                                        height: "100%",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        borderRight: "1px solid black"
+                                    }}>
+                                        <Text style={{
+                                            fontSize: 8,
+                                            fontFamily: 'Poppins',
+                                            fontWeight: 600
+                                        }}>{index + 1}</Text>
+                                    </View>
+                                    <View style={{
+                                        width: "49%",
+                                        height: "100%",
+                                        justifyContent: "center",
+                                        paddingLeft: "5px",
+
+                                        borderRight: "1px solid black"
+                                    }}>
+                                        <Text style={{
+                                            fontSize: 8,
+                                            fontFamily: 'Poppins',
+                                            fontWeight: 600
+                                        }}>{item.Student_Name}</Text>
+                                    </View>
+                                    <View style={{
+                                        width: "14.66%",
+                                        height: "100%",
+                                        justifyContent: "center",
+                                        alignItems: "flex-end",
+                                        paddingRight: "5px",
+                                        borderRight: "1px solid black"
+                                    }}>
+                                        <Text style={{
+                                            fontSize: 8,
+                                            fontFamily: 'Poppins',
+                                            fontWeight: 600
+                                        }}>{item.Amount}</Text>
+                                    </View>
+                                    <View style={{
+                                        width: "14.66%",
+                                        height: "100%",
+                                        justifyContent: "center",
+                                        alignItems: "flex-end",
+                                        paddingRight: "5px",
+                                        borderRight: "1px solid black"
+                                    }}>
+                                        <Text style={{
+                                            fontSize: 8,
+                                            fontFamily: 'Poppins',
+                                            fontWeight: 600
+                                        }}>{item.Total_Amt}</Text>
+                                    </View>
+                                    <View style={{
+                                        width: "14.66%",
+                                        height: "100%",
+                                        justifyContent: "center",
+                                        alignItems: "flex-end",
+                                        paddingRight: "5px",
+                                    }}>
+                                        <Text style={{
+                                            fontSize: 8,
+                                            fontFamily: 'Poppins',
+                                            fontWeight: 600
+                                        }}>{item.UnPaid_Amt}</Text>
+                                    </View>
+                                </View>
+                            )
+                        })}
+
+
                     </View>
-                    <View style={{
-                        width:"14.66%",
-                        height:"100%",
-                        justifyContent:"center",
-                        alignItems: "flex-end",
-                        paddingRight:"5px",
-                        borderRight:"1px solid black"
-                    }}>
-                        <Text style={{
-                            fontSize: 8, 
-                            fontFamily: 'Poppins',
-                            fontWeight: 600
-                        }}></Text>
-                    </View>
-                    <View style={{
-                        width:"14.66%",
-                        height:"100%",
-                        justifyContent:"center",
-                        alignItems: "flex-end",
-                        paddingRight:"5px",
-                        borderRight:"1px solid black"
-                    }}>
-                        <Text style={{
-                            fontSize: 8, 
-                            fontFamily: 'Poppins',
-                            fontWeight: 600
-                        }}></Text>
-                    </View>
-                    <View style={{
-                        width:"14.66%",
-                        height:"100%",
-                        justifyContent:"center",
-                        alignItems: "flex-end",
-                        paddingRight:"5px",
-                    }}>
-                        <Text style={{
-                            fontSize: 8, 
-                            fontFamily: 'Poppins',
-                            fontWeight: 600
-                        }}></Text>
-                    </View>
-                </View>
-            </View>
-        </Page>
-    </Document>
-  )
+                </Page>
+            ))}
+
+        </Document>
+    )
 }

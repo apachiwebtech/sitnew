@@ -9,7 +9,7 @@ import decryptedUserId from "../Utils/UserID";
 import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import { getRoleData } from "../Store/Role/role-action";
-import { useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import InquiryForm from "./InquiryForm";
 
 function AddRole() {
@@ -22,6 +22,8 @@ function AddRole() {
     const { inquiryid } = useParams();
 
     const student_id = localStorage.getItem("Student_id");
+
+    const navigate = useNavigate()
 
     const [value, setValue] = useState({
         date: "" || uid.date,
@@ -54,9 +56,9 @@ function AddRole() {
         return isValid;
     };
 
-    async function getinquiryDiscuss() {
+    async function getinquiryDiscuss(inquiry_id) {
         const data = {
-            inquiryid: inquiryid,
+            inquiryid: inquiryid || inquiry_id,
         };
         axios
             .post(`${BASE_URL}/inquirydiscuss_data`, data)
@@ -76,6 +78,7 @@ function AddRole() {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     };
 
+
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -92,14 +95,21 @@ function AddRole() {
             axios
                 .post(`${BASE_URL}/add_inquirydiscuss`, data)
                 .then((res) => {
-                    alert(res.data);
-                    setUid([]);
-                    setValue({
-                        date: "",
-                        discussion: "",
-                        nextdate: "",
-                    });
-                    getinquiryDiscuss();
+
+                    if(inquiryid == ':inquiryid'){
+                        alert(res.data.message);
+                        navigate(`/onlineinquiry/inquiryform/${res.data.inquiry_id}`)
+                    }else{
+                        alert(res.data);
+                        setUid([]);
+                        setValue({
+                            date: "",
+                            discussion: "",
+                            nextdate: "",
+                        });
+                        getinquiryDiscuss();
+                    }
+               
                 })
                 .catch((err) => {
                     console.log(err);

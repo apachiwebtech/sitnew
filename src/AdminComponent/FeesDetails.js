@@ -24,7 +24,7 @@ const FeesDetails = () => {
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
-    const [category, setCat] = useState("");
+    const [category, setCat] = useState("batchwise");
     const [value, setValue] = useState({
         
         course: "" || uid.course,
@@ -234,6 +234,7 @@ const FeesDetails = () => {
 
     const batchwisefeesdetailsnewpdf = async () => {
         const res = await axios.post(`${BASE_URL}/getbatchwisefees`, { batch_code: value.batch });
+
         const blob = await pdf(<BatchWiseFeesDetailsNewpdf batchwisefee = {res.data}/>).toBlob();
         const url = URL.createObjectURL(blob);
         window.open(url);
@@ -304,8 +305,8 @@ const FeesDetails = () => {
                                                                     <RadioGroup
 
                                                                         row aria-labelledby='demo-row-radio-button-group-lable'
-                                                                        name='row-radio-button-group'>
-                                                                        <FormControlLabel value="batchwise" control={<Radio />} label="Batch Wise Fees Details New"  onChange={(e) => setCat(e.target.value)}  />
+                                                                        name='row-radio-button-group' value={category}>
+                                                                        <FormControlLabel value="batchwise" control={<Radio/>} label="Batch Wise Fees Details New"  onChange={(e) => setCat(e.target.value)}  />
                                                                         <FormControlLabel value="feesrecord" control={<Radio />} label="Fees Record New" />
                                                                         <FormControlLabel value="facultypayment" control={<Radio />} label="Batch Wise Faculty Payment" />
 

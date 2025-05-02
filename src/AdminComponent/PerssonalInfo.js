@@ -317,7 +317,9 @@ const PerssonalInfo = () => {
                 const dataw = { batch: personalInfo.Batch_Code }
 
                 const currentDate = new Date();
-                const formattedDate = `${String(currentDate.getDate()).padStart(2, '0')}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${currentDate.getFullYear()}`;
+                const formattedDate = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}`;
+                console.log(formattedDate); // Output: 2024-11-08
+                
                 // console.log(formattedDate); // Output: 08-11-2024
 
 

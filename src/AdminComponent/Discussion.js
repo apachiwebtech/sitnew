@@ -227,7 +227,7 @@ const Discussion = () => {
                     style={{ width: "100%", padding: "10px 0" }}
                   >
                     <div>
-                      <h4 class="card-title">Add Company Information</h4>
+                      <h4 class="card-title">Add Discussion</h4>
                     </div>
                     <button
                       className="btn btn-success"

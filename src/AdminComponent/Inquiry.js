@@ -289,8 +289,12 @@ const Inquiry = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         let response;
+        let data; // <-- move `data` outside
+
         if (validateForm()) {
             if (inquiryid == ":inquiryid") {
+
+
                 response = await fetch(`${BASE_URL}/postInquiry`, {
                     method: "POST",
                     body: JSON.stringify({
@@ -320,6 +324,11 @@ const Inquiry = () => {
                         "Content-Type": "application/json",
                     },
                 });
+                data = await response.json();  // <-- only here
+                alert(data.message);
+                navigate(`/onlineinquiry/inquiryform/${data.inquiryid}`);
+
+
             } else {
                 response = await fetch(`${BASE_URL}/updateInquiry`, {
                     method: "POST",
@@ -351,14 +360,13 @@ const Inquiry = () => {
                         "Content-Type": "application/json",
                     },
                 });
+
+                data = await response.json();  // <-- for update as well
+                alert(data.message);
+                navigate("/inquirylisting");
             }
 
-            const data = await response.json();
 
-            alert(data.message);
-            //   window.location.pathname = '/inquirylisting'
-
-            navigate("/inquirylisting");
         }
     };
 
