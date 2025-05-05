@@ -21,7 +21,9 @@ import { StyledDataGrid } from "./StyledDataGrid";
 import { param } from "jquery";
 import _debounce from "lodash.debounce";
 import { formatDate } from "../Utils/dateFormat";
-
+import { useDispatch, useSelector } from "react-redux";
+import { getRoleData } from "../Store/Role/role-action";
+import Cookies from "js-cookie";
 
 
 
@@ -51,9 +53,9 @@ const InquiryListing = () => {
         to_date: "",
     });
     const [paginationModel, setPaginationModel] = useState({
-            pageSize: 50,
-            page: 0,
-          });
+        pageSize: 50,
+        page: 0,
+    });
 
     const getInquiryData = async () => {
         setLoading(true);
@@ -164,12 +166,12 @@ const InquiryListing = () => {
         setUid([]);
     }, []);
 
-    
+
     const handleInputChange = _debounce((newValue) => {
         setText(newValue);
 
 
-        console.log(newValue , "%$^&*(*")
+        console.log(newValue, "%$^&*(*")
 
         if (searchwise == "BatchWise") {
             getBatchcode(newValue);
@@ -347,35 +349,35 @@ const InquiryListing = () => {
             headerName: "Discussion",
             width: 390,
             renderCell: (params) => {
-              const isUnread = params.row.IsUnread === 0;
-          
-              return (
-                <div
-                  style={{
-                    display: "-webkit-box",
-                    WebkitLineClamp: 2,               // Limit to 2 lines
-                    WebkitBoxOrient: "vertical",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    lineHeight: "1.4",
-                    maxHeight: "2.8em",              // lineHeight * 2
-                  }}
-                >
-                  <p
-                    className={`font-12 ${isUnread ? "text-danger" : ""}`}
-                    style={{
-                      margin: 0,
-                      whiteSpace: "normal",
-                    }}
-                  >
-                    {params.row.Discussion}
-                  </p>
-                </div>
-              );
+                const isUnread = params.row.IsUnread === 0;
+
+                return (
+                    <div
+                        style={{
+                            display: "-webkit-box",
+                            WebkitLineClamp: 2,               // Limit to 2 lines
+                            WebkitBoxOrient: "vertical",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            lineHeight: "1.4",
+                            maxHeight: "2.8em",              // lineHeight * 2
+                        }}
+                    >
+                        <p
+                            className={`font-12 ${isUnread ? "text-danger" : ""}`}
+                            style={{
+                                margin: 0,
+                                whiteSpace: "normal",
+                            }}
+                        >
+                            {params.row.Discussion}
+                        </p>
+                    </div>
+                );
             },
-          },
-          
-          
+        },
+
+
         {
             field: "present_mobile",
             headerName: "Mobile",
@@ -464,19 +466,21 @@ const InquiryListing = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <Link to={`/inquiry/${params.row.id}`}>
+                        {roleaccess > 2 && <Link to={`/inquiry/${params.row.id}`}>
                             <EditIcon style={{ cursor: "pointer" }} />
-                        </Link>
-                        <DeleteIcon
+                        </Link>}
+
+                        {roleaccess > 3 && <DeleteIcon
                             style={{ color: "red", cursor: "pointer" }}
                             onClick={() => handleClick(params.row.id)}
-                        />
-                        <Switch
+                        />}
+                        {roleaccess > 2 && <Switch
                             {...label}
                             onChange={() => handleswitchchange(params.row.isActive, params.row.id)}
                             defaultChecked={params.row.isActive == 0 ? false : true}
                             color="secondary"
-                        />
+                        />}
+
                     </>
                 );
             },
@@ -492,12 +496,25 @@ const InquiryListing = () => {
     //     console.log(param);
     // };
 
+
+    const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 22,
+    };
+
+    const dispatch = useDispatch();
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata));
+    }, []);
+
     return (
         <div className={`container-fluid page-body-wrapper `}>
             <InnerHeader />
             {loading && <Loader />}
 
-            <div className="main-panel" style={{ display: loading ? "none" : "block" }}>
+            {roleaccess > 1 && <div className="main-panel" style={{ display: loading ? "none" : "block" }}>
                 <div className="content-wrapper">
                     <div className="row">
                         <div className="col-lg-12">
@@ -562,14 +579,14 @@ const InquiryListing = () => {
                                                                     searchwise === "NameWise"
                                                                         ? option.Student_Name
                                                                         : searchwise === "BatchWise"
-                                                                        ? option.Batch_code
-                                                                        : searchwise === "EmailWise"
-                                                                        ? option.Email
-                                                                        : searchwise === "MobileWise"
-                                                                        ? option.Present_Mobile
-                                                                        : searchwise === "CourseWise"
-                                                                        ? option.Course_Name
-                                                                        : "" // Provide a default fallback
+                                                                            ? option.Batch_code
+                                                                            : searchwise === "EmailWise"
+                                                                                ? option.Email
+                                                                                : searchwise === "MobileWise"
+                                                                                    ? option.Present_Mobile
+                                                                                    : searchwise === "CourseWise"
+                                                                                        ? option.Course_Name
+                                                                                        : "" // Provide a default fallback
                                                             } // Dynamically display the label based on `searchdata`
                                                             value={selectedStudent} // Use a state to manage the selected value
                                                             onChange={(e, newValue) => handleSearchChange(newValue)} // `newValue` is the selected object
@@ -581,14 +598,14 @@ const InquiryListing = () => {
                                                                     {searchwise === "NameWise"
                                                                         ? option.Student_Name
                                                                         : searchwise === "BatchWise"
-                                                                        ? option.Batch_code
-                                                                        : searchwise === "EmailWise"
-                                                                        ? option.Email
-                                                                        : searchwise === "MobileWise"
-                                                                        ? option.Present_Mobile
-                                                                        : searchwise === "CourseWise"
-                                                                        ? option.Course_Name
-                                                                        : ""}{" "}
+                                                                            ? option.Batch_code
+                                                                            : searchwise === "EmailWise"
+                                                                                ? option.Email
+                                                                                : searchwise === "MobileWise"
+                                                                                    ? option.Present_Mobile
+                                                                                    : searchwise === "CourseWise"
+                                                                                        ? option.Course_Name
+                                                                                        : ""}{" "}
                                                                     {/* Dynamically render the option */}
                                                                 </li>
                                                             )}
@@ -627,16 +644,16 @@ const InquiryListing = () => {
                                         <div className="col-lg-5">
                                             <div className="m-2 float-right">
                                                 <span className="mx-4">Total Inquiry : {totalstudent}</span>
-                                                <Link to="/onlineinquiry/inquiryform/:inquiryid">
+                                                {roleaccess > 1 && <Link to="/onlineinquiry/inquiryform/:inquiryid">
                                                     {" "}
                                                     <button className="btn btn-success">Add +</button>
-                                                </Link>
+                                                </Link>}
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div className="card" style={ { height: "600px", overflow: "hidden", border:"nono"}}>
+                                <div className="card" style={{ height: "600px", overflow: "hidden", border: "nono" }}>
                                     <StyledDataGrid
                                         rows={rowsWithIds}
                                         columns={columns}
@@ -647,52 +664,52 @@ const InquiryListing = () => {
                                         paginationMode="server"
                                         onPaginationModelChange={paginationModel}
                                         getRowId={(row) => row.id}
-                                        hideFooter 
+                                        hideFooter
                                         sx={{
                                             "& .MuiDataGrid-cell": {
-                                              borderRight: "1px solid #ccc", // Add border to cells
+                                                borderRight: "1px solid #ccc", // Add border to cells
                                             },
                                             "& .MuiDataGrid-columnHeaders": {
-                                            //   borderBottom: "2px solid #000", // Add border below header
+                                                //   borderBottom: "2px solid #000", // Add border below header
                                             },
-                                          }}
-                                        //   slots={{
-                                        //     toolbar: GridToolbar
-                                        // }}
-                                        // pagination
-                                        //     paginationModel={paginationModel}
-                                        //     onPaginationModelChange={setPaginationModel}
-                                        //     pageSizeOptions= {[50]}
-                                        //     autoHeight={false}
-                                        //     sx={{
-                                        //       height: 500, // Ensure enough height for pagination controls
-                                        //       '& .MuiDataGrid-footerContainer': {
-                                        //         justifyContent: 'flex-end',
-                                        //       },
-                                        //     }}
-                                        //     slotProps={{
-                                        //       toolbar: {
-                                        //         showQuickFilter: true,
-                                        //       },
-                                        //     }}
+                                        }}
+                                    //   slots={{
+                                    //     toolbar: GridToolbar
+                                    // }}
+                                    // pagination
+                                    //     paginationModel={paginationModel}
+                                    //     onPaginationModelChange={setPaginationModel}
+                                    //     pageSizeOptions= {[50]}
+                                    //     autoHeight={false}
+                                    //     sx={{
+                                    //       height: 500, // Ensure enough height for pagination controls
+                                    //       '& .MuiDataGrid-footerContainer': {
+                                    //         justifyContent: 'flex-end',
+                                    //       },
+                                    //     }}
+                                    //     slotProps={{
+                                    //       toolbar: {
+                                    //         showQuickFilter: true,
+                                    //       },
+                                    //     }}
                                     />
-                                     <div className="float-right py-2 mt-2  " style={{display:"flex", flexDirection:"row", justifyContent:"end"}}>
-                                        <button style={{marginRight:"0px"}}
+                                    <div className="float-right py-2 mt-2  " style={{ display: "flex", flexDirection: "row", justifyContent: "end" }}>
+                                        <button style={{ marginRight: "0px" }}
                                             onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
                                             disabled={page === 0} // Disable the "Previous" button on the first page
                                         >
                                             Previous
                                         </button>
 
-                                        <span style={{marginRight:"0px"}}>Page {page + 1}</span>
+                                        <span style={{ marginRight: "0px" }}>Page {page + 1}</span>
 
-                                        <button style={{marginRight:"50px"}}
+                                        <button style={{ marginRight: "50px" }}
                                             onClick={() => setPage((prev) => prev + 1)}
                                             disabled={!lastStudentId} // Disable the "Next" button if there is no lastStudentId (i.e., no data)
                                         >
                                             Next
                                         </button>
-                                    </div> 
+                                    </div>
 
                                     {confirmationVisibleMap[cid] && (
                                         <div className="confirm-delete">
@@ -715,7 +732,8 @@ const InquiryListing = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>}
+
         </div>
     );
 };

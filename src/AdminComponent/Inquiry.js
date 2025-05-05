@@ -298,6 +298,7 @@ const Inquiry = () => {
                 response = await fetch(`${BASE_URL}/postInquiry`, {
                     method: "POST",
                     body: JSON.stringify({
+                        Enquiry_Id: inquiryid,
                         firstname: value.firstname,
                         gender: value.gender,
                         dob: value.dob,
