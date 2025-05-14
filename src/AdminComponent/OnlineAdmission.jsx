@@ -8,6 +8,10 @@ import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import Loader from './Loader';
 import { StyledDataGrid } from "./StyledDataGrid";
+import { useDispatch, useSelector } from 'react-redux';
+import Cookies from 'js-cookie';
+import { getRoleData } from '../Store/Role/role-action';
+
 
 const OnlineAdmissions = () => {
 
@@ -57,97 +61,179 @@ const OnlineAdmissions = () => {
             </GridToolbarContainer>
         );
     }
+ const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 23
+    }
 
+    const dispatch = useDispatch()
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata))
+    }, [])
 
     const columns = [
-        {
-            field: 'index',
-            headerName: 'Id',
-            type: 'number',
-            align: 'center',
-            headerAlign: 'center',
-            flex: 1,
-            filterable: false,
-        },
-        {
-            field: 'Student_Name', headerName: 'Student Name', flex: 2, renderCell: (params) => {
-                return (
-                    <>
-                        {params.row.Status == 'Closed' ? <p className='text-danger'>{params.row.Student_Name}</p> : params.row.Status == 'Accepted' ? <p className='text-success'>{params.row.Student_Name}</p> : <p>{params.row.Student_Name}</p>}
-                    </>
-                )
-            }
-        },
-        {
-            field: 'Email', headerName: 'Email', flex: 2, renderCell: (params) => {
-                return (
-                    <>
-                        {params.row.Status == 'Closed' ? <p className='text-danger'>{params.row.Email}</p> : params.row.Status == 'Accepted' ? <p className='text-success'>{params.row.Email}</p> : <p>{params.row.Email}</p>}
-                    </>
-                )
-            }
-        },
-        { field: 'Present_Mobile', headerName: 'Mobile', flex: 2 , renderCell: (params) => {
+    {
+        field: 'index',
+        headerName: 'Id',
+        type: 'number',
+        align: 'center',
+        headerAlign: 'center',
+        flex: 1,
+        filterable: false,
+    },
+    {
+        field: 'Student_Name',
+        headerName: 'Student Name',
+        flex: 2,
+        renderCell: (params) => {
             return (
                 <>
-                    {params.row.Status == 'Closed' ? <p className='text-danger'>{params.row.Present_Mobile}</p> : params.row.Status == 'Accepted' ? <p className='text-success'>{params.row.Present_Mobile}</p> : <p>{params.row.Present_Mobile}</p>}
+                    {params.row.Status === 'Closed' ? (
+                        <p className='text-danger'>{params.row.Student_Name}</p>
+                    ) : params.row.Status === 'Accepted' ? (
+                        <p className='text-success'>{params.row.Student_Name}</p>
+                    ) : params.row.IsUnread === '1' ? (
+                        <p>{params.row.Student_Name}</p>
+                    ) : (
+                        <p className="fw-bold">{params.row.Student_Name}</p>
+                    )}
                 </>
-            )
-        } },
-        { field: 'Batch_Code', headerName: 'Batch Code', flex: 2 , renderCell: (params) => {
+            );
+        }
+    },
+    {
+        field: 'Email',
+        headerName: 'Email',
+        flex: 2,
+        renderCell: (params) => {
             return (
                 <>
-                    {params.row.Status == 'Closed' ? <p className='text-danger'>{params.row.Batch_Code}</p> : params.row.Status == 'Accepted' ? <p className='text-success'>{params.row.Batch_Code}</p> : <p>{params.row.Batch_Code}</p>}
+                    {params.row.Status === 'Closed' ? (
+                        <p className='text-danger'>{params.row.Email}</p>
+                    ) : params.row.Status === 'Accepted' ? (
+                        <p className='text-success'>{params.row.Email}</p>
+                    ) : params.row.IsUnread === '1' ? (
+                        <p>{params.row.Email}</p>
+                    ) : (
+                        <p className="fw-bold">{params.row.Email}</p>
+                    )}
                 </>
-            )
-        } },
-        {
-            field: 'Admission_Dt',
-            headerName: 'Admission Date',
-            flex: 2,
-            renderCell: (params) => {
-              const formattedDate = params.row.Admission_Dt 
-                ? new Date(params.row.Admission_Dt).toISOString().split('T')[0].split('-').reverse().join('-') 
+            );
+        }
+    },
+    {
+        field: 'Present_Mobile',
+        headerName: 'Mobile',
+        flex: 2,
+        renderCell: (params) => {
+            return (
+                <>
+                    {params.row.Status === 'Closed' ? (
+                        <p className='text-danger'>{params.row.Present_Mobile}</p>
+                    ) : params.row.Status === 'Accepted' ? (
+                        <p className='text-success'>{params.row.Present_Mobile}</p>
+                    ) : params.row.IsUnread === '1' ? (
+                        <p>{params.row.Present_Mobile}</p>
+                    ) : (
+                        <p className="fw-bold">{params.row.Present_Mobile}</p>
+                    )}
+                </>
+            );
+        }
+    },
+    {
+        field: 'Batch_Code',
+        headerName: 'Batch Code',
+        flex: 2,
+        renderCell: (params) => {
+            return (
+                <>
+                    {params.row.Status === 'Closed' ? (
+                        <p className='text-danger'>{params.row.Batch_Code}</p>
+                    ) : params.row.Status === 'Accepted' ? (
+                        <p className='text-success'>{params.row.Batch_Code}</p>
+                    ) : params.row.IsUnread === '1' ? (
+                        <p>{params.row.Batch_Code}</p>
+                    ) : (
+                        <p className="fw-bold">{params.row.Batch_Code}</p>
+                    )}
+                </>
+            );
+        }
+    },
+    {
+        field: 'Admission_Dt',
+        headerName: 'Admission Date',
+        flex: 2,
+        renderCell: (params) => {
+            const formattedDate = params.row.Admission_Dt
+                ? new Date(params.row.Admission_Dt).toISOString().split('T')[0].split('-').reverse().join('-')
                 : '';
-          
-              return (
+            return (
                 <>
-                  {params.row.Status === 'Closed' ? (
-                    <p className="text-danger">{formattedDate}</p>
-                  ) : params.row.Status === 'Accepted' ? (
-                    <p className="text-success">{formattedDate}</p>
-                  ) : (
-                    <p>{formattedDate}</p>
-                  )}
+                    {params.row.Status === 'Closed' ? (
+                        <p className='text-danger'>{formattedDate}</p>
+                    ) : params.row.Status === 'Accepted' ? (
+                        <p className='text-success'>{formattedDate}</p>
+                    ) : params.row.IsUnread === '1' ? (
+                        <p >{formattedDate}</p>
+                    ) : (
+                        <p className="fw-bold">{formattedDate}</p>
+                    )}
                 </>
-              );
-            }
-          },
-          
-        {
-            field: 'Status', headerName: 'Status', flex: 2, renderCell: (params) => {
-                return (
-                    <>
-                        {params.row.Status == 'Closed' ? <p className='text-danger'>{params.row.Status}</p> : params.row.Status == 'Accepted' ? <p className='text-success'>{params.row.Status}</p> : <p>{params.row.Status}</p>}
-                    </>
-                )
-            }
-        },
-        {
-            field: 'actions',
-            type: 'actions',
-            headerName: 'Action',
-            flex: 1,
-            renderCell: (params) => {
-                return (
-                    <>
-                        <Link to={`/onlineadmissionform/personalinfo/${params.row.Student_Id}`}><EditIcon style={{ cursor: "pointer" }} /></Link>
-                        <Switch {...label} onChange={() => handleswitchchange(params.row.isActive, params.row.id)} defaultChecked={params.row.isActive == 0 ? false : true} color="secondary" />
-                    </>
-                )
-            }
-        },
-    ];
+            );
+        }
+    },
+    {
+        field: 'Status',
+        headerName: 'Status',
+        flex: 2,
+        renderCell: (params) => {
+            return (
+                <>
+                    {params.row.Status === 'Closed' ? (
+                        <p className='text-danger'>{params.row.Status}</p>
+                    ) : params.row.Status === 'Accepted' ? (
+                        <p className='text-success'>{params.row.Status}</p>
+                    ) : params.row.IsUnread === '1' ? (
+                        <p>{params.row.Status}</p>
+                    ) : (
+                        <p className="fw-bold">{params.row.Status}</p>
+                    )}
+                </>
+            );
+        }
+    },
+    ...(roleaccess > 2 ? [{
+        field: 'actions',
+        type: 'actions',
+        headerName: 'Action',
+        flex: 1,
+        renderCell: (params) => {
+            return (
+                <>
+                    {roleaccess > 2 && (
+                        <Link to={`/onlineadmissionform/personalinfo/${params.row.Student_Id}`}>
+                            <EditIcon style={{ cursor: "pointer" }} />
+                        </Link>
+                    )}
+                    {roleaccess > 2 && (
+                        <Switch
+                            {...label}
+                            onChange={() => handleswitchchange(params.row.isActive, params.row.id)}
+                            defaultChecked={params.row.isActive != 0}
+                            color="secondary"
+                        />
+                    )}
+                </>
+            );
+        }
+    }] : [])
+];
+
 
     const rowsWithIds = onlineAdmissions.map((row, index) => ({ index: index + 1, ...row }));
 
