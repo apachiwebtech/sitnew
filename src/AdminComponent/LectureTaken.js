@@ -294,11 +294,11 @@ const LectureTaken = () => {
 
 
 
-    async function getStudentDetail() {
+    async function getStudentDetail(Take_Id) {
         const response = await fetch(`${BASE_URL}/new_update_data`, {
             method: 'POST',
             body: JSON.stringify({
-                u_id: lecturetakenid,
+                u_id: Take_Id || lecturetakenid,
                 uidname: "Take_Id",
                 tablename: "lecture_taken_master"
             }),
@@ -390,8 +390,20 @@ const LectureTaken = () => {
                 .then((res) => {
                     console.log(res.data)
                     alert("Data submitted successfully")
-                    gettakedata(res.data.TakeId)
-                    setHide(true)
+                    // if (res.data.TakeId) {
+                    //     window.location.pathname = `/lecturetaken/${res.data.TakeId}`
+                    //     gettakedata(res.data.TakeId)
+                    //     setHide(true)
+                    // }
+
+                    const Take_Id = res.data?.TakeId
+                    if (Take_Id) {
+                        gettakedata(Take_Id);
+                        setHide(true);
+                        Navigate(`/lecturetaken/${Take_Id}`);
+                        getStudentDetail(Take_Id)
+                    }
+
                 })
 
 
@@ -533,7 +545,7 @@ const LectureTaken = () => {
     };
 
 
-  console.log(studentdata , "$%^&*")
+    console.log(studentdata, "$%^&*")
 
 
     return (
@@ -979,3 +991,5 @@ const LectureTaken = () => {
 }
 
 export default LectureTaken
+
+

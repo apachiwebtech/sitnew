@@ -55,9 +55,9 @@ const AddConsultancyMasterListing = () => {
     };
     
     const columns = [
-        { field: 'Comp_Name', headerName: 'Consultancy Name', flex: 1 },
+        { field: 'Comp_Name', headerName: 'Consultancy Name', width: 200 },
         { field: 'Contact_Person', headerName: 'Contact Person', width: 150 },
-        { field: 'Designation', headerName: 'Designation', width: 200 },
+        { field: 'Designation', headerName: 'Designation', width: 150 },
         { field: 'Address', headerName: 'Address', width: 350 },
         { field: 'City', headerName: 'City', width: 100 },
         { field: 'Tel', headerName: 'Telephone', width: 150 },

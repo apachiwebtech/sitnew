@@ -355,12 +355,12 @@ const InquiryListing = () => {
                     <div
                         style={{
                             display: "-webkit-box",
-                            WebkitLineClamp: 2,               // Limit to 2 lines
+                            WebkitLineClamp: 2,              
                             WebkitBoxOrient: "vertical",
                             overflow: "hidden",
                             textOverflow: "ellipsis",
                             lineHeight: "1.4",
-                            maxHeight: "2.8em",              // lineHeight * 2
+                            maxHeight: "2.8em",             
                         }}
                     >
                         <p

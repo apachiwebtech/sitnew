@@ -254,9 +254,10 @@ const LectureTakenListing = () => {
                         <Link to={`/lecturetaken/${params.row.Take_Id}`}>
                             <EditIcon style={{ cursor: "pointer" }} />
                         </Link>
-                        <DeleteIcon
+                        <DeleteIcon 
+                            disabled
                             style={{ color: "red", cursor: "pointer" }}
-                            onClick={() => handleClick(params.row.Take_Id)}
+                            // onClick={() => handleClick(params.row.Take_Id)}
                         />
                         {/* <Switch {...label} onChange={() => handleswitchchange(params.row.isActive, params.row.id)} defaultChecked={params.row.isActive == 0 ? false : true} color="secondary" /> */}
                     </>

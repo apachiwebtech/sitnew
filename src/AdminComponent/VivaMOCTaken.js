@@ -63,11 +63,11 @@ const VivaMOCTaken = () => {
     }
 
 
-    async function getMocDetail() {
+    async function getMocDetail(Take_Id) {
         const response = await fetch(`${BASE_URL}/new_update_data`, {
             method: 'POST',
             body: JSON.stringify({
-                u_id: vivamoctakenid,
+                u_id:Take_Id || vivamoctakenid,
                 uidname: "Take_Id",
                 tablename: "viva_taken"
             }),
@@ -225,10 +225,17 @@ const VivaMOCTaken = () => {
             axios.post(`${BASE_URL}/add_vivamoctaken`, data)
 
                 .then((res) => {
-                    console.log(res)
+
                     alert("Data added successfully")
-                    gettakedata(res.data.Take_Id)
-                    setHide(true)
+
+
+                    const Take_Id = res.data?.Take_Id 
+                    if (Take_Id) {
+                        gettakedata(Take_Id);
+                        setHide(true);
+                        Navigate(`/vivamoctaken/${Take_Id}`);
+                        getMocDetail(Take_Id)
+                    }
                 })
 
         }

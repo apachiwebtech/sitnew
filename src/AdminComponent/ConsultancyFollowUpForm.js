@@ -120,6 +120,7 @@ const ConsultancyFollowUpForm = ({onClose, formState, setFormState, onSubmit, is
                                     <option value="">--Select Purpose--</option>
                                     <option>Meeting</option>
                                     <option>Placements</option>
+                                    <option>Placements Received</option>
                                     <option>Training</option>
                                     <option>Project</option>
                                     <option>Others</option>

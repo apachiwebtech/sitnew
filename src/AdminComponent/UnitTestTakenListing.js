@@ -159,7 +159,9 @@ const UnitTestTakenListing = () => {
                 return (
                     <>
                        <Link to={`/unittesttaken/${params.row.Take_Id}`}> <EditIcon style={{ cursor: "pointer" }} /></Link>
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.Take_Id)} />
+                        <DeleteIcon style={{ color: "red", cursor: "pointer" }}
+                        //  onClick={() => handleClick(params.row.Take_Id)}
+                          />
                     </>
                 )
             }

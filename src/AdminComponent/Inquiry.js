@@ -327,7 +327,8 @@ const Inquiry = () => {
                 });
                 data = await response.json();  // <-- only here
                 alert(data.message);
-                navigate(`/onlineinquiry/inquiryform/${data.inquiryid}`);
+                // navigate(`/onlineinquiry/inquiryform/${data.inquiryid}`);
+                navigate(`/inquirylisting`);
 
 
             } else {
@@ -716,7 +717,16 @@ const Inquiry = () => {
                                                                 id="exampleFormControlSelect1"
                                                                 value={value.selectedProgramme}
                                                                 name="selectedProgramme"
-                                                                onChange={onhandleChange}
+                                                                onChange={(e) => {
+                                                                    onhandleChange(e)
+                                                                    setCategoryId('')
+                                                                    setValue((prev) => ({
+                                                                        ...prev,
+                                                                        category: '',
+                                                                        batch: ''
+                                                                    }))
+
+                                                                }}
                                                                 defaultValue={value.selectedProgramme}
                                                             >
                                                                 <option>Select Course</option>

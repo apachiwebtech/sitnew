@@ -147,7 +147,7 @@ const AssignmentsTakenListing = () => {
                         </Link>
                         <DeleteIcon
                             style={{ color: "red", cursor: "pointer" }}
-                            onClick={() => handleClick(params.row.Given_Id)}
+                            // onClick={() => handleClick(params.row.Given_Id)}
                         />
                     </>
                 );

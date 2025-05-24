@@ -278,7 +278,7 @@ const StudentDiscussion = () => {
 
             <BootstrapDialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
                 <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-                    Add Company Information
+                    Add Discussion
                 </DialogTitle>
                 <IconButton
                     aria-label="close"

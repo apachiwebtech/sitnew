@@ -153,11 +153,11 @@ const UnitTestTaken = () => {
     };
 
 
-    async function getStudentDetail() {
+    async function getStudentDetail(Take_Id) {
         const response = await fetch(`${BASE_URL}/new_update_data`, {
             method: 'POST',
             body: JSON.stringify({
-                u_id: unittesttakenid,
+                u_id: Take_Id || unittesttakenid,
                 uidname: "Take_Id",
                 tablename: "Test_taken_master"
             }),
@@ -230,14 +230,22 @@ const UnitTestTaken = () => {
             }
 
 
-            axios.post(`${BASE_URL}/add_unittesttaken`, data)
-
-                .then((res) => {
-                    console.log(res)
-                    alert("Data added successfully")
-                    gettakedata(res.data.Take_Id)
-                    setHide(true)
-                })
+            try {
+                const res = await axios.post(`${BASE_URL}/add_unittesttaken`, data);
+                console.log(res);
+                alert("Data added successfully");
+    
+                const Take_Id = res.data?.Take_Id 
+                if (Take_Id) {
+                    gettakedata(Take_Id);
+                    setHide(true);
+                    Navigate(`/unittesttaken/${Take_Id}`);
+                    getStudentDetail(Take_Id)
+                }
+            } catch (error) {
+                console.error("Error submitting data:", error);
+                alert("Something went wrong while submitting the data.");
+            }
 
 
 
@@ -331,6 +339,7 @@ const UnitTestTaken = () => {
                                                         )
                                                     })}
                                                 </select>
+                                                {<span className="text-danger">{error.coursename}</span>}
                                             </div>
 
                                             <div class="form-group col-lg-3">
@@ -345,6 +354,7 @@ const UnitTestTaken = () => {
                                                     })}
 
                                                 </select>
+                                                {<span className="text-danger">{error.batchcode}</span>}
                                             </div>
 
                                             <div class="form-group col-lg-3">
@@ -358,6 +368,7 @@ const UnitTestTaken = () => {
                                                     })}
 
                                                 </select>
+                                                {<span className="text-danger">{error.utname}</span>}
                                             </div>
                                             <div class="form-group col-lg-3">
                                                 <lable for="exampleInputUsername">Max Marks</lable>
@@ -367,14 +378,14 @@ const UnitTestTaken = () => {
                                                 <label for="exampleFormControlSelect1">Unit Test Date<span className='text-danger'>*</span> </label>
                                                 <input type="date" class="form-control" id="exampleFormControlSelect1" value={value.utdate} name='utdate' onChange={onhandleChange} />
                                                 <option></option>
-
+                                                {<span className="text-danger">{error.utdate}</span>}
 
                                             </div>
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Unit No<span className='text-danger'>*</span> </label>
                                                 <input type="number" class="form-control" id="exampleFormControlSelect1" value={value.unitno} name='unitno' onChange={onhandleChange} />
                                                 <option></option>
-
+                                                {<span className="text-danger">{error.unitno}</span>}
 
                                             </div>
 

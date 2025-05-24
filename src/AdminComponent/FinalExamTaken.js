@@ -64,6 +64,10 @@ const Navigate = useNavigate()
             isValid = false;
             newErrors.date = "Date is Required"
         }
+        if (!value.Test_No) {
+            isValid = false;
+            newErrors.Test_No = "Test No is Required"
+        }
 
         setError(newErrors)
         return isValid
@@ -78,11 +82,11 @@ const Navigate = useNavigate()
 
 
 
-    async function getMocDetail() {
+    async function getMocDetail(Take_Id) {
         const response = await fetch(`${BASE_URL}/new_update_data`, {
             method: 'POST',
             body: JSON.stringify({
-                u_id: finalexamtakenid,
+                u_id:Take_Id || finalexamtakenid,
                 uidname: "Take_Id",
                 tablename: "Final_exam_master"
             }),
@@ -136,8 +140,15 @@ const Navigate = useNavigate()
                     // })
 
                     gettakedata(res.data.TakeId)
-
                     setHide(true)
+
+                    const Take_Id = res.data?.TakeId; 
+                    if (Take_Id) {
+                        gettakedata(Take_Id);
+                        setHide(true);
+                        Navigate(`/finalexamtaken/${Take_Id}`);
+                        getMocDetail(Take_Id)
+                    }
 
                 })
                 .catch((err) => {
@@ -384,10 +395,11 @@ const Navigate = useNavigate()
                                                 {<span className="text-danger"> {error.date} </span>}
                                             </div>
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">Test No<span className="text-danger"></span></label>
+                                                <label for="exampleInputUsername1">Test No<span className="text-danger">*</span></label>
                                                 <input type="number" class="form-control" id="exampleInputUsername1" value={value.Test_No} name='Test_No' onChange={onhandleChange} />
-                                               
+                                                {<span className="text-danger"> {error.Test_No} </span>}
                                             </div>
+                                            
 
 
 

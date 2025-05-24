@@ -151,11 +151,12 @@ const AssignmentsTaken = () => {
         });
     };
 
-    async function getUpdate() {
+    async function getUpdate(Take_Id) {
+
         const response = await fetch(`${BASE_URL}/new_update_data`, {
             method: "POST",
             body: JSON.stringify({
-                u_id: assignmentstakenid,
+                u_id:Take_Id || assignmentstakenid,
                 uidname: "Given_Id",
                 tablename: "Assignment_taken",
             }),
@@ -225,9 +226,20 @@ const AssignmentsTaken = () => {
                 .then((res) => {
                     console.log(res);
                     alert("Data added successfully");
-                    gettakedata(res.data.TakeId);
-                    setHide(true);
-                    // Navigate('/assignmentstaken')
+                    // if (res.data.TakeId) {
+                    //     window.location.pathname = `/assignmentstaken/${res.data.TakeId}`
+                    //     gettakedata(res.data.TakeId);
+                    //     setHide(true);
+                    // }
+
+                    const Take_Id = res.data?.TakeId 
+                    if (Take_Id) {
+                        gettakedata(Take_Id);
+                        setHide(true);
+                        Navigate(`/assignmentstaken/${Take_Id}`);
+                        getUpdate(Take_Id)
+                    }
+
                 });
         }
     };

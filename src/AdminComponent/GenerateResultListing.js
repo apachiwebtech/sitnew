@@ -186,7 +186,9 @@ const GenerateResultListing = () => {
                 return (
                     <>
                         <Link to={`/generateresult/${params.row.Id}`} > <EditIcon style={{ cursor: "pointer" }}  /></Link>
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.Id)} />
+                        <DeleteIcon style={{ color: "red", cursor: "pointer" }}
+                        //  onClick={() => handleClick(params.row.Id)}
+                          />
                     </>
                 )
             }

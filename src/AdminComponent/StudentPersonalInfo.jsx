@@ -48,6 +48,7 @@ const StudentPersonalInfo = () => {
         perWatsapp: "",
         sdate: "",
         edate: "",
+        Student_Code : ""
     });
     const { admissionid } = useParams();
 
@@ -153,6 +154,7 @@ const StudentPersonalInfo = () => {
             edate: data[0].Edate,
             online_stud_id: data[0].online_stud_id,
             Inquiry_Type: data[0].Inquiry_Type,
+            Student_Code: data[0].Student_Code,
         }));
     };
 
@@ -270,7 +272,7 @@ const StudentPersonalInfo = () => {
 
                                                         <div className="form-group col-lg-8">
                                                             <label for="exampleInputUsername1">
-                                                                Name<span className="text-danger">*</span>
+                                                                Name<span className="text-danger">*</span> <b>ID:</b> <span>{personalInfo.Student_Code }</span>
                                                             </label>
                                                             <input
                                                                 type="text"

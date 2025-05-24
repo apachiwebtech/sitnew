@@ -286,7 +286,7 @@ const Discussion = () => {
         open={open}
       >
         <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-          Add Company Information
+          Add Discussion
         </DialogTitle>
         <IconButton
           aria-label="close"
