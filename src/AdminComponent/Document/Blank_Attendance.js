@@ -75,6 +75,10 @@ const BlankAttendance = (props) => {
 
     const currentdate = date.toISOString().split("T")[0];
 
+    const getShortText = (text, maxChars = 30) => {
+        return text.length > maxChars ? text.substring(0, maxChars) + '...' : text;
+    };
+
     return (
         <Document>
             <Page size="A4" style={styles.page}>
@@ -166,12 +170,20 @@ const BlankAttendance = (props) => {
                                 flex: "5",
                             }}
                         >
-                            <View style={{ flex: "7" }}>
+                            <View style={{ flex: "3" }}>
                                 <View style={{ flexDirection: "row" }}>
-                                    <Text style={{ color: "lighgrey", fontSize: "8px" }}>Training Programme:</Text>
-                                    <Text style={{ color: "black" }}> {Course_Name}</Text>
+                                    <Text style={{ color: "black", fontSize: "8px" }}>Training Programme:</Text>
                                 </View>
                             </View>
+                            <View style={{ flex: "4" }}>
+                                <View style={{ flexDirection: "row" }}>
+                                    <Text style={{ fontSize: 8, color: "black" }}>
+                                        {getShortText(Course_Name, 25)}
+                                    </Text>
+
+                                </View>
+                            </View>
+
                             <View style={{ flex: "3" }}>
                                 <Text style={{ color: "black", borderLeft: "1px solid black", padding: "0px 10px" }}>
                                     {batch_id}
@@ -351,7 +363,7 @@ const BlankAttendance = (props) => {
                                                                 style={{
                                                                     color: "#000",
                                                                     fontSize: "6px",
-                                                                    borderBottom: "1px solid black",
+                                                                    borderBottom: rating !== "UNSATISFACTORY" ? "1px solid black" : "none",
                                                                 }}
                                                             >
                                                                 {rating}
@@ -370,7 +382,7 @@ const BlankAttendance = (props) => {
                                                                 style={{
                                                                     color: "#fff",
                                                                     fontSize: "6px",
-                                                                    borderBottom: "1px solid black",
+                                                                    borderBottom: idx !== 4 ? "1px solid black" : "none",
                                                                     visibility: "hidden",
                                                                 }}
                                                             >
@@ -395,7 +407,7 @@ const BlankAttendance = (props) => {
                     <Text>F/TD/05/01</Text>
                 </View>
             </Page>
-        </Document>
+        </Document >
     );
 };
 
