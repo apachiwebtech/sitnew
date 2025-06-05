@@ -5,7 +5,9 @@ import React, { useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 //import FormControlLabel from '@mui/material/FormControlLabel';
-
+import { useDispatch, useSelector } from "react-redux";
+import { getRoleData } from "../Store/Role/role-action";
+import Cookies from "js-cookie";
 
 const BatchRecord = () => {
 
@@ -196,7 +198,17 @@ const BatchRecord = () => {
 
  
     
+const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 48,
+    };
 
+    const dispatch = useDispatch();
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata));
+    }, []);
 
 
     const columns = [
@@ -215,7 +227,7 @@ const BatchRecord = () => {
         { field: 'description', headerName: 'Description', flex: 2},
         { field: 'feedback', headerName: 'FeedBack', flex: 2},
         
-        {
+        ...(roleaccess > 2 ? [{
             field: 'actions',
             type: 'actions',
             headerName: 'Action',
@@ -223,12 +235,12 @@ const BatchRecord = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
+                        {roleaccess > 2 && <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />}
+                        {roleaccess > 3 &&<DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />}
                     </>
                 )
             }
-        },
+        },] : [])
     ];
 
 

@@ -8,6 +8,10 @@ import InnerHeader from './InnerHeader';
 import { StyledDataGrid } from "./StyledDataGrid";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { useDispatch, useSelector } from 'react-redux';
+import Cookies from 'js-cookie';
+import { getRoleData } from '../Store/Role/role-action';
+
 
 const Assets = () => {
 
@@ -200,7 +204,18 @@ const Assets = () => {
 
 
 
+const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 72
+    }
 
+    const dispatch = useDispatch()
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata))
+    }, [])
 
     const columns = [
         {
@@ -248,8 +263,8 @@ const Assets = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
+                        {roleaccess > 2 && <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />}
+                        {roleaccess > 3 && <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />}
                     </>
                 )
             }

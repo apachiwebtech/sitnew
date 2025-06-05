@@ -17,6 +17,10 @@ import Select from "@mui/material/Select";
 import { StyledDataGrid } from "./StyledDataGrid";
 import { param } from "jquery";
 import _debounce from "lodash.debounce";
+import { useDispatch, useSelector } from 'react-redux';
+import Cookies from 'js-cookie';
+import { getRoleData } from '../Store/Role/role-action';
+
 
 const Students = () => {
     const [excelData, setExcelData] = useState([]);
@@ -87,6 +91,18 @@ const Students = () => {
                 setLoading(false);
             });
     };
+const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 25
+    }
+
+    const dispatch = useDispatch()
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata))
+    }, [])
 
     const columns = [
         {
@@ -105,7 +121,7 @@ const Students = () => {
         { field: "Present_Mobile", headerName: "mobile", flex: 2 },
         // { field: 'Qualification', headerName: 'Qualification', flex: 2 },
         { field: "Status", headerName: "Status", flex: 2, valueGetter: (params) => "Active" },
-        {
+        ...(roleaccess > 2 ? [{
             field: "actions",
             type: "actions",
             headerName: "Action",
@@ -113,19 +129,19 @@ const Students = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <Link to={`/admissionform/personalinfo/${params.row.Student_Id}`}>
+                        {roleaccess > 3 && (<Link to={`/admissionform/personalinfo/${params.row.Student_Id}`}>
                             <EditIcon style={{ cursor: "pointer" }} />
-                        </Link>
-                        <Switch
+                        </Link>)}
+                        {roleaccess > 2 && ( <Switch
                             {...label}
                             onChange={() => handleswitchchange(params.row.isActive, params.row.id)}
                             defaultChecked={params.row.isActive == 0 ? false : true}
                             color="secondary"
-                        />
+                        />)}
                     </>
                 );
             },
-        },
+        },] : [])
     ];
 
     const rowsWithIds = onlineAdmissions.map((row, index) => ({ index: index + 1, ...row }));
@@ -203,8 +219,15 @@ const Students = () => {
         };
 
         axios.post(`${BASE_URL}/getserchresult`, data).then((res) => {
-            setStudents(res.data.data);
+            const student = (res.data.data)
+            setStudents(student);
             setTotalStudent(res.data.totalCount);
+
+           
+        });
+        console.log("hello")
+        students.forEach(student => {
+            console.log(student.Student_Name);
         });
     };
 

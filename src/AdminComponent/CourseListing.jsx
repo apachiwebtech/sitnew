@@ -11,6 +11,10 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import Loader from './Loader';
 import { StyledDataGrid } from './StyledDataGrid';
+import { useDispatch, useSelector } from 'react-redux';
+import Cookies from 'js-cookie';
+import { getRoleData } from '../Store/Role/role-action';
+
 
 const CACHE_KEY = 'course_data'; // Key for localStorage caching
 const CACHE_EXPIRY_MS = 1000 * 60 * 15; // Cache expiry time (15 minutes)
@@ -113,7 +117,18 @@ const CourseListing = () => {
 
 
 
+const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 13
+    }
 
+    const dispatch = useDispatch()
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata))
+    }, [])
 
     const columns = [
         {
@@ -128,7 +143,7 @@ const CourseListing = () => {
         { field: 'Course_Name', headerName: 'Course Name', flex: 2 },
         { field: 'Course_Code', headerName: 'Course Code', flex: 2 },
         { field: 'Introduction', headerName: 'Introduction', flex: 2 },
-        {
+        ...(roleaccess > 2 ? [{
             field: 'actions',
             type: 'actions',
             headerName: 'Action',
@@ -136,16 +151,17 @@ const CourseListing = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <Link to={`/course/${params.row.Course_Id}`}><EditIcon style={{ cursor: "pointer" }}  /></Link>
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.Course_Id)} />
+                        {roleaccess > 2 && <Link to={`/course/${params.row.Course_Id}`}><EditIcon style={{ cursor: "pointer" }}  /></Link>}
+                        {roleaccess > 3 && <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.Course_Id)} />}
                     </>
                 )
             }
-        },
+        },] : [])
     ];
 
 
     const rowsWithIds = coursedata.map((row, index) => ({ index: index + 1, ...row }));
+
 
     return (
 
@@ -166,7 +182,7 @@ const CourseListing = () => {
                                             <h4 class="card-title">List of Course ({coursedata.length})</h4>
                                             
                                         </div>
-                                        <Link to='/course/:courseid'> <button className='btn btn-success'>Add +</button></Link>
+                                        {roleaccess > 1 && <Link to='/course/:courseid'> <button className='btn btn-success'>Add +</button></Link>}
 
                                     </div>
 

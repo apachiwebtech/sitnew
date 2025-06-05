@@ -9,6 +9,9 @@ import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import Loader from "./Loader";
 import { StyledDataGrid } from "./StyledDataGrid";
+import { useDispatch, useSelector } from 'react-redux';
+import Cookies from 'js-cookie';
+import { getRoleData } from '../Store/Role/role-action';
 
 function CustomToolbar() {
     return (
@@ -125,7 +128,18 @@ const InquiryCorporate = () => {
  }
 
 
+ const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 26
+    }
 
+    const dispatch = useDispatch()
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata))
+    }, [])
 
 
 
@@ -143,7 +157,7 @@ const InquiryCorporate = () => {
         { field: 'Course_Id', headerName: 'Course', flex: 1.5 },
         { field: 'Email', headerName: 'Email', flex: 1.5 },
         
-        {
+        ...(roleaccess > 2 ? [{
             field: 'actions',
             type: 'actions',
             headerName: 'Action',
@@ -151,13 +165,13 @@ const InquiryCorporate = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <Link to={`/addcorporateinquiry/${params.row.Id}`} ><EditIcon style={{ cursor: "pointer" }}  /></Link>
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.Id)} />
-                        <Switch {...label} onChange={() => handleswitchchange(params.row.isActive,params.row.id )} defaultChecked={params.row.isActive == 0 ? false : true} color="secondary" />
+                        {roleaccess >= 2 && (<Link to={`/addcorporateinquiry/${params.row.Id}`} ><EditIcon style={{ cursor: "pointer" }}  /></Link>)}
+                        {roleaccess > 3 && (<DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.Id)} />)}
+                        {roleaccess >= 2 && (<Switch {...label} onChange={() => handleswitchchange(params.row.isActive,params.row.id )} defaultChecked={params.row.isActive == 0 ? false : true} color="secondary" />)}
                     </>
                 )
             }
-        },
+        },] : [])
     ];
 
 

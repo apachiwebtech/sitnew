@@ -8,7 +8,9 @@ import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import { StyledDataGrid } from "./StyledDataGrid";
 //import AssignmentsTaken from "./AssignmentsTaken";
-
+import { useDispatch, useSelector } from "react-redux";
+import { getRoleData } from "../Store/Role/role-action";
+import Cookies from "js-cookie";
 const FeedBack1Listing = () => {
 
     const [uid, setUid] = useState([])
@@ -127,6 +129,17 @@ const FeedBack1Listing = () => {
 
 
 
+const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 22,
+    };
+
+    const dispatch = useDispatch();
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata));
+    }, []);
 
 
     const columns = [
@@ -145,7 +158,7 @@ const FeedBack1Listing = () => {
         { field: 'facultyname', headerName: 'Course Name', flex: 1.5 },
         { field: 'facultyname', headerName: 'Batch No.', flex: 1.5 },
 
-        {
+        ...(roleaccess > 2 ? [{
             field: 'actions',
             type: 'actions',
             headerName: 'Action',
@@ -153,14 +166,13 @@ const FeedBack1Listing = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <EditIcon style={{ cursor: "pointer" }} Link={() => handleUpdate(params.row.id)} />
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} Link={() => handleClick(params.row.id)} />
+                        {roleaccess > 2 && <EditIcon style={{ cursor: "pointer" }} Link={() => handleUpdate(params.row.id)} />}
+                        {roleaccess > 3 && <DeleteIcon style={{ color: "red", cursor: "pointer" }} Link={() => handleClick(params.row.id)} />}
                     </>
                 )
             }
-        },
+        },] : [])
     ];
-
 
 
     const rowsWithIds = feedback1data.map((row, index) => ({ index: index + 1, ...row }));
@@ -185,7 +197,7 @@ const FeedBack1Listing = () => {
                                         <div >
                                             <h4 class="card-title">VIEW STUDENT FEEDBACK ON TRAINING CO-ORDINATION - 1</h4>
                                         </div>
-                                        <Link to='/feedback1/:feedback1id'> <button className='btn btn-success'>Add +</button></Link>
+                                        {roleaccess > 1 &&<Link to='/feedback1/:feedback1id'> <button className='btn btn-success'>Add +</button></Link>}
 
 
                                     </div>

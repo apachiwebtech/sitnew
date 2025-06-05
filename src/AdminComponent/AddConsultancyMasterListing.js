@@ -8,6 +8,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import { StyledDataGrid } from "./StyledDataGrid";
+import { useDispatch, useSelector } from "react-redux";
+import { getRoleData } from "../Store/Role/role-action";
+import Cookies from "js-cookie";
 
 const AddConsultancyMasterListing = () => {
     const [deleteId, setDeleteId] = useState(null)
@@ -54,6 +57,19 @@ const AddConsultancyMasterListing = () => {
         }
     };
     
+
+const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 103,
+    };
+
+    const dispatch = useDispatch();
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata));
+    }, []);
+
     const columns = [
         { field: 'Comp_Name', headerName: 'Consultancy Name', width: 200 },
         { field: 'Contact_Person', headerName: 'Contact Person', width: 150 },
@@ -68,16 +84,16 @@ const AddConsultancyMasterListing = () => {
             width:200,
             renderCell: (params) => (
                 <>
-                    <EditIcon style={{ cursor: "pointer" }} onClick={() =>{navigate(`/consultancymaster/${params.row.Const_Id}`)}} />
-                    <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => setDeleteId(params.row.Const_Id)} />
-                    <Switch
+                    {roleaccess > 2 &&<EditIcon style={{ cursor: "pointer" }} onClick={() =>{navigate(`/consultancymaster/${params.row.Const_Id}`)}} />}
+                     {roleaccess > 3 &&<DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => setDeleteId(params.row.Const_Id)} />}
+                    {roleaccess > 2 &&<Switch
                         {...label}
                         onChange={() =>
                             handleSwitchChange(params.row.IsActive, params.row.Const_Id)
                          }
                         checked={params.row.IsActive === 1}
                         color="secondary"
-                    />
+                    />}
                 </>
             )
         },
@@ -95,7 +111,7 @@ const AddConsultancyMasterListing = () => {
                                 <div className="card-body">
                                     <div className='d-flex justify-content-between gap-3' style={{borderBottom: "2px solid #dce4ec", width: "100%", padding: "10px 0" }}>
                                         <h4 className="card-title">View Consultancy</h4>
-                                        <Link to='/consultancymaster/:consultancymasterid'><button className='btn btn-success'>Add +</button></Link>
+                                        {roleaccess > 1 &&<Link to='/consultancymaster/:consultancymasterid'><button className='btn btn-success'>Add +</button></Link>}
                                     </div>
                                     <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "hidden"}}>
                                         <StyledDataGrid

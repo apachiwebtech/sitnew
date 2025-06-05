@@ -8,6 +8,10 @@ import { Link } from "react-router-dom";
 import { BASE_URL } from "./BaseUrl";
 import InnerHeader from "./InnerHeader";
 import { StyledDataGrid } from "./StyledDataGrid";
+import { useDispatch, useSelector } from "react-redux";
+import { getRoleData } from "../Store/Role/role-action";
+import Cookies from "js-cookie";
+
 
 const AddFacultySalaryListing = () => {
     const [uid, setUid] = useState([]);
@@ -102,6 +106,19 @@ const AddFacultySalaryListing = () => {
         }
     };
 
+
+    const roledata = {
+            role: Cookies.get(`role`),
+            pageid: 78,
+        };
+    
+        const dispatch = useDispatch();
+        const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+    
+        useEffect(() => {
+            dispatch(getRoleData(roledata));
+        }, []);
+
     const columns = [
         { field: "Faculty_Name", headerName: "Faculty Name", flex: 1 },
         { field: "Faculty_Code", headerName: "Faculty Code", flex: 1 },
@@ -134,30 +151,30 @@ const AddFacultySalaryListing = () => {
         { field: "Net_Payment", headerName: "Net Payment", flex: 1 },
         { field: "Payment_Type", headerName: "Payment Type", flex: 1 },
         { field: "Cheque_No", headerName: "Cheque No", flex: 1 },
-        {
+        ...(roleaccess > 2 ? [{
             field: "actions",
             headerName: "Action",
             flex: 1,
             renderCell: (params) => {
                 return (
                     <>
-                        <Link to={`/addfacultysalry/${params.row.Salary_Id}`}>
+                        {roleaccess > 2 && <Link to={`/addfacultysalry/${params.row.Salary_Id}`}>
                             <EditIcon style={{ cursor: "pointer" }} />
-                        </Link>
-                        <DeleteIcon
+                        </Link>}
+                        {roleaccess > 3 && <DeleteIcon
                             style={{ color: "red", cursor: "pointer" }}
                             onClick={() => handleClick(params.row.id)}
-                        />
-                        <Switch
+                        />}
+                        {roleaccess > 2 && <Switch
                             {...label}
                             onChange={() => console.log("1")}
                             defaultChecked={params.row.isActive == 0 ? false : true}
                             color="secondary"
-                        />
+                        />}
                     </>
                 );
             },
-        },
+        },] : [])
     ];
 
     const rowsWithIds = inquiryData.map((row, index) => ({

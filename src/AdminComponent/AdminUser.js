@@ -112,6 +112,20 @@ const AdminUser = () => {
 
     });
 
+const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 40
+    }
+
+    const dispatch = useDispatch()
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata))
+    }, [])
+
     const columns = [
         {
             field: 'index',
@@ -152,19 +166,7 @@ const AdminUser = () => {
     ];
 
 
-    const roledata = {
-        role: Cookies.get(`role`),
-        pageid: 3
-    }
-
-    const dispatch = useDispatch()
-    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
-
-
-
-    useEffect(() => {
-        dispatch(getRoleData(roledata))
-    }, [])
+    
 
     return (
 

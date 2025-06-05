@@ -231,6 +231,7 @@ import TimeSheetDoc from "./AdminComponent/Document/TimeSheetDoc.js";
 import StudentReports from "./AdminComponent/Document/StudentReports.js";
 import Forcardlist from "./AdminComponent/Document/Forcardlist.js";
 import { BatchWiseFeesDetailsNewpdf } from "./AdminComponent/Document/BatchWiseFeesDetailsNewpdf.js";
+import StudentListR from "./AdminComponent/Document/StudentListR.js";
 
 
 
@@ -576,7 +577,8 @@ const Router = createBrowserRouter([
                            {/* <ID_CardDoc/> */}
                            {/* <StudentLabelDoc/> */}
                            {/* <AnalysisDoc/> */}
-                           <BatchWiseFeesDetailsNewpdf/>
+                           {/* <BatchWiseFeesDetailsNewpdf/> */}
+                           <StudentListR/>
                         </PDFViewer>
                     </div>
                 ),

@@ -13,6 +13,9 @@ import MyDocument1 from "./MyDocument1";
 import Loader from "./Loader";
 import { BASE_URL } from './BaseUrl';
 import { StyledDataGrid } from './StyledDataGrid';
+import { useDispatch, useSelector } from 'react-redux';
+import Cookies from 'js-cookie';
+import { getRoleData } from '../Store/Role/role-action';
 
 function CustomToolbar() {
     return (
@@ -112,6 +115,19 @@ const AdmissionListing = () => {
         URL.revokeObjectURL(url);
     };
 
+    const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 24
+    }
+
+    const dispatch = useDispatch()
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata))
+    }, [])
+
     const columns = [
         { field: 'index', headerName: 'Id', type: 'number', align: 'center', headerAlign: 'center', flex: 0.5, filterable: false },
         { field: 'Student_Name', headerName: 'Student Name', flex: 2 },
@@ -141,7 +157,7 @@ const AdmissionListing = () => {
         { field: 'Payment_Type', headerName: 'Payment Type', flex: 1 },
         { field: 'Amount', headerName: 'Total Fees', flex: 1 },
         { field: 'Status', headerName: 'Status', flex: 0.5, renderCell: () => <p>Active</p> },
-        {
+        ...(roleaccess > 2 ? [{
             field: 'actions',
             type: 'actions',
             headerName: 'Action',
@@ -151,16 +167,16 @@ const AdmissionListing = () => {
                     <Button onClick={() => downloadPDF(params.row.Admission_Id)}>
                         <PrintIcon />
                     </Button>
-                    <Link to={`/admission/${params.row.Admission_Id}`}><EditIcon style={{ cursor: "pointer" }} /></Link>
-                    <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.Admission_Id)} />
-                    <Switch
+                    {roleaccess >= 2 && <Link to={`/admission/${params.row.Admission_Id}`}><EditIcon style={{ cursor: "pointer" }} /></Link>}
+                    {roleaccess > 3 && (<DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.Admission_Id)} />)}
+                    {roleaccess >= 2 &&  <Switch
                         onChange={() => handleswitchchange(params.row.isActive, params.row.id)}
                         defaultChecked={params.row.isActive === 0 ? false : true}
                         color="secondary"
-                    />
+                    />}
                 </>
             )
-        },
+        },] : [])
     ];
 
     const rowsWithIds = admission.map((row, index) => ({ index: index + 1, ...row }));

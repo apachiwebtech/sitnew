@@ -9,6 +9,10 @@ import { BASE_URL } from './BaseUrl';
 import InnerHeader from "./InnerHeader";
 import { type } from "@testing-library/user-event/dist/type";
 import { StyledDataGrid } from "./StyledDataGrid";
+import { useDispatch, useSelector } from "react-redux";
+import { getRoleData } from "../Store/Role/role-action";
+import Cookies from "js-cookie";
+
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     "& .MuiDialogContent-root": {
         padding: theme.spacing(2),
@@ -43,6 +47,19 @@ const FacultyMonthlyStatement = () => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
 
+
+const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 67,
+    };
+
+    const dispatch = useDispatch();
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata));
+    }, []);
+
     const columns = [
         {
             field: 'index',
@@ -64,8 +81,8 @@ const FacultyMonthlyStatement = () => {
             renderCall:(param) => {
                 return (
                     <>
-                    <EditIcon style={{ cursor: "pointer" }} onClick={() => (param.row.id)} />
-                        <DeleteIcon style={{ color: "red", cursor: "pointer"}} onClick={() => (param.row.id)} />
+                    {roleaccess > 2 && <EditIcon style={{ cursor: "pointer" }} onClick={() => (param.row.id)} />}
+                        {roleaccess > 3 && <DeleteIcon style={{ color: "red", cursor: "pointer"}} onClick={() => (param.row.id)} />}
                     </>
                 )
             }

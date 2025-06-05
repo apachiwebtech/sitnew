@@ -9,6 +9,9 @@ import { error } from 'jquery';
 import toast, { Toaster } from 'react-hot-toast';
 import { StyledDataGrid } from './StyledDataGrid';
 //import FormControlLabel from '@mui/material/FormControlLabel';
+import { useDispatch, useSelector } from 'react-redux';
+import Cookies from 'js-cookie';
+import { getRoleData } from '../Store/Role/role-action';
 
 const RollNumberAllot = () => {
 
@@ -177,6 +180,19 @@ const RollNumberAllot = () => {
 
 
     ];
+     const roledata = {
+            role: Cookies.get(`role`),
+            pageid: 27
+        }
+    
+        const dispatch = useDispatch()
+        const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+    
+    
+        useEffect(() => {
+            dispatch(getRoleData(roledata))
+        }, [])
+    
 
 
     const rowsWithIds = student.map((row, index) => ({ index: index + 1, ...row }));

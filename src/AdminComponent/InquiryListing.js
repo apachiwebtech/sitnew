@@ -319,7 +319,17 @@ const InquiryListing = () => {
             </GridToolbarContainer>
         );
     }
+ const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 22,
+    };
 
+    const dispatch = useDispatch();
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata));
+    }, []);
     const columns = [
         {
             field: "Student_Name",
@@ -483,7 +493,7 @@ const InquiryListing = () => {
                 );
             },
         },
-        {
+        ...(roleaccess > 2 ? [{
             field: "actions",
             type: "actions",
             headerName: "Action",
@@ -509,7 +519,7 @@ const InquiryListing = () => {
                     </>
                 );
             },
-        },
+        },] : [])
     ];
     const onhandleChange = (e) => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -522,17 +532,7 @@ const InquiryListing = () => {
     // };
 
 
-    const roledata = {
-        role: Cookies.get(`role`),
-        pageid: 22,
-    };
-
-    const dispatch = useDispatch();
-    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
-
-    useEffect(() => {
-        dispatch(getRoleData(roledata));
-    }, []);
+   
 
     const cleardata = () => {
         localStorage.removeItem("searchwise");

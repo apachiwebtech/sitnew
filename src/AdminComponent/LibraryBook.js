@@ -9,7 +9,9 @@ import Loader from './Loader';
 import { StyledDataGrid } from "./StyledDataGrid";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
+import { useDispatch, useSelector } from 'react-redux';
+import Cookies from 'js-cookie';
+import { getRoleData } from '../Store/Role/role-action';
 
 const LibraryBook = () => {
 
@@ -222,6 +224,18 @@ const LibraryBook = () => {
 
  
     
+const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 20
+    }
+
+    const dispatch = useDispatch()
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata))
+    }, [])
 
 
 
@@ -247,7 +261,7 @@ const LibraryBook = () => {
           
         { field: 'rackno', headerName: 'Rach No.', flex: 1},
         
-        {
+        ...(roleaccess > 2 ? [{
             field: 'actions',
             type: 'actions',
             headerName: 'Action',
@@ -255,12 +269,12 @@ const LibraryBook = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
+                       {roleaccess >= 2 && ( <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />)}
+                       {roleaccess > 3 && (<DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />)}
                     </>
                 )
             }
-        },
+        },] : [])
     ];
 
 
@@ -369,10 +383,10 @@ const LibraryBook = () => {
 
 
 
-                                        <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                        <button type='button' onClick={() => {
+                                        {roleaccess > 2 && <button type="submit" class="btn btn-primary mr-2">Submit</button>}
+                                         {roleaccess > 2 && <button type='button' onClick={() => {
                                             window.location.reload()
-                                        }} class="btn btn-light">Cancel</button>
+                                        }} class="btn btn-light">Cancel</button>}
                                     </form>
 
                                 </div>

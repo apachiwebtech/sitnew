@@ -9,6 +9,9 @@ import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import AddFacultySalary from "./AddFacultySalary";
 import { StyledDataGrid } from "./StyledDataGrid";
+import { useDispatch, useSelector } from 'react-redux';
+import Cookies from 'js-cookie';
+import { getRoleData } from '../Store/Role/role-action';
 
 const AddEmployeeSalaryListing = () => {
 
@@ -185,7 +188,17 @@ const AddEmployeeSalaryListing = () => {
 
 
 
+const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 82,
+    };
 
+    const dispatch = useDispatch();
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata));
+    }, []);
 
 
     const columns = [
@@ -238,9 +251,9 @@ const AddEmployeeSalaryListing = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <Link to={`/addemployeesalary/${params.row.id}`}><EditIcon style={{ cursor: "pointer" }} /></Link>
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
-                        <Switch {...label} onChange={() => handleswitchchange(params.row.isActive, params.row.id)} defaultChecked={params.row.isActive == 0 ? false : true} color="secondary" />
+                         {roleaccess > 2 && <Link to={`/addemployeesalary/${params.row.id}`}><EditIcon style={{ cursor: "pointer" }} /></Link>}
+                         {roleaccess > 3 && <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />}
+                         {roleaccess > 2 && <Switch {...label} onChange={() => handleswitchchange(params.row.isActive, params.row.id)} defaultChecked={params.row.isActive == 0 ? false : true} color="secondary" />}
                     </>
                 )
             }

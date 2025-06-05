@@ -8,6 +8,9 @@ import InnerHeader from './InnerHeader';
 import Loader from "./Loader";
 import { Link } from "react-router-dom";
 //import FormControlLabel from '@mui/material/FormControlLabel';
+import { useDispatch, useSelector } from "react-redux";
+import { getRoleData } from "../Store/Role/role-action";
+import Cookies from "js-cookie";
 
 const FinalExamListing = () => {
 
@@ -139,7 +142,17 @@ const FinalExamListing = () => {
             }
         },
     ];
+ const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 32,
+    };
 
+    const dispatch = useDispatch();
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata));
+    }, []);
 
     const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
 
@@ -160,7 +173,7 @@ const FinalExamListing = () => {
                                         <div>
                                             <h4 class="card-title">Final Exam Taken</h4>
                                         </div>
-                                        <Link to='/finalexamtaken/:finalexamtakenid'> <button className='btn btn-success'>Add +</button></Link>
+                                        {roleaccess > 1 && <Link to='/finalexamtaken/:finalexamtakenid'> <button className='btn btn-success'>Add +</button></Link>}
 
                                     </div>
 

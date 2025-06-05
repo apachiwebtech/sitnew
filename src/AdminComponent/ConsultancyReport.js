@@ -7,7 +7,9 @@ import { StyledDataGrid } from './StyledDataGrid';
 //import FormControlLabel from '@mui/material/FormControlLabel';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
+import { useDispatch, useSelector } from "react-redux";
+import { getRoleData } from "../Store/Role/role-action";
+import Cookies from "js-cookie";
 const ConsultancyReport = () => {
 
     const [coursedata, setCourseData] = useState([])
@@ -78,7 +80,17 @@ const ConsultancyReport = () => {
       })
     }
 
+const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 107,
+    };
 
+    const dispatch = useDispatch();
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata));
+    }, []);
     const columns = [
         {
             field: 'index',

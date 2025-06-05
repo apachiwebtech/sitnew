@@ -7,7 +7,9 @@ import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import Loader from './Loader';
 import { StyledDataGrid } from "./StyledDataGrid";
-
+import { useDispatch, useSelector } from 'react-redux';
+import Cookies from 'js-cookie';
+import { getRoleData } from '../Store/Role/role-action';
 
 const ProjectMaster = () => {
 
@@ -179,6 +181,20 @@ const ProjectMaster = () => {
     const onhandleChange = (e) => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
+
+const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 88,
+    };
+
+    const dispatch = useDispatch();
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata));
+    }, []);
+
+
     const columns = [
         {
             field: 'index',
@@ -200,8 +216,8 @@ const ProjectMaster = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
+                         {roleaccess > 2 && <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />}
+                         {roleaccess > 3 && <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />}
                     </>
                 )
             }
@@ -209,8 +225,16 @@ const ProjectMaster = () => {
     ];
 
 
-    const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }))
-    .sort((a, b) => b.projectno.localeCompare(a.projectno));
+    // const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }))
+    // .sort((a, b) => b.projectno.localeCompare(a.projectno));
+
+    const rowsWithIds = vendordata
+  .map((row, index) => ({ index: index + 1, ...row }))
+  .sort((a, b) => {
+    const projectA = a.projectno ?? '';
+    const projectB = b.projectno ?? '';
+    return projectB.localeCompare(projectA);
+  });
 
 
     return (

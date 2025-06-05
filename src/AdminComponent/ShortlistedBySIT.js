@@ -9,6 +9,9 @@ import { StyledDataGrid } from "./StyledDataGrid";
 //import FormControlLabel from '@mui/material/FormControlLabel';
 // import ImageList from '@mui/material/ImageList';
 // import { ImageSourcePropType } from 'react-native';
+import { useDispatch, useSelector } from "react-redux";
+import { getRoleData } from "../Store/Role/role-action";
+import Cookies from "js-cookie";
 
 const ShortlistedBySIT = () => {
     const [brand, setBrand] = useState([]);
@@ -161,6 +164,18 @@ const ShortlistedBySIT = () => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     };
 
+const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 111,
+    };
+
+    const dispatch = useDispatch();
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata));
+    }, []);
+
     const columns = [
         { field: "CompanyName", headerName: "Company Name", flex: 2 },
         {
@@ -195,10 +210,10 @@ const ShortlistedBySIT = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <EditIcon
+                         {roleaccess > 2 &&<EditIcon
                             style={{ cursor: "pointer" }}
                             onClick={() => handleUpdate(params.row.id)}
-                        />
+                        />}
                     </>
                 );
             },

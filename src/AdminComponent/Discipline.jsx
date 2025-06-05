@@ -174,6 +174,18 @@ const Discipline = () => {
     }
 
 
+    const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 1
+    }
+
+    const dispatch = useDispatch()
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata))
+    }, [])
 
 
 
@@ -190,37 +202,33 @@ const Discipline = () => {
             
         },
         { field: 'Deciplin', headerName: 'Discipline', flex: 2 },
-        {
+        ...(roleaccess > 2 ? [{
             field: 'actions',
             type: 'actions',
             headerName: 'Action',
             flex: 0.5,
-            renderCell: (params) => {
-                return (
-                    <>
-                       {roleaccess >=2 && <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.Id)} />} 
-                        {roleaccess > 3 &&  <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.Id)} />}
-                    </>
-                )
-            }
-        },
+            renderCell: (params) => (
+              <>
+                {roleaccess >= 2 && (
+                  <EditIcon 
+                    style={{ cursor: "pointer" }} 
+                    onClick={() => handleUpdate(params.row.Id)} 
+                  />
+                )}
+                {roleaccess > 3 && (
+                  <DeleteIcon 
+                    style={{ color: "red", cursor: "pointer" }} 
+                    onClick={() => handleClick(params.row.Id)} 
+                  />
+                )}
+              </>
+            )
+          }] : [])
     ];
 
 
     const rowsWithIds = Discipline.map((row, index) => ({ index: index + 1, ...row }));
 
-    const roledata = {
-        role: Cookies.get(`role`),
-        pageid: 1
-    }
-
-    const dispatch = useDispatch()
-    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
-
-
-    useEffect(() => {
-        dispatch(getRoleData(roledata))
-    }, [])
 
     
 

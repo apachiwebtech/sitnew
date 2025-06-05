@@ -12,7 +12,9 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Loader from './Loader';
 import { StyledDataGrid } from './StyledDataGrid';
-
+import { useDispatch, useSelector } from 'react-redux';
+import Cookies from 'js-cookie';
+import { getRoleData } from '../Store/Role/role-action';
 
 const CollegeListing = () => {
 
@@ -143,7 +145,18 @@ const CollegeListing = () => {
         }));
     }
 
+const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 19
+    }
 
+    const dispatch = useDispatch()
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata))
+    }, [])
 
 
     const columns = [
@@ -163,7 +176,7 @@ const CollegeListing = () => {
         { field: 'address', headerName: 'Address', flex: 2 },
         { field: 'city', headerName: 'City', flex: 2 },
 
-        {
+        ...(roleaccess > 2 ? [{
             field: 'actions',
             type: 'actions',
             headerName: 'Action',
@@ -176,7 +189,7 @@ const CollegeListing = () => {
                     </>
                 )
             }
-        },
+        },] : [])
     ];
 
 
@@ -200,7 +213,7 @@ const CollegeListing = () => {
                                             <h4 class="card-title">View College Information Details</h4>
                                         </div>
                                         <div className='my-2 text-right'>
-                                            <Link to='/college/:collegeid'> <button className='btn btn-success'>Add +</button></Link>
+                                            {roleaccess > 1 &&<Link to='/college/:collegeid'> <button className='btn btn-success'>Add +</button></Link>}
 
                                         </div>
                                     </div>

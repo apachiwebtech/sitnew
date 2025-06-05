@@ -11,6 +11,9 @@ import Loader from './Loader';
 import { StyledDataGrid } from './StyledDataGrid';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { useDispatch, useSelector } from 'react-redux';
+import Cookies from 'js-cookie';
+import { getRoleData } from '../Store/Role/role-action';
 
 const CACHE_KEY = 'annual_data'; // Key for localStorage caching
 const CACHE_EXPIRY_MS = 1000 * 60 * 15; // Cache expiry time (15 minutes)
@@ -30,16 +33,16 @@ const AnnualBatchListing = () => {
     to_date: ""
   })
   const [paginationModel, setPaginationModel] = useState({
-          pageSize: 50,
-          page: 0,
-        });
+    pageSize: 50,
+    page: 0,
+  });
 
   async function getAnnualData() {
 
     axios.get(`${BASE_URL}/getannualbatch`)
       .then((res) => {
         console.log(res.data)
-        
+
         setAnnulBatch(res.data)
         localStorage.setItem(CACHE_KEY, JSON.stringify({
           data: res.data,
@@ -190,8 +193,31 @@ const AnnualBatchListing = () => {
       })
 
   }
+  // const roledata = {
+  //         role: Cookies.get(`role`),
+  //         pageid: 14
+  //     }
+
+  //     const dispatch = useDispatch()
+  //     const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
 
 
+  //     useEffect(() => {
+  //         dispatch(getRoleData(roledata))
+  //     }, [])
+
+  const roledata = {
+    role: Cookies.get(`role`),
+    pageid: 14
+  }
+
+  const dispatch = useDispatch()
+  const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+
+  useEffect(() => {
+    dispatch(getRoleData(roledata))
+  }, [])
 
   const columns = [
     {
@@ -208,31 +234,31 @@ const AnnualBatchListing = () => {
     { field: 'Category', headerName: 'Category', width: 140 },
     { field: 'Timings', headerName: 'Timings', width: 250 },
 
-    { field: 'SDate', headerName: 'Planned Start Date', width: 140, valueGetter: (params) => params.value ? new Date(params.value).toISOString().split('T')[0].split('-').reverse().join('-') : ''},
+    { field: 'SDate', headerName: 'Planned Start Date', width: 140, valueGetter: (params) => params.value ? new Date(params.value).toISOString().split('T')[0].split('-').reverse().join('-') : '' },
     {
-  field: 'StartDate', 
-  headerName: 'Actual Start Date', 
-  width: 140, 
-  renderCell: (param) => (
-    <p>{param.row.SDate ? new Date(param.row.SDate).toISOString().split('T')[0].split('-').reverse().join('-') : ''}</p>
-  )
-},
+      field: 'StartDate',
+      headerName: 'Actual Start Date',
+      width: 140,
+      renderCell: (param) => (
+        <p>{param.row.SDate ? new Date(param.row.SDate).toISOString().split('T')[0].split('-').reverse().join('-') : ''}</p>
+      )
+    },
 
 
-    { field: 'EDate', headerName: 'Last Date of Admission', width: 150 , valueGetter: (params) => params.value ? new Date(params.value).toISOString().split('T')[0].split('-').reverse().join('-') : ''},
+    { field: 'EDate', headerName: 'Last Date of Admission', width: 150, valueGetter: (params) => params.value ? new Date(params.value).toISOString().split('T')[0].split('-').reverse().join('-') : '' },
     {
-      field: 'EndDate', 
-      headerName: 'Training Completion Date', 
-      width: 170, 
+      field: 'EndDate',
+      headerName: 'Training Completion Date',
+      width: 170,
       renderCell: (param) => (
         <p>{param.row.EDate ? new Date(param.row.EDate).toISOString().split('T')[0].split('-').reverse().join('-') : ''}</p>
       )
     },
-    
+
 
     { field: 'Duration', headerName: 'Duration', width: 90 },
     { field: 'Training_Coordinator', headerName: 'Training Coordinator', width: 150 },
-    {
+    ...(roleaccess > 2 ? [{
       field: 'actions',
       type: 'actions',
       headerName: 'Action',
@@ -240,12 +266,12 @@ const AnnualBatchListing = () => {
       renderCell: (params) => {
         return (
           <>
-            <Link to={`/annualbatch/${params.row.Batch_Id}`}><EditIcon style={{ cursor: "pointer" }} /></Link>
-            <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.Batch_Id)} />
+            {roleaccess >= 2 && (<Link to={`/annualbatch/${params.row.Batch_Id}`}><EditIcon style={{ cursor: "pointer" }} /></Link>)}
+            {roleaccess > 3 && (<DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.Batch_Id)} />)}
           </>
         )
       }
-    },
+    }] : [])
   ];
 
 
@@ -253,6 +279,9 @@ const AnnualBatchListing = () => {
   const onhandleChange = (e) => {
     setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
   }
+
+
+
 
   return (
     <div className="container-fluid page-body-wrapper ">
@@ -272,63 +301,63 @@ const AnnualBatchListing = () => {
                       <h4 class="card-title">Annual Batch</h4>
 
                     </div>
-                    <Link to='/annualbatch/:batch_id'> <button className='btn btn-success'>Add +</button></Link>
+                    {roleaccess > 1 && (<Link to='/annualbatch/:batch_id'> <button className='btn btn-success'>Add +</button></Link>)}
 
                   </div>
                   <div className="card" style={{ borderBottom: "2px solid #dce4ec", width: "100%" }}>
-  <div className="card-body">
-    <form className="forms-sample row py-3 d-flex align-items-center flex-wrap" onSubmit={handleSubmit} style={{ gap: "15px" }}>
-      
-      {/* Course Dropdown */}
-      <div className="form-group" style={{ display: "flex", flexDirection: "column" }}>
-        <label htmlFor="exampleFormControlSelect1">Course <span className="text-danger">*</span></label>
-        <select className="form-control form-control-lg" id="exampleFormControlSelect1" name="selectcourse" onChange={onhandleChange}>
-          <option value="">Select</option>
-          {course.map((item) => (
-            <option key={item.Course_Id} value={item.Course_Id}>{item.Course_Name}</option>
-          ))}
-        </select>
-      </div>
+                    <div className="card-body">
+                      <form className="forms-sample row py-3 d-flex align-items-center flex-wrap" onSubmit={handleSubmit} style={{ gap: "15px" }}>
 
-      {/* From Date Picker */}
-      <div className="form-group" style={{ display: "flex", flexDirection: "column" }}>
-        <label htmlFor="from_date">From Date <span className="text-danger">*</span></label>
-        <DatePicker
-          selected={value.from_date}
-          onChange={(date) => onhandleChange({ target: { name: "from_date", value: date } })}
-          className="form-control"
-          id="from_date"
-          placeholderText="Select From Date"
-          dateFormat="dd-MM-yyyy"
-        />
-      </div>
+                        {/* Course Dropdown */}
+                        <div className="form-group" style={{ display: "flex", flexDirection: "column" }}>
+                          <label htmlFor="exampleFormControlSelect1">Course <span className="text-danger">*</span></label>
+                          <select className="form-control form-control-lg" id="exampleFormControlSelect1" name="selectcourse" onChange={onhandleChange}>
+                            <option value="">Select</option>
+                            {course.map((item) => (
+                              <option key={item.Course_Id} value={item.Course_Id}>{item.Course_Name}</option>
+                            ))}
+                          </select>
+                        </div>
 
-      {/* To Date Picker */}
-      <div className="form-group" style={{ display: "flex", flexDirection: "column" }}>
-        <label htmlFor="to_date">To Date <span className="text-danger">*</span></label>
-        <DatePicker
-          selected={value.to_date}
-          onChange={(date) => onhandleChange({ target: { name: "to_date", value: date } })}
-          className="form-control"
-          id="to_date"
-          placeholderText="Select To Date"
-          dateFormat="dd-MM-yyyy"
-          minDate={value.from_date}
-        />
-      </div>
+                        {/* From Date Picker */}
+                        <div className="form-group" style={{ display: "flex", flexDirection: "column" }}>
+                          <label htmlFor="from_date">From Date <span className="text-danger">*</span></label>
+                          <DatePicker
+                            selected={value.from_date}
+                            onChange={(date) => onhandleChange({ target: { name: "from_date", value: date } })}
+                            className="form-control"
+                            id="from_date"
+                            placeholderText="Select From Date"
+                            dateFormat="dd-MM-yyyy"
+                          />
+                        </div>
 
-      {/* Buttons */}
-      <div className="d-flex align-items-center" style={{ display: "flex", flexDirection: "row", marginTop: "12px" }}>
-        <button type="submit" className="btn btn-sm btn-primary mr-2">Submit</button>
-        <button type="reset" onClick={() => getAnnualData()} className="btn btn-sm btn-primary mr-2">Clear</button>
-      </div>
-    
-    </form>
-  </div>
-</div>
+                        {/* To Date Picker */}
+                        <div className="form-group" style={{ display: "flex", flexDirection: "column" }}>
+                          <label htmlFor="to_date">To Date <span className="text-danger">*</span></label>
+                          <DatePicker
+                            selected={value.to_date}
+                            onChange={(date) => onhandleChange({ target: { name: "to_date", value: date } })}
+                            className="form-control"
+                            id="to_date"
+                            placeholderText="Select To Date"
+                            dateFormat="dd-MM-yyyy"
+                            minDate={value.from_date}
+                          />
+                        </div>
+
+                        {/* Buttons */}
+                        <div className="d-flex align-items-center" style={{ display: "flex", flexDirection: "row", marginTop: "12px" }}>
+                          <button type="submit" className="btn btn-sm btn-primary mr-2">Submit</button>
+                          <button type="reset" onClick={() => getAnnualData()} className="btn btn-sm btn-primary mr-2">Clear</button>
+                        </div>
+
+                      </form>
+                    </div>
+                  </div>
 
 
-                  <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "hidden"}}>
+                  <div style={{ borderLeft: "1px solid #dce4ec", height: "510px", overflow: "hidden" }}>
                     <StyledDataGrid
                       rows={rowsWithIds}
                       columns={columns}
@@ -338,24 +367,24 @@ const AnnualBatchListing = () => {
                       rowHeight={35}
                       getRowId={(row) => row.Batch_Id}
                       pagination
-                                            paginationModel={paginationModel}
-                                            onPaginationModelChange={setPaginationModel}
-                                            pageSizeOptions= {[50]}
-                                            autoHeight={false}
-                                            sx={{
-                                              height: 500, // Ensure enough height for pagination controls
-                                              '& .MuiDataGrid-footerContainer': {
-                                                justifyContent: 'flex-end',
-                                              },
-                                            }}
-                                            slots={{
-                                              toolbar: GridToolbar
-                                          }}
-                                            slotProps={{
-                                              toolbar: {
-                                                showQuickFilter: true,
-                                              },
-                                            }}
+                      paginationModel={paginationModel}
+                      onPaginationModelChange={setPaginationModel}
+                      pageSizeOptions={[50]}
+                      autoHeight={false}
+                      sx={{
+                        height: 500, // Ensure enough height for pagination controls
+                        '& .MuiDataGrid-footerContainer': {
+                          justifyContent: 'flex-end',
+                        },
+                      }}
+                      slots={{
+                        toolbar: GridToolbar
+                      }}
+                      slotProps={{
+                        toolbar: {
+                          showQuickFilter: true,
+                        },
+                      }}
                     />
 
                     {confirmationVisibleMap[cid] && (

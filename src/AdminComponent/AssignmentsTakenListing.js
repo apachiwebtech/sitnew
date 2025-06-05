@@ -8,6 +8,10 @@ import { BASE_URL } from "./BaseUrl";
 import InnerHeader from "./InnerHeader";
 import Loader from "./Loader";
 import { StyledDataGrid } from "./StyledDataGrid";
+import { useDispatch, useSelector } from "react-redux";
+import { getRoleData } from "../Store/Role/role-action";
+import Cookies from "js-cookie";
+
 
 const AssignmentsTakenListing = () => {
     const [uid, setUid] = useState([]);
@@ -19,9 +23,9 @@ const AssignmentsTakenListing = () => {
     const [loading, setLoading] = useState(true);
     const [assignmentstakendata, setassignmentstakendata] = useState([]);
     const [paginationModel, setPaginationModel] = useState({
-            pageSize: 50,
-            page: 0,
-          });
+        pageSize: 50,
+        page: 0,
+    });
 
     const [value, setValue] = useState({
         coursename: " ",
@@ -118,22 +122,22 @@ const AssignmentsTakenListing = () => {
             headerName: "Assignment Date",
             flex: 1,
             valueGetter: (params) => {
-              if (!params.value) return ""; // Handle empty values
-          
-              // Check if the date is already in DD-MM-YYYY format
-              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
-              if (ddmmyyyyRegex.test(params.value)) {
-                return params.value; // Return as-is if already formatted
-              }
-          
-              const date = new Date(params.value);
-              if (isNaN(date.getTime())) return ""; // Handle invalid dates
-          
-              // Convert to DD-MM-YYYY format
-              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+                if (!params.value) return ""; // Handle empty values
+
+                // Check if the date is already in DD-MM-YYYY format
+                const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+                if (ddmmyyyyRegex.test(params.value)) {
+                    return params.value; // Return as-is if already formatted
+                }
+
+                const date = new Date(params.value);
+                if (isNaN(date.getTime())) return ""; // Handle invalid dates
+
+                // Convert to DD-MM-YYYY format
+                return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
             },
-          },
-          
+        },
+
         {
             field: "actions",
             type: "actions",
@@ -142,19 +146,30 @@ const AssignmentsTakenListing = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <Link to={`/assignmentstaken/${params.row.Given_Id}`}>
+                        {roleaccess > 2 && <Link to={`/assignmentstaken/${params.row.Given_Id}`}>
                             <EditIcon style={{ cursor: "pointer" }} />
-                        </Link>
-                        <DeleteIcon
+                        </Link>}
+                        {roleaccess > 3 && <DeleteIcon
                             style={{ color: "red", cursor: "pointer" }}
-                            // onClick={() => handleClick(params.row.Given_Id)}
-                        />
+                            onClick={() => handleClick(params.row.Given_Id)}
+                        />}
                     </>
                 );
             },
         },
     ];
 
+    const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 29,
+    };
+
+    const dispatch = useDispatch();
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata));
+    }, []);
     const rowsWithIds = assignmentstakendata.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
@@ -174,13 +189,13 @@ const AssignmentsTakenListing = () => {
                                         <div>
                                             <h4 class="card-title">Add Assignmentstaken Details</h4>
                                         </div>
-                                        <Link to="/assignmentstaken/:assignmentstakenid">
+                                        {roleaccess > 1 && <Link to="/assignmentstaken/:assignmentstakenid">
                                             {" "}
                                             <button className="btn btn-success">Add +</button>
-                                        </Link>
+                                        </Link>}
                                     </div>
 
-                                    <div  style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "hidden"}}>
+                                    <div style={{ borderLeft: "1px solid #dce4ec", height: "510px", overflow: "hidden" }}>
                                         <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
@@ -192,21 +207,21 @@ const AssignmentsTakenListing = () => {
                                             pagination
                                             paginationModel={paginationModel}
                                             onPaginationModelChange={setPaginationModel}
-                                            pageSizeOptions= {[50]}
+                                            pageSizeOptions={[50]}
                                             autoHeight={false}
                                             sx={{
-                                              height: 500, // Ensure enough height for pagination controls
-                                              '& .MuiDataGrid-footerContainer': {
-                                                justifyContent: 'flex-end',
-                                              },
+                                                height: 500, // Ensure enough height for pagination controls
+                                                '& .MuiDataGrid-footerContainer': {
+                                                    justifyContent: 'flex-end',
+                                                },
                                             }}
                                             slots={{
                                                 toolbar: GridToolbar
                                             }}
                                             slotProps={{
-                                              toolbar: {
-                                                showQuickFilter: true,
-                                              },
+                                                toolbar: {
+                                                    showQuickFilter: true,
+                                                },
                                             }}
                                         />
 

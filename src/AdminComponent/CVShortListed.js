@@ -11,6 +11,9 @@ import InnerHeader from './InnerHeader';
 import { useNavigate, Link } from 'react-router-dom';
 import Loader from "./Loader";
 import { StyledDataGrid } from "./StyledDataGrid";
+import { useDispatch, useSelector } from "react-redux";
+import { getRoleData } from "../Store/Role/role-action";
+import Cookies from "js-cookie";
 
 const CVShortListed = () => {
     const [CVShortlistedList, setCVShortlistedList] = useState([])
@@ -51,6 +54,19 @@ const CVShortListed = () => {
         }
     };
 
+
+const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 104,
+    };
+
+    const dispatch = useDispatch();
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata));
+    }, []);
+
     const columns = [
         { field: 'Batch_code', headerName: 'Batch Code', flex:1.6 },
         { field: 'Course_Name', headerName: 'Course Name', flex:3 },
@@ -84,10 +100,10 @@ const CVShortListed = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <EditIcon style={{ cursor: "pointer" }} onClick={() => {
+                       {roleaccess > 2 && <EditIcon style={{ cursor: "pointer" }} onClick={() => {
                             navigate(`/cvshortlisted/${params.row.id}`)
-                        }} />
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => setDeleteId(params.row.id)} />
+                        }} />}
+                         {roleaccess > 3 &&<DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => setDeleteId(params.row.id)} />}
                     </>
                 )
             }
@@ -109,7 +125,7 @@ const CVShortListed = () => {
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between align-items-center gap-3' style={{borderBottom: "2px solid #dce4ec", width: "100%", padding: "10px 0" }}>
                                         <h4 class="card-title">CV Shortlisted </h4>
-                                        <Link to='/cvshortlisted/:cvid' className="btn btn-success">Add +</Link>
+                                         {roleaccess > 1 &&<Link to='/cvshortlisted/:cvid' className="btn btn-success">Add +</Link>}
                                     </div>
                                     <div>
                                         <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "hidden"}}>

@@ -16,6 +16,9 @@ import Autocomplete from "@mui/material/Autocomplete";
 import InputLabel from "@mui/material/InputLabel";
 import { Button, Switch } from "@mui/material";
 import _debounce from "lodash.debounce";
+import { useDispatch, useSelector } from "react-redux";
+import { getRoleData } from "../Store/Role/role-action";
+import Cookies from "js-cookie";
 
 const LectureTakenListing = () => {
     const [uid, setUid] = useState([]);
@@ -207,7 +210,17 @@ const LectureTakenListing = () => {
                 setLoading(false);
             });
     };
+const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 28,
+    };
 
+    const dispatch = useDispatch();
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata));
+    }, []);
     const columns = [
         {
             field: "index",
@@ -243,7 +256,7 @@ const LectureTakenListing = () => {
         { field: "Batch_Id", headerName: "Batch Code", flex: 2 },
         { field: "Topic", headerName: "Topic", flex: 2 },
         { field: "Faculty_Id", headerName: "Faculty Name", flex: 2 },
-        {
+        ...(roleaccess > 2 ? [ {
             field: "actions",
             type: "actions",
             headerName: "Action",
@@ -251,19 +264,18 @@ const LectureTakenListing = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <Link to={`/lecturetaken/${params.row.Take_Id}`}>
+                         {roleaccess > 2 && <Link to={`/lecturetaken/${params.row.Take_Id}`}>
                             <EditIcon style={{ cursor: "pointer" }} />
-                        </Link>
-                        <DeleteIcon 
-                            disabled
+                        </Link>}
+                        {roleaccess > 3 && <DeleteIcon
                             style={{ color: "red", cursor: "pointer" }}
-                            // onClick={() => handleClick(params.row.Take_Id)}
-                        />
+                            onClick={() => handleClick(params.row.Take_Id)}
+                        />}
                         {/* <Switch {...label} onChange={() => handleswitchchange(params.row.isActive, params.row.id)} defaultChecked={params.row.isActive == 0 ? false : true} color="secondary" /> */}
                     </>
                 );
             },
-        },
+        },] : [])
     ];
 
     const rowsWithIds = lecturetakendata.map((row, index) => ({ index: index + 1, ...row }));
@@ -344,7 +356,7 @@ const LectureTakenListing = () => {
                                                 </div>
 
                                                 <div class="form-group col-lg-2">
-                                                    <Button
+                                                    {roleaccess > 2 && <Button
                                                         type="submit"
                                                         onClick={() => {
                                                             setPageExpand();
@@ -352,10 +364,10 @@ const LectureTakenListing = () => {
                                                         variant="contained"
                                                     >
                                                         Search
-                                                    </Button>
+                                                    </Button>}
                                                 </div>
                                                 <div className="form-group col-lg-2" >
-                                                    <Button
+                                                {roleaccess > 2 &&<Button
                                                         type="submit"
                                                         onClick={() => {
                                                             window.location.reload();
@@ -363,7 +375,7 @@ const LectureTakenListing = () => {
                                                         variant="contained"
                                                     >
                                                         Clear
-                                                    </Button>
+                                                    </Button>}
                                                 </div>
                                             </form>
                                         </div>
@@ -382,10 +394,10 @@ const LectureTakenListing = () => {
                                         <div>
                                             <h4 class="card-title">Add Lecture Details</h4>
                                         </div>
-                                        <Link to="/lecturetaken/:lecturetakenid">
+                                        {roleaccess > 1 && <Link to="/lecturetaken/:lecturetakenid">
                                             {" "}
                                             <button className="btn btn-success">Add +</button>
-                                        </Link>
+                                        </Link>}
                                     </div>
 
                                     <div >

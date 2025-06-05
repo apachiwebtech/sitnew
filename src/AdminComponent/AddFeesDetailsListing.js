@@ -16,6 +16,9 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import _debounce from "lodash.debounce";
 import Select from "@mui/material/Select";
+import { useDispatch, useSelector } from 'react-redux';
+import Cookies from 'js-cookie';
+import { getRoleData } from '../Store/Role/role-action';
 
 const AddFeesDetailsListing = () => {
     const [cid, setCid] = useState("");
@@ -261,6 +264,19 @@ const AddFeesDetailsListing = () => {
         }
     };
 
+
+const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 13
+    }
+
+    const dispatch = useDispatch()
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata))
+    }, [])
 
     const columns = [
         { field: "Fees_Code", headerName: "Receipt No", width: 130 },

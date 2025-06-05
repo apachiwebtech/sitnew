@@ -154,9 +154,7 @@ const StudentBatch = () => {
             case "0117":
                 newlecturemailpdf();
                 break;    
-                case "forcard":
-                    forcardlistpdf();
-                    break; 
+                
         }
     };
 
@@ -224,11 +222,14 @@ const StudentBatch = () => {
     };
 
     const assignmentReceiptPdf = async () => {
-        const blob = await pdf(<AssignmentReceiptDoc />).toBlob();
+        const res = await axios.post(`${BASE_URL}/getassignmentreceipt`, { batch_code: value.batch});
+        const blob = await pdf(<AssignmentReceiptDoc assignment={res.data.data}/>).toBlob();
+
         const url = URL.createObjectURL(blob);
         window.open(url);
         URL.revokeObjectURL(url);
     };
+
     const assignmentpdf = async () => {
         const blob = await pdf(<AssignmentDoc/>).toBlob();
         const url = URL.createObjectURL(blob);
@@ -300,14 +301,7 @@ const StudentBatch = () => {
 
 
     // for testing
-    const forcardlistpdf = async () => {
-                const res = await axios.post(`${BASE_URL}/getidStudent`, {batch_code: value.batch});
-                const blob = await pdf(<Forcardlist cardlist = {res.data}/> ).toBlob();
-                const url = URL.createObjectURL(blob);
-                console.log("Generated PDF URL:", url);
-                window.open(url);
-                URL.revokeObjectURL(url);
-            };
+    
 
     const handlegetbatch = async (courseid) => {
         setValue({
@@ -445,11 +439,7 @@ const StudentBatch = () => {
                                                             label="Student Label"
                                                         />
                                                         {/* for testing  */}
-                                                        <FormControlLabel
-                                                            value="forcard"
-                                                            control={<Radio />}
-                                                            label="For Card List"
-                                                        />
+                                                        
                                                     </RadioGroup>
                                                 </FormControl>
 

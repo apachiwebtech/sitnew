@@ -7,7 +7,9 @@ import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import Loader from './Loader';
 import { StyledDataGrid } from "./StyledDataGrid";
-
+import { useDispatch, useSelector } from 'react-redux';
+import Cookies from 'js-cookie';
+import { getRoleData } from '../Store/Role/role-action';
 
 const BatchCategory = () => {
 
@@ -177,7 +179,18 @@ const BatchCategory = () => {
 
 
 
+const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 15
+    }
 
+    const dispatch = useDispatch()
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata))
+    }, [])
 
     const columns = [
         {
@@ -190,7 +203,7 @@ const BatchCategory = () => {
             filterable: false,
         },
         { field: 'BatchCategory', headerName: 'Batch Category', flex: 2 },
-        {
+        ...(roleaccess > 2 ? [{
             field: 'actions',
             type: 'actions',
             headerName: 'Action',
@@ -198,16 +211,17 @@ const BatchCategory = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
+                        {roleaccess >= 2 && <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />}
+                        {roleaccess > 3 &&<DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />}
                     </>
                 )
             }
-        },
+        },] : [])
     ];
 
 
     const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
+
 
     return (
 

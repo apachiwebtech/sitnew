@@ -15,7 +15,9 @@ import IconButton from '@mui/material/IconButton';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
+import { useDispatch, useSelector } from "react-redux";
+import { getRoleData } from "../Store/Role/role-action";
+import Cookies from "js-cookie";
 
 const CorporateInquiryForm = () => {
 
@@ -246,7 +248,17 @@ const CorporateInquiryForm = () => {
 
 
 
+    const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 50,
+    };
 
+    const dispatch = useDispatch();
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata));
+    }, []);
 
 
     const columns = [
@@ -268,7 +280,7 @@ const CorporateInquiryForm = () => {
         { field: 'Discipline', headerName: 'discipline', flex: 2 },
         { field: 'Inquiry_type', headerName: 'inquiry type', flex: 2 },
         // { field: 'isActive', headerName: 'Options', flex: 2},
-        {
+        ...(roleaccess > 2 ? [{
             field: 'actions',
             type: 'actions',
             headerName: 'Action',
@@ -276,14 +288,14 @@ const CorporateInquiryForm = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
+                        {roleaccess > 2 &&<EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />}
+                        {roleaccess > 3 &&<DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />}
                     </>
                 )
             }
-        },
+        },] : [])
     ];
-
+ 
 
     const rowsWithIds = inquiryData.map((row, index) => ({ index: index + 1, ...row }));
 

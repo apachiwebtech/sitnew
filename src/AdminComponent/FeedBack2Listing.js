@@ -7,6 +7,9 @@ import { Link } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 //import AssignmentsTaken from "./AssignmentsTaken";
+import { useDispatch, useSelector } from "react-redux";
+import { getRoleData } from "../Store/Role/role-action";
+import Cookies from "js-cookie";
 
 const FeedBack2Listing = () => {
 
@@ -152,15 +155,25 @@ const FeedBack2Listing = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <EditIcon style={{ cursor: "pointer" }} Link={() => handleUpdate(params.row.id)} />
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} Link={() => handleClick(params.row.id)} />
+                        {roleaccess > 2 &&<EditIcon style={{ cursor: "pointer" }} Link={() => handleUpdate(params.row.id)} />}
+                        {roleaccess > 3 && <DeleteIcon style={{ color: "red", cursor: "pointer" }} Link={() => handleClick(params.row.id)} />}
                     </>
                 )
             }
         },
     ];
 
+const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 35,
+    };
 
+    const dispatch = useDispatch();
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata));
+    }, []);
 
     const rowsWithIds = feedback2data.map((row, index) => ({ index: index + 1, ...row }));
 
@@ -184,7 +197,7 @@ const FeedBack2Listing = () => {
                                         <div >
                                             <h4 class="card-title">VVIEW STUDENT FEEDBACK ON TRAINING CO-ORDINATION - 2</h4>
                                         </div>
-                                        <Link to='/feedback2/:feedback2id'> <button className='btn btn-success'>Add +</button></Link>
+                                        {roleaccess > 1 &&<Link to='/feedback2/:feedback2id'> <button className='btn btn-success'>Add +</button></Link>}
 
 
                                     </div>

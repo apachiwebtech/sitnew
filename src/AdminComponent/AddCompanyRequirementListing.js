@@ -8,7 +8,9 @@ import { Link } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import { StyledDataGrid } from "./StyledDataGrid";
-
+import { useDispatch, useSelector } from "react-redux";
+import { getRoleData } from "../Store/Role/role-action";
+import Cookies from "js-cookie";
 const AddCompanyRequirementListing = () => {
 
     const [uid, setUid] = useState([])
@@ -142,7 +144,17 @@ const AddCompanyRequirementListing = () => {
 
 
 
+const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 110,
+    };
 
+    const dispatch = useDispatch();
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata));
+    }, []);
 
  const columns = [
     { field: 'CompanyName', headerName: 'Company Name', flex: 1 },
@@ -158,9 +170,9 @@ const AddCompanyRequirementListing = () => {
         renderCell: (params) => {
             return (
                 <>
-                    <Link to={`/companyrequirment/${params.row.CompReqId}`}><EditIcon style={{ cursor: "pointer" }}  /></Link>
-                    <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => setDeleteId(params.row.CompReqId)} />
-                    <Switch {...label} onChange={() => handleSwitchChange(params.row.IsActive, params.row.CompReqId )} checked={params.row.IsActive === 1} color="secondary" />
+                    {roleaccess > 2 &&<Link to={`/companyrequirment/${params.row.CompReqId}`}><EditIcon style={{ cursor: "pointer" }}  /></Link>}
+                     {roleaccess > 3 &&<DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => setDeleteId(params.row.CompReqId)} />}
+                    {roleaccess > 2 &&<Switch {...label} onChange={() => handleSwitchChange(params.row.IsActive, params.row.CompReqId )} checked={params.row.IsActive === 1} color="secondary" />}
                 </>
             )
         }
@@ -187,7 +199,7 @@ const AddCompanyRequirementListing = () => {
                                         <div >
                                             <h4 class="card-title">Company Requirement</h4>
                                         </div>
-                                           <Link to='/companyrequirment/:companyrequirmentid'> <button className='btn btn-success'>Add +</button></Link>
+                                            {roleaccess > 1 &&<Link to='/companyrequirment/:companyrequirmentid'> <button className='btn btn-success'>Add +</button></Link>}
 
                                        
 

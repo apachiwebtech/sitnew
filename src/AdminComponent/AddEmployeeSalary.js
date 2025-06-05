@@ -208,7 +208,11 @@ const AddEmployeeSalary = () => {
 
     const onhandleChange = (e) => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+        console.log(setValue)
     }
+// useEffect(() => {
+//     console.log(value)
+// }, [value])
 
 
 
@@ -337,8 +341,8 @@ const AddEmployeeSalary = () => {
                                                             <input type="text" class="form-control" id="exampleInputUsername1" value={value.dob} name='dob' onChange={onhashchange} disabled />
                                                         </div>
 
-                                                        <div class="form-group col-lg-4">
-                                                            <lable for="exampleInputUsername1" >Company</lable>
+                                                         <div class="form-group col-lg-4">
+                                                           <lable for="exampleInputUsername1" >Company</lable>
                                                             <input type="text" class="form-control" id="exampleInputUsername1" value={value.company} name='company' onChange={onhandleChange} disabled />
                                                         </div>
 

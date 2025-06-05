@@ -14,6 +14,9 @@ import Course from "./Course";
 import { pdf } from "@react-pdf/renderer";
 import { Category } from "@mui/icons-material";
 import Forcardlist from "./Document/Forcardlist";
+import { useDispatch, useSelector } from "react-redux";
+import { getRoleData } from "../Store/Role/role-action";
+import Cookies from "js-cookie";
 
 const StudentReport = () => {
 
@@ -25,6 +28,7 @@ const StudentReport = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [course, setCourse] = useState([])
     const [batch, setBatch] = useState([]);
+    const [Category, setCat] = useState("batchwise");
 
     
   
@@ -194,27 +198,41 @@ const StudentReport = () => {
 
         
 
-        axios.post(`${BASE_URL}/add_employeerecord`, data)
-            .then((res) => {
-               console.log(res)
-               getEmployeeData()
+        // axios.post(`${BASE_URL}/add_employeerecord`, data)
+        //     .then((res) => {
+        //        console.log(res)
+        //        getEmployeeData()
 
-            })
-            .catch((err) => {
-                console.log(err)
-            })
+        //     })
+        //     .catch((err) => {
+        //         console.log(err)
+        //     })
     }
 };
 
     const generatePdf = () => {
         switch (Category) {
             case "forcard":
-                forcardlistpdf();
-                break;
+                    forcardlistpdf();
+                    break; 
+        }
+    }
+
+    const handlegetbatch = async (courseid) => {
+        setValue({
+            course: courseid,
+        });
+
+        try {
+            const res = await axios.post(`${BASE_URL}/getcoursewisebatch`, { courseid: courseid });
+            
+            
+            setBatch(res.data);
+        } catch (err) {
+            console.error("Error fetching data:", err);
         }
     };
-
-
+    
     const onhandleChange = (e) => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
@@ -248,40 +266,35 @@ const StudentReport = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
+                       {roleaccess > 2 && <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />}
+                        {roleaccess > 3 &&<DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />}
                     </>
                 )
             }
         },
     ];
 
-    const handlegetbatch = async (courseid) => {
-        setValue({
-            course: courseid,
-        });
-
-        try {
-            const res = await axios.post(`${BASE_URL}/getcoursewisebatch`, { courseid: courseid });
-            
-            
-            setBatch(res.data);
-        } catch (err) {
-            console.error("Error fetching data:", err);
-        }
-    };
+    const roledata = {
+            role: Cookies.get(`role`),
+            pageid: 47,
+        };
+    
+        const dispatch = useDispatch();
+        const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+    
+        useEffect(() => {
+            dispatch(getRoleData(roledata));
+        }, []);
+    
 
     const forcardlistpdf = async () => {
+        const res = await axios.post(`${BASE_URL}/getidStudent`, {batch_code: value.batch});
+        const blob = await pdf(<Forcardlist cardlist = {res.data}/> ).toBlob();
+        const url = URL.createObjectURL(blob);
+        window.open(url);
+        URL.revokeObjectURL(url);
         
-            const blob = await pdf(<Forcardlist /> ).toBlob();
-            console.log("Blob created:", blob);
-
-             
-            const url = URL.createObjectURL(blob);
-            console.log("Generated PDF URL:", url);
-            window.open(url);
-            URL.revokeObjectURL(url);
-        };
+    };
 
     
 
@@ -311,12 +324,13 @@ const StudentReport = () => {
                                                         <FormControlLabel value="student" control={<Radio />} label="Student List" />
                                                         <FormControlLabel value="batch" control={<Radio />} label="Batch Wise" />
                                                         <FormControlLabel value="yearly" control={<Radio />} label="Yearly" />
-                                                        <FormControlLabel value="forcard" control={<Radio />} label="For Card List" />
+                                                        <FormControlLabel value="forcard" control={<Radio />} label="For Card List" onChange={(e) => setCat(e.target.value)}/>
                                                         <FormControlLabel value="month" control={<Radio />} label="Month Wise" />
                                                         <FormControlLabel value="document" control={<Radio />} label="Documents" />
                                                         <FormControlLabel value="left" control={<Radio />} label="Left" />
                                                         <FormControlLabel value="cancelled" control={<Radio />} label="Cancelled Students" />
                                                         <FormControlLabel value="placed" control={<Radio />} label="Placed Students" />
+                                                       
 
                                                     </RadioGroup>
                                                 </FormControl>
@@ -367,10 +381,22 @@ const StudentReport = () => {
 
 
 
-                                        <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                        <button type='button' onClick={() => {
-                                            window.location.reload()
-                                        }} class="btn btn-light">Cancel</button>
+                                        <button
+                                            type="submit"
+                                            class="btn btn-primary mr-2"
+                                            // onClick={() => downloadPDF(1)}
+                                        >
+                                            Submit
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                window.location.reload();
+                                            }}
+                                            class="btn btn-light"
+                                        >
+                                            Cancel
+                                        </button>
                                     </form>
 
                                 </div>

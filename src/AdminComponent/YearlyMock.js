@@ -17,6 +17,9 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import { StyledDataGrid } from './StyledDataGrid';
+import { useDispatch, useSelector } from "react-redux";
+import { getRoleData } from "../Store/Role/role-action";
+import Cookies from "js-cookie";
 
 const YearlyMock = () => {
 
@@ -225,7 +228,17 @@ const YearlyMock = () => {
     }
 
  
+    const roledata = {
+            role: Cookies.get(`role`),
+            pageid: 54,
+        };
     
+        const dispatch = useDispatch();
+        const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+    
+        useEffect(() => {
+            dispatch(getRoleData(roledata));
+        }, []);
 
 
 
@@ -253,8 +266,8 @@ const YearlyMock = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
+                        {roleaccess > 2 && <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />}
+                        {roleaccess > 3 && <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />}
                     </>
                 )
             }

@@ -9,8 +9,10 @@ import decryptedUserId from '../Utils/UserID'
 import Cookies from 'js-cookie'
 import { useDispatch, useSelector } from 'react-redux'
 import { getRoleData } from '../Store/Role/role-action'
-import { StyledDataGrid } from './StyledDataGrid'
-
+import { StyledDataGrid } from './StyledDataGrid';
+// import { useDispatch, useSelector } from "react-redux"
+// import { getRoleData } from "../Store/Role/role-action";
+// import Cookies from "js-cookie";
 
 function AddRole() {
 
@@ -142,6 +144,20 @@ function AddRole() {
         }));
     }
 
+const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 39
+    }
+
+    const dispatch = useDispatch()
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata))
+    }, [])
+
+
     const columns = [
         {
             field: 'index',
@@ -170,19 +186,7 @@ function AddRole() {
     ];
     const rowsWithIds = role.map((row, index) => ({ index: index + 1, ...row }));
 
-    const roledata = {
-        role: Cookies.get(`role`),
-        pageid: 4
-    }
-
-    const dispatch = useDispatch()
-    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
-
-
-    useEffect(() => {
-        dispatch(getRoleData(roledata))
-    }, [])
-
+    
 
     console.log(roleaccess)
 

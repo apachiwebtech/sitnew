@@ -16,6 +16,10 @@ import { pdf } from "@react-pdf/renderer";
 import MyDocument3 from "./MyDocument3";
 import TestDocument from "./TestDocument";
 import { StyledDataGrid } from "./StyledDataGrid";
+import { useDispatch, useSelector } from "react-redux";
+import { getRoleData } from "../Store/Role/role-action";
+import Cookies from "js-cookie";
+
 const FinalExam = () => {
     const [brand, setBrand] = useState([]);
     const [vendordata, setVendorData] = useState([]);
@@ -261,6 +265,18 @@ const FinalExam = () => {
         }
     };
 
+const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 56,
+    };
+
+    const dispatch = useDispatch();
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata));
+    }, []);
+
     const columns = [
         {
             field: "index",
@@ -276,7 +292,7 @@ const FinalExam = () => {
         { field: "description", headerName: "Description", flex: 2 },
         { field: "feedback", headerName: "FeedBack", flex: 2 },
 
-        {
+        ...(roleaccess > 2 ? [{
             field: "actions",
             type: "actions",
             headerName: "Action",
@@ -284,15 +300,15 @@ const FinalExam = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />
-                        <DeleteIcon
+                        {roleaccess > 2 && <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />}
+                        {roleaccess > 3 && <DeleteIcon
                             style={{ color: "red", cursor: "pointer" }}
                             onClick={() => handleClick(params.row.id)}
-                        />
+                        />}
                     </>
                 );
             },
-        },
+        },] : [])
     ];
 
     async function downloadPDF(id) {

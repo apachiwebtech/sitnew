@@ -8,6 +8,9 @@ import InnerHeader from './InnerHeader';
 import { Link } from 'react-router-dom';
 import Loader from './Loader';
 import { StyledDataGrid } from './StyledDataGrid';
+import { useDispatch, useSelector } from 'react-redux';
+import Cookies from 'js-cookie';
+import { getRoleData } from '../Store/Role/role-action';
 
 const CACHE_KEY = 'annulbatch_data'; // Key for localStorage caching
 const CACHE_EXPIRY_MS = 1000 * 60 * 15; // Cache expiry time (15 minutes)
@@ -97,6 +100,21 @@ const Batch = () => {
         }));
     }
 
+    
+    const rowsWithIds = annulbatch.map((row, index) => ({ index: index + 1, ...row }));
+const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 17
+    }
+
+    const dispatch = useDispatch()
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata))
+    }, [])
+
     const columns = [
         {
             field: 'index',
@@ -126,7 +144,7 @@ const Batch = () => {
           },
           
         { field: 'Training_Coordinator', headerName: 'Training Coordinator', flex: 1.5 },
-        {
+        ...(roleaccess > 2 ? [{
             field: 'actions',
             type: 'actions',
             headerName: 'Action',
@@ -139,10 +157,8 @@ const Batch = () => {
                     </>
                 )
             }
-        },
+        },] : [])
     ];
-
-    const rowsWithIds = annulbatch.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
         <div className="container-fluid page-body-wrapper ">

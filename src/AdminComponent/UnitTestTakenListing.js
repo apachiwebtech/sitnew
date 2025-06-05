@@ -9,6 +9,9 @@ import InnerHeader from './InnerHeader';
 import Loader from "./Loader";
 import { StyledDataGrid } from "./StyledDataGrid";
 //import AssignmentsTaken from "./AssignmentsTaken";
+import { useDispatch, useSelector } from "react-redux";
+import { getRoleData } from "../Store/Role/role-action";
+import Cookies from "js-cookie";
 
 const UnitTestTakenListing = () => {
 
@@ -168,7 +171,17 @@ const UnitTestTakenListing = () => {
         },
     ];
 
+    const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 30,
+    };
 
+    const dispatch = useDispatch();
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata));
+    }, []);
 
     const rowsWithIds = unittesttakendata.map((row, index) => ({ index: index + 1, ...row }));
 
@@ -190,7 +203,7 @@ const UnitTestTakenListing = () => {
                                         <div >
                                             <h4 class="card-title">Unit Test Taken</h4>
                                         </div>
-                                        <Link to='/unittesttaken/:unittesttakenid'> <button className='btn btn-success'>Add +</button></Link>
+                                        {roleaccess > 1 && <Link to='/unittesttaken/:unittesttakenid'> <button className='btn btn-success'>Add +</button></Link>}
 
 
                                     </div>

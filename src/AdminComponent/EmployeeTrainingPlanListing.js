@@ -8,6 +8,10 @@ import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import { StyledDataGrid } from "./StyledDataGrid";
 //import AssignmentsTaken from "./AssignmentsTaken";
+import { useDispatch, useSelector } from "react-redux";
+import { getRoleData } from "../Store/Role/role-action";
+import Cookies from "js-cookie";
+
 
 const EmployeeTrainingPlanListing = () => {
 
@@ -122,7 +126,17 @@ const EmployeeTrainingPlanListing = () => {
 
 
 
+const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 42,
+    };
 
+    const dispatch = useDispatch();
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata));
+    }, []);
 
 
     const columns = [
@@ -169,9 +183,9 @@ const EmployeeTrainingPlanListing = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <Link to={`/employeerecord/${params.row.id}`}><EditIcon style={{cursor: "pointer"}} /></Link>
+                        {roleaccess > 2 && <Link to={`/employeerecord/${params.row.id}`}><EditIcon style={{cursor: "pointer"}} /></Link>}
                         {/* <EditIcon style={{ cursor: "pointer" }} Link={() => handleUpdate(params.row.id)} /> */}
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} Link={() => handleClick(params.row.id)} />
+                        {roleaccess > 3 && <DeleteIcon style={{ color: "red", cursor: "pointer" }} Link={() => handleClick(params.row.id)} />}
                     </>
                 )
             }
@@ -199,7 +213,7 @@ const EmployeeTrainingPlanListing = () => {
                                         <div >
                                             <h4 class="card-title">Employee Training Plan</h4>
                                         </div>
-                                        <Link to='/employeetrainingplan/:employeetrainingplanid'> <button className='btn btn-success'>Add +</button></Link>
+                                        {roleaccess > 1 && <Link to='/employeetrainingplan/:employeetrainingplanid'> <button className='btn btn-success'>Add +</button></Link>}
 
 
                                     </div>

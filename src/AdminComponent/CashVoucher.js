@@ -13,6 +13,10 @@ import PrintIcon from '@mui/icons-material/Print';
 import { Voucher } from "./Document/Voucher";
 import { pdf } from "@react-pdf/renderer";
 import { data } from "jquery";
+import { useDispatch, useSelector } from 'react-redux';
+import Cookies from 'js-cookie';
+import { getRoleData } from '../Store/Role/role-action';
+
 
 const CashVoucher = () => {
 
@@ -97,6 +101,18 @@ const CashVoucher = () => {
 
 
 
+const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 79
+    }
+
+    const dispatch = useDispatch()
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata))
+    }, [])
 
 
 
@@ -144,8 +160,8 @@ const CashVoucher = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <Link to={`/cashvoucher/${params.row.id}`}><EditIcon style={{ cursor: "pointer" }} /></Link>
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
+                        {roleaccess > 2 && <Link to={`/cashvoucher/${params.row.id}`}><EditIcon style={{ cursor: "pointer" }} /></Link>}
+                        {roleaccess > 3 && <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />}
                         {/* <Switch {...label} onChange={() => handleswitchchange(params.row.isActive, params.row.id)} defaultChecked={params.row.isActive == 0 ? false : true} color="secondary" /> */}
                         <PrintIcon style={{ color: "blue", cursor: "pointer" }} onClick={() => printReceipt(params.row)} />
                     </>
@@ -206,7 +222,7 @@ const CashVoucher = () => {
                                         <div >
                                             <h4 class="card-title">View Cash Voucher</h4>
                                         </div>
-                                        <Link to='/cashvoucher/:voucherid'> <button className='btn btn-success'>Add +</button></Link>
+                                        {roleaccess > 1 &&  <Link to='/cashvoucher/:voucherid'> <button className='btn btn-success'>Add +</button></Link>}
 
 
                                     </div>

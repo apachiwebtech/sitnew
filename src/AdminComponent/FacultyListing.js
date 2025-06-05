@@ -8,7 +8,9 @@ import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import { StyledDataGrid } from "./StyledDataGrid";
 //import AssignmentsTaken from "./AssignmentsTaken";
-
+import { useDispatch, useSelector } from 'react-redux';
+import Cookies from 'js-cookie';
+import { getRoleData } from '../Store/Role/role-action';
 
 
 const FacultyListing = () => {
@@ -144,7 +146,18 @@ const FacultyListing = () => {
 
 
 
+ const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 21
+    }
 
+    const dispatch = useDispatch()
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata))
+    }, [])
 
 
     const columns = [
@@ -160,7 +173,7 @@ const FacultyListing = () => {
         },
         { field: 'Faculty_Name', headerName: 'Faculty Name', flex: 4 },
 
-        {
+        ...(roleaccess > 2 ? [{
             field: 'actions',
             type: 'actions',
             headerName: 'Action',
@@ -174,7 +187,7 @@ const FacultyListing = () => {
                     </>
                 )
             }
-        },
+        },] : [])
     ];
 
 

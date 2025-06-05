@@ -9,6 +9,9 @@ import { StyledDataGrid } from "./StyledDataGrid";
 //import FormControlLabel from '@mui/material/FormControlLabel';
 // import ImageList from '@mui/material/ImageList';
 // import { ImageSourcePropType } from 'react-native';
+import { useDispatch, useSelector } from "react-redux";
+import { getRoleData } from "../Store/Role/role-action";
+import Cookies from "js-cookie";
 
 const UploadBanner = () => {
   const [brand, setBrand] = useState([]);
@@ -156,6 +159,18 @@ const UploadBanner = () => {
 
   const onhandleupload = (e) => setImage(e.target.files[0]);
 
+const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 97,
+    };
+
+    const dispatch = useDispatch();
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata));
+    }, []);
+
   const columns = [
     {
       field: "index",
@@ -175,14 +190,14 @@ const UploadBanner = () => {
       flex: 1,
       renderCell: (params) => (
         <>
-          <EditIcon
+          {roleaccess > 2 &&<EditIcon
             style={{ cursor: "pointer" }}
             onClick={() => handleUpdate(params.row.id)}
-          />
-          <DeleteIcon
+          />}
+           {roleaccess > 3 &&<DeleteIcon
             style={{ color: "red", cursor: "pointer" }}
             onClick={() => handleClick(params.row.id)}
-          />
+          />}
         </>
       ),
     },

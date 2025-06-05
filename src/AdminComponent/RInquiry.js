@@ -14,6 +14,10 @@ import { StyledDataGrid } from "./StyledDataGrid";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { format } from "date-fns";
+import { useDispatch, useSelector } from "react-redux";
+import { getRoleData } from "../Store/Role/role-action";
+import Cookies from "js-cookie";
+
 
 const RInquiry = () => {
     const [selected, setSelected] = useState([]);
@@ -355,14 +359,25 @@ const RInquiry = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <EditIcon style={{ cursor: "pointer" }} onClick={() => params.row.Student_Id} />
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => params.row.Student_Id} />
+                        {roleaccess > 2 && <EditIcon style={{ cursor: "pointer" }} onClick={() => params.row.Student_Id} />}
+                        {roleaccess > 3 && <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => params.row.Student_Id} />}
                     </>
                 );
             },
         },
     ];
 
+     const roledata = {
+            role: Cookies.get(`role`),
+            pageid: 44,
+        };
+    
+        const dispatch = useDispatch();
+        const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+    
+        useEffect(() => {
+            dispatch(getRoleData(roledata));
+        }, []);
     const rowsWithIds = inquery.map((row, index) => ({ index: index + 1, ...row }));
 
     return (

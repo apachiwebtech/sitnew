@@ -11,6 +11,9 @@ import VivaMOCTaken from "./VivaMOCTaken";
 import Loader from "./Loader";
 import { StyledDataGrid } from "./StyledDataGrid";
 import { G } from "@react-pdf/renderer";
+import { useDispatch, useSelector } from "react-redux";
+import { getRoleData } from "../Store/Role/role-action";
+import Cookies from "js-cookie";
 
 const VivaMOCTakenListing = () => {
 
@@ -110,7 +113,17 @@ const VivaMOCTakenListing = () => {
 
 
 
+const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 31,
+    };
 
+    const dispatch = useDispatch();
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata));
+    }, []);
 
     const columns = [
         {
@@ -148,7 +161,7 @@ const VivaMOCTakenListing = () => {
           },
           
 
-        {
+          ...(roleaccess > 2 ? [{
             field: 'actions',
             type: 'actions',
             headerName: 'Action',
@@ -163,10 +176,10 @@ const VivaMOCTakenListing = () => {
                     </>
                 )
             }
-        },
+        },] : [])
     ];
 
-
+    
 
     const rowsWithIds = vivamoctakendata.map((row, index) => ({ index: index + 1, ...row }));
 
@@ -188,7 +201,7 @@ const VivaMOCTakenListing = () => {
                                         <div >
                                             <h4 class="card-title">Viva / MOC Taken</h4>
                                         </div>
-                                        <Link to='/vivamoctaken/:vivamoctakenid'> <button className='btn btn-success'>Add +</button></Link>
+                                        {roleaccess > 1 && <Link to='/vivamoctaken/:vivamoctakenid'> <button className='btn btn-success'>Add +</button></Link>}
 
 
                                     </div>

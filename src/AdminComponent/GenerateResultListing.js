@@ -11,6 +11,9 @@ import GenerateResult from "./GenerateResult";
 import Loader from "./Loader";
 import toast, { Toaster } from 'react-hot-toast';
 import { StyledDataGrid } from "./StyledDataGrid";
+import { useDispatch, useSelector } from "react-redux";
+import { getRoleData } from "../Store/Role/role-action";
+import Cookies from "js-cookie";
 
 
 
@@ -195,7 +198,17 @@ const GenerateResultListing = () => {
         },
     ];
 
+    const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 33,
+    };
 
+    const dispatch = useDispatch();
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata));
+    }, []);
 
     const rowsWithIds = generateresultdata.map((row, index) => ({ index: index + 1, ...row }));
 
@@ -220,7 +233,7 @@ const GenerateResultListing = () => {
                                         <div >
                                             <h4 class="card-title">View  Final Result</h4>
                                         </div>
-                                        <Link to='/generateresult/:generateresultid'> <button className='btn btn-success'>Add +</button></Link>
+                                        {roleaccess > 1 &&<Link to='/generateresult/:generateresultid'> <button className='btn btn-success'>Add +</button></Link>}
 
 
                                     </div>

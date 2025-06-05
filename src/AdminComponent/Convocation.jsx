@@ -16,6 +16,9 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Link, useNavigate } from "react-router-dom";
 import { StyledDataGrid } from "./StyledDataGrid";
+import { useDispatch, useSelector } from "react-redux";
+import { getRoleData } from "../Store/Role/role-action";
+import Cookies from "js-cookie";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -170,6 +173,19 @@ const Convocation = () => {
     }
   }
 
+const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 106,
+    };
+
+    const dispatch = useDispatch();
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata));
+    }, []);
+
+
   const columns = [
     { field: "Batch_Code", headerName: "Batch Code", flex:2, },
     {
@@ -202,8 +218,8 @@ const Convocation = () => {
       renderCell: (params) => {
         return (
           <>
-            <EditIcon style={{ cursor: "pointer" }} onClick={()=>navigate(`/convocation/${params.row.Id}`)} />
-            <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => setDeleteId(params.row.Id)} />
+            {roleaccess > 2 &&<EditIcon style={{ cursor: "pointer" }} onClick={()=>navigate(`/convocation/${params.row.Id}`)} />}
+             {roleaccess > 3 &&<DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => setDeleteId(params.row.Id)} />}
           </>
         )
       }
@@ -261,9 +277,9 @@ const Convocation = () => {
                     >
                       Add +
                     </button> */}
-                    <Link to='/convocation/:Id' className='btn btn-success'>
+                     {roleaccess > 1 &&<Link to='/convocation/:Id' className='btn btn-success'>
                         Add +
-                    </Link>
+                    </Link>}
                   </div>
 
                   <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "hidden"}}>

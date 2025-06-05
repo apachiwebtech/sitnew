@@ -8,6 +8,10 @@ import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import { StyledDataGrid } from "./StyledDataGrid";
 
+import { useDispatch, useSelector } from "react-redux";
+import { getRoleData } from "../Store/Role/role-action";
+import Cookies from "js-cookie";
+
 const EmailMasterListing = () => {
 
     const [uid, setUid] = useState([])
@@ -120,6 +124,18 @@ const EmailMasterListing = () => {
     }
 
 
+const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 102,
+    };
+
+    const dispatch = useDispatch();
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata));
+    }, []);
+
 
     const columns = [
         {
@@ -144,8 +160,8 @@ const EmailMasterListing = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <Link to={`/emailmaster/${params.row.Given_Id}`} ><EditIcon style={{ cursor: "pointer" }}  /></Link>
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} Link={() => handleClick(params.row.Given_Id)} />
+                        {roleaccess > 2 &&<Link to={`/emailmaster/${params.row.Given_Id}`} ><EditIcon style={{ cursor: "pointer" }}  /></Link>}
+                        {roleaccess > 3 && <DeleteIcon style={{ color: "red", cursor: "pointer" }} Link={() => handleClick(params.row.Given_Id)} />}
                     </>
                 )
             }
@@ -173,7 +189,7 @@ const EmailMasterListing = () => {
                                         <div >
                                             <h4 class="card-title">Email Details</h4>
                                         </div>
-                                        <Link to='/emailmaster/:emailmaster'> <button className='btn btn-success'>Add +</button></Link>
+                                        {roleaccess > 1 &&<Link to='/emailmaster/:emailmaster'> <button className='btn btn-success'>Add +</button></Link>}
 
 
                                     </div>
