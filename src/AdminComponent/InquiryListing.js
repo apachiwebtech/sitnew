@@ -73,22 +73,41 @@ const InquiryListing = () => {
     };
 
     useEffect(() => {
-        getInquiryData(page, pageSize);
+        if (localStorage.getItem("searchwise") && localStorage.getItem("searchdata")) {
+            setSearchWise(localStorage.getItem("searchwise"));
+            setSearchData(localStorage.getItem("searchdata"));
+            fetchSearchInquiry();
+        } else {
+
+            // getInquiryData();
+            getInquiryData(page, pageSize);
+        }
     }, [page, pageSize]);
 
 
-    const onsearchformSumbit = (e) => {
-        e.preventDefault();
-
+    const fetchSearchInquiry = () => {
         const data = {
-            searchwise: searchwise,
-            search: searchdata,
+            searchwise: searchwise || localStorage.getItem("searchwise"),
+            search: searchdata || localStorage.getItem("searchdata") || "",
         };
 
         axios.post(`${BASE_URL}/getserchInquiry`, data).then((res) => {
             setInquiryData(res.data);
+            setLoading(false);
+
+            if(searchwise && searchdata){
+                localStorage.setItem("searchwise", searchwise);
+                localStorage.setItem("searchdata", searchdata);
+            }
+
         });
     };
+
+    const onsearchformSumbit = (e) => {
+        e.preventDefault();
+        fetchSearchInquiry();
+    };
+
 
 
     const handlesearchselect = (value) => {
@@ -160,8 +179,14 @@ const InquiryListing = () => {
     }
 
     useEffect(() => {
-        getInquiryData();
+        if (localStorage.getItem("searchwise") && localStorage.getItem("searchdata")) {
+            fetchSearchInquiry();
+            setSearchWise(localStorage.getItem("searchwise"));
+            setSearchData(localStorage.getItem("searchdata"));
+        } else {
 
+            getInquiryData();
+        }
         setError({});
         setUid([]);
     }, []);
@@ -355,12 +380,12 @@ const InquiryListing = () => {
                     <div
                         style={{
                             display: "-webkit-box",
-                            WebkitLineClamp: 2,              
+                            WebkitLineClamp: 2,
                             WebkitBoxOrient: "vertical",
                             overflow: "hidden",
                             textOverflow: "ellipsis",
                             lineHeight: "1.4",
-                            maxHeight: "2.8em",             
+                            maxHeight: "2.8em",
                         }}
                     >
                         <p
@@ -509,6 +534,12 @@ const InquiryListing = () => {
         dispatch(getRoleData(roledata));
     }, []);
 
+    const cleardata = () => {
+        localStorage.removeItem("searchwise");
+        localStorage.removeItem("searchdata");
+        window.location.reload();
+    }
+
     return (
         <div className={`container-fluid page-body-wrapper `}>
             <InnerHeader />
@@ -579,15 +610,15 @@ const InquiryListing = () => {
                                                                     searchwise === "NameWise"
                                                                         ? option.Student_Name
                                                                         : searchwise === "BatchWise"
-                                                                            ? option.Batch_code
+                                                                            ? option.Batch_code 
                                                                             : searchwise === "EmailWise"
                                                                                 ? option.Email
                                                                                 : searchwise === "MobileWise"
-                                                                                    ? option.Present_Mobile
+                                                                                    ? option.Present_Mobile 
                                                                                     : searchwise === "CourseWise"
-                                                                                        ? option.Course_Name
-                                                                                        : "" // Provide a default fallback
-                                                            } // Dynamically display the label based on `searchdata`
+                                                                                        ? option.Course_Name 
+                                                                                        : localStorage.getItem("searchdata") // Provide a default fallback
+                                                            }
                                                             value={selectedStudent} // Use a state to manage the selected value
                                                             onChange={(e, newValue) => handleSearchChange(newValue)} // `newValue` is the selected object
                                                             onInputChange={(e, newInputValue) =>
@@ -629,9 +660,7 @@ const InquiryListing = () => {
                                                     <div className=" col-lg-2">
                                                         <Button
                                                             type="submit"
-                                                            onClick={() => {
-                                                                window.location.reload();
-                                                            }}
+                                                            onClick={cleardata}
                                                             variant="contained"
                                                         >
                                                             Clear

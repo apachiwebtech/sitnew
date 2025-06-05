@@ -46,7 +46,7 @@ const PerssonalInfo = () => {
         permanentCity: '',
         permanentState: '',
         permanentCountry: '',
-        permanentmobile: '',
+        familymobile: '',
         perWatsapp: '',
         sdate: '',
         edate: '',
@@ -172,47 +172,46 @@ const PerssonalInfo = () => {
 
         const data = await response.json();
 
-        setbatchcode(data[0].Batch_Code)
-        getBatchwiseamount(data[0].Batch_Code)
-        setBatchId(data[0].Batch_Id)
-        setAmount(data[0].INR_Total)
+        setbatchcode(data.data[0].Batch_Code)
+        getBatchwiseamount(data.data[0].Batch_Code)
+        setBatchId(data.data[0].Batch_Id)
+        setAmount(data.data[0].INR_Total)
 
-        console.log(data[0].Permanent_Country)
         setPersonalInfo(prevState => ({
             ...prevState,
-            Batch_Code: data[0].Batch_Code,
-            studentName: data[0].Student_Name,
-            gender: data[0].Sex,
-            nationality: data[0].Nationality,
-            dob: data[0].DOB,
+            Batch_Code: data.data[0].Batch_Code,
+            studentName: data.data[0].Student_Name,
+            gender: data.data[0].Sex,
+            nationality: data.data[0].Nationality,
+            dob: data.data[0].DOB,
             // password: data[0].,
-            Student_Id: data[0].Student_Id,
-            presentaddress: data[0].Present_Address,
-            presentPincode: data[0].Present_Pin,
-            presentCity: data[0].Present_City,
-            state: data[0].Present_State,
-            presentCountry: data[0].Present_Country,
-            mobile: data[0].Present_Mobile,
-            reference: data[0].Refered_By,
+            Student_Id: data.data[0].Student_Id,
+            presentaddress: data.data[0].Present_Address,
+            presentPincode: data.data[0].Present_Pin,
+            presentCity: data.data[0].Present_City,
+            state: data.data[0].Present_State,
+            presentCountry: data.data[0].Present_Country,
+            mobile: data.data[0].Present_Mobile,
+            reference: data.data[0].Refered_By,
             whatsapp: '',
-            course: data[0].Course_Id,
-            category: data[0].Batch_Category_id,
+            course: data.data[0].Course_Id,
+            category: data.data[0].Batch_Category_id,
             // Referby: data[0].Refered_By,
-            admission_dt: data[0].Admission_Dt,
-            prestatus: data[0].Status_id,
-            changestatus: data[0].Status_id,
-            date: data[0].Status_date,
-            prestatusdate: data[0].Status_date,
-            permanentAdress: data[0].Permanent_Address,
-            permanentPincode: data[0].Permanent_Pin,
-            permanentCity: data[0].Permanent_City,
-            permanentState: data[0].Permanent_State,
-            permanentCountry: data[0].Permanent_Country,
-            permanentmobile: data[0].Permanent_Tel,
-            permanentemail: data[0].Email,
+            admission_dt: data.data[0].Admission_Dt,
+            prestatus: data.data[0].Status,
+            changestatus: data.data[0].Status_id,
+            date: data.data[0].Status_date,
+            prestatusdate: data.data[0].Status_date,
+            permanentAdress: data.data[0].Permanent_Address,
+            permanentPincode: data.data[0].Permanent_Pin,
+            permanentCity: data.data[0].Permanent_City,
+            permanentState: data.data[0].Permanent_State,
+            permanentCountry: data.data[0].Permanent_Country,
+            familymobile: data.data[0].Father_Mobile,
+            permanentemail: data.data[0].Email,
             perWatsapp: '',
-            sdate: data[0].SDate,
-            edate: data[0].Edate
+            sdate: data.data[0].SDate,
+            edate: data.data[0].Edate
         }));
     }
 
@@ -287,7 +286,7 @@ const PerssonalInfo = () => {
                 permanentCity: personalInfo.permanentCity,
                 permanentState: personalInfo.permanentState,
                 permanentCountry: personalInfo.permanentCountry,
-                permanentmobile: personalInfo.permanentmobile,
+                familymobile: personalInfo.familymobile,
                 perWatsapp: personalInfo.perWatsapp,
                 permanentemail: personalInfo.permanentemail
             }),
@@ -598,7 +597,7 @@ const PerssonalInfo = () => {
                                                             <input type="text" className="form-control" id="exampleInputUsername1" value={personalInfo.prestatus} placeholder="Ex. Closed" name='prestatus' disabled onChange={handleChange} />
                                                         </div>
                                                         <div className="form-group col-lg-4">
-                                                            <label for="exampleInputUsername1">Date</label>
+                                                            <label for="exampleInputUsername1">Status Date</label>
 
                                                             <input type="text" className="form-control" id="exampleInputUsername1" value={personalInfo.prestatusdate} placeholder="Date" name='prestatusdate' disabled onChange={handleChange} />
                                                         </div>
@@ -662,7 +661,7 @@ const PerssonalInfo = () => {
 
                                                         <div className='form-group col-3'>
                                                             <label for="exampleInputUsername1">Family Mobile</label>
-                                                            <input type="number" className="form-control" id="exampleInputUsername1" value={personalInfo.permanentmobile} placeholder="Number" name='permanentmobile' onChange={handleChange} />
+                                                            <input type="number" className="form-control" id="exampleInputUsername1" value={personalInfo.familymobile} placeholder="Number" name='familymobile' onChange={handleChange} />
                                                         </div>
 
                                                         <div className='form-group col-3'>

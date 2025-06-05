@@ -11,6 +11,7 @@ import InnerHeaderForm from "./InnerHeaderForm";
 const StudentPersonalInfo = () => {
     const [course, setCourse] = useState([]);
     const [batchCategoty, setbatchCategory] = useState([]);
+    const [batch, setBatch] = useState([]);
     const [status, setStatus] = useState([]);
     const [photo, setPhoto] = useState("");
     const location = useLocation();
@@ -44,11 +45,12 @@ const StudentPersonalInfo = () => {
         permanentCity: "",
         permanentState: "",
         permanentCountry: "",
-        permanentmobile: "",
+        familymobile: "",
         perWatsapp: "",
         sdate: "",
         edate: "",
-        Student_Code : ""
+        Student_Code: "",
+        permanentemail : ""
     });
     const { admissionid } = useParams();
 
@@ -73,11 +75,6 @@ const StudentPersonalInfo = () => {
         setbatchCategory(data);
     };
 
-    async function getStatus() {
-        axios.get(`${BASE_URL}/getstatus`).then((res) => {
-            setStatus(res.data);
-        });
-    }
     async function getStatus() {
         axios.get(`${BASE_URL}/getstatus`).then((res) => {
             setStatus(res.data);
@@ -116,45 +113,46 @@ const StudentPersonalInfo = () => {
 
         const data = await response.json();
 
-        console.log(data[0].Permanent_Country);
+        setBatch(data.batchdata);
+
+        
         setPersonalInfo((prevState) => ({
             ...prevState,
-            Batch_Code: data[0].Batch_Code,
-            studentName: data[0].Student_Name,
-            Student_Id: data[0].Student_Id,
-            Email: data[0].Email,
-            gender: data[0].Sex,
-            nationality: data[0].Nationality,
-            dob: data[0].DOB,
-            // password: data[0].,
-            reference: data[0].Refered_By,
-            presentaddress: data[0].Present_Address,
-            presentPincode: data[0].Present_Pin,
-            presentCity: data[0].Present_City,
-            state: data[0].Present_State,
-            presentCountry: data[0].Present_Country,
-            mobile: data[0].Present_Mobile,
+            Batch_Code: data.data[0].Batch_Code,
+            studentName: data.data[0].Student_Name,
+            Student_Id: data.data[0].Student_Id,
+            permanentemail: data.data[0].Email,
+            gender: data.data[0].Sex,
+            nationality: data.data[0].Nationality,
+            dob: data.data[0].DOB,
+            reference: data.data[0].Refered_By,
+            presentaddress: data.data[0].Present_Address,
+            presentPincode: data.data[0].Present_Pin,
+            presentCity: data.data[0].Present_City,
+            state: data.data[0].Present_State,
+            presentCountry: data.data[0].Present_Country,
+            mobile: data.data[0].Present_Mobile,
             whatsapp: "",
-            course: data[0].Course_Id,
-            category: data[0].Batch_Category_id,
-            Referby: data[0].Refered_By,
-            admission_dt: data[0].Admission_Dt,
-            prestatus: data[0].Status,
-            changestatus: data[0].Status_id,
-            date: data[0].Status_date,
-            prestatusdate: data[0].StateChangeDt,
-            permanentAdress: data[0].Permanent_Address,
-            permanentPincode: data[0].Permanent_Pin,
-            permanentCity: data[0].Permanent_City,
-            permanentState: data[0].Permanent_State,
-            permanentCountry: data[0].Permanent_Country,
-            permanentmobile: data[0].Permanent_Tel,
+            course: data.data[0].Course_Id,
+            category: data.data[0].Batch_Category_id,
+            Referby: data.data[0].Refered_By,
+            admission_dt: data.data[0].Admission_Dt,
+            prestatus: data.data[0].Status,
+            changestatus: data.data[0].Status_id,
+            date: data.data[0].Status_date,
+            prestatusdate: data.data[0].StateChangeDt,
+            permanentAdress: data.data[0].Permanent_Address,
+            permanentPincode: data.data[0].Permanent_Pin,
+            permanentCity: data.data[0].Permanent_City,
+            permanentState: data.data[0].Permanent_State,
+            permanentCountry: data.data[0].Permanent_Country,
+            familymobile: data.data[0].Father_Mobile,
             perWatsapp: "",
-            sdate: data[0].SDate,
-            edate: data[0].Edate,
-            online_stud_id: data[0].online_stud_id,
-            Inquiry_Type: data[0].Inquiry_Type,
-            Student_Code: data[0].Student_Code,
+            sdate: data.data[0].SDate,
+            edate: data.data[0].Edate,
+            online_stud_id: data.data[0].online_stud_id,
+            Inquiry_Type: data.data[0].Inquiry_Type,
+            Student_Code: data.data[0].Student_Code,
         }));
     };
 
@@ -175,7 +173,7 @@ const StudentPersonalInfo = () => {
             body: JSON.stringify({
                 Student_Id: localStorage.getItem(`Admissionid`),
                 studentName: personalInfo.studentName,
-                Email: personalInfo.Email,
+                permanentemail: personalInfo.permanentemail,
                 Batch_Code: personalInfo.Batch_Code,
                 gender: personalInfo.gender,
                 nationality: personalInfo.nationality,
@@ -202,7 +200,7 @@ const StudentPersonalInfo = () => {
                 permanentCity: personalInfo.permanentCity,
                 permanentState: personalInfo.permanentState,
                 permanentCountry: personalInfo.permanentCountry,
-                permanentmobile: personalInfo.permanentmobile,
+                familymobile: personalInfo.familymobile,
                 perWatsapp: personalInfo.perWatsapp,
             }),
             headers: {
@@ -272,7 +270,7 @@ const StudentPersonalInfo = () => {
 
                                                         <div className="form-group col-lg-8">
                                                             <label for="exampleInputUsername1">
-                                                                Name<span className="text-danger">*</span> <b>ID:</b> <span>{personalInfo.Student_Code }</span>
+                                                                Name<span className="text-danger">*</span> <b>ID:</b> <span>{personalInfo.Student_Code}</span>
                                                             </label>
                                                             <input
                                                                 type="text"
@@ -354,11 +352,26 @@ const StudentPersonalInfo = () => {
                                                                 type="text"
                                                                 className="form-control"
                                                                 id="exampleInputUsername1"
-                                                                value={personalInfo.Email}
+                                                                value={personalInfo.permanentemail}
                                                                 placeholder="Name*"
-                                                                name="Email"
+                                                                name="permanentemail"
                                                                 onChange={handleChange}
                                                             />
+                                                        </div>
+
+                                                        <div className="form-group col-lg-4">
+                                                            <label for="exampleTextarea1">Batch Details</label>
+                                                            <div className = 'border p-2 w-100'>
+                                                                {batch.map((item) => {
+                                                                    return (
+                                                                        <div key={item.id}>
+                                                                            <p>
+                                                                                {item.Batch_code}
+                                                                            </p>
+                                                                        </div>
+                                                                    )
+                                                                })}
+                                                            </div>
                                                         </div>
 
                                                         <div className="form-group col-lg-12 ">
@@ -603,7 +616,7 @@ const StudentPersonalInfo = () => {
 
                                                     <div className="row">
                                                         <div className="form-group col-lg-6">
-                                                            <label for="exampleInputUsername1">Set Status</label>
+                                                            <label for="exampleInputUsername1">Status</label>
                                                             <select
                                                                 className="form-control form-control-lg"
                                                                 id="exampleFormControlSelect1"
@@ -620,7 +633,7 @@ const StudentPersonalInfo = () => {
                                                             </select>
                                                         </div>
                                                         <div className="form-group col-lg-6">
-                                                            <label for="exampleInputUsername1">Date</label>
+                                                            <label for="exampleInputUsername1">Status Date</label>
                                                             <input
                                                                 type="date"
                                                                 className="form-control"
@@ -716,9 +729,9 @@ const StudentPersonalInfo = () => {
                                                                 type="number"
                                                                 className="form-control"
                                                                 id="exampleInputUsername1"
-                                                                value={personalInfo.permanentmobile}
+                                                                value={personalInfo.familymobile}
                                                                 placeholder="Number"
-                                                                name="permanentmobile"
+                                                                name="familymobile"
                                                                 onChange={handleChange}
                                                             />
                                                         </div>
@@ -751,22 +764,22 @@ const StudentPersonalInfo = () => {
                                                     <hr />
                                                     <h4>Unit Test Avg : 00</h4>
                                                     <hr />
-                                                    <h4>Final Exam Marks : 30.6</h4>
+                                                    <h4>Final Exam Marks : 00</h4>
                                                     <hr />
-                                                    <h4>Attendance(%) : 30.6</h4>
+                                                    <h4>Attendance(%) : 00</h4>
                                                     <hr />
-                                                    <h4>Final Total : 30.6</h4>
+                                                    <h4>Final Total : 00</h4>
                                                     <hr />
 
                                                     <h4>Batch Details :</h4>
                                                     <div>
                                                         <p>
                                                             <b>Batch Start:</b>
-                                                            {personalInfo.sdate}
+                                                            &nbsp;{personalInfo.sdate}
                                                         </p>
                                                         <p>
                                                             <b>Batch End:</b>
-                                                            {personalInfo.edate}
+                                                            &nbsp;{personalInfo.edate}
                                                         </p>
                                                     </div>
                                                 </div>

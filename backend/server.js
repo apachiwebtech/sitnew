@@ -1766,6 +1766,7 @@ app.get("/nodeapp/getCollege", (req, res, next) => {
 
 app.post("/nodeapp/postInquiry", (req, res, next) => {
   const {
+    Enquiry_Id,
     firstname,
     email,
     gender,
@@ -1791,7 +1792,7 @@ app.post("/nodeapp/postInquiry", (req, res, next) => {
   const created_date = new Date();
 
   const insertIntoInquiry =
-    "INSERT INTO Student_Inquiry ( Email, Student_Name, Sex, DOB, Present_Mobile,Inquiry_Dt, Inquiry_type, Qualification, Discipline, Percentage, Course_Id ,Nationality,Present_Country,Discussion,StateChangeDt,OnlineState ,Inquiry,Batch_Category_id ,Batch_Code ,Refered_By,IsUnread ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    "INSERT INTO Student_Inquiry ( Email, Student_Name, Sex, DOB, Present_Mobile,Inquiry_Dt, Inquiry_type, Qualification, Discipline, Percentage, Course_Id ,Nationality,Present_Country,Discussion,StateChangeDt,OnlineState ,Inquiry,Batch_Category_id ,Batch_Code ,Refered_By , IsUnread ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
   con.query(
     insertIntoInquiry,
@@ -1816,25 +1817,2617 @@ app.post("/nodeapp/postInquiry", (req, res, next) => {
       category,
       batch,
       advert,
-      "1",
+      '1'
     ],
     (error, data) => {
       if (error) {
         res.json(error);
         return;
       } else {
-        // const inquiryid = data.insertId;
+        const inquiryid = data.insertId;
 
-        // const adddiscussion =
-        //     "insert into awt_inquirydiscussion(`Inquiry_id`,`date`,`discussion`,`created_date`) values(?,?,?,?)";
 
-        // con.query(adddiscussion, [inquiryid, InquiryDate, discussion, created_date], (err, data) => {
-        //     if (err) {
-        //         return res.json(err);
-        //     } else {
-        //     }
-        // });
-        res.status(200).json({ message: "Data added to inquiry table." });
+        if (Enquiry_Id == ':inquiryid') {
+
+          const adddiscussion = "insert into awt_inquirydiscussion(`Inquiry_id`,`date`,`discussion`,`created_date`) values(?,?,?,?)";
+
+          con.query(adddiscussion, [inquiryid, InquiryDate, discussion, created_date], (err, data) => {
+            if (err) {
+              return res.json(err);
+            } else {
+              return res.json({ message: "Data added to inquiry table.", inquiryid: inquiryid })
+            }
+          });
+
+        } else {
+          return res.json({ message: "Data added to inquiry table.", inquiryid: inquiryid })
+
+        }
+
+
+
+        // res.status(200).json({ message: "Data added to inquiry table." });
+      }
+    }
+  );
+});
+
+app.post("/nodeapp/SendInquiry", (req, res, next) => {
+  const { firstname, email, mobile, qualification, location, course } = req.body;
+
+  // Mobile number validation: must be exactly 10 digits
+  const mobileRegex = /^[0-9]{10}$/;
+  if (!mobileRegex.test(mobile)) {
+    return res.status(400).json({ error: "Invalid mobile number. It must be exactly 10 digits." });
+  }
+
+  const date = new Date();
+  const formattedDate = date.toISOString().slice(0, 10);
+
+
+
+  const insertIntoInquiry =
+    "INSERT INTO Student_Inquiry ( Email, Student_Name, Present_Mobile, Qualification, Course_Id ,Present_City ,Inquiry_Dt) VALUES (?,?,?,?,?,?,?)";
+
+  con.query(
+    insertIntoInquiry,
+    [email, firstname, mobile, qualification, course, location, formattedDate],
+    (error, data) => {
+      if (error) {
+        res.json(error);
+        return;
+      }
+      writeLog(`this email is inserted ${mobile} and ${email}`);
+      res.status(200).json({ message: "Data added to inquiry table." });
+    }
+  );
+});
+
+app.post("/nodeapp/updateInquiry", async (req, res, next) => {
+  const created_date = new Date();
+
+  const {
+    Enquiry_Id,
+    firstname,
+    email,
+    gender,
+    dob,
+    mobile,
+    InquiryDate,
+    modeEnquiry,
+    advert,
+    programmeEnquired,
+    selectedProgramme,
+    category,
+    batch,
+    qualification,
+    descipline,
+    percentage,
+    nationality,
+    statusdate,
+    status,
+    country,
+    discussion,
+  } = req.body;
+
+  const sql =
+    "UPDATE Student_Inquiry SET  Student_Name = ?, Email = ?, Sex = ?, DOB = ?, Present_Mobile = ?, Inquiry_Dt = ?, Inquiry_type =?, Course_Id = ?, Qualification = ?, Discipline = ?, Percentage = ? , Discussion = ? ,StateChangeDt = ? ,OnlineState = ?, Inquiry = ?,Batch_Category_id = ? ,Batch_Code =? , Refered_By = ? ,Nationality = ?, Present_Country = ? ,IsUnread = 1 WHERE Inquiry_Id = ? ";
+
+  try {
+    const data = await new Promise((resolve, reject) => {
+      con.query(
+        sql,
+        [
+          firstname,
+          email,
+          gender,
+          dob,
+          mobile,
+          InquiryDate,
+          modeEnquiry,
+          selectedProgramme,
+          qualification,
+          descipline,
+          percentage,
+          discussion,
+          statusdate,
+          status,
+          programmeEnquired,
+          category,
+          batch,
+          advert,
+          nationality,
+          country,
+          Enquiry_Id,
+        ],
+        (error, data) => {
+          if (error) reject(error);
+          else resolve(data);
+        }
+      );
+    });
+
+    res.status(200).json({ message: "Data added to inquiry table." });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+app.post("/nodeapp/deleteInquiry", async (req, res, next) => {
+  const { Inquiry_Id } = req.body;
+
+  const sql = "UPDATE Student_Inquiry SET isDelete = 1 WHERE Inquiry_Id = ?";
+
+  try {
+    const data = await new Promise((resolve, reject) => {
+      con.query(sql, [Inquiry_Id], (error, data) => {
+        if (error) reject(error);
+        else resolve(data);
+      });
+    });
+
+    res.status(200).json({
+      message: "Record Deleted.",
+    });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+app.get("/nodeapp/getStudents", async (req, res, next) => {
+  const sql =
+    "SELECT sm.Student_Id,sm.Batch_Code,sm.Student_Name,sm.Present_Address,sm.Email, sm.Present_Mobile, sm.Qualification, sm.IsActive ,stm.Status ,sm.Admission_Dt FROM Student_Master as sm left join Status_Master as stm on stm.Id = sm.Status_id WHERE sm.IsDelete = 0 and sm.Admission != 1 and sm.IsAdmOpen = 'open' and sm.Status_id != 8 and sm.Admission_Dt IS NOT NULL order by sm.created_date desc";
+
+  try {
+    const data = await new Promise((resolve, reject) => {
+      con.query(sql, (error, data) => {
+        if (error) reject(error);
+        else resolve(data);
+      });
+    });
+
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({
+      message: "Cannot get Students data.",
+    });
+  }
+});
+
+app.get("/nodeapp/getFinalStudents", async (req, res, next) => {
+  const sql =
+    "SELECT sm.Student_Id,sm.Batch_Code,sm.Student_Name,sm.Present_Address,sm.Email, sm.Present_Mobile, sm.Qualification, sm.IsActive ,stm.Status FROM Student_Master as sm left join Status_Master as stm on stm.Id = sm.OnlineState WHERE sm.IsDelete = 0 and Admission = 1  order by sm.Student_Id desc";
+
+  try {
+    const data = await new Promise((resolve, reject) => {
+      con.query(sql, (error, data) => {
+        if (error) reject(error);
+        else resolve(data);
+      });
+    });
+
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({
+      message: "Cannot get Students data.",
+    });
+  }
+});
+
+app.get("/nodeapp/getCorporate", async (req, res, next) => {
+  const sql =
+    "SELECT co.Id, co.FullName,co.email,c.Course_Name FROM CorporateInquiry as co LEFT JOIN Course_Mst AS c ON co.Course_Id = c.Course_Id WHERE co.IsDelete = 0";
+
+  try {
+    const data = await new Promise((resolve, reject) => {
+      con.query(sql, (error, data) => {
+        if (error) reject(error);
+        else resolve(data);
+      });
+    });
+
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+app.get("/nodeapp/getBtach", async (req, res, next) => {
+  const sql =
+    "SELECT Batch_Id, Course_Id, Batch_code, Batch_Category_id  FROM Batch_Mst WHERE isDelete = 0 AND isActive = 1";
+
+  try {
+    const data = await new Promise((resolve, reject) => {
+      con.query(sql, (error, data) => {
+        if (error) reject(error);
+        else resolve(data);
+      });
+    });
+
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+app.get("/nodeapp/getBtachCategory", async (req, res, next) => {
+  const sql = "SELECT BatchCategory,id  FROM MST_BatchCategory WHERE isDelete = 0 AND isActive = 1";
+
+  try {
+    const data = await new Promise((resolve, reject) => {
+      con.query(sql, (error, data) => {
+        if (error) reject(error);
+        else resolve(data);
+      });
+    });
+
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+app.post(`/nodeapp/data_status`, async (req, res) => {
+  let status = req.body.status;
+  let Inquiry_Id = req.body.Inquiry_Id;
+  let table_name = req.body.table_name;
+  const sql = `update ${table_name} set isActive = ? where Inquiry_Id = ?`;
+
+  try {
+    const data = await new Promise((resolve, reject) => {
+      con.query(sql, [status, Inquiry_Id], (err, data) => {
+        if (err) reject(err);
+        else resolve(data);
+      });
+    });
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+app.post(`/nodeapp/data_Corporate_status`, async (req, res) => {
+  let status = req.body.status;
+  let Inquiry_Id = req.body.Inquiry_Id;
+  let table_name = req.body.table_name;
+
+  const sql = `update ${table_name} set isActive = ? where Id = ?`;
+
+  try {
+    const data = await new Promise((resolve, reject) => {
+      con.query(sql, [status, Inquiry_Id], (err, data) => {
+        if (err) reject(err);
+        else resolve(data);
+      });
+    });
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+app.post(`/nodeapp/getcompanyinfo`, async (req, res) => {
+  let student_id = req.body.student_id;
+
+  const sql = "select * from `Company_info` where Student_id = ?";
+
+  try {
+    const data = await new Promise((resolve, reject) => {
+      con.query(sql, [student_id], (err, data) => {
+        if (err) reject(err);
+        else resolve(data);
+      });
+    });
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+app.post(`/nodeapp/getdiscussion`, async (req, res) => {
+  let student_id = req.body.student_id;
+
+  const sql = "select * from `Discussion` where Student_id = ?";
+
+  try {
+    const data = await new Promise((resolve, reject) => {
+      con.query(sql, [student_id], (err, data) => {
+        if (err) reject(err);
+        else resolve(data);
+      });
+    });
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+app.post(`/nodeapp/getdocuments`, async (req, res) => {
+  let student_id = req.body.student_id;
+
+  const sql = "select * from `Documents` where Student_id = ?";
+
+  try {
+    const data = await new Promise((resolve, reject) => {
+      con.query(sql, [student_id], (err, data) => {
+        if (err) reject(err);
+        else resolve(data);
+      });
+    });
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+app.post(`/nodeapp/getcorporateinquiry`, async (req, res) => {
+  const sql = "select * from `CorporateInquiry` where IsDelete = 0 ";
+
+  try {
+    const data = await new Promise((resolve, reject) => {
+      con.query(sql, (err, data) => {
+        if (err) reject(err);
+        else resolve(data);
+      });
+    });
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+app.post(`/nodeapp/getcorporateinquiryform`, async (req, res) => {
+  let id = req.body.id;
+
+  const sql = "select * from `CorporateInquiry` where Id = ? ";
+
+  try {
+    const data = await new Promise((resolve, reject) => {
+      con.query(sql, [id], (err, data) => {
+        if (err) reject(err);
+        else resolve(data);
+      });
+    });
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+app.post(`/nodeapp/add_companyinfo`, async (req, res) => {
+  let Company = req.body.Company;
+  let BussinessNature = req.body.BussinessNature;
+  let Designation = req.body.Designation;
+  let Duration = req.body.Duration;
+  let student_id = req.body.student_id;
+
+  const sql =
+    "insert into Company_info(`Company`,`BussinessNature`,`Designation`,`Duration`,`student_id`) values(?,?,?,?,?)";
+
+  try {
+    const data = await new Promise((resolve, reject) => {
+      con.query(sql, [Company, BussinessNature, Designation, Duration, student_id], (err, data) => {
+        if (err) reject(err);
+        else resolve(data);
+      });
+    });
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+
+
+
+
+app.post("/nodeapp/upload_doc", upload.single("image"), async (req, res) => {
+  const doc_name = req.body.doc_name || "document";
+  const student_id = req.body.student_id;
+  const ext = path.extname(req.file.originalname);
+  const safeName = doc_name.replace(/\s+/g, "_");
+  const filename = `${safeName}${ext}`;
+
+  const uploadDir = path.join(__dirname, `../uploads/student_document/${student_id}`);
+
+  // Create folder if it doesn't exist
+  if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+  }
+
+  const filePath = path.join(uploadDir, filename);
+
+  try {
+    // Write the file from memory to disk
+    fs.writeFileSync(filePath, req.file.buffer);
+
+    // Now insert into DB
+    const sql = "INSERT INTO Documents(`upload_image`, `doc_name`, `Student_id`) VALUES (?, ?, ?)";
+    const data = await new Promise((resolve, reject) => {
+      con.query(sql, [filename, doc_name, student_id], (err, data) => {
+        if (err) reject(err);
+        else resolve(data);
+      });
+    });
+
+    res.json({ success: true, filename, data });
+  } catch (err) {
+    res.status(500).json({ success: false, error: "File save failed", detail: err.message });
+  }
+});
+
+
+
+app.post("/nodeapp/updateStudent", async (req, res, next) => {
+  const {
+    Student_Id,
+    studentName,
+    permanentemail,
+    Batch_Code,
+    gender,
+    nationality,
+    dob,
+    password,
+    reference,
+    presentaddress,
+    presentPincode,
+    presentCity,
+    state,
+    presentCountry,
+    mobile,
+    whatsapp,
+    course,
+    category,
+    Referby,
+    admission_dt,
+    prestatus,
+    changestatus,
+    date,
+    permanentAdress,
+    permanentPincode,
+    permanentCity,
+    permanentState,
+    permanentCountry,
+    permanentmobile,
+    perWatsapp,
+    prestatusdate,
+  } = req.body;
+
+  const sql =
+    "UPDATE Student_Master SET  Student_Name = ?, Sex = ?, DOB = ?, Present_Mobile = ?, Course_Id = ?,Batch_Code = ?,Nationality =?, Refered_By = ?,Present_Address =? ,Present_Pin = ?,Present_City = ?,Present_State= ? ,Present_Country = ? ,Batch_Category_id = ? ,Admission_Dt = ? ,Status_date = ? , Status_id = ? ,StateChangeDt = ? ,Permanent_Address = ?,Permanent_Pin = ?,Permanent_City = ?,Permanent_State =? ,Permanent_Country = ?,Permanent_Tel = ? ,Email = ? , IsUnread = ?  WHERE Student_Id = ?";
+
+  try {
+    const data = await new Promise((resolve, reject) => {
+      con.query(
+        sql,
+        [
+          studentName,
+          gender,
+          dob,
+          mobile,
+          course,
+          Batch_Code,
+          nationality,
+          Referby,
+          presentaddress,
+          presentPincode,
+          presentCity,
+          state,
+          presentCountry,
+          category,
+          admission_dt,
+          date,
+          changestatus,
+          prestatusdate,
+          permanentAdress,
+          permanentPincode,
+          permanentCity,
+          permanentState,
+          permanentCountry,
+          permanentmobile,
+          permanentemail,
+          1,
+          Student_Id,
+        ],
+        (error, data) => {
+          if (error) reject(error);
+          else resolve(data);
+        }
+      );
+    });
+
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+app.post("/nodeapp/getPersonal", async (req, res, next) => {
+  const { admissionid } = req.body;
+
+  const sql =
+    "SELECT sm.*,bm.SDate , bm.EDate,bm.Batch_Id ,bm.INR_Total,stm.Status , am.Student_Code FROM Student_Master as sm LEFT join Admission_master as am on am.Student_Id =sm.Student_Id left join Batch_Mst as bm on bm.Batch_code = sm.Batch_Code left join Fees_Structure as fs on bm.Batch_Id = fs.batch_id left join Status_Master as stm on stm.Id = sm.Status_id WHERE sm.Student_Id = ?";
+
+  try {
+    const data = await new Promise((resolve, reject) => {
+      con.query(sql, [admissionid], (error, data) => {
+        if (error) reject(error);
+        else resolve(data);
+      });
+    });
+
+    const Email = data[0].Email;
+
+    const checkbatchdetails = 'select bm.Batch_code from Student_Master as sm left join Admission_master as am on am.Student_Id = sm.Student_Id left JOIN Batch_Mst as bm on bm.Batch_Id = am.Batch_Id  where sm.Email = ? and  sm.status_id = 8 and sm.IsDelete = 0'
+
+    const batchdata = await new Promise((resolve, reject) => {
+      con.query(checkbatchdetails, [Email], (error, batchdata) => {
+        if (error) reject(error);
+        else resolve(batchdata);
+      });
+    });
+
+    res.json({ data: data, batchdata: batchdata });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+app.post("/nodeapp/postCorporateInquiry", async (req, res, next) => {
+  const {
+    firstname,
+    lastname,
+    middilename,
+    Mobile,
+    Phone,
+    Email,
+    CompanyName,
+    Designation,
+    Country,
+    Address,
+    Pin,
+    City,
+    State,
+    Place,
+    id,
+  } = req.body;
+
+  const sql =
+    "update `CorporateInquiry` set Fname = ? , Lname=? , MName = ? ,CompanyName = ? ,Address = ? ,City =? ,State =? ,Country = ?,Pin = ? ,Mobile = ?,Email = ?,Place = ? where Id = ?  ";
+
+  try {
+    const data = await new Promise((resolve, reject) => {
+      con.query(
+        sql,
+        [firstname, lastname, middilename, CompanyName, Address, City, State, Country, Pin, Mobile, Email, Place, id],
+        (error, data) => {
+          if (error) reject(error);
+          else resolve(data);
+        }
+      );
+    });
+
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+app.post("/nodeapp/postqualification", async (req, res, next) => {
+  const { studentId, qualification, descipline, college, uni, passYear, grade, status, kt, remark, u_id } = req.body;
+
+  let sql;
+  let param;
+
+  if (u_id == undefined) {
+    sql =
+      "INSERT INTO awt_academicqualification (Student_id ,Qualification,Discipline, College , University ,PassingYear,Percentage,Status,KT,remark) VALUES(?,?,?,?,?,?,?,?,?,?)";
+
+    param = [studentId, qualification, descipline, college, uni, passYear, grade, status, kt, remark];
+  } else {
+    sql =
+      "update awt_academicqualification set Qualification = ?, Discipline = ?,College = ?,University = ?,PassingYear = ?,Percentage = ? ,Status = ?, KT = ? , remark = ?  where id = ?";
+    param = [qualification, descipline, college, uni, passYear, grade, status, kt, remark, u_id];
+  }
+
+  try {
+    const data = await new Promise((resolve, reject) => {
+      con.query(sql, param, (error, data) => {
+        if (error) reject(error);
+        else resolve(data);
+      });
+    });
+
+    res.status(200).json({
+      message: "Qualifications Added.",
+      data: data,
+    });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+app.post("/nodeapp/acqualification_update", async (req, res) => {
+  let u_id = req.body.u_id;
+
+  const sql = "select * from awt_academicqualification where id = ?";
+
+  try {
+    const data = await new Promise((resolve, reject) => {
+      con.query(sql, [u_id], (err, data) => {
+        if (err) reject(err);
+        else resolve(data);
+      });
+    });
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// ==============================Lecture takene
+
+app.post("/nodeapp/add_lecturetaken", async (req, res) => {
+  let {
+    course,
+    batch,
+    lecture,
+    classroom,
+    lecturedate,
+    lecturefrom,
+    lectureto,
+    faculty,
+    facultytime,
+    timeto,
+    assignmentadate,
+    enddate,
+    materialissued,
+    material,
+    assignmentgive,
+    assignment,
+    testgiven,
+    test,
+    topicdescuss,
+    nextplanning,
+    uid,
+  } = req.body;
+
+  let sql;
+  let param;
+
+  const getlecture = 'select * from Batch_Lecture_Master where id = ?';
+
+  try {
+    const data = await new Promise((resolve, reject) => {
+      con.query(getlecture, [lecture], (err, data) => {
+        if (err) reject(err);
+        else resolve(data);
+      });
+    });
+
+    if (!data.length) {
+      return res.status(404).json({ message: 'Lecture not found' });
+    }
+
+    const subject = data[0].subject;
+    const subject_topic = data[0].subject_topic;
+
+    if (uid == undefined) {
+      sql =
+        "insert into lecture_taken_master (`Course_Id`,`Batch_Id`,`Lecture_Id`,`ClassRoom`,`Take_Dt`,`Lecture_Start`,`Lecture_End`,`Faculty_Id`,`Faculty_Start`,`Faculty_End`,`Assign_Start`,`Assign_End`,`Assignment_Id`,`Material`,`Assign_Given`,`Test_Given`,`Test_Id`,`Next_Planning`,`Lecture_Name`, `Topic`) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
+      param = [
+        course,
+        batch,
+        lecture,
+        classroom,
+        lecturedate,
+        lecturefrom,
+        lectureto,
+        faculty,
+        facultytime,
+        timeto,
+        assignmentadate,
+        enddate,
+        assignment,
+        materialissued,
+        assignmentgive,
+        testgiven,
+        test,
+        nextplanning,
+        subject_topic,
+        subject
+      ];
+    } else {
+      sql =
+        "update `lecture_taken_master` set Course_Id =? ,Batch_Id = ? ,Lecture_Id = ?,ClassRoom = ? ,Take_Dt = ? ,Lecture_Start = ?,Lecture_End = ?,Faculty_Id = ? ,Faculty_Start = ? ,Faculty_End = ? ,Assign_Start =?,Assign_End = ? ,Assignment_Id = ?, Material =?,Assign_Given = ? ,Test_Given = ?,Test_Id = ?  ,Next_Planning = ? ,Lecture_Name = ? ,Topic = ?   where Take_Id =?";
+
+      param = [
+        course,
+        batch,
+        lecture,
+        classroom,
+        lecturedate,
+        lecturefrom,
+        lectureto,
+        faculty,
+        facultytime,
+        timeto,
+        assignmentadate,
+        enddate,
+        assignment,
+        materialissued,
+        assignmentgive,
+        testgiven,
+        test,
+        nextplanning,
+        subject_topic,
+        subject,
+        uid,
+      ];
+    }
+
+    const data = await new Promise((resolve, reject) => {
+      con.query(sql, param, (err, data) => {
+        if (err) reject(err);
+        else resolve(data);
+      });
+    });
+
+//Library
+const express = require("express");
+const cors = require("cors");
+const mysql = require("mysql");
+const app = express();
+const path = require("path");
+const multer = require("multer");
+const jwt = require("jsonwebtoken");
+const fs = require("fs");
+var { SendMailClient } = require("zeptomail");
+const { writeLog } = require("./Routes/utility/log.js");
+const https = require('https');
+const axios = require("axios");
+//Routes
+const batchmoving = require("./Routes/account/batchmoving");
+const employeeloan = require("./Routes/account/employeeloan");
+const festivaluload = require("./Routes/utility/UploadFestival");
+const uploadevent = require("./Routes/utility/UploadEvent");
+const uploadexcel = require("./Routes/Batch/uploadExcel");
+const uploadtestimonial = require("./Routes/utility/uploadtestimonial");
+const uploadBanner = require("./Routes/utility/UploadBanner");
+const voucher = require("./Routes/account/GenerateVoucherNo");
+const projectmaster = require("./Routes/account/projectMaster");
+const generateresult = require("./Routes/DailyAactivity/GenerateResult");
+const ImportAttendance = require("./Routes/DailyAactivity/ImportAttendance");
+const qmsdoes = require("./Routes/utility/QmsDose");
+const emailmaster = require("./Routes/utility/EmailMaster");
+const Consultant_Mst = require("./Routes/utility/Consultant_Mst");
+const Consultant_Branch = require("./Routes/utility/Consultant_Branch");
+const Consultant_FollowUp = require("./Routes/utility/Consultant_FollowUp");
+const CV_Shortlisted = require("./Routes/utility/CV_Shortlisted");
+const CV_Child = require("./Routes/utility/CV_Child");
+const apisR = require("./Routes/Utils/apis");
+const SearchResult = require("./Routes/Utils/SearchResult");
+const SearchInquiry = require("./Routes/Utils/SearchInquiry");
+const SearchLectureTaken = require("./Routes/Utils/SearchLectureTaken");
+const LatestVvUpdate = require("./Routes/Placement/LatestVvUpdate");
+const ConsultantReport = require("./Routes/Placement/ConsultantReport");
+const CompanyReuirement = require("./Routes/Placement/CompanyReuirement");
+// const Test_mail = require("./Routes/Utils/Test_mail")
+// Use CORS middleware
+
+const url = "api.zeptomail.in/";
+const token =
+  "Zoho-enczapikey PHtE6r0IF+m52WZ5oUIF4PbpFs/3YNgr/uIyLFMT5I9BW/4AFk0GrIgvwzOwrhh+BPZAFPWcnd05sbie5+vQc2q+ZG1NDmqyqK3sx/VYSPOZsbq6x00asFscckLcXYHodddi0SDSudbdNA==";
+
+app.use(
+  cors({
+    origin: "*", // Allow all origins
+  })
+);
+
+
+// Parse incoming JSON requests
+app.use(express.json({ limit: "50mb" })); // Adjust the limit as needed
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
+
+// Define routes
+app.use("/nodeapp", batchmoving);
+app.use("/nodeapp", employeeloan);
+app.use("/nodeapp", festivaluload);
+app.use("/nodeapp", uploadevent);
+app.use("/nodeapp", uploadexcel);
+app.use("/nodeapp", uploadtestimonial);
+app.use("/nodeapp", uploadBanner);
+app.use("/nodeapp", voucher);
+app.use("/nodeapp", projectmaster);
+app.use("/nodeapp", generateresult);
+app.use("/nodeapp", qmsdoes);
+app.use("/nodeapp", emailmaster);
+app.use("/nodeapp", Consultant_Mst);
+app.use("/nodeapp", Consultant_Branch);
+app.use("/nodeapp", Consultant_FollowUp);
+app.use("/nodeapp", CV_Shortlisted);
+app.use("/nodeapp", CV_Child);
+app.use("/nodeapp", apisR);
+app.use("/nodeapp", SearchResult);
+app.use("/nodeapp", ImportAttendance);
+app.use("/nodeapp", SearchLectureTaken);
+app.use("/nodeapp", SearchInquiry);
+app.use("/nodeapp", LatestVvUpdate);
+app.use("/nodeapp", ConsultantReport);
+app.use("/nodeapp", CompanyReuirement);
+// app.use("/nodeapp", Test_mail);
+
+// Error handling middleware (optional)
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send("Something went wrong!");
+});
+
+// Error handling middleware (optional)
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send("Something went wrong!");
+});
+
+const JWT_SECRET = "satyam";
+
+
+const memoryStorage = multer.memoryStorage();
+const upload = multer({ storage: memoryStorage });
+
+// Create a connection pool with the required details
+const con = mysql.createPool({
+  host: "localhost", // Replace with your host name
+  user: "abhishek_sit", // Replace with your database username
+  password: "5CM#KDD@KE", // Replace with your database password
+  database: "abhishek_sit", // Replace with your database name
+});
+
+// const con = mysql.createPool({
+//   host: 'localhost',   // Replace with your host name
+//   user: 'root',        // Replace with your database username
+//   password: '', // Replace with your database password
+//   database: 'sit'  // Replace with your database name
+// });
+
+con.getConnection((err, connection) => {
+  if (err) {
+    writeLog("Error connecting to the database:", err);
+  } else {
+    writeLog("Successfully connected to the database");
+    // connection.release(); // Release the connection back to the pool
+  }
+});
+
+app.get("/nodeapp/node", (req, res) => {
+  return res.json("This is satyam");
+});
+
+app.listen("30000", () => {
+  console.log("listening");
+  // writeLog("Server listening on 30000");
+});
+
+// app.get("/nodeapp/restart", (req, res) => {
+//     const restartFilePath = path.join(__dirname, "tmp", "restart.txt");
+
+//     fs.writeFile(restartFilePath, "Restarting app", (err) => {
+//         if (err) {
+//             console.error("Failed to write restart.txt:", err);
+//             return res.status(500).json({ success: false, message: "Failed to trigger restart" });
+//         }
+
+//         res.json({ success: true, message: "Restart triggered" });
+//     });
+// });
+
+
+// // Read your PDF file and convert it to base64
+// const pdfBuffer = fs.readFileSync('path/to/test.pdf');
+// const base64Pdf = pdfBuffer.toString('base64');
+
+
+app.post("/nodeapp/login", (req, res) => {
+  let email = req.body.email;
+  let password = req.body.password;
+  let role = req.body.role;
+
+  const sql = "select * from awt_adminuser where email = ? and password = ? and role = ? and deleted = 0";
+
+  con.query(sql, [email, password, role], (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      if (data.length > 0) {
+        const id = data[0].id;
+        // req.session.id = id;
+        const token = jwt.sign({ id: id }, JWT_SECRET, { expiresIn: "12h" });
+        return res.json({ data, id: id, token: token });
+      }
+    }
+  });
+});
+
+app.get("/nodeapp/protected", (req, res) => {
+  const token = req.headers["authorization"];
+
+  if (!token) {
+    return res.status(401).json({ message: "Token is missing" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    res.json({ message: "This is a protected route", user: decoded });
+  } catch (error) {
+    res.status(401).json({ message: "Invalid token" });
+  }
+});
+
+// app.get('/nodeapp/checkauth', (req, res) => {
+//   if (req.session.id) {
+//     return res.json({ valid: true, sessionid: req.session.id })
+//   } else {
+//     return res.json({ valid: false })
+//   };
+// });
+
+
+
+app.post("/nodeapp/add_data", (req, res) => {
+  let title = req.body.title;
+  let created_date = new Date();
+  let uid = req.body.uid;
+  let user_id = req.body.user_id;
+  let tablename = req.body.tablename;
+
+  let sql;
+  let param;
+  if (uid == undefined) {
+    sql = `insert into ${tablename} (title,created_by,created_date) values(?,?,?)`;
+    param = [title, user_id, created_date];
+  } else {
+    sql = `update ${tablename} set title = ?, updated_by = ?, updated_date = ? where id =?`;
+    param = [title, user_id, created_date, uid];
+  }
+
+  con.query(sql, param, (err, data) => {
+    console.log(sql);
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json("Data Added Successfully!");
+    }
+  });
+});
+
+app.post("/nodeapp/update_data", (req, res) => {
+  let u_id = req.body.u_id;
+  let tablename = req.body.tablename;
+
+  const sql = `select * from ${tablename} where id = ?`;
+
+  con.query(sql, [u_id], (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
+app.post("/nodeapp/new_update_data", (req, res) => {
+  let u_id = req.body.u_id;
+  let tablename = req.body.tablename;
+  let uidname = req.body.uidname;
+
+  const sql = `select * from ${tablename} where ${uidname} = ?`;
+
+  con.query(sql, [u_id], (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
+app.post("/nodeapp/get_data", (req, res) => {
+  let tablename = req.body.tablename;
+  let columnname = req.body.columnname;
+
+  if (columnname == undefined) {
+    const sql = `select * from ${tablename} where deleted = 0 `;
+
+    con.query(sql, (err, data) => {
+      if (err) {
+        return res.json(err);
+      } else {
+        return res.json(data);
+      }
+    });
+  } else {
+    const sql = `select ${columnname} from ${tablename} where deleted = 0 `;
+
+    con.query(sql, (err, data) => {
+      if (err) {
+        return res.json(err);
+      } else {
+        return res.json(data);
+      }
+    });
+  }
+});
+
+app.post("/nodeapp/get_new_data", (req, res) => {
+  let tablename = req.body.tablename;
+  let columnname = req.body.columnname;
+
+  const sql = `select ${columnname} from ${tablename} where isDelete = 0 `;
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+app.post("/nodeapp/getStudentAllInformation", (req, res) => {
+
+  const batch_code = req.body.batch_code;
+
+  const sql = `select 
+                                                                                                                                               s.Student_Name, 
+                                                                                                                                               s.DOB, 
+                                                                                                                                               s.Present_Address,
+                                                                                                                                               s.Email, 
+                                                                                                                                               s.Present_Mobile, 
+                                                                                                                                               a.Qualification, 
+                                                                                                                                               a.Discipline, 
+                                                                                                                                               a.PassingYear, 
+                                                                                                                                               c.Company, 
+                                                                                                                                               c.Duration, 
+                                                                                                                                               b.Batch_code, 
+                                                                                                                                               b.SDate, 
+                                                                                                                                               b.EDate, 
+                                                                                                                                               cm.Course_Name, 
+                                                                                                                                               am.Student_Code 
+                                                                                                                                               from Student_Master as s LEFT JOIN awt_academicqualification as a on a.Student_id = s.Student_id LEFT JOIN Company_info as c on c.Student_id = s.Student_id Left Join Course_Mst as cm on cm.Course_Id = s.Course_Id LEFT Join Admission_master as am on am.Student_id = s.Student_id LEFT JOIN Batch_Mst AS b ON b.Batch_Id = am.Batch_Id where s.IsDelete = 0 AND s.Batch_Code = ?`;
+
+  con.query(sql, [batch_code], (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
+app.post("/nodeapp/delete_data", (req, res) => {
+  let cat_id = req.body.cat_id;
+  let tablename = req.body.tablename;
+
+  const sql = `update ${tablename} set deleted = 1 where id = ?`;
+
+  con.query(sql, [cat_id], (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+app.post("/nodeapp/new_delete_data", (req, res) => {
+  let delete_id = req.body.delete_id;
+  let tablename = req.body.tablename;
+  let column_name = req.body.column_name;
+
+  const sql = `update ${tablename} set IsDelete = 1 where ${column_name} = ?`;
+
+  con.query(sql, [delete_id], (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
+app.get("/nodeapp/vendor_details", (req, res) => {
+  const sql = `select * from awt_vendor_master where deleted = 0 `;
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+app.get("/nodeapp/getassetcat", (req, res) => {
+  const sql = `select * from awt_asset_category where deleted = 0`;
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
+app.post("/nodeapp/add_vendor", (req, res) => {
+  let {
+    vendorname,
+    email,
+    telephone,
+    type,
+    address,
+    country,
+    state,
+    city,
+    pin,
+    contactperson,
+    mobile,
+    fax,
+    comments,
+    uid,
+  } = req.body;
+
+  let sql;
+  let param;
+
+  console.log(uid);
+
+  if (uid == undefined) {
+    sql =
+      "insert into awt_vendor_master(`vendorname`,`email`,`telephone`,`type`,`address`,`country`,`state`,`city`,`pin`,`contactperson`,`mobile`,`fax`,`comment`) values(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
+    param = [
+      vendorname,
+      email,
+      telephone,
+      type,
+      address,
+      country,
+      state,
+      city,
+      pin,
+      contactperson,
+      mobile,
+      fax,
+      comments,
+    ];
+  } else {
+    sql =
+      "update `awt_vendor_master` set `vendorname` =? , `email` =? , `telephone` =? , `type` =? , `address` =? , `country` =? , `state` =? , `city` =? , `pin` =? , `contactperson` =? , `mobile` =? , `fax` =? , `comments` =? where id =?";
+
+    param = [
+      vendorname,
+      email,
+      telephone,
+      type,
+      address,
+      country,
+      state,
+      city,
+      pin,
+      contactperson,
+      mobile,
+      fax,
+      comments,
+      uid,
+    ];
+  }
+
+  con.query(sql, param, (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
+app.post("/nodeapp/add_course", (req, res) => {
+  let { course, course_code, eligibility, introduction, keypoint, objective, studyprep, uid } = req.body;
+
+  let sql;
+  let param;
+
+  if (uid == undefined) {
+    sql =
+      "insert into Course_Mst(`Course_Name`,`Course_Code`,`Eligibility`,`Introduction`,`Course_Description`,`Objective`,`Basic_Subject`) values(?,?,?,?,?,?,?)";
+
+    param = [course, course_code, eligibility, introduction, keypoint, objective, studyprep];
+  } else {
+    sql =
+      "update `Course_Mst` set `Course_Name` =? , `Course_Code` =? , `Eligibility` =? , `Introduction` =? , `Course_Description` =? , `Objective` =? , `Basic_Subject` =?  where `Course_Id` =?";
+
+    param = [course, course_code, eligibility, introduction, keypoint, objective, studyprep, uid];
+  }
+
+  con.query(sql, param, (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
+app.post("/nodeapp/batch_category", (req, res) => {
+  let { batch, batchtype, prefix, description, uid } = req.body;
+
+  let sql;
+  let param;
+
+  console.log(uid);
+
+  if (uid == undefined) {
+    sql = "insert into MST_BatchCategory(`BatchCategory`,`Batch_Type`,`Prefix`,`Description`) values(?,?,?,?)";
+
+    param = [batch, batchtype, prefix, description];
+  } else {
+    sql =
+      "update `MST_BatchCategory` set `BatchCategory` = ? , `Batch_Type` = ? , `Prefix` = ? , `Description` = ? where id =?";
+
+    param = [batch, batchtype, prefix, description, uid];
+  }
+
+  con.query(sql, param, (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
+app.post("/nodeapp/add_college", (req, res) => {
+  let {
+    college_name,
+    university,
+    contact_person,
+    designation,
+    address,
+    city,
+    pin,
+    country,
+    state,
+    telephone,
+    mobile,
+    email,
+    website,
+    remark,
+    purpose,
+    course,
+    refstudentname,
+    refmobile,
+    refemail,
+    batch,
+    desciplinevalue,
+    uid,
+  } = req.body;
+
+  let sql;
+  let param;
+
+  if (uid == undefined) {
+    sql =
+      "insert into awt_college(`college_name`,`university`,`contact_person`,`designation`,`address`,`city`,`pin`,`country`,`state`,`telephone`,`mobile`,`email`,`website`,`remark`,`purpose`,`course`,`refstudentname`,`refmobile`,`refemail`,`batch`,`descipline`) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
+    param = [
+      college_name,
+      university,
+      contact_person,
+      designation,
+      address,
+      city,
+      pin,
+      country,
+      state,
+      telephone,
+      mobile,
+      email,
+      website,
+      remark,
+      purpose,
+      course,
+      refstudentname,
+      refmobile,
+      refemail,
+      batch,
+      desciplinevalue,
+    ];
+  } else {
+    sql =
+      "update `awt_college` set `college_name` =? , `university` =? , `contact_person` =? , `designation` =? , `address` =? , `city` =? , `pin` =? , `country` =? , `state` =? , `telephone` =? , `mobile` =? , `email` =? , `website` =? , `remark` =? , `purpose` =? , `course` =? ,refstudentname =?,refmobile =?,batch =?,descipline =?,refemail = ? where id =?";
+
+    param = [
+      college_name,
+      university,
+      contact_person,
+      designation,
+      address,
+      city,
+      pin,
+      country,
+      state,
+      telephone,
+      mobile,
+      email,
+      website,
+      remark,
+      purpose,
+      course,
+      refstudentname,
+      refmobile,
+      batch,
+      desciplinevalue,
+      refemail,
+      uid,
+    ];
+  }
+
+  con.query(sql, param, (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+app.post("/nodeapp/add_college_follow", (req, res) => {
+  let {
+    collegeid,
+    date,
+    contactperson,
+    designation,
+    purpose,
+    directline,
+    email,
+    nextdate,
+    remark,
+    note,
+    mobile,
+    descipline,
+    uid,
+  } = req.body;
+
+  let sql;
+  let param;
+
+  if (uid == "") {
+    sql =
+      "insert Into College_Follows( `College_id`,`Tdate`,`CName`,`Designation`,`Purpose`,`DirectLine`,`Email`,`nextdate`,`Remark`,`Note`,`Phone`,`Discipline`) values(?,?,?,?,?,?,?,?,?,?,?,?)";
+
+    param = [
+      collegeid,
+      date,
+      contactperson,
+      designation,
+      purpose,
+      directline,
+      email,
+      nextdate,
+      remark,
+      note,
+      mobile,
+      descipline,
+    ];
+  } else {
+    sql =
+      "update `College_Follows` set College_id = ? , Tdate = ?,CName = ? ,Designation = ? ,Purpose = ? ,DirectLine = ? ,Email = ? , nextdate = ? ,Remark = ? ,Note = ? ,Phone = ? ,Discipline = ? where Follow_id = ? ";
+
+    param = [
+      collegeid,
+      date,
+      contactperson,
+      designation,
+      purpose,
+      directline,
+      email,
+      nextdate,
+      remark,
+      note,
+      mobile,
+      descipline,
+      uid,
+    ];
+  }
+
+  con.query(sql, param, (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
+app.post("/nodeapp/add_librarybook", (req, res) => {
+  let {
+    bookname,
+    booknumber,
+    publication,
+    page,
+    status,
+    comment,
+    coursename,
+    author,
+    purchasedate,
+    price,
+    rackno,
+    uid,
+  } = req.body;
+
+  let sql;
+  let param;
+
+  console.log(uid);
+
+  if (uid == undefined) {
+    sql =
+      "insert into awt_librarybook(`bookname`,`booknumber`,`publication`,`page`,`status`,`comment`,`coursename`,`author`,`purchasedate`,`price`,`rackno`) values(?,?,?,?,?,?,?,?,?,?,?)";
+
+    param = [
+      bookname,
+      booknumber,
+      publication,
+      page,
+      status,
+      comment,
+      coursename,
+      author,
+      purchasedate,
+      price,
+      rackno,
+    ];
+  } else {
+    sql =
+      "update `awt_librarybook` set `bookname` =? , `booknumber` =? , `publication` =? , `page` =? , `status` =? , `comment` =? , `coursename` =? , `author` =? , `purchasedate` =? , `price` =? , `rackno` = ? where id = ?";
+
+    param = [
+      bookname,
+      booknumber,
+      publication,
+      page,
+      status,
+      comment,
+      coursename,
+      author,
+      purchasedate,
+      price,
+      rackno,
+      uid,
+    ];
+  }
+
+  con.query(sql, param, (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
+app.post("/nodeapp/add_feedback", (req, res) => {
+  let { questionfor, category, question, selection, order, uid } = req.body;
+
+  let sql;
+  let param;
+
+  console.log(uid);
+
+  if (uid == undefined) {
+    sql = "insert into awt_feedback(`questionfor`,`category`,`question`,`selection`,`order`) values(?,?,?,?,?)";
+
+    param = [questionfor, category, question, selection, order];
+  } else {
+    sql =
+      "update `awt_feedback` set `questionfor` =? , `category` =? , `question` =? , `selection` =? , `order` =? where id = ?";
+
+    param = [questionfor, category, question, selection, order, uid];
+  }
+
+  con.query(sql, param, (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
+app.post("/nodeapp/add_faculty_master", (req, res) => {
+  let {
+    Faculty_Code,
+    Faculty_Name,
+    Married,
+    DOB,
+    Nationality,
+    Faculty_Type,
+    Office_Tel,
+    Res_Tel,
+    Mobile,
+    EMail,
+    Present_Address,
+    Present_City,
+    Present_State,
+    Present_Country,
+    Present_Pin,
+    Present_Tel,
+    Permanent_Address,
+    Permanent_City,
+    Permanent_State,
+    Permanent_Country,
+    Permanent_Pin,
+    Permanent_Tel,
+    Service_Offered,
+    Specialization,
+    Experience,
+    Company_Name,
+    Company_Address,
+    Company_Phone,
+    Interview_Date,
+    Working_At,
+    Qualified,
+    Joining_Date,
+    Comments,
+    Interviewer,
+    Sal_Struct,
+    Salary,
+    Date_added,
+    TDS,
+    PAN,
+    Resigned,
+    InvoiceName,
+    IsActive,
+    IsDelete,
+    CourseId,
+    DesignExp,
+    KnowSw,
+    Working_Status,
+    TrainingCategory,
+    Interview_Status,
+    Reference_by,
+    uid,
+  } = req.body;
+
+  let sql;
+  let param;
+
+  console.log(uid);
+
+  if (uid == undefined) {
+    sql =
+      "insert into faculty_master(`Faculty_Code`, `Faculty_Name`, `Married`, `DOB`, `Nationality`, `Faculty_Type`, `Office_Tel`, `Res_Tel`, `Mobile`, `EMail`, `Present_Address`, `Present_City`, `Present_State`, `Present_Country`, `Present_Pin`, `Present_Tel`, `Permanent_Address`, `Permanent_City`, `Permanent_State`, `Permanent_Country`, `Permanent_Pin`, `Permanent_Tel`, `Service_Offered`, `Specialization`,`Experience`,`Company_Name`,`Company_Address`,`Company_Phone`,`Interview_Date`,`Working_At`,`Qualified`,`Joining_Date`,`Comments`,`Interviewer`,`Sal_Struct`,`Salary`,`Date_added`,`TDS`,`PAN`,`Resigned`,`InvoiceName`,`IsActive`,`IsDelete`,`CourseId`,`DesignExp`,`KnowSw`,`Working_Status`,`TrainingCategory`,`Interview_Status`,`Reference_by`) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
+    param = [
+      Faculty_Code,
+      Faculty_Name,
+      Married,
+      DOB,
+      Nationality,
+      Faculty_Type,
+      Office_Tel,
+      Res_Tel,
+      Mobile,
+      EMail,
+      Present_Address,
+      Present_City,
+      Present_State,
+      Present_Country,
+      Present_Pin,
+      Present_Tel,
+      Permanent_Address,
+      Permanent_City,
+      Permanent_State,
+      Permanent_Country,
+      Permanent_Pin,
+      Permanent_Tel,
+      Service_Offered,
+      Specialization,
+      Experience,
+      Company_Name,
+      Company_Address,
+      Company_Phone,
+      Interview_Date,
+      Working_At,
+      Qualified,
+      Joining_Date,
+      Comments,
+      Interviewer,
+      Sal_Struct,
+      Salary,
+      Date_added,
+      TDS,
+      PAN,
+      Resigned,
+      InvoiceName,
+      IsActive,
+      IsDelete,
+      CourseId,
+      DesignExp,
+      KnowSw,
+      Working_Status,
+      TrainingCategory,
+      Interview_Status,
+      Reference_by,
+    ];
+  } else {
+    sql =
+      "update `faculty_master` set `Faculty_Code` =? , `Faculty_Name` =? , `Married` =? , `DOB` =? , `Nationality` =? , `Faculty_Type` =? , `Office_Tel` =? , `Res_Tel` =? , `Mobile` =? , `EMail` =? , `Present_Address` =? , `Present_City` =? , `Present_State` =? , `Present_Country` =? , `Present_Pin` =? , `Present_Tel` =? , `Permanent_Address` =? , `Permanent_City` =? , `Permanent_State` =? , `Permanent_Country` =? , `Permanent_Pin` =? , `Permanent_Tel` =? , `Service_Offered` =? , `Specialization` =? ,`Experience` =? ,`Company_Name` =? ,`Company_Address` =? ,`Company_Phone` =? ,`Interview_Date` =? ,`Working_At` =? ,`Qualified` =? ,`Joining_Date` =? ,`Comments` =? ,`Interviewer` =? ,`Sal_Struct` =? ,`Salary` =? ,`Date_added` =? ,`TDS` =? ,`PAN` =? ,`Resigned` =? ,`InvoiceName` =? ,`IsActive` =? ,`IsDelete` =? ,`CourseId` =? ,`DesignExp` =? ,`KnowSw` =? ,`Working_Status` =? ,`TrainingCategory` =? ,`Interview_Status` =? ,`Reference_by` =? where id = ?";
+
+    param = [
+      Faculty_Code,
+      Faculty_Name,
+      Married,
+      DOB,
+      Nationality,
+      Faculty_Type,
+      Office_Tel,
+      Res_Tel,
+      Mobile,
+      EMail,
+      Present_Address,
+      Present_City,
+      Present_State,
+      Present_Country,
+      Present_Pin,
+      Present_Tel,
+      Permanent_Address,
+      Permanent_City,
+      Permanent_State,
+      Permanent_Country,
+      Permanent_Pin,
+      Permanent_Tel,
+      Service_Offered,
+      Specialization,
+      Experience,
+      Company_Name,
+      Company_Address,
+      Company_Phone,
+      Interview_Date,
+      Working_At,
+      Qualified,
+      Joining_Date,
+      Comments,
+      Interviewer,
+      Sal_Struct,
+      Salary,
+      Date_added,
+      TDS,
+      PAN,
+      Resigned,
+      InvoiceName,
+      IsActive,
+      IsDelete,
+      CourseId,
+      DesignExp,
+      KnowSw,
+      Working_Status,
+      TrainingCategory,
+      Interview_Status,
+      Reference_by,
+      uid,
+    ];
+  }
+
+  con.query(sql, param, (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
+app.post("/nodeapp/add_annual", (req, res) => {
+  let {
+    selectcourse,
+    batchcategory,
+    description,
+    trainingdate,
+    actualdate,
+    timings,
+    basicinr,
+    servicetaxI,
+    coursename,
+    batchcode,
+    planned,
+    admissiondate,
+    duration,
+    coordinator,
+    taxrate,
+    totalinr,
+    servicetax,
+    publish,
+    uid,
+  } = req.body;
+
+  let sql;
+  let param;
+
+  if (uid == undefined) {
+    const checkcourse = "select * from Batch_Mst where Course_Id = ?";
+
+    con.query(checkcourse, [selectcourse], (err, data) => {
+      if (err) {
+        return res.json(err);
+      } else {
+        const count = data.length;
+
+        const code = selectcourse + "0" + count;
+
+        sql =
+          "insert into Batch_Mst(`Course_Id`,`Category`,`Course_description`,`EDate`,`ActualDate`,`Timings`,`INR_Basic`,`INR_ServiceTax`,`CourseName`,`Batch_code`,`SDate`,`Admission_Date`,`Duration`,`Training_Coordinator`,`TaxRate`,`INR_Total`,`Dollar_ServiceTax`,`Corporate`) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
+        param = [
+          selectcourse,
+          batchcategory,
+          description,
+          trainingdate,
+          actualdate,
+          timings,
+          basicinr,
+          servicetaxI,
+          coursename,
+          code,
+          planned,
+          admissiondate,
+          duration,
+          coordinator,
+          taxrate,
+          totalinr,
+          servicetax,
+          publish,
+        ];
+
+        con.query(sql, param, (err, data) => {
+          if (err) {
+            return res.json(err);
+          } else {
+            return res.json(data);
+          }
+        });
+      }
+    });
+  } else {
+    sql =
+      "update `Batch_Mst` set `Course_Id` = ? , `Category` =? , `Course_description` = ? ,`EDate` =? ,`ActualDate` =? ,`Timings` =? ,`INR_Basic` = ? ,`INR_ServiceTax` =? ,`CourseName` =?  ,`SDate` =? ,`Admission_Date` =? ,`Duration` =?,`Training_Coordinator` = ? ,`TaxRate` =? ,`INR_Total` =? ,`Dollar_ServiceTax` = ? , `Corporate` = ?   where `Batch_Id` = ?";
+
+    param = [
+      selectcourse,
+      batchcategory,
+      description,
+      trainingdate,
+      actualdate,
+      timings,
+      basicinr,
+      servicetaxI,
+      coursename,
+      planned,
+      admissiondate,
+      duration,
+      coordinator,
+      taxrate,
+      totalinr,
+      servicetax,
+      publish,
+      uid,
+    ];
+
+    con.query(sql, param, (err, data) => {
+      if (err) {
+        return res.json(err);
+      } else {
+        return res.json(data);
+      }
+    });
+  }
+});
+
+app.post("/nodeapp/update_batchdetails", (req, res) => {
+  let {
+    selectcourse,
+    batchcategory,
+    description,
+    trainingdate,
+    actualdate,
+    timings,
+    basicinr,
+    servicetaxI,
+    coursename,
+    batchcode,
+    planned,
+    admissiondate,
+    duration,
+    coordinator,
+    taxrate,
+    totalinr,
+    servicetax,
+    category,
+    uid,
+  } = req.body;
+
+  let sql;
+  let param;
+
+  if (uid == undefined) {
+    sql =
+      "insert into Batch_Mst(`Course_Id`, `Batch_Category_id`,`Category`,`Course_description`,`EDate`,`ActualDate`,`Timings`,`INR_Basic`,`INR_ServiceTax`,`CourseName`,`Batch_code`,`SDate`,`Admission_Date`,`Duration`,`Training_Coordinator`,`TaxRate`,`INR_Total`,`Dollar_ServiceTax`) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
+    param = [
+      selectcourse,
+      batchcategory,
+      category,
+      description,
+      trainingdate,
+      actualdate,
+      timings,
+      basicinr,
+      servicetaxI,
+      coursename,
+      batchcode,
+      planned,
+      admissiondate,
+      duration,
+      coordinator,
+      taxrate,
+      totalinr,
+      servicetax,
+    ];
+  } else {
+    sql =
+      "update `Batch_Mst`  set Course_Id = ? ,Batch_Category_id = ?,Category =? ,Course_description = ? ,EDate = ? ,ActualDate = ?,Timings = ? ,INR_Basic = ? ,INR_ServiceTax = ? ,CourseName = ? ,SDate = ? ,Admission_Date = ? ,Duration = ? ,Training_Coordinator = ? ,TaxRate = ?,INR_Total = ? , Dollar_ServiceTax =? where Batch_Id = ?";
+
+    param = [
+      selectcourse,
+      batchcategory,
+      category,
+      description,
+      trainingdate,
+      actualdate,
+      timings,
+      basicinr,
+      servicetaxI,
+      coursename,
+      planned,
+      admissiondate,
+      duration,
+      coordinator,
+      taxrate,
+      totalinr,
+      servicetax,
+      uid,
+    ];
+  }
+
+  con.query(sql, param, (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      // return res.json(data)
+
+      const batch_id = data.insertId;
+
+      if (uid == undefined) {
+        const insertsql =
+          "insert into batch_result_structure(`batch_id`,`unit_test`,`assignment_wt`,`exam_wt`) values(?,?,?,?)";
+
+        con.query(insertsql, [batch_id, 35, 15, 50], (err, data) => {
+          if (err) {
+            return res.json(err);
+          } else {
+            return res.json(data);
+          }
+        });
+      } else {
+        return res.json(data);
+      }
+    }
+  });
+});
+
+app.post("/nodeapp/update_batch", (req, res) => {
+  let {
+    selectcourse,
+    batchcategory,
+    timings,
+    coursename,
+    planned,
+    admissiondate,
+    duration,
+    coordinator,
+    eligibility,
+    targetstudent,
+    passingcriteria,
+    comments,
+    briefdescription,
+    attachment,
+    documentrequire,
+    todate,
+    uid,
+  } = req.body;
+  let sql;
+  let param;
+  sql =
+    "update `Batch_Mst` set Course_Id = ? , Category =? , Timings = ? , CourseName = ? ,SDate = ? ,Admission_Date = ?,Duration = ? ,Training_Coordinator = ? ,Min_Qualifiaction = ? ,Max_Students = ? , Passing_Criteria = ? , Comments = ? ,Course_description = ? ,Attachment = ? ,Documents_Required = ? ,EDate = ?  where `Batch_Id` = ?";
+  param = [
+    selectcourse,
+    batchcategory,
+    timings,
+    coursename,
+    planned,
+    admissiondate,
+    duration,
+    coordinator,
+    eligibility,
+    targetstudent,
+    passingcriteria,
+    comments,
+    briefdescription,
+    attachment,
+    documentrequire,
+    todate,
+    uid,
+  ];
+  con.query(sql, param, (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      if (coursename) {
+        sql = "update `Course_Mst` set Course_Name = ? where Course_Id = ?";
+        param = [coursename, selectcourse];
+        con.query(sql, param, (err, data) => {
+          if (err) {
+            return res.json(err);
+          } else {
+            return res.json(data);
+          }
+        });
+      } else {
+        return res.json(data);
+      }
+    }
+  });
+});
+
+app.post("/nodeapp/add_bookissue", (req, res) => {
+  let { student, book, bookcode, issuedate, returndate, uid } = req.body;
+
+  let sql;
+  let param;
+
+  console.log(uid);
+
+  if (uid == undefined) {
+    sql = "insert into awt_bookissue(`student`,`book`,`bookcode`,`issuedate`,`returndate`) values(?,?,?,?,?)";
+
+    param = [student, book, bookcode, issuedate, returndate];
+  } else {
+    sql =
+      "update `awt_bookissue` set `student` =? , `book` =? , `bookcode` =? ,`issuedate` =? ,`returndate` =? where id = ?";
+
+    param = [student, book, bookcode, issuedate, returndate, uid];
+  }
+
+  con.query(sql, param, (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
+app.post("/nodeapp/add_employeerecord", (req, res) => {
+  let { training, attendee, instructor, description, feedback, uid } = req.body;
+
+  let sql;
+  let param;
+
+  console.log(uid);
+
+  if (uid == undefined) {
+    sql =
+      "insert into awt_employeerecord(`training`,`attendee`,`instructor`,`description`,`feedback`) values(?,?,?,?,?)";
+
+    param = [training, attendee, instructor, description, feedback];
+  } else {
+    sql =
+      "update `awt_employeerecord` set `training` =? , `attendee` =? , `instructor` =? ,`description` =? , `feedback` =? where id = ?";
+
+    param = [training, attendee, instructor, description, feedback, uid];
+  }
+
+  con.query(sql, param, (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
+app.post("/nodeapp/getadmissionactivity", (req, res, next) => {
+  const { page = 0, pageSize = 10 } = req.body;
+
+  const offset = page * pageSize;
+
+  const sql =
+    `SELECT 
+                                                                                                                                               i.Inquiry_Id AS id,
+                                                                                                                                               COALESCE(i.Student_Id, sm.Student_Id) AS Student_Id,
+                                                                                                                                               COALESCE(i.FName, sm.FName) AS FName,
+                                                                                                                                               COALESCE(i.LName, sm.LName) AS LName,
+                                                                                                                                               COALESCE(i.MName, sm.MName) AS MName,
+                                                                                                                                               COALESCE(i.Student_Name, sm.Student_Name) AS Student_Name,
+                                                                                                                                               COALESCE(i.Course_Id, sm.Course_Id) AS Course_Id,
+                                                                                                                                               COALESCE(i.Qualification, sm.Qualification) AS Qualification,
+                                                                                                                                               COALESCE(i.present_mobile, sm.present_mobile) AS present_mobile,
+                                                                                                                                               COALESCE(i.Email, sm.Email) AS Email,
+                                                                                                                                               COALESCE(i.Discipline, sm.Discipline) AS Discipline,
+                                                                                                                                               COALESCE(i.Inquiry_type, sm.Inquiry_type) AS Inquiry_type,
+                                                                                                                                               COALESCE(i.isActive, sm.isActive) AS isActive,
+                                                                                                                                               COALESCE(i.inquiry_DT, sm.inquiry_DT) AS inquiry_DT,
+                                                                                                                                               c.Course_Name,
+                                                                                                                                               COALESCE(i.Percentage, sm.Percentage) AS Percentage,
+                                                                                                                                               COALESCE(i.Discussion, sm.Discussion) AS Discussion,
+                                                                                                                                               sm_status.Status,
+                                                                                                                                               md.Deciplin,
+                                                                                                                                               COALESCE(i.IsUnread, sm.IsUnread) AS IsUnread
+                                                                                                                                           FROM Student_Inquiry AS i
+                                                                                                                                           LEFT JOIN Student_Master AS sm ON i.Student_Id = sm.Student_Id
+                                                                                                                                           LEFT JOIN Course_Mst AS c ON COALESCE(i.Course_id, sm.Course_Id) = c.Course_Id
+                                                                                                                                           LEFT JOIN Status_Master AS sm_status ON sm_status.Id = COALESCE(i.OnlineState, sm.OnlineState)
+                                                                                                                                           LEFT JOIN MST_Deciplin AS md ON md.Id = COALESCE(i.Discipline, sm.Discipline)
+                                                                                                                                           WHERE COALESCE(i.isDelete, sm.isDelete) = 0 
+                                                                                                                                             AND COALESCE(i.Admission, sm.Admission) != 1
+                                                                                                                                           ORDER BY COALESCE(i.Inquiry_Dt, sm.Inquiry_Dt) DESC
+                                                                                                                                           LIMIT ? OFFSET ?;`;
+
+  const countQuery = `
+                                                                                                                                             SELECT COUNT(*) as totalCount 
+                                                                                                                                             FROM Student_Inquiry as i where i.isDelete = 0 and i.Admission != 1 `;
+
+  con.query(sql, [pageSize, offset], (error, data) => {
+    if (error) {
+      return res.json(error);
+    }
+
+    con.query(countQuery, (err, countResult) => {
+      if (err) {
+        return res.json({ error: err.message });
+      }
+
+      const totalCount = countResult[0]?.totalCount || 0; // Get total count from the count query
+
+      // Determine the last student ID
+      let lastStudentId = null;
+      if (data.length > 0) {
+        lastStudentId = data[data.length - 1].id;
+      }
+
+      // Respond with paginated data and total count
+      return res.json({ data, totalCount, lastStudentId });
+    });
+  });
+});
+
+app.post("/nodeapp/getBtachwiseamount", (req, res, next) => {
+  const Batch_Code = req.body.Batch_Code;
+
+  const sql =
+    "SELECT bm.Batch_Id,bm.Batch_code,fs.total_inr FROM `Batch_Mst` as bm LEFT JOIN Fees_Structure as fs  on bm.Batch_Id = fs.batch_id WHERE bm.Batch_code =  ? and isDelete = 0 ";
+
+  con.query(sql, [Batch_Code], (error, data) => {
+    if (error) {
+      return res.json(error);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
+app.get("/nodeapp/getadmissiondata", (req, res, next) => {
+  //   const sql = 'SELECT i.Inquiry_Id as id,i.Student_Id,i.FName, i.LName, i.MName,i.Student_Name,i.Course_Id,i.Qualification, i.Discussion, i.present_mobile, i.Email, i.Discipline, i.Inquiry_type, i.isActive, i.inquiry_DT, c.Course_Name, i.Percentage , sm.Status , md.Deciplin , i.IsUnread FROM Student_Inquiry AS i LEFT JOIN Course_Mst AS c ON i.Course_id = c.Course_Id LEFT JOIN Status_Master as sm on sm.Id = i.OnlineState left JOIN MST_Deciplin as md on md.Id = i.Discipline WHERE i.isDelete = 0 order by i.Inquiry_Id desc';
+  const sql =
+    "select sm.*, cm.Course_Name from Student_Master as sm left join Course_Mst as cm on cm.Course_Id = sm.Course_Id where sm.IsDelete = 0 order by sm.Student_Id desc";
+  con.query(sql, (error, data) => {
+    if (error) {
+      return res.json(error);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
+app.get("/nodeapp/admissiondata", (req, res, next) => {
+  const sql =
+    "select am.Admission_Id,am.Admission_Date,am.Amount ,am.Payment_Type, sm.Student_Name ,cm.Course_Name,bm.Batch_code from Admission_master as am left join Student_Master as sm on sm.Student_Id = am.Student_Id left JOIN Course_Mst as cm on cm.Course_Id = am.Course_Id LEFT JOIN Batch_Mst as bm on bm.Batch_Id = am.Batch_Id where am.isDelete = 0 and sm.IsAdmOpen = 'open' order by am.Admission_Id desc";
+  con.query(sql, (error, data) => {
+    if (error) {
+      return res.json(error);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
+// app.post('/nodeapp/process_admission', (req, res, next) => {
+
+//   let { Student_Id, Course_Id, Batch_Id, Amount, Admission_Dt, student_code } = req.body
+
+//   const sql = 'insert into Admission_master(`Student_Id`,`Course_Id`,`Batch_Id`,`Amount`,`Admission_Date`,`Student_Code`,`Payment_Type`) values(?,?,?,?,?,?,?)'
+
+//   con.query(sql, [Student_Id, Course_Id, Batch_Id, Amount, Admission_Dt, student_code,'Lumpsum'], (error, data) => {
+
+//     if (error) {
+//       return res.json(error);
+//     } else {
+//       const updatestudent = 'update Student_Master set Admission = 1 , Status_id = 8  where Student_Id = ?'
+
+//       con.query(updatestudent, [Student_Id], (err, data) => {
+//         if (err) {
+//           return res.json(err)
+//         } else {
+
+//           const sql = "update Student_Inquiry set Admission = 1 where Student_Id = ?"
+//           con.query(sql, [Student_Id], (err, data) => {
+//             if (err) {
+//               return res.json(err)
+//             } else {
+//               return res.json()
+//             }
+//           })
+//         }
+//       })
+//     }
+//   })
+
+// })
+
+app.post("/nodeapp/process_admission", async (req, res) => {
+  const { Student_Id, Course_Id, Batch_Id, Amount, Admission_Dt, student_code } = req.body;
+
+  const sqlInsert = `
+                                                                                                                                               INSERT INTO Admission_master
+                                                                                                                                               (Student_Id, Course_Id, Batch_Id, Amount, Admission_Date, Student_Code, Payment_Type)
+                                                                                                                                               VALUES (?, ?, ?, ?, ?, ?, ?)
+                                                                                                                                             `;
+  const sqlUpdateStudent = `
+                                                                                                                                               UPDATE Student_Master 
+                                                                                                                                               SET Admission = 1, Status_id = 8 
+                                                                                                                                               WHERE Student_Id = ?
+                                                                                                                                             `;
+  const sqlUpdateInquiry = `
+                                                                                                                                               UPDATE Student_Inquiry 
+                                                                                                                                               SET Admission = 1 
+                                                                                                                                               WHERE Student_Id = ?
+                                                                                                                                             `;
+
+  try {
+    // Insert into Admission_master
+    await query(con, sqlInsert, [Student_Id, Course_Id, Batch_Id, Amount, Admission_Dt, student_code, "Lumpsum"]);
+
+    // Update Student_Master
+    await query(con, sqlUpdateStudent, [Student_Id]);
+
+    // Update Student_Inquiry
+    await query(con, sqlUpdateInquiry, [Student_Id]);
+
+    const sqlStudentDetails = `select sm.Student_Name, cm.Course_Name, sm.Email from Student_Master as sm 
+                                                                                                                                               left join Course_Mst as cm ON sm.Course_Id = cm.Course_Id where sm.Student_Id = ? and sm.IsDelete = 0`;
+
+    const [data] = await query(con, sqlStudentDetails, [Student_Id]);
+    const { Student_Name, Course_Name, Email } = data;
+
+    const htmlBody = `
+                                                                                                                                                   <html lang="en">
+                                                                                                                                                       <head>
+                                                                                                                                                           <meta charset="UTF-8">
+                                                                                                                                                           <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                                                                                                                                           <link rel="preconnect" href="https://fonts.googleapis.com">
+                                                                                                                                                           <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+                                                                                                                                                           <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+                                                                                                                                                           <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Satisfy&display=swap" rel="stylesheet">
+                                                                                                                                                           <title>Document</title>
+                                                                                                                                                           <style>
+                                                                                                                                                               body{
+                                                                                                                                                                   font-family: "Roboto", sans-serif;
+                                                                                                                                                               }
+                                                                                                                                                               p {
+                                                                                                                                                                   color: #335F9B;
+                                                                                                                                                               }
+                                                                                                                                                               .font600 {
+                                                                                                                                                                   font-weight: 600;
+                                                                                                                                                               }
+                                                                                                                                                               .m-0{
+                                                                                                                                                                   margin: 0px;
+                                                                                                                                                               }
+                                                                                                                                                               .color-light{
+                                                                                                                                                                   color: #4F81BD;
+                                                                                                                                                               }
+                                                                                                                                                               .last p{
+                                                                                                                                                                   font-size: 10px;
+                                                                                                                                                               }
+                                                                                                                                                           </style>
+                                                                                                                                                       </head>
+                                                                                                                                                       <body>
+                                                                                                                                                           <p>Dear <b>${Student_Name},</b></p>
+                                                                                                                                                           <p>Warm greetings from SIT!!!</p>
+                                                                                                                                                           <p><b>Your admission form is accepted for ${Course_Name}.</b></p>
+                                                                                                                                                           <p>Please find the attach documents, request you to kindly read the same and send us the signed copy of it.</p>
+                                                                                                                                                           <p>Kindly make the payment as earliest to confirm your admission</p>
+                                                                                                                                                           <p><b>You can do the payment through NEFT; RTGS or you can directly deposit the cheque in our axis bank account</b></p>
+                                                                                                                                                           <p style="text-decoration: underline;">Please find below bank details of SIT :</p>
+                                                                                                                                                           <div style="display: flex;">
+                                                                                                                                                               <p>Bank account name</p>
+                                                                                                                                                               <p style="padding-left: 50px;">: Suvidya Institute of Technology Pvt. Ltd.</p>
+                                                                                                                                                           </div>
+                                                                                                                                                           <div style="display: flex;">
+                                                                                                                                                               <p>Bank Name</p>
+                                                                                                                                                               <p style="padding-left: 99px;">: Axis Bank Ltd.</p>
+                                                                                                                                                           </div>
+                                                                                                                                                           <div style="display: flex;">
+                                                                                                                                                               <p>Branch Address</p>
+                                                                                                                                                               <p style="padding-left: 74px;">: Vakola, Mumbai (MH), City Survey No. 841 to 846,<br>Florence Lorenace chs ltd. Mumbai 400055.</p>
+                                                                                                                                                           </div>
+                                                                                                                                                           <div style="display: flex;">
+                                                                                                                                                               <p>Bank Account No</p>
+                                                                                                                                                               <p style="padding-left: 62px;">: 911020002988600</p>
+                                                                                                                                                           </div>
+                                                                                                                                                           <div style="display: flex;">
+                                                                                                                                                               <p>IFSC code for NEFT payment </p>
+                                                                                                                                                               <p style="padding-left: 50px;">: UTIB0001244</p>
+                                                                                                                                                           </div>
+                                                                                                                                                           <div style="display: flex;">
+                                                                                                                                                               <p>MICR Code</p>
+                                                                                                                                                               <p style="padding-left: 100px;">: 400211082</p>
+                                                                                                                                                           </div>
+                                                                                                                                                           <div style="display: flex;">
+                                                                                                                                                               <p>Swift Code</p>
+                                                                                                                                                               <p style="padding-left: 106px;">: AXISINBB028</p>
+                                                                                                                                                           </div>
+                                                                                                                                           
+                                                                                                                                                           <p>Mention your Reference no. (mentioned in subject of this mail)  in all correspondence.</p>
+                                                                                                                                           
+                                                                                                                                                           <p><b>Please find attached herewith Procedure & Rules & Regulation for your information.</b></p>
+                                                                                                                                                           <p><b>Please mail us payment slip/bank payment advice after payment.  For any queries related to accounts, call on 022-61943120 or mail on</b><a  href="mailto:manasipanchal@suvidya.ac.in" style="text-decoration: underline;"> manasipanchal@suvidya.ac.in</a></p>
+                                                                                                                                           
+                                                                                                                                                           <p class="m-0 font600 color-light">Regards,</p>
+                                                                                                                                                           <p class="m-0 font600 color-light">Jeena Fernandes</p>
+                                                                                                                                                           <p class="m-0 font600 color-light">Sr. Executive Career Building Department</p>
+                                                                                                                                                           <p class="m-0 font600 color-light">Mobile No: 9167219405</p>
+                                                                                                                                                           <p class="m-0 font600 color-light">Tel: 91 022 26682295, 91 022 26682290 - Ext.101</p>
+                                                                                                                                           
+                                                                                                                                                           <div>
+                                                                                                                                                               <p><a href="mailto:www.suvidya.ac.in ">www.suvidya.ac.in  </a>  |  <a href="mailto:www.accent.net.in">www.accent.net.in</a></p>
+                                                                                                                                           
+                                                                                                                                                               <p class=" font600 color-light">Follow Simple Rules – Change Food to Improve Immunity, Use Mask, Keep Safe Distance, use Sanitiser, Be Happy and Be Healthy.</p>
+                                                                                                                                                               <p class=" font600 color-light">Print if it is very much necessary to support environment as one Kg paper need 10 litres of water.</p>
+                                                                                                                                                               <p class=" font600 color-light">Disclaimer – Email contents are for your information only, if you do not wish to received then please feel free  to infrom us happily, will stop sending with immediate effect.</p>
+                                                                                                                                           
+                                                                                                                                                               <img style="width: 100px;" src="https://ci3.googleusercontent.com/meips/ADKq_NbsTBI0TbxWtHsgK4sZiEjQKNTdIHzy9jy8nKKE_9hmO0Wf6ofXFypOTD-0REzIfxiG23CcpvDEBSdVzxc-wEUDQ3IRel8=s0-d-e1-ft#http://sit.suvidya.ac.in/images/suvidya_logo.jpg" alt="">
+                                                                                                                                           
+                                                                                                                                                               <p style="font-size: 13px;"><b>Suvidya Institute of Technology Pvt. Ltd.</b></p>
+                                                                                                                                                               <p style="font-size: 13px;"><b>An ISO 9001:2015 Certified Organisation by Bureau of Indian Standards</b></p>
+                                                                                                                                                               <p style="font-size: 13px;margin-top: 30px;"><b>18/140,  Anand Nagar, Nehru Road, Vakola,</b></p>
+                                                                                                                                                               <p style="font-size: 13px;"><b>Santacruz (East), Mumbai – 400 055.</b></p>
+                                                                                                                                           
+                                                                                                                                                               <div style="margin: 20px 0px;" class="last">
+                                                                                                                                                                   <p>Tel: 91 022 26682290 Ext.11, 16. Cell:9821569885</p>
+                                                                                                                                                                   <p>Email {Senderemail}</p>
+                                                                                                                                                                   <p>Website : <a href="https://www.suvidya.ac.in" target="_blank">www.suvidya.ac.in</a></p>
+                                                                                                                                                               </div>
+                                                                                                                                                               <p style="font-family: 'Satisfy', cursive;"><b>“Together we will bring new dimension to engineering industry”</b></p>
+                                                                                                                                                           </div>
+                                                                                                                                                       </body>
+                                                                                                                                                   </html>
+                                                                                                                                               `;
+    const confirmationHtmlBody = `
+                                                                                                                                                   <html lang="en">
+                                                                                                                                                       <head>
+                                                                                                                                                           <meta charset="UTF-8">
+                                                                                                                                                           <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                                                                                                                                           <link rel="preconnect" href="https://fonts.googleapis.com">
+                                                                                                                                                           <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+                                                                                                                                                           <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+                                                                                                                                                           <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Satisfy&display=swap" rel="stylesheet">
+                                                                                                                                                           <title>Document</title>
+                                                                                                                                                           <style>
+                                                                                                                                                               body{
+                                                                                                                                                                   font-family: "Roboto", sans-serif;
+                                                                                                                                                               }
+                                                                                                                                                               p {
+                                                                                                                                                                   color: #335F9B;
+                                                                                                                                                               }
+                                                                                                                                                               .font600 {
+                                                                                                                                                               font-weight: 600;
+                                                                                                                                                               }
+                                                                                                                                                               .m-0{
+                                                                                                                                                                   margin: 0px;
+                                                                                                                                                               }
+                                                                                                                                                               .color-light{
+                                                                                                                                                               color: #4F81BD;
+                                                                                                                                                               }
+                                                                                                                                                               .last p{
+                                                                                                                                                                   font-size: 10px;
+                                                                                                                                                               }
+                                                                                                                                                           </style>
+                                                                                                                                                       </head>
+                                                                                                                                           
+                                                                                                                                                       <body>
+                                                                                                                                                           <p>Dear Jeena Fernandes,</p>
+                                                                                                                                           
+                                                                                                                                                           <p>This is to confirm that the admission form acceptance mail has been successfully sent to the following student:</p>
+                                                                                                                                           
+                                                                                                                                                           <p>Student Name: ${Student_Name}</p>
+                                                                                                                                                           <p>Email: ${Email}</p>
+                                                                                                                                                           <p>Course: ${Course_Name}</p>
+                                                                                                                                                           
+                                                                                                                                                           <p>Best regards,</p>
+                                                                                                                                                           <p>Suvidya Institute of Technology Pvt. Ltd.</p>
+                                                                                                                                                       </body>
+                                                                                                                                                   </html>
+                                                                                                                                               `;
+
+    const client = new SendMailClient({ url, token });
+    await client.sendMail({
+      from: {
+        address: "noreply@sitsuvidya.in",
+        name: "noreply",
+      },
+      to: [
+        {
+          email_address: {
+            address: Email,
+            name: Student_Name,
+          },
+        },
+      ],
+      // cc: [ { email_address: { address: "jeenafernandes@suvidya.ac.in", name: "Jeena Fernandes" } } ],
+      subject: "Admission Form Accepted",
+      htmlbody: htmlBody,
+    });
+
+    await client.sendMail({
+      from: {
+        address: "noreply@sitsuvidya.in",
+        name: "noreply",
+      },
+      to: [
+        {
+          email_address: {
+            address: "jeenafernandes@suvidya.ac.in",
+            name: "Jeena Fernandes",
+          },
+        },
+      ],
+      subject: `Confirmation: Admission Form Acceptance Mail Sent to ${Student_Name}`,
+      htmlbody: confirmationHtmlBody,
+    });
+
+    res.json({ message: "Admission process completed successfully." });
+  } catch (error) {
+    console.error("Error during admission process:", error);
+    res.status(500).json({ message: "An error occurred during the admission process." });
+  }
+});
+
+// Helper function to wrap query into a Promise
+const query = (connection, sql, params) => {
+  return new Promise((resolve, reject) => {
+    connection.query(sql, params, (error, results) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(results);
+      }
+    });
+  });
+};
+
+app.post("/nodeapp/studentDetail", (req, res, next) => {
+  const { id } = req.body;
+
+  const sql = `SELECT 
+                                                                                                                                               i.Inquiry_Id AS id,
+                                                                                                                                               COALESCE(i.Student_Id, sm.Student_Id) AS Student_Id,
+                                                                                                                                               COALESCE(i.Sex, sm.Sex) AS Sex,
+                                                                                                                                               COALESCE(i.DOB, sm.DOB) AS DOB,
+                                                                                                                                               COALESCE(i.Student_Name, sm.Student_Name) AS Student_Name,
+                                                                                                                                               COALESCE(i.Course_Id, sm.Course_Id) AS Course_Id,
+                                                                                                                                               COALESCE(i.Qualification, sm.Qualification) AS Qualification,
+                                                                                                                                               COALESCE(i.Discussion, sm.Discussion) AS Discussion,
+                                                                                                                                               COALESCE(i.Present_Mobile, sm.Present_Mobile) AS Present_Mobile,
+                                                                                                                                               COALESCE(i.Nationality, sm.Nationality) AS Nationality,
+                                                                                                                                               COALESCE(i.Email, sm.Email) AS Email,
+                                                                                                                                               COALESCE(i.Discipline, sm.Discipline) AS Discipline,
+                                                                                                                                               COALESCE(i.Inquiry_type, sm.Inquiry_type) AS Inquiry_type,
+                                                                                                                                               COALESCE(i.isActive, sm.isActive) AS isActive,
+                                                                                                                                               COALESCE(i.inquiry_DT, sm.inquiry_DT) AS inquiry_DT,
+                                                                                                                                               COALESCE(i.Percentage, sm.Percentage) AS Percentage,
+                                                                                                                                               c.course,
+                                                                                                                                               COALESCE(i.Present_Country, sm.Present_Country) AS Present_Country,
+                                                                                                                                               COALESCE(i.StateChangeDt, sm.StateChangeDt) AS StateChangeDt,
+                                                                                                                                               COALESCE(i.OnlineState, sm.OnlineState) AS OnlineState,
+                                                                                                                                               COALESCE(i.Inquiry, sm.Inquiry) AS Inquiry,
+                                                                                                                                               COALESCE(i.Batch_Category_id, sm.Batch_Category_id) AS Batch_Category_id,
+                                                                                                                                               COALESCE(i.Refered_By, sm.Refered_By) AS Refered_By,
+                                                                                                                                               COALESCE(i.Batch_Code, sm.Batch_Code) AS Batch_Code
+                                                                                                                                           FROM Student_Inquiry AS i
+                                                                                                                                           LEFT JOIN Student_Master AS sm ON i.Student_Id = sm.Student_Id
+                                                                                                                                           LEFT JOIN awt_course AS c ON COALESCE(i.Course_Id, sm.Course_Id) = c.id
+                                                                                                                                           WHERE i.Inquiry_Id = ?`;
+
+
+  con.query(sql, [id], (error, data) => {
+    if (error) {
+      res.status(500).json(error);
+      return;
+    }
+
+    return res.json(data);
+  });
+});
+
+app.post("/nodeapp/AdmitDetail", (req, res, next) => {
+  const { id } = req.body;
+
+  const sql =
+    "select am.Admission_Id,am.Student_Code,am.Course_Id, am.Batch_Id,am.Admission_Date ,am.Payment_Type,am.Amount, sm.Student_Name ,sm.Student_Id from Admission_master as am left join Student_Master as sm on sm.Student_Id = am.Student_Id left JOIN Course_Mst as cm on cm.Course_Id = am.Course_Id LEFT JOIN Batch_Mst as bm on bm.Batch_Id = am.Batch_Id where am.Admission_Id = ?";
+
+  con.query(sql, [id], (error, data) => {
+    if (error) {
+      res.status(500).json(error);
+      return;
+    }
+
+    return res.json(data);
+  });
+});
+app.get("/nodeapp/getEducation", (req, res, next) => {
+  const sql = "SELECT * FROM MST_Education";
+
+  con.query(sql, (error, data) => {
+    if (error) {
+      return res.json(error);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+app.get("/nodeapp/getDiscipline", (req, res, next) => {
+  const sql = "SELECT * FROM MST_Deciplin where IsDelete = 0";
+
+  con.query(sql, (error, data) => {
+    if (error) {
+      return res.json(error);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
+app.get("/nodeapp/getCourses", (req, res, next) => {
+  const sql = "SELECT Course_Id, Course_Name FROM Course_Mst ";
+
+  con.query(sql, (error, data) => {
+    if (error) {
+      return res.json(error);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
+app.get("/nodeapp/getCollege", (req, res, next) => {
+  const sql = "SELECT * FROM awt_college where deleted = 0";
+
+  con.query(sql, (error, data) => {
+    if (error) {
+      return res.json(error);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
+app.post("/nodeapp/postInquiry", (req, res, next) => {
+  const {
+    Enquiry_Id,
+    firstname,
+    email,
+    gender,
+    dob,
+    mobile,
+    InquiryDate,
+    modeEnquiry,
+    advert,
+    programmeEnquired,
+    selectedProgramme,
+    category,
+    batch,
+    qualification,
+    descipline,
+    percentage,
+    nationality,
+    statusdate,
+    status,
+    country,
+    discussion,
+  } = req.body;
+
+  const created_date = new Date();
+
+  const insertIntoInquiry =
+    "INSERT INTO Student_Inquiry ( Email, Student_Name, Sex, DOB, Present_Mobile,Inquiry_Dt, Inquiry_type, Qualification, Discipline, Percentage, Course_Id ,Nationality,Present_Country,Discussion,StateChangeDt,OnlineState ,Inquiry,Batch_Category_id ,Batch_Code ,Refered_By , IsUnread ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
+  con.query(
+    insertIntoInquiry,
+    [
+      email,
+      firstname,
+      gender,
+      dob,
+      mobile,
+      InquiryDate,
+      modeEnquiry,
+      qualification,
+      descipline,
+      percentage,
+      selectedProgramme,
+      nationality,
+      country,
+      discussion,
+      statusdate,
+      status,
+      programmeEnquired,
+      category,
+      batch,
+      advert,
+      '1'
+    ],
+    (error, data) => {
+      if (error) {
+        res.json(error);
+        return;
+      } else {
+        const inquiryid = data.insertId;
+
+
+        if (Enquiry_Id == ':inquiryid') {
+
+          const adddiscussion = "insert into awt_inquirydiscussion(`Inquiry_id`,`date`,`discussion`,`created_date`) values(?,?,?,?)";
+
+          con.query(adddiscussion, [inquiryid, InquiryDate, discussion, created_date], (err, data) => {
+            if (err) {
+              return res.json(err);
+            } else {
+              return res.json({ message: "Data added to inquiry table.", inquiryid: inquiryid })
+            }
+          });
+
+        } else {
+          return res.json({ message: "Data added to inquiry table.", inquiryid: inquiryid })
+
+        }
+
+
+
+        // res.status(200).json({ message: "Data added to inquiry table." });
       }
     }
   );
@@ -2226,7 +4819,7 @@ app.post("/nodeapp/updateStudent", (req, res, next) => {
   } = req.body;
 
   const sql =
-    "UPDATE Student_Master SET  Student_Name = ?, Sex = ?, DOB = ?, Present_Mobile = ?, Course_Id = ?,Batch_Code = ?,Nationality =?, Refered_By = ?,Present_Address =? ,Present_Pin = ?,Present_City = ?,Present_State= ? ,Present_Country = ? ,Batch_Category_id = ? ,Admission_Dt = ? ,Status_date = ? , Status_id = ? ,StateChangeDt = ? ,Permanent_Address = ?,Permanent_Pin = ?,Permanent_City = ?,Permanent_State =? ,Permanent_Country = ?,Permanent_Tel = ? ,Email = ?  WHERE Student_Id = ?";
+    "UPDATE Student_Master SET  Student_Name = ?, Sex = ?, DOB = ?, Present_Mobile = ?, Course_Id = ?,Batch_Code = ?,Nationality =?, Refered_By = ?,Present_Address =? ,Present_Pin = ?,Present_City = ?,Present_State= ? ,Present_Country = ? ,Batch_Category_id = ? ,Admission_Dt = ? ,Status_date = ? , Status_id = ? ,StateChangeDt = ? ,Permanent_Address = ?,Permanent_Pin = ?,Permanent_City = ?,Permanent_State =? ,Permanent_Country = ?,Permanent_Tel = ? ,Email = ? , IsUnread = ?  WHERE Student_Id = ?";
 
   con.query(
     sql,
@@ -2256,6 +4849,7 @@ app.post("/nodeapp/updateStudent", (req, res, next) => {
       permanentCountry,
       permanentmobile,
       permanentemail,
+      1,
       Student_Id,
     ],
     (error, data) => {
@@ -2273,15 +4867,31 @@ app.post("/nodeapp/getPersonal", (req, res, next) => {
   const { admissionid } = req.body;
 
   const sql =
-    "SELECT sm.*,bm.SDate , bm.EDate,bm.Batch_Id ,bm.INR_Total,stm.Status FROM Student_Master as sm  left join Batch_Mst as bm on bm.Batch_code = sm.Batch_Code left join Fees_Structure as fs on bm.Batch_Id = fs.batch_id left join Status_Master as stm on stm.Id = sm.Status_id  WHERE sm.Student_Id = ?";
+    "SELECT sm.*,bm.SDate , bm.EDate,bm.Batch_Id ,bm.INR_Total,stm.Status , am.Student_Code FROM Student_Master as sm LEFT join Admission_master as am on am.Student_Id =sm.Student_Id left join Batch_Mst as bm on bm.Batch_code = sm.Batch_Code left join Fees_Structure as fs on bm.Batch_Id = fs.batch_id left join Status_Master as stm on stm.Id = sm.Status_id WHERE sm.Student_Id = ?";
 
   con.query(sql, [admissionid], (error, data) => {
     if (error) {
       res.status(500).json(error);
       return;
+    } else {
+
+      const Email = data[0].Email;
+
+      const checkbatchdetails = 'select bm.Batch_code from Student_Master as sm left join Admission_master as am on am.Student_Id = sm.Student_Id left JOIN Batch_Mst as bm on bm.Batch_Id = am.Batch_Id  where sm.Email = ? and  sm.status_id = 8 and sm.IsDelete = 0'
+
+      con.query(checkbatchdetails, [Email], (error, batchdata) => {
+        if (error) {
+          return res.json(error)
+        } else {
+          return res.json({ data: data, batchdata: batchdata })
+        }
+
+      })
     }
-    return res.status(200).json(data);
+    // return res.status(200).json(data);
   });
+
+
 });
 
 app.post("/nodeapp/postCorporateInquiry", (req, res, next) => {
@@ -2393,100 +5003,125 @@ app.post("/nodeapp/add_lecturetaken", (req, res) => {
   let sql;
   let param;
 
-  console.log(uid);
 
-  if (uid == undefined) {
-    sql =
-      "insert into lecture_taken_master (`Course_Id`,`Batch_Id`,`Lecture_Id`,`ClassRoom`,`Take_Dt`,`Lecture_Start`,`Lecture_End`,`Faculty_Id`,`Faculty_Start`,`Faculty_End`,`Assign_Start`,`Assign_End`,`Assignment_Id`,`Material`,`Assign_Given`,`Test_Given`,`Test_Id`,`Topic`,`Next_Planning`) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
-    param = [
-      course,
-      batch,
-      lecture,
-      classroom,
-      lecturedate,
-      lecturefrom,
-      lectureto,
-      faculty,
-      facultytime,
-      timeto,
-      assignmentadate,
-      enddate,
-      assignment,
-      materialissued,
-      assignmentgive,
-      testgiven,
-      test,
-      topicdescuss,
-      nextplanning,
-    ];
-  } else {
-    sql =
-      "update `lecture_taken_master` set Course_Id =? ,Batch_Id = ? ,Lecture_Id = ?,ClassRoom = ? ,Take_Dt = ? ,Lecture_Start = ?,Lecture_End = ?,Faculty_Id = ? ,Faculty_Start = ? ,Faculty_End = ? ,Assign_Start =?,Assign_End = ? ,Assignment_Id = ?, Material =?,Assign_Given = ? ,Test_Given = ?,Test_Id = ? ,Topic = ? ,Next_Planning = ?   where Take_Id =?";
+  const getlecture = 'select * from Batch_Lecture_Master where id = ?';
 
-    param = [
-      course,
-      batch,
-      lecture,
-      classroom,
-      lecturedate,
-      lecturefrom,
-      lectureto,
-      faculty,
-      facultytime,
-      timeto,
-      assignmentadate,
-      enddate,
-      assignment,
-      materialissued,
-      assignmentgive,
-      testgiven,
-      test,
-      topicdescuss,
-      nextplanning,
-      uid,
-    ];
-  }
-
-  con.query(sql, param, (err, data) => {
+  con.query(getlecture, [lecture], (err, data) => {
     if (err) {
-      return res.json(err);
+      return res.json(err)
     } else {
-      const TakeId = data.insertId;
 
-      if (TakeId) {
-        // const getdata = `SELECT sm.Student_Id, sm.Student_Name FROM Batch_Mst as bm LEFT JOIN Student_Master as sm ON bm.Batch_code = sm.Batch_code WHERE bm.Batch_Id = ? AND bm.isDelete = 0 AND sm.isDelete = 0`;
-        const getdata = `SELECT DISTINCT  sm.Student_Id,sm.Student_Name FROM Admission_master as am LEFT JOIN Student_Master as sm ON sm.Student_Id = am.Student_Id LEFT JOIN Batch_Mst as bm ON bm.Batch_Id = am.Batch_Id  WHERE am.IsDelete = 0 AND am.IsActive = 1 AND sm.Status_id = 8 AND bm.Batch_Id = ?`;
-
-        con.query(getdata, [batch], (err, result) => {
-          if (err) {
-            return res.json(err);
-          } else {
-            let insertions = result.map((item) => {
-              const { Student_Id, Student_Name } = item;
-              const insert = `INSERT INTO Lecture_taken_child (Take_Id, Student_Id, Student_Name, isDelete,Student_Reaction) VALUES (?, ?, ?, ?,?)`;
-
-              return new Promise((resolve, reject) => {
-                con.query(insert, [TakeId, Student_Id, Student_Name, 0, "excellent"], (err, data) => {
-                  if (err) {
-                    reject(err);
-                  } else {
-                    resolve("Data Inserted");
-                  }
-                });
-              });
-            });
-
-            Promise.all(insertions)
-              .then((results) => res.json({ msg: "Data Inserted", TakeId: TakeId }))
-              .catch((error) => res.json(error));
-          }
-        });
-      } else {
-        return res.json("Main data inserted");
+      if (err) {
+        return res.json(err);
+      } else if (!data.length) {
+        return res.status(404).json({ message: 'Lecture not found' });
       }
+
+
+      const subject = data[0].subject;
+      const subject_topic = data[0].subject_topic;
+
+      if (uid == undefined) {
+        sql =
+          "insert into lecture_taken_master (`Course_Id`,`Batch_Id`,`Lecture_Id`,`ClassRoom`,`Take_Dt`,`Lecture_Start`,`Lecture_End`,`Faculty_Id`,`Faculty_Start`,`Faculty_End`,`Assign_Start`,`Assign_End`,`Assignment_Id`,`Material`,`Assign_Given`,`Test_Given`,`Test_Id`,`Next_Planning`,`Lecture_Name`, `Topic`) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
+        param = [
+          course,
+          batch,
+          lecture,
+          classroom,
+          lecturedate,
+          lecturefrom,
+          lectureto,
+          faculty,
+          facultytime,
+          timeto,
+          assignmentadate,
+          enddate,
+          assignment,
+          materialissued,
+          assignmentgive,
+          testgiven,
+          test,
+          nextplanning,
+          subject_topic,
+          subject
+        ];
+      } else {
+        sql =
+          "update `lecture_taken_master` set Course_Id =? ,Batch_Id = ? ,Lecture_Id = ?,ClassRoom = ? ,Take_Dt = ? ,Lecture_Start = ?,Lecture_End = ?,Faculty_Id = ? ,Faculty_Start = ? ,Faculty_End = ? ,Assign_Start =?,Assign_End = ? ,Assignment_Id = ?, Material =?,Assign_Given = ? ,Test_Given = ?,Test_Id = ?  ,Next_Planning = ? ,Lecture_Name = ? ,Topic = ?   where Take_Id =?";
+
+        param = [
+          course,
+          batch,
+          lecture,
+          classroom,
+          lecturedate,
+          lecturefrom,
+          lectureto,
+          faculty,
+          facultytime,
+          timeto,
+          assignmentadate,
+          enddate,
+          assignment,
+          materialissued,
+          assignmentgive,
+          testgiven,
+          test,
+          nextplanning,
+          subject_topic,
+          subject,
+          uid,
+        ];
+      }
+
+      con.query(sql, param, (err, data) => {
+        if (err) {
+          return res.json(err);
+        } else {
+          const TakeId = data.insertId;
+
+          if (TakeId) {
+            // const getdata = `SELECT sm.Student_Id, sm.Student_Name FROM Batch_Mst as bm LEFT JOIN Student_Master as sm ON bm.Batch_code = sm.Batch_code WHERE bm.Batch_Id = ? AND bm.isDelete = 0 AND sm.isDelete = 0`;
+            const getdata = `SELECT DISTINCT  sm.Student_Id,sm.Student_Name FROM Admission_master as am LEFT JOIN Student_Master as sm ON sm.Student_Id = am.Student_Id LEFT JOIN Batch_Mst as bm ON bm.Batch_Id = am.Batch_Id  WHERE am.IsDelete = 0 AND am.IsActive = 1 AND sm.Status_id = 8 AND bm.Batch_Id = ?`;
+
+            con.query(getdata, [batch], (err, result) => {
+              if (err) {
+                return res.json(err);
+              } else {
+                let insertions = result.map((item) => {
+                  const { Student_Id, Student_Name } = item;
+                  const insert = `INSERT INTO Lecture_taken_child (Take_Id, Student_Id, Student_Name, isDelete,Student_Reaction) VALUES (?, ?, ?, ?,?)`;
+
+                  return new Promise((resolve, reject) => {
+                    con.query(insert, [TakeId, Student_Id, Student_Name, 0, "excellent"], (err, data) => {
+                      if (err) {
+                        reject(err);
+                      } else {
+                        resolve("Data Inserted");
+                      }
+                    });
+                  });
+                });
+
+                Promise.all(insertions)
+                  .then((results) => res.json({ msg: "Data Inserted", TakeId: TakeId }))
+                  .catch((error) => res.json(error));
+              }
+            });
+          } else {
+            return res.json("Main data inserted");
+          }
+        }
+      });
+
     }
+
   });
+
+
 });
 
 app.post(`/nodeapp/add_lecturechild`, (req, res) => {
@@ -2507,6 +5142,7 @@ app.post(`/nodeapp/getlecturetakendata`, (req, res) => {
       return res.json(err);
     } else {
       let lastStudentId = null;
+      let lastTakeId = null;
       if (data.length > 0) {
         lastTakeId = data[data.length - 1].Take_Id;
       }
@@ -3385,894 +6021,8 @@ app.post("/nodeapp/add_finalexamtaken", (req, res) => {
 
 
 
-// app.post("/nodeapp/add_generateresult", (req, res) => {
-//     let {
-//         course,
-//         batch,
-//         returndate,
-//         printdate,
-//         faculty1,
-//         faculty2,
-//         label1,
-//         label2,
-//         approved,
-//         startdate,
-//         enddate,
-//         uid,
-//     } = req.body;
 
-//     let sql;
-//     let param;
-
-//     if (uid == undefined) {
-//         sql =
-//             "insert into generate_final_result(`Course_Id`,`Batch_Id`,`Result_date`,`Print_date`,`Label1`,`Faculty1`,`Label2`,`Faculty2`,`Approve`,`Start_date`,`End_date`,`IsDelete`) values(?,?,?,?,?,?,?,?,?,?,?,?)";
-
-//         param = [
-//             course,
-//             batch,
-//             returndate,
-//             printdate,
-//             label1,
-//             faculty1,
-//             label2,
-//             faculty2,
-//             approved,
-//             startdate,
-//             enddate,
-//             0,
-//         ];
-//     } else {
-//         sql =
-//             "update `generate_final_result` set `Course_Id` =? , `Batch_Id` =? , `Result_date` =? , `Print_date` =? , `Label1` =? , `Faculty1` =? , `Label2` =? ,`Faculty2` = ?,`Approve` =? ,`Start_date` = ? ,`End_date` = ?  where id = ?";
-
-//         param = [
-//             course,
-//             batch,
-//             returndate,
-//             printdate,
-//             label1,
-//             faculty1,
-//             label2,
-//             faculty2,
-//             approved,
-//             startdate,
-//             enddate,
-//             uid,
-//         ];
-//     }
-
-//     con.query(sql, param, (err, data) => {
-//         if (err) {
-//             return res.json(err);
-//         } else {
-//             console.log(data);
-
-//             const GenID = data.insertId;
-
-//             if (GenID > 0) {
-//                 // Function to insert data into 'generate_final_child'
-//                 const insertData = (groupedData) => {
-//                     let insertions = Object.values(groupedData).map((student) => {
-//                         const {
-//                             Student_Id,
-//                             Student_Code,
-//                             Student_Name,
-//                             assignmentData,
-//                             testData,
-//                             assignmentAverage,
-//                             testAverage,
-//                             FinalData,
-//                             Final_Avg,
-//                             Viva_Marks,
-//                         } = student;
-
-//                         const ass_avg = assignmentAverage.toFixed(2);
-//                         const test_avg = testAverage.toFixed(2);
-//                         const finalavg = Final_Avg.toFixed(2);
-
-//                         const finalper = assignmentAverage + testAverage + Final_Avg;
-
-//                         const finalpercentage = finalper.toFixed(2);
-
-//                         // Build the query fields and values for both assignment and test at once
-//                         const queryFields = `Ass1_Given, Ass1_Max, Ass1_Status, Ass2_Given, Ass2_Max, Ass2_Status,
-//              Ass3_Given, Ass3_Max, Ass3_Status, Ass4_Given, Ass4_Max, Ass4_Status,
-//              Ass5_Given, Ass5_Max, Ass5_Status, Ass6_Given, Ass6_Max, Ass6_Status,
-//              Ass7_Given, Ass7_Max, Ass7_Status, Ass8_Given, Ass8_Max, Ass8_Status,
-//              Ass9_Given, Ass9_Max, Ass9_Status, Ass10_Given, Ass10_Max, Ass10_Status,
-//              Test1_Given, Test1_Max, Test1_Status, Test2_Given, Test2_Max, Test2_Status,
-//              Test3_Given, Test3_Max, Test3_Status, Test4_Given, Test4_Max, Test4_Status,
-//              Test5_Given, Test5_Max, Test5_Status, Test6_Given, Test6_Max, Test6_Status,
-//              Test7_Given, Test7_Max, Test7_Status, Test8_Given, Test8_Max, Test8_Status,
-//              Test9_Given, Test9_Max, Test9_Status, Test10_Given, Test10_Max, Test10_Status,Ass_Percent,Test_Percent,Final1_Given,Final1_Max,Final1_Status,Final2_Given,Final2_Max,Final2_Status,Final3_Given,Final3_Max,Final3_Status,Final_Percent,Discipline , Final_Result_Percent`;
-
-//                         // Combine both assignment and test data into the same query values array
-//                         const queryValues = [
-//                             assignmentData.Ass1_Given,
-//                             assignmentData.Ass1_Max,
-//                             assignmentData.Ass1_Status,
-//                             assignmentData.Ass2_Given,
-//                             assignmentData.Ass2_Max,
-//                             assignmentData.Ass2_Status,
-//                             assignmentData.Ass3_Given,
-//                             assignmentData.Ass3_Max,
-//                             assignmentData.Ass3_Status,
-//                             assignmentData.Ass4_Given,
-//                             assignmentData.Ass4_Max,
-//                             assignmentData.Ass4_Status,
-//                             assignmentData.Ass5_Given,
-//                             assignmentData.Ass5_Max,
-//                             assignmentData.Ass5_Status,
-//                             assignmentData.Ass6_Given,
-//                             assignmentData.Ass6_Max,
-//                             assignmentData.Ass6_Status,
-//                             assignmentData.Ass7_Given,
-//                             assignmentData.Ass7_Max,
-//                             assignmentData.Ass7_Status,
-//                             assignmentData.Ass8_Given,
-//                             assignmentData.Ass8_Max,
-//                             assignmentData.Ass8_Status,
-//                             assignmentData.Ass9_Given,
-//                             assignmentData.Ass9_Max,
-//                             assignmentData.Ass9_Status,
-//                             assignmentData.Ass10_Given,
-//                             assignmentData.Ass10_Max,
-//                             assignmentData.Ass10_Status,
-//                             testData.Test1_Given,
-//                             testData.Test1_Max,
-//                             testData.Test1_Status,
-//                             testData.Test2_Given,
-//                             testData.Test2_Max,
-//                             testData.Test2_Status,
-//                             testData.Test3_Given,
-//                             testData.Test3_Max,
-//                             testData.Test3_Status,
-//                             testData.Test4_Given,
-//                             testData.Test4_Max,
-//                             testData.Test4_Status,
-//                             testData.Test5_Given,
-//                             testData.Test5_Max,
-//                             testData.Test5_Status,
-//                             testData.Test6_Given,
-//                             testData.Test6_Max,
-//                             testData.Test6_Status,
-//                             testData.Test7_Given,
-//                             testData.Test7_Max,
-//                             testData.Test7_Status,
-//                             testData.Test8_Given,
-//                             testData.Test8_Max,
-//                             testData.Test8_Status,
-//                             testData.Test9_Given,
-//                             testData.Test9_Max,
-//                             testData.Test9_Status,
-//                             testData.Test10_Given,
-//                             testData.Test10_Max,
-//                             testData.Test10_Status,
-//                             ass_avg,
-//                             test_avg,
-//                             FinalData.Final1_Given,
-//                             FinalData.Final1_Max,
-//                             FinalData.Final1_Status,
-//                             FinalData.Final2_Given,
-//                             FinalData.Final2_Max,
-//                             FinalData.Final2_Status,
-//                             FinalData.Final3_Given,
-//                             FinalData.Final3_Max,
-//                             FinalData.Final3_Status,
-//                             finalavg,
-//                             Viva_Marks,
-//                             finalpercentage,
-//                         ];
-
-//                         // Prepare insert query
-//                         const insertQuery = `INSERT INTO generate_final_child (Gen_id, Batch_Id, Student_Code, Student_Name, ${queryFields})
-//                          VALUES (?, ?, ?, ?, ${queryValues.map(() => "?").join(", ")})`;
-
-//                         return new Promise((resolve, reject) => {
-
-//                             con.query(
-//                                 insertQuery,
-//                                 [GenID, batch, Student_Code, Student_Name, ...queryValues],
-//                                 (err, childdata) => {
-//                                     if (err) {
-//                                         console.error("Error inserting data:", err);
-
-//                                         reject(err);
-//                                     } else {
-//                                         const childid = childdata.insertId;
-
-//                                         const getattendetail =
-//                                             "SELECT COUNT(*) as total_lecture, SUM(CASE WHEN ltc.Student_Atten = 'Absent' THEN 1 ELSE 0 END) AS total_absent ,SUM(CASE WHEN ltc.Student_Atten = 'Present' THEN 1 ELSE 0 END) AS total_present ,ROUND(SUM(CASE WHEN ltc.Student_Atten = 'Present' THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) as atten_per FROM`lecture_taken_master` as ltm LEFT JOIN Lecture_taken_child as ltc on ltc.Take_Id = ltm.Take_Id WHERE ltc.Student_Id = ? and ltm.Batch_Id = ? and ltm.IsDelete = 0";
-
-//                                         con.query(getattendetail, [Student_Id, batch], (err, data) => {
-
-//                                             if (err) {
-//                                                 return res.json(err);
-//                                             } else {
-//                                                 const Total_Lectures = data[0].total_lecture;
-//                                                 const AttenLectures = data[0].total_present;
-//                                                 const Absents = data[0].total_absent;
-//                                                 const Atten_Per = data[0].atten_per;
-
-//                                                 const updateattend =
-//                                                     "update `generate_final_child` set Total_Lectures = ?,Full_Attendance = ?,Full_Attend =?,Absents = ?,AttenLectures = ? where id = ?";
-
-//                                                 con.query(
-//                                                     updateattend,
-//                                                     [
-//                                                         Total_Lectures,
-//                                                         Atten_Per,
-//                                                         Atten_Per,
-//                                                         Absents,
-//                                                         AttenLectures,
-//                                                         childid,
-//                                                     ],
-//                                                     (err, data) => {
-//                                                         if (err) {
-//                                                             return res.json(err);
-//                                                         } else {
-//                                                             const getassigndetails =
-//                                                                 "SELECT COUNT(*) as total_assignment,SUM(CASE WHEN agc.Status = 'Present' THEN 1 ELSE 0 END) AS total_given FROM Assignment_taken as atn LEFT join Assignment_given_child as agc on agc.Given_Id = atn.Given_Id WHERE  atn.Batch_Id = ? AND agc.Student_Id = ? AND atn.IsDelete = 0";
-
-//                                                             con.query(
-//                                                                 getassigndetails,
-//                                                                 [batch, Student_Id],
-//                                                                 (err, assigndata) => {
-//                                                                     if (err) {
-//                                                                         return res.json(err);
-//                                                                     } else {
-//                                                                         const Total_assignment =
-//                                                                             assigndata[0].total_assignment;
-//                                                                         const Total_given = assigndata[0].total_given;
-
-//                                                                         const updateassign =
-//                                                                             "update `generate_final_child` set Total_Assignments =? ,Given_Assignments =? where id = ?";
-
-//                                                                         con.query(
-//                                                                             updateassign,
-//                                                                             [Total_assignment, Total_given, childid],
-//                                                                             (err, data) => {
-//                                                                                 if (err) {
-//                                                                                     return res.json(err);
-//                                                                                 } else {
-//                                                                                     const gettestdetails =
-//                                                                                         "SELECT COUNT(*) as total_test,SUM(CASE WHEN ttc.Status = 'Present' THEN 1 ELSE 0 END) AS total_given FROM Test_taken_master as ttm LEFT join Test_taken_child as ttc on ttc.Take_Id = ttm.Take_Id WHERE  ttm.Batch_Id = ? AND ttc.Student_Id = ? AND ttm.IsDelete = 0";
-
-//                                                                                     con.query(
-//                                                                                         gettestdetails,
-//                                                                                         [batch, Student_Id],
-//                                                                                         (err, testdata) => {
-//                                                                                             if (err) {
-//                                                                                                 return res.json(err);
-//                                                                                             } else {
-//                                                                                                 const Total_test =
-//                                                                                                     testdata[0]
-//                                                                                                         .total_test;
-//                                                                                                 const Total_given =
-//                                                                                                     testdata[0]
-//                                                                                                         .total_given;
-
-//                                                                                                 const updatetest =
-//                                                                                                     "update `generate_final_child` set Total_Tests =? ,Given_Tests =? where id = ?";
-
-//                                                                                                 con.query(
-//                                                                                                     updatetest,
-//                                                                                                     [
-//                                                                                                         Total_test,
-//                                                                                                         Total_given,
-//                                                                                                         childid,
-//                                                                                                     ],
-//                                                                                                     (err, data) => {
-//                                                                                                         if (err) {
-//                                                                                                             return res.json(
-//                                                                                                                 err
-//                                                                                                             );
-//                                                                                                         } else {
-//                                                                                                             return res.json(
-//                                                                                                                 "Updated"
-//                                                                                                             );
-//                                                                                                         }
-//                                                                                                     }
-//                                                                                                 );
-//                                                                                             }
-//                                                                                         }
-//                                                                                     );
-//                                                                                 }
-//                                                                             }
-//                                                                         );
-//                                                                     }
-//                                                                 }
-//                                                             );
-//                                                         }
-//                                                     }
-//                                                 );
-//                                             }
-//                                         });
-//                                     }
-//                                 }
-//                             );
-//                         });
-//                     });
-
-//                     // return insertions;
-
-//                 };
-
-//                 // Fetch data and call insertData for both assignment and test data together
-
-//                 // const getdata = `SELECT sm.Student_Id, sm.Student_Name ,at.* ,agc.*,ttc.Marks_Given as Test_Marks_Given,ttm.Marks as Test_Marks,ttm.Test_No,ttc.Status as Test_Status,etc.Marks_Given as Final_Mark_Given ,fem.Marks as Final_Marks ,fem.Test_No as Final_test_No, etc.Status Final_Status ,vtc.Marks_Given as Viva_Marks FROM Batch_Mst as bm
-//                 // LEFT JOIN Student_Master as sm ON bm.Batch_code = sm.Batch_code
-//                 // LEFT JOIN Assignment_given_child as agc on agc.Student_Id = sm.Student_Id
-//                 // LEFT JOIN Assignment_taken as at on at.Given_Id = agc.Given_Id
-//                 // LEFT JOIN Test_taken_child as ttc on ttc.Student_Id = sm.Student_Id
-//                 // LEFT JOIN Test_taken_master as ttm on ttm.Take_Id = ttc.Take_Id
-//                 // LEFT JOIN Exam_taken_child as etc on etc.Student_Id = sm.Student_Id
-//                 // LEFT JOIN Final_exam_master as fem on fem.Take_Id = etc.Take_Id
-//                 // LEFT JOIN viva_taken_child as vtc on vtc.Student_Id  = sm.Student_Id
-//                 // LEFT JOIN viva_taken as vt on vt.Take_Id = vtc.Take_Id
-//                 // WHERE bm.Batch_Id = 1 AND bm.isDelete = 0 AND sm.isDelete = 0 and at.isDelete = 0 and ttm.isDelete = 0 and fem.isDelete = 0`;
-
-//                 const getdata =
-//                     "SELECT sm.Student_Id,am.Student_Code, sm.Student_Name ,at.* ,agc.*,ttc.Marks_Given as Test_Marks_Given,ttm.Marks as Test_Marks,ttm.Test_No,ttc.Status as Test_Status,etc.Marks_Given as Final_Mark_Given ,fem.Marks as Final_Marks ,fem.Test_No as Final_test_No, etc.Status Final_Status ,vtc.Marks_Given as Viva_Marks FROM Batch_Mst as bm LEFT JOIN Admission_master as am on bm.Batch_Id = am.Batch_Id LEFT JOIN Student_Master as sm on sm.Student_Id = am.Student_Id   LEFT JOIN Assignment_given_child as agc on agc.Student_Id = sm.Student_Id LEFT JOIN Assignment_taken  as at on at.Given_Id = agc.Given_Id  LEFT JOIN Test_taken_child as ttc on ttc.Student_Id = sm.Student_Id LEFT JOIN Test_taken_master as ttm on ttm.Take_Id = ttc.Take_Id  LEFT JOIN Exam_taken_child as etc on etc.Student_Id = sm.Student_Id LEFT JOIN Final_exam_master as fem on fem.Take_Id = etc.Take_Id LEFT JOIN viva_taken_child as vtc on vtc.Student_Id  = sm.Student_Id LEFT JOIN viva_taken as vt on vt.Take_Id = vtc.Take_Id WHERE bm.Batch_Id = ? and sm.Status_Id = 8 and sm.isDelete = 0 and am.isDelete = 0";
-
-//                 con.query(getdata, [batch], (err, result) => {
-//                     if (err) {
-//                         return res.json(err);
-//                     }
-
-//                     // Combine assignment and test data for each student
-//                     const combinedData = result.reduce((acc, curr) => {
-//                         const {
-//                             Student_Id,
-//                             Student_Code,
-//                             Student_Name,
-//                             Assign_No,
-//                             Marks_Given,
-//                             Marks,
-//                             Status,
-//                             Test_No,
-//                             Test_Marks_Given,
-//                             Test_Marks,
-//                             Test_Status,
-//                             Final_test_No,
-//                             Final_Marks,
-//                             Final_Mark_Given,
-//                             Final_Status,
-//                             Viva_Marks,
-//                         } = curr;
-
-//                         if (!acc[Student_Id]) {
-//                             acc[Student_Id] = {
-//                                 Student_Id,
-//                                 Student_Code,
-//                                 Student_Name,
-//                                 assignmentData: {
-//                                     Ass1_Given: 0,
-//                                     Ass1_Max: 0,
-//                                     Ass1_Status: "",
-//                                     Ass2_Given: 0,
-//                                     Ass2_Max: 0,
-//                                     Ass2_Status: "",
-//                                     Ass3_Given: 0,
-//                                     Ass3_Max: 0,
-//                                     Ass3_Status: "",
-//                                     Ass4_Given: 0,
-//                                     Ass4_Max: 0,
-//                                     Ass4_Status: "",
-//                                     Ass5_Given: 0,
-//                                     Ass5_Max: 0,
-//                                     Ass5_Status: "",
-//                                     Ass6_Given: 0,
-//                                     Ass6_Max: 0,
-//                                     Ass6_Status: "",
-//                                     Ass7_Given: 0,
-//                                     Ass7_Max: 0,
-//                                     Ass7_Status: "",
-//                                     Ass8_Given: 0,
-//                                     Ass8_Max: 0,
-//                                     Ass8_Status: "",
-//                                     Ass9_Given: 0,
-//                                     Ass9_Max: 0,
-//                                     Ass9_Status: "",
-//                                     Ass10_Given: 0,
-//                                     Ass10_Max: 0,
-//                                     Ass10_Status: "",
-//                                 },
-//                                 testData: {
-//                                     Test1_Given: 0,
-//                                     Test1_Max: 0,
-//                                     Test1_Status: "",
-//                                     Test2_Given: 0,
-//                                     Test2_Max: 0,
-//                                     Test2_Status: "",
-//                                     Test3_Given: 0,
-//                                     Test3_Max: 0,
-//                                     Test3_Status: "",
-//                                     Test4_Given: 0,
-//                                     Test4_Max: 0,
-//                                     Test4_Status: "",
-//                                     Test5_Given: 0,
-//                                     Test5_Max: 0,
-//                                     Test5_Status: "",
-//                                     Test6_Given: 0,
-//                                     Test6_Max: 0,
-//                                     Test6_Status: "",
-//                                     Test7_Given: 0,
-//                                     Test7_Max: 0,
-//                                     Test7_Status: "",
-//                                     Test8_Given: 0,
-//                                     Test8_Max: 0,
-//                                     Test8_Status: "",
-//                                     Test9_Given: 0,
-//                                     Test9_Max: 0,
-//                                     Test9_Status: "",
-//                                     Test10_Given: 0,
-//                                     Test10_Max: 0,
-//                                     Test10_Status: "",
-//                                 },
-//                                 FinalData: {
-//                                     Final1_Given: 0,
-//                                     Final1_Max: 0,
-//                                     Final1_Status: "",
-//                                     Final2_Given: 0,
-//                                     Final2_Max: 0,
-//                                     Final2_Status: "",
-//                                     Final3_Given: 0,
-//                                     Final3_Max: 0,
-//                                     Final3_Status: "",
-//                                 },
-//                                 Viva_Marks,
-//                             };
-//                         }
-
-//                         // Assign assignment data
-//                         acc[Student_Id].assignmentData[`Ass${Assign_No}_Given`] = Marks_Given;
-//                         acc[Student_Id].assignmentData[`Ass${Assign_No}_Max`] = Marks;
-//                         acc[Student_Id].assignmentData[`Ass${Assign_No}_Status`] = Status;
-
-//                         // Assign test data
-//                         acc[Student_Id].testData[`Test${Test_No}_Given`] = Test_Marks_Given;
-//                         acc[Student_Id].testData[`Test${Test_No}_Max`] = Test_Marks;
-//                         acc[Student_Id].testData[`Test${Test_No}_Status`] = Test_Status;
-
-//                         // Assign test data
-//                         acc[Student_Id].FinalData[`Final${Final_test_No}_Given`] = Final_Mark_Given;
-//                         acc[Student_Id].FinalData[`Final${Final_test_No}_Max`] = Final_Marks;
-//                         acc[Student_Id].FinalData[`Final${Final_test_No}_Status`] = Final_Status;
-
-//                         return acc;
-//                     }, {});
-
-//                     Object.keys(combinedData).forEach((studentId) => {
-//                         const assignmentData = combinedData[studentId].assignmentData;
-//                         let totalGivenMarks = 0;
-//                         let totalMaxMarks = 0;
-//                         let assignmentsCompleted = 0;
-
-//                         for (let i = 1; i <= 10; i++) {
-//                             const given = assignmentData[`Ass${i}_Given`];
-//                             const max = assignmentData[`Ass${i}_Max`];
-
-//                             if (given > 0 && max > 0) {
-//                                 totalGivenMarks += given;
-//                                 totalMaxMarks += max;
-//                                 assignmentsCompleted++;
-//                             }
-//                         }
-
-//                         // Calculate the average marks if there are any completed assignments
-//                         combinedData[studentId].assignmentAverage =
-//                             assignmentsCompleted > 0 ? (totalGivenMarks / totalMaxMarks) * 15 : 0;
-//                     });
-
-//                     Object.keys(combinedData).forEach((studentId) => {
-//                         const testData = combinedData[studentId].testData;
-//                         let totalGivenMarks = 0;
-//                         let totalMaxMarks = 0;
-//                         let testCompleted = 0;
-
-//                         for (let i = 1; i <= 10; i++) {
-//                             const given = testData[`Test${i}_Given`];
-//                             const max = testData[`Test${i}_Max`];
-
-//                             if (given > 0 && max > 0) {
-//                                 totalGivenMarks += given;
-//                                 totalMaxMarks += max;
-//                                 testCompleted++;
-//                             }
-//                         }
-
-//                         // Calculate the average marks if there are any completed assignments
-//                         combinedData[studentId].testAverage =
-//                             testCompleted > 0 ? (totalGivenMarks / totalMaxMarks) * 35 : 0;
-//                     });
-
-//                     Object.keys(combinedData).forEach((studentId) => {
-//                         const FinalData = combinedData[studentId].FinalData;
-//                         let totalGivenMarks = 0;
-//                         let totalMaxMarks = 0;
-//                         let testCompleted = 0;
-
-//                         for (let i = 1; i <= 3; i++) {
-//                             const given = FinalData[`Final${i}_Given`];
-//                             const max = FinalData[`Final${i}_Max`];
-
-//                             if (given > 0 && max > 0) {
-//                                 totalGivenMarks += given;
-//                                 totalMaxMarks += max;
-//                                 testCompleted++;
-//                             }
-//                         }
-
-//                         // Calculate the average marks if there are any completed assignments
-//                         combinedData[studentId].Final_Avg =
-//                             testCompleted > 0 ? (totalGivenMarks / totalMaxMarks) * 50 : 0;
-//                     });
-
-//                     // Insert both assignment and test data in one go
-//                     const insertions = insertData(combinedData);
-
-//                     Promise.all(insertions)
-//                         .then(() => res.json("Data Inserted Successfully"))
-//                         .catch((error) => res.json(error));
-//                 });
-
-
-//             } else {
-//                 const updateData = (groupedData) => {
-//                     let updates = Object.values(groupedData).map((student) => {
-//                         const {
-//                             Student_Id,
-//                             assignmentData,
-//                             testData,
-//                             assignmentAverage,
-//                             testAverage,
-//                             FinalData,
-//                             Final_Avg,
-//                             Viva_Marks,
-//                         } = student;
-
-//                         const ass_avg = assignmentAverage.toFixed(2);
-//                         const test_avg = testAverage.toFixed(2);
-//                         const finalavg = Final_Avg.toFixed(2);
-//                         const finalpercentage = (assignmentAverage + testAverage + Final_Avg).toFixed(2);
-
-//                         // Query to update specific fields for the student
-//                         const updateQuery = `
-//               UPDATE generate_final_child
-//               SET 
-//                 Ass1_Given = ?, Ass1_Max = ?, Ass1_Status = ?,
-//                 Ass2_Given = ?, Ass2_Max = ?, Ass2_Status = ?,
-//                 Ass3_Given = ?, Ass3_Max = ?, Ass3_Status = ?,
-//                 Ass4_Given = ?, Ass4_Max = ?, Ass4_Status = ?,
-//                 Ass5_Given = ?, Ass5_Max = ?, Ass5_Status = ?,
-//                 Ass6_Given = ?, Ass6_Max = ?, Ass6_Status = ?,
-//                 Ass7_Given = ?, Ass7_Max = ?, Ass7_Status = ?,
-//                 Ass8_Given = ?, Ass8_Max = ?, Ass8_Status = ?,
-//                 Ass9_Given = ?, Ass9_Max = ?, Ass9_Status = ?,
-//                 Ass10_Given = ?, Ass10_Max = ?, Ass10_Status = ?,
-//                 Test1_Given = ?, Test1_Max = ?, Test1_Status = ?,
-//                 Test2_Given = ?, Test2_Max = ?, Test2_Status = ?,
-//                 Test3_Given = ?, Test3_Max = ?, Test3_Status = ?,
-//                 Test4_Given = ?, Test4_Max = ?, Test4_Status = ?,
-//                 Test5_Given = ?, Test5_Max = ?, Test5_Status = ?,
-//                 Test6_Given = ?, Test6_Max = ?, Test6_Status = ?,
-//                 Test7_Given = ?, Test7_Max = ?, Test7_Status = ?,
-//                 Test8_Given = ?, Test8_Max = ?, Test8_Status = ?,
-//                 Test9_Given = ?, Test9_Max = ?, Test9_Status = ?,
-//                 Test10_Given = ?, Test10_Max = ?, Test10_Status = ?,
-//                 Final1_Given = ?, Final1_Max = ?, Final1_Status = ?,
-//                 Final2_Given = ?, Final2_Max = ?, Final2_Status = ?,
-//                 Final3_Given = ?, Final3_Max = ?, Final3_Status = ?,
-//                 Ass_Percent = ?, Test_Percent = ?, Final_Percent = ?, Discipline = ?, Final_Result_Percent = ?
-//               WHERE Gen_id = ? AND Student_Code = ?`;
-
-//                         const updateValues = [
-//                             assignmentData.Ass1_Given,
-//                             assignmentData.Ass1_Max,
-//                             assignmentData.Ass1_Status,
-//                             assignmentData.Ass2_Given,
-//                             assignmentData.Ass2_Max,
-//                             assignmentData.Ass2_Status,
-//                             assignmentData.Ass3_Given,
-//                             assignmentData.Ass3_Max,
-//                             assignmentData.Ass3_Status,
-//                             assignmentData.Ass4_Given,
-//                             assignmentData.Ass4_Max,
-//                             assignmentData.Ass4_Status,
-//                             assignmentData.Ass5_Given,
-//                             assignmentData.Ass5_Max,
-//                             assignmentData.Ass5_Status,
-//                             assignmentData.Ass6_Given,
-//                             assignmentData.Ass6_Max,
-//                             assignmentData.Ass6_Status,
-//                             assignmentData.Ass7_Given,
-//                             assignmentData.Ass7_Max,
-//                             assignmentData.Ass7_Status,
-//                             assignmentData.Ass8_Given,
-//                             assignmentData.Ass8_Max,
-//                             assignmentData.Ass8_Status,
-//                             assignmentData.Ass9_Given,
-//                             assignmentData.Ass9_Max,
-//                             assignmentData.Ass9_Status,
-//                             assignmentData.Ass10_Given,
-//                             assignmentData.Ass10_Max,
-//                             assignmentData.Ass10_Status,
-//                             testData.Test1_Given,
-//                             testData.Test1_Max,
-//                             testData.Test1_Status,
-//                             testData.Test2_Given,
-//                             testData.Test2_Max,
-//                             testData.Test2_Status,
-//                             testData.Test3_Given,
-//                             testData.Test3_Max,
-//                             testData.Test3_Status,
-//                             testData.Test4_Given,
-//                             testData.Test4_Max,
-//                             testData.Test4_Status,
-//                             testData.Test5_Given,
-//                             testData.Test5_Max,
-//                             testData.Test5_Status,
-//                             testData.Test6_Given,
-//                             testData.Test6_Max,
-//                             testData.Test6_Status,
-//                             testData.Test7_Given,
-//                             testData.Test7_Max,
-//                             testData.Test7_Status,
-//                             testData.Test8_Given,
-//                             testData.Test8_Max,
-//                             testData.Test8_Status,
-//                             testData.Test9_Given,
-//                             testData.Test9_Max,
-//                             testData.Test9_Status,
-//                             testData.Test10_Given,
-//                             testData.Test10_Max,
-//                             testData.Test10_Status,
-//                             FinalData.Final1_Given,
-//                             FinalData.Final1_Max,
-//                             FinalData.Final1_Status,
-//                             FinalData.Final2_Given,
-//                             FinalData.Final2_Max,
-//                             FinalData.Final2_Status,
-//                             FinalData.Final3_Given,
-//                             FinalData.Final3_Max,
-//                             FinalData.Final3_Status,
-//                             ass_avg,
-//                             test_avg,
-//                             finalavg,
-//                             Viva_Marks,
-//                             finalpercentage,
-//                             uid,
-//                             Student_Id,
-//                         ];
-
-//                         // Execute update query
-//                         return new Promise((resolve, reject) => {
-//                             con.query(updateQuery, updateValues, (err, result) => {
-//                                 if (err) {
-//                                     console.error("Error updating data:", err);
-//                                     reject(err);
-//                                 } else {
-//                                     resolve("Data Updated Successfully");
-//                                 }
-//                             });
-//                         });
-//                     });
-
-//                     // Return all update promises
-//                     return updates;
-//                 };
-
-//                 const getdata =
-//                     "SELECT sm.Student_Id, sm.Student_Name ,at.* ,agc.*,ttc.Marks_Given as Test_Marks_Given,ttm.Marks as Test_Marks,ttm.Test_No,ttc.Status as Test_Status,etc.Marks_Given as Final_Mark_Given ,fem.Marks as Final_Marks ,fem.Test_No as Final_test_No, etc.Status Final_Status ,vtc.Marks_Given as Viva_Marks FROM Batch_Mst as bm LEFT JOIN Admission_master as am on bm.Batch_Id = am.Batch_Id LEFT JOIN Student_Master as sm on sm.Student_Id = am.Student_Id   LEFT JOIN Assignment_given_child as agc on agc.Student_Id = sm.Student_Id LEFT JOIN Assignment_taken  as at on at.Given_Id = agc.Given_Id  LEFT JOIN Test_taken_child as ttc on ttc.Student_Id = sm.Student_Id LEFT JOIN Test_taken_master as ttm on ttm.Take_Id = ttc.Take_Id  LEFT JOIN Exam_taken_child as etc on etc.Student_Id = sm.Student_Id LEFT JOIN Final_exam_master as fem on fem.Take_Id = etc.Take_Id LEFT JOIN viva_taken_child as vtc on vtc.Student_Id  = sm.Student_Id LEFT JOIN viva_taken as vt on vt.Take_Id = vtc.Take_Id WHERE bm.Batch_Id = ? and sm.Status_Id = 8 and sm.isDelete = 0 and am.isDelete = 0 ";
-
-//                 con.query(getdata, [batch], (err, result) => {
-//                     if (err) {
-//                         return res.json(err);
-//                     }
-
-//                     // Combine assignment and test data for each student
-//                     const combinedData = result.reduce((acc, curr) => {
-//                         const {
-//                             Student_Id,
-//                             Student_Name,
-//                             Assign_No,
-//                             Marks_Given,
-//                             Marks,
-//                             Status,
-//                             Test_No,
-//                             Test_Marks_Given,
-//                             Test_Marks,
-//                             Test_Status,
-//                             Final_test_No,
-//                             Final_Marks,
-//                             Final_Mark_Given,
-//                             Final_Status,
-//                             Viva_Marks,
-//                         } = curr;
-
-//                         if (!acc[Student_Id]) {
-//                             acc[Student_Id] = {
-//                                 Student_Id,
-//                                 Student_Name,
-//                                 assignmentData: {
-//                                     Ass1_Given: 0,
-//                                     Ass1_Max: 0,
-//                                     Ass1_Status: "",
-//                                     Ass2_Given: 0,
-//                                     Ass2_Max: 0,
-//                                     Ass2_Status: "",
-//                                     Ass3_Given: 0,
-//                                     Ass3_Max: 0,
-//                                     Ass3_Status: "",
-//                                     Ass4_Given: 0,
-//                                     Ass4_Max: 0,
-//                                     Ass4_Status: "",
-//                                     Ass5_Given: 0,
-//                                     Ass5_Max: 0,
-//                                     Ass5_Status: "",
-//                                     Ass6_Given: 0,
-//                                     Ass6_Max: 0,
-//                                     Ass6_Status: "",
-//                                     Ass7_Given: 0,
-//                                     Ass7_Max: 0,
-//                                     Ass7_Status: "",
-//                                     Ass8_Given: 0,
-//                                     Ass8_Max: 0,
-//                                     Ass8_Status: "",
-//                                     Ass9_Given: 0,
-//                                     Ass9_Max: 0,
-//                                     Ass9_Status: "",
-//                                     Ass10_Given: 0,
-//                                     Ass10_Max: 0,
-//                                     Ass10_Status: "",
-//                                 },
-//                                 testData: {
-//                                     Test1_Given: 0,
-//                                     Test1_Max: 0,
-//                                     Test1_Status: "",
-//                                     Test2_Given: 0,
-//                                     Test2_Max: 0,
-//                                     Test2_Status: "",
-//                                     Test3_Given: 0,
-//                                     Test3_Max: 0,
-//                                     Test3_Status: "",
-//                                     Test4_Given: 0,
-//                                     Test4_Max: 0,
-//                                     Test4_Status: "",
-//                                     Test5_Given: 0,
-//                                     Test5_Max: 0,
-//                                     Test5_Status: "",
-//                                     Test6_Given: 0,
-//                                     Test6_Max: 0,
-//                                     Test6_Status: "",
-//                                     Test7_Given: 0,
-//                                     Test7_Max: 0,
-//                                     Test7_Status: "",
-//                                     Test8_Given: 0,
-//                                     Test8_Max: 0,
-//                                     Test8_Status: "",
-//                                     Test9_Given: 0,
-//                                     Test9_Max: 0,
-//                                     Test9_Status: "",
-//                                     Test10_Given: 0,
-//                                     Test10_Max: 0,
-//                                     Test10_Status: "",
-//                                 },
-//                                 FinalData: {
-//                                     Final1_Given: 0,
-//                                     Final1_Max: 0,
-//                                     Final1_Status: "",
-//                                     Final2_Given: 0,
-//                                     Final2_Max: 0,
-//                                     Final2_Status: "",
-//                                     Final3_Given: 0,
-//                                     Final3_Max: 0,
-//                                     Final3_Status: "",
-//                                 },
-//                                 Viva_Marks,
-//                             };
-//                         }
-
-//                         // Assign assignment data
-//                         acc[Student_Id].assignmentData[`Ass${Assign_No}_Given`] = Marks_Given;
-//                         acc[Student_Id].assignmentData[`Ass${Assign_No}_Max`] = Marks;
-//                         acc[Student_Id].assignmentData[`Ass${Assign_No}_Status`] = Status;
-
-//                         // Assign test data
-//                         acc[Student_Id].testData[`Test${Test_No}_Given`] = Test_Marks_Given;
-//                         acc[Student_Id].testData[`Test${Test_No}_Max`] = Test_Marks;
-//                         acc[Student_Id].testData[`Test${Test_No}_Status`] = Test_Status;
-
-//                         // Assign test data
-//                         acc[Student_Id].FinalData[`Final${Final_test_No}_Given`] = Final_Mark_Given;
-//                         acc[Student_Id].FinalData[`Final${Final_test_No}_Max`] = Final_Marks;
-//                         acc[Student_Id].FinalData[`Final${Final_test_No}_Status`] = Final_Status;
-
-//                         return acc;
-//                     }, {});
-
-//                     Object.keys(combinedData).forEach((studentId) => {
-//                         const assignmentData = combinedData[studentId].assignmentData;
-//                         let totalGivenMarks = 0;
-//                         let totalMaxMarks = 0;
-//                         let assignmentsCompleted = 0;
-
-//                         for (let i = 1; i <= 10; i++) {
-//                             const given = assignmentData[`Ass${i}_Given`];
-//                             const max = assignmentData[`Ass${i}_Max`];
-
-//                             if (given > 0 && max > 0) {
-//                                 totalGivenMarks += given;
-//                                 totalMaxMarks += max;
-//                                 assignmentsCompleted++;
-//                             }
-//                         }
-
-//                         // Calculate the average marks if there are any completed assignments
-//                         combinedData[studentId].assignmentAverage =
-//                             assignmentsCompleted > 0 ? (totalGivenMarks / totalMaxMarks) * 15 : 0;
-//                     });
-
-//                     Object.keys(combinedData).forEach((studentId) => {
-//                         const testData = combinedData[studentId].testData;
-//                         let totalGivenMarks = 0;
-//                         let totalMaxMarks = 0;
-//                         let testCompleted = 0;
-
-//                         for (let i = 1; i <= 10; i++) {
-//                             const given = testData[`Test${i}_Given`];
-//                             const max = testData[`Test${i}_Max`];
-
-//                             if (given > 0 && max > 0) {
-//                                 totalGivenMarks += given;
-//                                 totalMaxMarks += max;
-//                                 testCompleted++;
-//                             }
-//                         }
-
-//                         // Calculate the average marks if there are any completed assignments
-//                         combinedData[studentId].testAverage =
-//                             testCompleted > 0 ? (totalGivenMarks / totalMaxMarks) * 35 : 0;
-//                     });
-
-//                     Object.keys(combinedData).forEach((studentId) => {
-//                         const FinalData = combinedData[studentId].FinalData;
-//                         let totalGivenMarks = 0;
-//                         let totalMaxMarks = 0;
-//                         let testCompleted = 0;
-
-//                         for (let i = 1; i <= 3; i++) {
-//                             const given = FinalData[`Final${i}_Given`];
-//                             const max = FinalData[`Final${i}_Max`];
-
-//                             if (given > 0 && max > 0) {
-//                                 totalGivenMarks += given;
-//                                 totalMaxMarks += max;
-//                                 testCompleted++;
-//                             }
-//                         }
-
-//                         // Calculate the average marks if there are any completed assignments
-//                         combinedData[studentId].Final_Avg =
-//                             testCompleted > 0 ? (totalGivenMarks / totalMaxMarks) * 50 : 0;
-//                     });
-
-//                     // Insert both assignment and test data in one go
-//                     const insertions = updateData(combinedData);
-
-//                     Promise.all(insertions)
-//                         .then(() => res.json("Data Updated Successfully"))
-//                         .catch((error) => res.json(error));
-//                 });
-//             } //esle close
-//         }
-//     });
-// });
-
-
-app.post("/nodeapp/add_generateresult", (req, res) => {
+app.post("/nodeapp/add_generateresult", async (req, res) => {
   let {
     course,
     batch,
@@ -4337,7 +6087,7 @@ app.post("/nodeapp/add_generateresult", (req, res) => {
 
       const GenID = data.insertId;
 
-      if (GenID > 0) {
+
         // Function to insert data into 'generate_final_child'
         const insertData = (groupedData) => {
 
@@ -4588,574 +6338,160 @@ app.post("/nodeapp/add_generateresult", (req, res) => {
 
         };
 
-        // Fetch data and call insertData for both assignment and test data together
 
-        // const getdata = `SELECT sm.Student_Id, sm.Student_Name ,at.* ,agc.*,ttc.Marks_Given as Test_Marks_Given,ttm.Marks as Test_Marks,ttm.Test_No,ttc.Status as Test_Status,etc.Marks_Given as Final_Mark_Given ,fem.Marks as Final_Marks ,fem.Test_No as Final_test_No, etc.Status Final_Status ,vtc.Marks_Given as Viva_Marks FROM Batch_Mst as bm
-        // LEFT JOIN Student_Master as sm ON bm.Batch_code = sm.Batch_code
-        // LEFT JOIN Assignment_given_child as agc on agc.Student_Id = sm.Student_Id
-        // LEFT JOIN Assignment_taken as at on at.Given_Id = agc.Given_Id
-        // LEFT JOIN Test_taken_child as ttc on ttc.Student_Id = sm.Student_Id
-        // LEFT JOIN Test_taken_master as ttm on ttm.Take_Id = ttc.Take_Id
-        // LEFT JOIN Exam_taken_child as etc on etc.Student_Id = sm.Student_Id
-        // LEFT JOIN Final_exam_master as fem on fem.Take_Id = etc.Take_Id
-        // LEFT JOIN viva_taken_child as vtc on vtc.Student_Id  = sm.Student_Id
-        // LEFT JOIN viva_taken as vt on vt.Take_Id = vtc.Take_Id
-        // WHERE bm.Batch_Id = 1 AND bm.isDelete = 0 AND sm.isDelete = 0 and at.isDelete = 0 and ttm.isDelete = 0 and fem.isDelete = 0`;
-
-        const getdata =
-          "SELECT sm.Student_Id,am.Student_Code, sm.Student_Name ,at.* ,agc.*,ttc.Marks_Given as Test_Marks_Given,ttm.Marks as Test_Marks,ttm.Test_No,ttc.Status as Test_Status,etc.Marks_Given as Final_Mark_Given ,fem.Marks as Final_Marks ,fem.Test_No as Final_test_No, etc.Status Final_Status ,vtc.Marks_Given as Viva_Marks FROM Batch_Mst as bm LEFT JOIN Admission_master as am on bm.Batch_Id = am.Batch_Id LEFT JOIN Student_Master as sm on sm.Student_Id = am.Student_Id   LEFT JOIN Assignment_given_child as agc on agc.Student_Id = sm.Student_Id LEFT JOIN Assignment_taken  as at on at.Given_Id = agc.Given_Id  LEFT JOIN Test_taken_child as ttc on ttc.Student_Id = sm.Student_Id LEFT JOIN Test_taken_master as ttm on ttm.Take_Id = ttc.Take_Id  LEFT JOIN Exam_taken_child as etc on etc.Student_Id = sm.Student_Id LEFT JOIN Final_exam_master as fem on fem.Take_Id = etc.Take_Id LEFT JOIN viva_taken_child as vtc on vtc.Student_Id  = sm.Student_Id LEFT JOIN viva_taken as vt on vt.Take_Id = vtc.Take_Id WHERE bm.Batch_Id = ? and sm.Status_Id = 8 and sm.isDelete = 0 and am.isDelete = 0";
-
-        con.query(getdata, [batch], (err, result) => {
-          if (err) {
-            return res.json(err);
-          }
-
-          // Combine assignment and test data for each student
-          const combinedData = result.reduce((acc, curr) => {
-            const {
+        const assignmentQuery = `
+        SELECT sm.Student_Id, am.Student_Code, sm.Student_Name, agc.Assign_No, agc.Marks_Given, agc.Marks, agc.Status
+        FROM Batch_Mst as bm
+        LEFT JOIN Admission_master as am ON bm.Batch_Id = am.Batch_Id
+        LEFT JOIN Student_Master as sm ON sm.Student_Id = am.Student_Id
+        LEFT JOIN Assignment_given_child as agc ON agc.Student_Id = sm.Student_Id AND agc.isDelete = 0
+        WHERE bm.Batch_Id = ? AND sm.Status_Id = 8 AND sm.isDelete = 0 AND am.isDelete = 0
+      `;
+    
+      const testQuery = `
+        SELECT sm.Student_Id, ttm.Test_No, ttc.Marks_Given as Test_Marks_Given, ttm.Marks as Test_Marks, ttc.Status as Test_Status
+        FROM Student_Master as sm
+        LEFT JOIN Test_taken_child as ttc ON ttc.Student_Id = sm.Student_Id AND ttc.isDelete = 0
+        LEFT JOIN Test_taken_master as ttm ON ttm.Take_Id = ttc.Take_Id AND ttm.isDelete = 0
+        WHERE sm.Status_Id = 8 AND sm.isDelete = 0
+      `;
+    
+      const finalQuery = `
+        SELECT sm.Student_Id, fem.Test_No as Final_test_No, etc.Marks_Given as Final_Mark_Given, fem.Marks as Final_Marks, etc.Status as Final_Status, vtc.Marks_Given as Viva_Marks
+        FROM Student_Master as sm
+        LEFT JOIN Exam_taken_child as etc ON etc.Student_Id = sm.Student_Id AND etc.isDelete = 0
+        LEFT JOIN Final_exam_master as fem ON fem.Take_Id = etc.Take_Id AND fem.isDelete = 0
+        LEFT JOIN viva_taken_child as vtc ON vtc.Student_Id = sm.Student_Id AND vtc.isDelete = 0
+        LEFT JOIN viva_taken as vt ON vt.Take_Id = vtc.Take_Id AND vt.isDelete = 0
+        WHERE sm.Status_Id = 8 AND sm.isDelete = 0
+      `;
+    
+      try {
+        const [assignmentData, testData, finalData] = await Promise.all([
+          queryPromise(assignmentQuery, [batch]),
+          queryPromise(testQuery),
+          queryPromise(finalQuery),
+        ]);
+    
+        const combinedData = {};
+    
+        // Process assignments
+        assignmentData.forEach((row) => {
+          const { Student_Id, Student_Code, Student_Name, Assign_No, Marks_Given, Marks, Status } = row;
+          if (!combinedData[Student_Id]) {
+            combinedData[Student_Id] = {
               Student_Id,
               Student_Code,
               Student_Name,
-              Assign_No,
-              Marks_Given,
-              Marks,
-              Status,
-              Test_No,
-              Test_Marks_Given,
-              Test_Marks,
-              Test_Status,
-              Final_test_No,
-              Final_Marks,
-              Final_Mark_Given,
-              Final_Status,
-              Viva_Marks,
-            } = curr;
-
-            if (!acc[Student_Id]) {
-              acc[Student_Id] = {
-                Student_Id,
-                Student_Code,
-                Student_Name,
-                assignmentData: {
-                  Ass1_Given: 0,
-                  Ass1_Max: 0,
-                  Ass1_Status: "",
-                  Ass2_Given: 0,
-                  Ass2_Max: 0,
-                  Ass2_Status: "",
-                  Ass3_Given: 0,
-                  Ass3_Max: 0,
-                  Ass3_Status: "",
-                  Ass4_Given: 0,
-                  Ass4_Max: 0,
-                  Ass4_Status: "",
-                  Ass5_Given: 0,
-                  Ass5_Max: 0,
-                  Ass5_Status: "",
-                  Ass6_Given: 0,
-                  Ass6_Max: 0,
-                  Ass6_Status: "",
-                  Ass7_Given: 0,
-                  Ass7_Max: 0,
-                  Ass7_Status: "",
-                  Ass8_Given: 0,
-                  Ass8_Max: 0,
-                  Ass8_Status: "",
-                  Ass9_Given: 0,
-                  Ass9_Max: 0,
-                  Ass9_Status: "",
-                  Ass10_Given: 0,
-                  Ass10_Max: 0,
-                  Ass10_Status: "",
-                },
-                testData: {
-                  Test1_Given: 0,
-                  Test1_Max: 0,
-                  Test1_Status: "",
-                  Test2_Given: 0,
-                  Test2_Max: 0,
-                  Test2_Status: "",
-                  Test3_Given: 0,
-                  Test3_Max: 0,
-                  Test3_Status: "",
-                  Test4_Given: 0,
-                  Test4_Max: 0,
-                  Test4_Status: "",
-                  Test5_Given: 0,
-                  Test5_Max: 0,
-                  Test5_Status: "",
-                  Test6_Given: 0,
-                  Test6_Max: 0,
-                  Test6_Status: "",
-                  Test7_Given: 0,
-                  Test7_Max: 0,
-                  Test7_Status: "",
-                  Test8_Given: 0,
-                  Test8_Max: 0,
-                  Test8_Status: "",
-                  Test9_Given: 0,
-                  Test9_Max: 0,
-                  Test9_Status: "",
-                  Test10_Given: 0,
-                  Test10_Max: 0,
-                  Test10_Status: "",
-                },
-                FinalData: {
-                  Final1_Given: 0,
-                  Final1_Max: 0,
-                  Final1_Status: "",
-                  Final2_Given: 0,
-                  Final2_Max: 0,
-                  Final2_Status: "",
-                  Final3_Given: 0,
-                  Final3_Max: 0,
-                  Final3_Status: "",
-                },
-                Viva_Marks,
-              };
-            }
-
-            // Assign assignment data
-            acc[Student_Id].assignmentData[`Ass${Assign_No}_Given`] = Marks_Given;
-            acc[Student_Id].assignmentData[`Ass${Assign_No}_Max`] = Marks;
-            acc[Student_Id].assignmentData[`Ass${Assign_No}_Status`] = Status;
-
-            // Assign test data
-            acc[Student_Id].testData[`Test${Test_No}_Given`] = Test_Marks_Given;
-            acc[Student_Id].testData[`Test${Test_No}_Max`] = Test_Marks;
-            acc[Student_Id].testData[`Test${Test_No}_Status`] = Test_Status;
-
-            // Assign test data
-            acc[Student_Id].FinalData[`Final${Final_test_No}_Given`] = Final_Mark_Given;
-            acc[Student_Id].FinalData[`Final${Final_test_No}_Max`] = Final_Marks;
-            acc[Student_Id].FinalData[`Final${Final_test_No}_Status`] = Final_Status;
-
-            return acc;
-          }, {});
-
-          Object.keys(combinedData).forEach((studentId) => {
-            const assignmentData = combinedData[studentId].assignmentData;
-            let totalGivenMarks = 0;
-            let totalMaxMarks = 0;
-            let assignmentsCompleted = 0;
-
-            for (let i = 1; i <= 10; i++) {
-              const given = assignmentData[`Ass${i}_Given`];
-              const max = assignmentData[`Ass${i}_Max`];
-
-              if (given > 0 && max > 0) {
-                totalGivenMarks += given;
-                totalMaxMarks += max;
-                assignmentsCompleted++;
-              }
-            }
-
-            // Calculate the average marks if there are any completed assignments
-            combinedData[studentId].assignmentAverage =
-              assignmentsCompleted > 0 ? (totalGivenMarks / totalMaxMarks) * 15 : 0;
-          });
-
-          Object.keys(combinedData).forEach((studentId) => {
-            const testData = combinedData[studentId].testData;
-            let totalGivenMarks = 0;
-            let totalMaxMarks = 0;
-            let testCompleted = 0;
-
-            for (let i = 1; i <= 10; i++) {
-              const given = testData[`Test${i}_Given`];
-              const max = testData[`Test${i}_Max`];
-
-              if (given > 0 && max > 0) {
-                totalGivenMarks += given;
-                totalMaxMarks += max;
-                testCompleted++;
-              }
-            }
-
-            // Calculate the average marks if there are any completed assignments
-            combinedData[studentId].testAverage =
-              testCompleted > 0 ? (totalGivenMarks / totalMaxMarks) * 35 : 0;
-          });
-
-          Object.keys(combinedData).forEach((studentId) => {
-            const FinalData = combinedData[studentId].FinalData;
-            let totalGivenMarks = 0;
-            let totalMaxMarks = 0;
-            let testCompleted = 0;
-
-            for (let i = 1; i <= 3; i++) {
-              const given = FinalData[`Final${i}_Given`];
-              const max = FinalData[`Final${i}_Max`];
-
-              if (given > 0 && max > 0) {
-                totalGivenMarks += given;
-                totalMaxMarks += max;
-                testCompleted++;
-              }
-            }
-
-            // Calculate the average marks if there are any completed assignments
-            combinedData[studentId].Final_Avg =
-              testCompleted > 0 ? (totalGivenMarks / totalMaxMarks) * 50 : 0;
-          });
-
-          // Insert both assignment and test data in one go
-          const insertions = insertData(combinedData);
-
-          Promise.all(insertions)
-            .then(() => res.json("Data Inserted Successfully"))
-            .catch((error) => res.json(error));
-        });
-
-
-      } else {
-        const updateData = (groupedData) => {
-          let updates = Object.values(groupedData).map((student) => {
-            const {
-              Student_Id,
-              assignmentData,
-              testData,
-              assignmentAverage,
-              testAverage,
-              FinalData,
-              Final_Avg,
-              Viva_Marks,
-            } = student;
-
-            const ass_avg = assignmentAverage.toFixed(2);
-            const test_avg = testAverage.toFixed(2);
-            const finalavg = Final_Avg.toFixed(2);
-            const finalpercentage = (assignmentAverage + testAverage + Final_Avg).toFixed(2);
-
-            // Query to update specific fields for the student
-            const updateQuery = `
-                                                                                                                                                       UPDATE generate_final_child
-                                                                                                                                                       SET 
-                                                                                                                                                         Ass1_Given = ?, Ass1_Max = ?, Ass1_Status = ?,
-                                                                                                                                                         Ass2_Given = ?, Ass2_Max = ?, Ass2_Status = ?,
-                                                                                                                                                         Ass3_Given = ?, Ass3_Max = ?, Ass3_Status = ?,
-                                                                                                                                                         Ass4_Given = ?, Ass4_Max = ?, Ass4_Status = ?,
-                                                                                                                                                         Ass5_Given = ?, Ass5_Max = ?, Ass5_Status = ?,
-                                                                                                                                                         Ass6_Given = ?, Ass6_Max = ?, Ass6_Status = ?,
-                                                                                                                                                         Ass7_Given = ?, Ass7_Max = ?, Ass7_Status = ?,
-                                                                                                                                                         Ass8_Given = ?, Ass8_Max = ?, Ass8_Status = ?,
-                                                                                                                                                         Ass9_Given = ?, Ass9_Max = ?, Ass9_Status = ?,
-                                                                                                                                                         Ass10_Given = ?, Ass10_Max = ?, Ass10_Status = ?,
-                                                                                                                                                         Test1_Given = ?, Test1_Max = ?, Test1_Status = ?,
-                                                                                                                                                         Test2_Given = ?, Test2_Max = ?, Test2_Status = ?,
-                                                                                                                                                         Test3_Given = ?, Test3_Max = ?, Test3_Status = ?,
-                                                                                                                                                         Test4_Given = ?, Test4_Max = ?, Test4_Status = ?,
-                                                                                                                                                         Test5_Given = ?, Test5_Max = ?, Test5_Status = ?,
-                                                                                                                                                         Test6_Given = ?, Test6_Max = ?, Test6_Status = ?,
-                                                                                                                                                         Test7_Given = ?, Test7_Max = ?, Test7_Status = ?,
-                                                                                                                                                         Test8_Given = ?, Test8_Max = ?, Test8_Status = ?,
-                                                                                                                                                         Test9_Given = ?, Test9_Max = ?, Test9_Status = ?,
-                                                                                                                                                         Test10_Given = ?, Test10_Max = ?, Test10_Status = ?,
-                                                                                                                                                         Final1_Given = ?, Final1_Max = ?, Final1_Status = ?,
-                                                                                                                                                         Final2_Given = ?, Final2_Max = ?, Final2_Status = ?,
-                                                                                                                                                         Final3_Given = ?, Final3_Max = ?, Final3_Status = ?,
-                                                                                                                                                         Ass_Percent = ?, Test_Percent = ?, Final_Percent = ?, Discipline = ?, Final_Result_Percent = ?
-                                                                                                                                                       WHERE Gen_id = ? AND Student_Code = ?`;
-
-            const updateValues = [
-              assignmentData.Ass1_Given,
-              assignmentData.Ass1_Max,
-              assignmentData.Ass1_Status,
-              assignmentData.Ass2_Given,
-              assignmentData.Ass2_Max,
-              assignmentData.Ass2_Status,
-              assignmentData.Ass3_Given,
-              assignmentData.Ass3_Max,
-              assignmentData.Ass3_Status,
-              assignmentData.Ass4_Given,
-              assignmentData.Ass4_Max,
-              assignmentData.Ass4_Status,
-              assignmentData.Ass5_Given,
-              assignmentData.Ass5_Max,
-              assignmentData.Ass5_Status,
-              assignmentData.Ass6_Given,
-              assignmentData.Ass6_Max,
-              assignmentData.Ass6_Status,
-              assignmentData.Ass7_Given,
-              assignmentData.Ass7_Max,
-              assignmentData.Ass7_Status,
-              assignmentData.Ass8_Given,
-              assignmentData.Ass8_Max,
-              assignmentData.Ass8_Status,
-              assignmentData.Ass9_Given,
-              assignmentData.Ass9_Max,
-              assignmentData.Ass9_Status,
-              assignmentData.Ass10_Given,
-              assignmentData.Ass10_Max,
-              assignmentData.Ass10_Status,
-              testData.Test1_Given,
-              testData.Test1_Max,
-              testData.Test1_Status,
-              testData.Test2_Given,
-              testData.Test2_Max,
-              testData.Test2_Status,
-              testData.Test3_Given,
-              testData.Test3_Max,
-              testData.Test3_Status,
-              testData.Test4_Given,
-              testData.Test4_Max,
-              testData.Test4_Status,
-              testData.Test5_Given,
-              testData.Test5_Max,
-              testData.Test5_Status,
-              testData.Test6_Given,
-              testData.Test6_Max,
-              testData.Test6_Status,
-              testData.Test7_Given,
-              testData.Test7_Max,
-              testData.Test7_Status,
-              testData.Test8_Given,
-              testData.Test8_Max,
-              testData.Test8_Status,
-              testData.Test9_Given,
-              testData.Test9_Max,
-              testData.Test9_Status,
-              testData.Test10_Given,
-              testData.Test10_Max,
-              testData.Test10_Status,
-              FinalData.Final1_Given,
-              FinalData.Final1_Max,
-              FinalData.Final1_Status,
-              FinalData.Final2_Given,
-              FinalData.Final2_Max,
-              FinalData.Final2_Status,
-              FinalData.Final3_Given,
-              FinalData.Final3_Max,
-              FinalData.Final3_Status,
-              ass_avg,
-              test_avg,
-              finalavg,
-              Viva_Marks,
-              finalpercentage,
-              uid,
-              Student_Id,
-            ];
-
-            // Execute update query
-            return new Promise((resolve, reject) => {
-              con.query(updateQuery, updateValues, (err, result) => {
-                if (err) {
-                  console.error("Error updating data:", err);
-                  reject(err);
-                } else {
-                  resolve("Data Updated Successfully");
-                }
-              });
-            });
-          });
-
-          // Return all update promises
-          return updates;
-        };
-
-        const getdata =
-          "SELECT sm.Student_Id, sm.Student_Name ,at.* ,agc.*,ttc.Marks_Given as Test_Marks_Given,ttm.Marks as Test_Marks,ttm.Test_No,ttc.Status as Test_Status,etc.Marks_Given as Final_Mark_Given ,fem.Marks as Final_Marks ,fem.Test_No as Final_test_No, etc.Status Final_Status ,vtc.Marks_Given as Viva_Marks FROM Batch_Mst as bm LEFT JOIN Admission_master as am on bm.Batch_Id = am.Batch_Id LEFT JOIN Student_Master as sm on sm.Student_Id = am.Student_Id   LEFT JOIN Assignment_given_child as agc on agc.Student_Id = sm.Student_Id LEFT JOIN Assignment_taken  as at on at.Given_Id = agc.Given_Id  LEFT JOIN Test_taken_child as ttc on ttc.Student_Id = sm.Student_Id LEFT JOIN Test_taken_master as ttm on ttm.Take_Id = ttc.Take_Id  LEFT JOIN Exam_taken_child as etc on etc.Student_Id = sm.Student_Id LEFT JOIN Final_exam_master as fem on fem.Take_Id = etc.Take_Id LEFT JOIN viva_taken_child as vtc on vtc.Student_Id  = sm.Student_Id LEFT JOIN viva_taken as vt on vt.Take_Id = vtc.Take_Id WHERE bm.Batch_Id = ? and sm.Status_Id = 8 and sm.isDelete = 0 and am.isDelete = 0 ";
-
-        con.query(getdata, [batch], (err, result) => {
-          if (err) {
-            return res.json(err);
+              assignmentData: {},
+              testData: {},
+              FinalData: {},
+              Viva_Marks: 0,
+            };
           }
-
-          // Combine assignment and test data for each student
-          const combinedData = result.reduce((acc, curr) => {
-            const {
-              Student_Id,
-              Student_Name,
-              Assign_No,
-              Marks_Given,
-              Marks,
-              Status,
-              Test_No,
-              Test_Marks_Given,
-              Test_Marks,
-              Test_Status,
-              Final_test_No,
-              Final_Marks,
-              Final_Mark_Given,
-              Final_Status,
-              Viva_Marks,
-            } = curr;
-
-            if (!acc[Student_Id]) {
-              acc[Student_Id] = {
-                Student_Id,
-                Student_Name,
-                assignmentData: {
-                  Ass1_Given: 0,
-                  Ass1_Max: 0,
-                  Ass1_Status: "",
-                  Ass2_Given: 0,
-                  Ass2_Max: 0,
-                  Ass2_Status: "",
-                  Ass3_Given: 0,
-                  Ass3_Max: 0,
-                  Ass3_Status: "",
-                  Ass4_Given: 0,
-                  Ass4_Max: 0,
-                  Ass4_Status: "",
-                  Ass5_Given: 0,
-                  Ass5_Max: 0,
-                  Ass5_Status: "",
-                  Ass6_Given: 0,
-                  Ass6_Max: 0,
-                  Ass6_Status: "",
-                  Ass7_Given: 0,
-                  Ass7_Max: 0,
-                  Ass7_Status: "",
-                  Ass8_Given: 0,
-                  Ass8_Max: 0,
-                  Ass8_Status: "",
-                  Ass9_Given: 0,
-                  Ass9_Max: 0,
-                  Ass9_Status: "",
-                  Ass10_Given: 0,
-                  Ass10_Max: 0,
-                  Ass10_Status: "",
-                },
-                testData: {
-                  Test1_Given: 0,
-                  Test1_Max: 0,
-                  Test1_Status: "",
-                  Test2_Given: 0,
-                  Test2_Max: 0,
-                  Test2_Status: "",
-                  Test3_Given: 0,
-                  Test3_Max: 0,
-                  Test3_Status: "",
-                  Test4_Given: 0,
-                  Test4_Max: 0,
-                  Test4_Status: "",
-                  Test5_Given: 0,
-                  Test5_Max: 0,
-                  Test5_Status: "",
-                  Test6_Given: 0,
-                  Test6_Max: 0,
-                  Test6_Status: "",
-                  Test7_Given: 0,
-                  Test7_Max: 0,
-                  Test7_Status: "",
-                  Test8_Given: 0,
-                  Test8_Max: 0,
-                  Test8_Status: "",
-                  Test9_Given: 0,
-                  Test9_Max: 0,
-                  Test9_Status: "",
-                  Test10_Given: 0,
-                  Test10_Max: 0,
-                  Test10_Status: "",
-                },
-                FinalData: {
-                  Final1_Given: 0,
-                  Final1_Max: 0,
-                  Final1_Status: "",
-                  Final2_Given: 0,
-                  Final2_Max: 0,
-                  Final2_Status: "",
-                  Final3_Given: 0,
-                  Final3_Max: 0,
-                  Final3_Status: "",
-                },
-                Viva_Marks,
-              };
-            }
-
-            // Assign assignment data
-            acc[Student_Id].assignmentData[`Ass${Assign_No}_Given`] = Marks_Given;
-            acc[Student_Id].assignmentData[`Ass${Assign_No}_Max`] = Marks;
-            acc[Student_Id].assignmentData[`Ass${Assign_No}_Status`] = Status;
-
-            // Assign test data
-            acc[Student_Id].testData[`Test${Test_No}_Given`] = Test_Marks_Given;
-            acc[Student_Id].testData[`Test${Test_No}_Max`] = Test_Marks;
-            acc[Student_Id].testData[`Test${Test_No}_Status`] = Test_Status;
-
-            // Assign test data
-            acc[Student_Id].FinalData[`Final${Final_test_No}_Given`] = Final_Mark_Given;
-            acc[Student_Id].FinalData[`Final${Final_test_No}_Max`] = Final_Marks;
-            acc[Student_Id].FinalData[`Final${Final_test_No}_Status`] = Final_Status;
-
-            return acc;
-          }, {});
-
-          Object.keys(combinedData).forEach((studentId) => {
-            const assignmentData = combinedData[studentId].assignmentData;
-            let totalGivenMarks = 0;
-            let totalMaxMarks = 0;
-            let assignmentsCompleted = 0;
-
-            for (let i = 1; i <= 10; i++) {
-              const given = assignmentData[`Ass${i}_Given`];
-              const max = assignmentData[`Ass${i}_Max`];
-
-              if (given > 0 && max > 0) {
-                totalGivenMarks += given;
-                totalMaxMarks += max;
-                assignmentsCompleted++;
-              }
-            }
-
-            // Calculate the average marks if there are any completed assignments
-            combinedData[studentId].assignmentAverage =
-              assignmentsCompleted > 0 ? (totalGivenMarks / totalMaxMarks) * 15 : 0;
-          });
-
-          Object.keys(combinedData).forEach((studentId) => {
-            const testData = combinedData[studentId].testData;
-            let totalGivenMarks = 0;
-            let totalMaxMarks = 0;
-            let testCompleted = 0;
-
-            for (let i = 1; i <= 10; i++) {
-              const given = testData[`Test${i}_Given`];
-              const max = testData[`Test${i}_Max`];
-
-              if (given > 0 && max > 0) {
-                totalGivenMarks += given;
-                totalMaxMarks += max;
-                testCompleted++;
-              }
-            }
-
-            // Calculate the average marks if there are any completed assignments
-            combinedData[studentId].testAverage =
-              testCompleted > 0 ? (totalGivenMarks / totalMaxMarks) * 35 : 0;
-          });
-
-          Object.keys(combinedData).forEach((studentId) => {
-            const FinalData = combinedData[studentId].FinalData;
-            let totalGivenMarks = 0;
-            let totalMaxMarks = 0;
-            let testCompleted = 0;
-
-            for (let i = 1; i <= 3; i++) {
-              const given = FinalData[`Final${i}_Given`];
-              const max = FinalData[`Final${i}_Max`];
-
-              if (given > 0 && max > 0) {
-                totalGivenMarks += given;
-                totalMaxMarks += max;
-                testCompleted++;
-              }
-            }
-
-            // Calculate the average marks if there are any completed assignments
-            combinedData[studentId].Final_Avg =
-              testCompleted > 0 ? (totalGivenMarks / totalMaxMarks) * 50 : 0;
-          });
-
-          // Insert both assignment and test data in one go
-          const insertions = updateData(combinedData);
-
-          Promise.all(insertions)
-            .then(() => res.json("Data Updated Successfully"))
-            .catch((error) => res.json(error));
+    
+          combinedData[Student_Id].assignmentData[`Ass${Assign_No}_Given`] = Marks_Given;
+          combinedData[Student_Id].assignmentData[`Ass${Assign_No}_Max`] = Marks;
+          combinedData[Student_Id].assignmentData[`Ass${Assign_No}_Status`] = Status;
         });
-      } //esle close
+    
+        // Process tests
+        testData.forEach((row) => {
+          const { Student_Id, Test_No, Test_Marks_Given, Test_Marks, Test_Status } = row;
+          if (!combinedData[Student_Id]) {
+            combinedData[Student_Id] = {
+              Student_Id,
+              Student_Code: "",
+              Student_Name: "",
+              assignmentData: {},
+              testData: {},
+              FinalData: {},
+              Viva_Marks: 0,
+            };
+          }
+    
+          combinedData[Student_Id].testData[`Test${Test_No}_Given`] = Test_Marks_Given;
+          combinedData[Student_Id].testData[`Test${Test_No}_Max`] = Test_Marks;
+          combinedData[Student_Id].testData[`Test${Test_No}_Status`] = Test_Status;
+        });
+    
+        // Process finals + viva
+        finalData.forEach((row) => {
+          const { Student_Id, Final_test_No, Final_Mark_Given, Final_Marks, Final_Status, Viva_Marks } = row;
+          if (!combinedData[Student_Id]) {
+            combinedData[Student_Id] = {
+              Student_Id,
+              Student_Code: "",
+              Student_Name: "",
+              assignmentData: {},
+              testData: {},
+              FinalData: {},
+              Viva_Marks: 0,
+            };
+          }
+    
+          combinedData[Student_Id].FinalData[`Final${Final_test_No}_Given`] = Final_Mark_Given;
+          combinedData[Student_Id].FinalData[`Final${Final_test_No}_Max`] = Final_Marks;
+          combinedData[Student_Id].FinalData[`Final${Final_test_No}_Status`] = Final_Status;
+          combinedData[Student_Id].Viva_Marks = Viva_Marks;
+        });
+    
+        // Calculate Averages
+        Object.keys(combinedData).forEach((studentId) => {
+          const student = combinedData[studentId];
+    
+          // Assignment Avg
+          let assignGiven = 0,
+            assignMax = 0;
+          for (let i = 1; i <= 10; i++) {
+            const g = student.assignmentData[`Ass${i}_Given`] || 0;
+            const m = student.assignmentData[`Ass${i}_Max`] || 0;
+            if (g > 0 && m > 0) {
+              assignGiven += g;
+              assignMax += m;
+            }
+          }
+          student.assignmentAverage = assignMax > 0 ? (assignGiven / assignMax) * 15 : 0;
+    
+          // Test Avg
+          let testGiven = 0,
+            testMax = 0;
+          for (let i = 1; i <= 10; i++) {
+            const g = student.testData[`Test${i}_Given`] || 0;
+            const m = student.testData[`Test${i}_Max`] || 0;
+            if (g > 0 && m > 0) {
+              testGiven += g;
+              testMax += m;
+            }
+          }
+          student.testAverage = testMax > 0 ? (testGiven / testMax) * 35 : 0;
+    
+          // Final Avg
+          let finalGiven = 0,
+            finalMax = 0;
+          for (let i = 1; i <= 3; i++) {
+            const g = student.FinalData[`Final${i}_Given`] || 0;
+            const m = student.FinalData[`Final${i}_Max`] || 0;
+            if (g > 0 && m > 0) {
+              finalGiven += g;
+              finalMax += m;
+            }
+          }
+          student.Final_Avg = finalMax > 0 ? (finalGiven / finalMax) * 50 : 0;
+        });
+    
+        // Insert all students' processed data
+        const insertions = insertData(combinedData);
+    
+        await Promise.all(insertions);
+    
+        res.json("Data Inserted Successfully");
+      } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Internal Server Error", error: err });
+      }
+
+
     }
   });
 });
@@ -5456,7 +6792,7 @@ app.post("/nodeapp/add_viewstudent", (req, res) => {
   let { course, batch, uid } = req.body;
 
   let sql;
-  let params;
+  let param;
 
   console.log(uid);
 
@@ -5465,7 +6801,7 @@ app.post("/nodeapp/add_viewstudent", (req, res) => {
     param = [course, batch];
   } else {
     sql = "update `viewstudent` set `course` =? , `batch` =? where id =?";
-    param = [cousr, batch, uid];
+    param = [course, batch, uid];
   }
   con.query(sql, param, (err, data) => {
     if (err) {
@@ -5778,7 +7114,7 @@ app.get("/nodeapp/getstatus", (req, res) => {
 });
 
 app.get("/nodeapp/getfaculty_masterdata", (req, res) => {
-  const sql = "select * from faculty_master where  IsDelete = 0";
+  const sql = "select * from faculty_master where  IsDelete = 0 order by Faculty_Name asc";
 
   con.query(sql, (err, data) => {
     if (err) {
@@ -6217,31 +7553,67 @@ app.post("/nodeapp/add_inquirydiscuss", (req, res) => {
   let sql;
   let param;
 
-  if (u_id == undefined) {
-    sql =
-      "insert into awt_inquirydiscussion(`Inquiry_id`,`date`,`nextdate`,`discussion`,`created_by`,`created_date`) values(?,?,?,?,?,?)";
-    param = [inquiryid, date, nextdate, discussion, user_id, created_date];
+
+  if (inquiryid == ':inquiryid') {
+
+    const getinquiryid = "INSERT INTO Student_Inquiry (Student_Id , Inquiry_Dt) VALUES(? , ?)";
+
+
+    con.query(getinquiryid, [null, date], (err, data) => {
+      if (err) {
+
+        return res.json(err)
+
+      } else {
+        const inquiry_id = data.insertId;
+
+        const insertdata = "insert into awt_inquirydiscussion(`Inquiry_id`,`date`,`nextdate`,`discussion`,`created_by`,`created_date`) values(?,?,?,?,?,?)";
+
+        con.query(insertdata, [inquiry_id, date, nextdate, discussion, user_id, created_date], (err, data) => {
+          if (err) {
+            return res.json(err)
+          } else {
+            return res.json({ message: "Data Submitted", inquiry_id: inquiry_id })
+          }
+        })
+
+      }
+    })
+
+
   } else {
-    sql =
-      "update awt_inquirydiscussion set date = ? , nextdate = ? , discussion = ?, updated_by = ? ,updated_date = ? where id = ? ";
-    param = [date, nextdate, discussion, user_id, created_date, u_id];
+
+
+    if (u_id == undefined) {
+      sql =
+        "insert into awt_inquirydiscussion(`Inquiry_id`,`date`,`nextdate`,`discussion`,`created_by`,`created_date`) values(?,?,?,?,?,?)";
+      param = [inquiryid, date, nextdate, discussion, user_id, created_date];
+    } else {
+      sql =
+        "update awt_inquirydiscussion set date = ? , nextdate = ? , discussion = ?, updated_by = ? ,updated_date = ? where id = ? ";
+      param = [date, nextdate, discussion, user_id, created_date, u_id];
+    }
+
+    con.query(sql, param, (err, data) => {
+      if (err) {
+        return res.json(err);
+      } else {
+        const updateinquiry = "update Student_Inquiry set Discussion = ? where Inquiry_Id = ?";
+
+        con.query(updateinquiry, [discussion, inquiryid], (err, data) => {
+          if (err) {
+            return res.json(err);
+          } else {
+            return res.json("Data Submitted");
+          }
+        });
+      }
+    });
+
   }
 
-  con.query(sql, param, (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      const updateinquiry = "update Student_Inquiry set Discussion = ? where Inquiry_Id = ?";
 
-      con.query(updateinquiry, [discussion, inquiryid], (err, data) => {
-        if (err) {
-          return res.json(err);
-        } else {
-          return res.json("Data Submitted");
-        }
-      });
-    }
-  });
+
 });
 
 // ******************oadmisiion discussion
@@ -6408,7 +7780,7 @@ app.get("/nodeapp/getbatchlisting", (req, res) => {
 
 app.get("/nodeapp/getCourse", (req, res) => {
   const sql =
-    "select Course_Id,Course_Name,Introduction,Course_Code from `Course_Mst` where IsDelete = 0 order by Course_Id desc";
+    "select Course_Id,Course_Name,Introduction,Course_Code from `Course_Mst` where IsDelete = 0 order by Course_Name Asc";
 
   con.query(sql, (err, data) => {
     if (err) {
@@ -7066,6 +8438,32 @@ app.post("/nodeapp/getidStudent", (req, res) => {
   });
 });
 
+app.post("/nodeapp/getbatchwisefees", (req, res) => {
+  const { batch_code } = req.body;
+
+  const sql = `SELECT 
+                                                                                                                                               sfm.Amount, 
+                                                                                                                                               sfm.Total_Amt, 
+                                                                                                                                               sfm.UnPaid_Amt, 
+                                                                                                                                               sm.Student_Name, 
+                                                                                                                                               bm.Batch_code, 
+                                                                                                                                               bm.SDate, 
+                                                                                                                                               bm.EDate, 
+                                                                                                                                               cm.Course_Name 
+                                                                                                                                               FROM S_Fees_Mst as sfm 
+                                                                                                                                               LEFT JOIN Student_Master as sm on sm.Student_Id = sfm.Student_Id 
+                                                                                                                                               LEFT JOIN Batch_Mst as bm on bm.Batch_Id = sfm.Batch_Id 
+                                                                                                                                               LEFT JOIN Course_Mst as cm on cm.Course_Id = sfm.Course_Id WHERE bm.Batch_code = ?`;
+
+  con.query(sql, [batch_code], (err, data) => {
+    if (err) {
+      return res.json({ error: true, message: err });
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
 app.post("/nodeapp/getbatchwiselecture", (req, res) => {
   const { batch_id } = req.body;
 
@@ -7108,7 +8506,7 @@ app.post("/nodeapp/getbatchwisefinalexam", (req, res) => {
 });
 
 app.get("/nodeapp/getfaculty", (req, res) => {
-  const sql = "select Faculty_Id, Faculty_Name from `faculty_master` where IsDelete = 0 ";
+  const sql = "select Faculty_Id, Faculty_Name from `faculty_master` where IsDelete = 0 order by Faculty_Name asc";
 
   con.query(sql, (err, data) => {
     if (err) {
@@ -7455,15 +8853,15 @@ app.post("/nodeapp/getfilterbatch", (req, res) => {
 
   if ((selectcourse && from_date, to_date)) {
     sql =
-      "SELECT * FROM `Batch_Mst` as b left JOIN `Course_Mst`as c on b.Course_Id = c.Course_Id where b.SDate BETWEEN ? and ? and b.Course_Id = ? ";
+      "SELECT * FROM `Batch_Mst` as b left JOIN `Course_Mst`as c on b.Course_Id = c.Course_Id where b.SDate BETWEEN ? and ? and b.Course_Id = ? and b.IsDelete = 0";
     param = [from_date, to_date, selectcourse];
   } else if (selectcourse) {
     sql =
-      "SELECT * FROM `Batch_Mst` as b left JOIN `Course_Mst`as c on b.Course_Id = c.Course_Id where b.Course_Id = ? ";
+      "SELECT * FROM `Batch_Mst` as b left JOIN `Course_Mst`as c on b.Course_Id = c.Course_Id where b.Course_Id = ? and b.IsDelete = 0";
     param = [selectcourse];
   } else {
     sql =
-      "SELECT * FROM `Batch_Mst` as b left JOIN `Course_Mst`as c on b.Course_Id = c.Course_Id where b.SDate BETWEEN ? and ? ";
+      "SELECT * FROM `Batch_Mst` as b left JOIN `Course_Mst`as c on b.Course_Id = c.Course_Id where b.SDate BETWEEN ? and ? and b.IsDelete = 0";
     param = [from_date, to_date];
   }
 
@@ -8126,14 +9524,15 @@ app.post("/nodeapp/allocatedrollno", (req, res) => {
       return res.json(err);
     }
 
-    // Sort students by Student_Name in ascending order
+    // Sort students by Student_Name in ascending 
+
+
     students.sort((a, b) => a.Student_Name.localeCompare(b.Student_Name));
 
 
 
     // Extract and sort Student_Code in ascending order
     const sortedCodes = students.map((student) => student.Student_Code).sort();
-
 
 
 
@@ -8226,7 +9625,7 @@ app.post("/nodeapp/getstudent_details", (req, res) => {
   let { Student_Id } = req.body;
 
   const sql =
-    "select sm.Student_Name, sm.Student_Id ,sm.Present_Mobile,sm.Email,cm.Course_Name , sm.Course_Id,am.Batch_Id,bm.Batch_code from Student_Master as sm left JOIN Course_Mst as cm on sm.Course_Id = cm.Course_Id  left join Admission_master as am on am.Student_Id = sm.Student_Id  left join Batch_Mst as bm on bm.Batch_Id = am.Batch_Id where sm.Student_Id = ?";
+    "select sm.Student_Name, sm.Student_Id ,sm.Present_Mobile,sm.Email,cm.Course_Name , sm.Course_Id,am.Batch_Id, bm.Batch_code,bm.Fees_Full_Payment from Student_Master as sm left JOIN Course_Mst as cm on sm.Course_Id = cm.Course_Id  left join Admission_master as am on am.Student_Id = sm.Student_Id  left join Batch_Mst as bm on bm.Batch_Id = am.Batch_Id where sm.Student_Id = ?";
 
   con.query(sql, [Student_Id], (err, data) => {
     if (err) {
@@ -8444,22 +9843,22 @@ app.get("/nodeapp/getbatchcancellation", (req, res) => {
 app.post("/nodeapp/generatebatchcode", (req, res) => {
   const { course_id, batchcat_id } = req.body;
 
-  let newbatchid = "1,2,4,6"; // Common batch IDs
+  let newbatchid = "1,2,4,6,3"; // Common batch IDs
   const queryForCategory1And2 = `
                                                                                                                                                SELECT * 
                                                                                                                                                FROM Batch_Mst 
-                                                                                                                                               WHERE Course_Id = ? AND FIND_IN_SET(Batch_Category_id, ?) 
+                                                                                                                                               WHERE Course_Id = ? AND IsDelete = 0 and FIND_IN_SET(Batch_Category_id, ?) 
                                                                                                                                                ORDER BY Batch_Id DESC 
                                                                                                                                                LIMIT 1`;
 
   const queryForCategory3 = `
                                                                                                                                                SELECT * 
                                                                                                                                                FROM Batch_Mst 
-                                                                                                                                               WHERE Course_Id = ? AND Batch_Category_id = ? 
+                                                                                                                                               WHERE Course_Id = ? AND IsDelete = 0 AND  Batch_Category_id = ? 
                                                                                                                                                ORDER BY Batch_Id DESC 
                                                                                                                                                LIMIT 1`;
 
-  if (["1", "2", "4", "6"].includes(batchcat_id)) {
+  if (["1", "2", "4", "6", "3"].includes(batchcat_id)) {
     con.query(queryForCategory1And2, [course_id, newbatchid], (err, data) => {
       if (err) {
         console.error(err);
@@ -8474,17 +9873,7 @@ app.post("/nodeapp/generatebatchcode", (req, res) => {
       const batchNum = batchCode.toString().padStart(5, "0");
       return res.json({ batch_code: `${batchNum}` });
     });
-  } else if (batchcat_id === "3") {
-    con.query(queryForCategory3, [course_id, batchcat_id], (err, data) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ error: "Error fetching batch data." });
-      }
 
-      const batchCode = Number(data[0]?.Batch_code || 0) + 1;
-      const batchNum = batchCode.toString().padStart(5, "0");
-      return res.json({ batch_code: `${batchNum}` });
-    });
   } else {
     const lastCount = 0;
     const batchNum = lastCount.toString().padStart(4, "0");
@@ -9445,11 +10834,22 @@ app.post("/nodeapp/getbatchcategorywise", (req, res) => {
 app.post("/nodeapp/getupcominhgbatch", (req, res) => {
   let { course_id, category_id } = req.body;
 
-  const current_date = new Date().toISOString().split('T')[0]; // 'YYYY-MM-DD'
+  // const current_date = new Date().toISOString().split('T')[0]; 
 
-  const sql = "select * from Batch_Mst where Course_Id = ? and Batch_Category_id = ? and SDate > ? and isDelete = 0 and isActive = 1";
+  const today = new Date();
+  const year = today.getFullYear();
+  const isBeforeApril = today.getMonth() < 3;
+  const startYear = isBeforeApril ? year - 1 : year;
+  const endYear = isBeforeApril ? year : year + 1;
 
-  con.query(sql, [course_id, category_id, current_date], (err, data) => {
+  // Format the dates as YYYY-MM-DD
+  const fromDate = `${startYear}-04-01`;
+  const toDate = `${endYear}-03-31`;
+
+
+  const sql = "select * from Batch_Mst where Course_Id = ? and Batch_Category_id = ? and SDate BETWEEN ? and ? and isDelete = 0 and isActive = 1";
+
+  con.query(sql, [course_id, category_id, fromDate, toDate], (err, data) => {
     if (err) {
       return res.json(err);
     } else {
@@ -9457,6 +10857,7 @@ app.post("/nodeapp/getupcominhgbatch", (req, res) => {
     }
   });
 });
+
 
 
 //This is for disscussion modify
