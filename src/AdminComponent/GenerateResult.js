@@ -174,26 +174,53 @@ const GenerateResult = () => {
         e.preventDefault();
 
         if (validateForm()) {
-            setLoading(true);
-            const data = {
-                course: courseid,
-                batch: value.batch,
-                returndate: value.returndate,
-                printdate: value.printdate,
-                faculty1: value.faculty1,
-                faculty2: value.faculty2,
-                label1: value.label1,
-                label2: value.label2,
-                approved: value.approved,
-                startdate: value.startdate,
-                enddate: value.enddate,
-                uid: uid.Id,
-            };
 
-            axios.post(`${BASE_URL}/add_generateresult`, data).then((res) => {
-                setLoading(false);
-                alert("Data Added Successfully");
-            });
+            if (generateresultid == ':generateresultid') {
+                setLoading(true);
+                const data = {
+                    course: courseid,
+                    batch: value.batch,
+                    returndate: value.returndate,
+                    printdate: value.printdate,
+                    faculty1: value.faculty1,
+                    faculty2: value.faculty2,
+                    label1: value.label1,
+                    label2: value.label2,
+                    approved: value.approved,
+                    startdate: value.startdate,
+                    enddate: value.enddate,
+                };
+
+                axios.post(`${BASE_URL}/add_generateresult`, data).then((res) => {
+                    setLoading(false);
+                    alert("Data Added Successfully");
+                });
+
+            } else {
+                setLoading(true);
+                const data = {
+                    course: courseid,
+                    batch: value.batch,
+                    returndate: value.returndate,
+                    printdate: value.printdate,
+                    faculty1: value.faculty1,
+                    faculty2: value.faculty2,
+                    label1: value.label1,
+                    label2: value.label2,
+                    approved: value.approved,
+                    startdate: value.startdate,
+                    enddate: value.enddate,
+                    uid: uid.Id,
+                };
+
+                axios.post(`${BASE_URL}/update_generateresult`, data).then((res) => {
+                    setLoading(false);
+                    alert("Data Updated Successfully");
+                    getchilddata()
+                });
+
+            }
+
         }
     };
 
@@ -517,7 +544,7 @@ const GenerateResult = () => {
                                 <div class="card-body">
                                     <div className="table-responsive">
                                         <table class="table table-bordered table-gen">
-                                            <thead>
+                                            <thead >
                                                 <tr>
                                                     {/* {headers.map(
                                                         (item, index) => {
@@ -586,3 +613,6 @@ const GenerateResult = () => {
 };
 
 export default GenerateResult;
+
+
+

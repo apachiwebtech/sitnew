@@ -4,7 +4,6 @@ import { roleActions } from "./roleSilce";
 
 export const getRoleData = (data) => {
 
-    console.log(data, "data")
 
 
     return async (dispatch) => {
@@ -25,7 +24,6 @@ export const getRoleData = (data) => {
 
             const apidata = await response.json();
             dispatch(roleActions.getRoleData(apidata));
-            console.log(apidata,"neww")
 
     
 

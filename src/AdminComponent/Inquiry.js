@@ -811,7 +811,7 @@ const Inquiry = () => {
                                                             </select>
                                                         </div>
                                                         <div className="form-group col-lg-4 ">
-                                                            <label for="exampleInputUsername1">Descipline</label>
+                                                            <label for="exampleInputUsername1">Discipline</label>
                                                             <select
                                                                 className="form-control form-control-lg"
                                                                 id="exampleFormControlSelect1"
@@ -820,7 +820,7 @@ const Inquiry = () => {
                                                                 name="descipline"
                                                                 onChange={onhandleChange}
                                                             >
-                                                                <option>Select Descipline</option>
+                                                                <option>Select Discipline</option>
                                                                 {Discipline.map((item) => {
                                                                     return (
                                                                         <option value={item.Id}>{item.Deciplin}</option>

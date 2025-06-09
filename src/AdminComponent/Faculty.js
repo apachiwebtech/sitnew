@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import { Link, useParams } from 'react-router-dom';
+import axios from 'axios';
 //import FormControlLabel from '@mui/material/FormControlLabel';
 
 const Faculty = () => {
@@ -10,9 +11,11 @@ const Faculty = () => {
     const [uid, setUid] = useState([])
     const [error, setError] = useState({})
     const [paginationModel, setPaginationModel] = useState({
-            pageSize: 50,
-            page: 0,
-          });
+        pageSize: 50,
+        page: 0,
+    });
+
+    console.log(facultyid, "facultyid")
 
 
     const [value, setValue] = useState({
@@ -71,52 +74,50 @@ const Faculty = () => {
     // }
 
 
-    async function getStudentDetail() {
-        const response = await fetch(`${BASE_URL}/studentDetail`, {
-            method: 'POST',
-            body: JSON.stringify({
-                id: facultyid,
-            }),
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
+    async function getFacultyDetail() {
+        axios.post(`${BASE_URL}/getfacultydata`, { facultyid: facultyid })
 
-        const data = await response.json();
+            .then((res) => {
+
+                const data = res.data;
+
+                
+                setValue(prevState => ({
+                    ...prevState,
+                    Faculty_Name: data[0].Faculty_Name,
+                    Faculty_Code: data[0].Faculty_Code,
+                    DOB: data[0].DOB,
+                    Nationality: data[0].Nationality,
+                    discipline: data[0].discipline,
+                    status: data[0].status,
+                    invoicename: data[0].invoicename,
+                    Married: data[0].Married,
+                    joiningdate: data[0].joiningdate,
+                    Faculty_Type: data[0].Faculty_Type,
+                    software: data[0].software,
+                    training: data[0].training,
+                    Present_Address: data[0].Present_Address,
+                    Present_City: data[0].Present_City,
+                    Present_Pin: data[0].Permanent_Pin,
+                    Present_State: data[0].Permanent_State,
+                    Present_Country: data[0].Present_Country,
+                    Mobile: data[0].Mobile,
+                    EMail: data[0].EMail,
+                    Permanent_Address: data[0].Permanent_Address,
+                    Permanent_City: data[0].Permanent_City,
+                    Permanent_Pin: data[0].Permanent_Pin,
+                    Permanent_State: data[0].Permanent_State,
+                    Permanent_Country: data[0].Permanent_Country,
+                    Permanent_Tel: data[0].Permanent_Tel,
+                }))
+            })
 
 
-        setValue(prevState => ({
-            ...prevState,
-            Faculty_Name: data[0].Faculty_Name,
-            Faculty_Code: data[0].Faculty_Code,
-            DOB: data[0].DOB,
-            Nationality: data[0].Nationality,
-            discipline: data[0].discipline,
-            status: data[0].status,
-            invoicename: data[0].invoicename,
-            Married: data[0].Married,
-            joiningdate: data[0].joiningdate,
-            Faculty_Type: data[0].Faculty_Type,
-            software: data[0].software,
-            training: data[0].training,
-            Present_Address: data[0].Present_Address,
-            Present_City: data[0].Present_City,
-            Present_Pin: data[0].Permanent_Pin,
-            Present_State: data[0].Permanent_State,
-            Present_Country: data[0].Present_Country,
-            Mobile: data[0].Mobile,
-            EMail: data[0].EMail,
-            Permanent_Address: data[0].Permanent_Address,
-            Permanent_City: data[0].Permanent_City,
-            Permanent_Pin: data[0].Permanent_Pin,
-            Permanent_State: data[0].Permanent_State,
-            Permanent_Country: data[0].Permanent_Country,
-            Permanent_Tel: data[0].Permanent_Tel,
-        }))
+
     }
     useEffect(() => {
-        if (':facultyid' !== ":facultyid") {
-            getStudentDetail()
+        if (facultyid != ":facultyid") {
+            getFacultyDetail()
         }
 
         value.title = ""
@@ -167,7 +168,6 @@ const Faculty = () => {
             response = await fetch(`${BASE_URL}/updatefaculty_master`, {
                 method: 'POST',
                 body: JSON.stringify({
-
                     Faculty_Name: value.Faculty_Name,
                     Faculty_Code: value.Faculty_Code,
                     DOB: value.DOB,
@@ -224,8 +224,8 @@ const Faculty = () => {
                         <div class="d-flex">
 
                             {
-                                facultyid == ":facultyid" ? (<>  
-                                     <div className='px-2 mx-2'><Link to="/faculty/:facultyid"><h4>Personal Information</h4></Link></div>
+                                facultyid == ":facultyid" ? (<>
+                                    <div className='px-2 mx-2'><Link to="/faculty/:facultyid"><h4>Personal Information</h4></Link></div>
 
                                     <div className='px-2 mx-2'><Link to="/addfacultymaster"><h4>Current Experience/Other Details</h4></Link></div> </>) :
                                     <>

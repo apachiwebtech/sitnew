@@ -11,7 +11,6 @@ const roleSlice = createSlice({
         getRoleData(state, action){
             const newList = action.payload;
             state.roleAssign = newList;
-            console.log(newList, "from slice");
         },
 
     }
