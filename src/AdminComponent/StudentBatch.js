@@ -213,7 +213,7 @@ const StudentBatch = () => {
     const blankAttendancePdf = async () => {
         const res = await axios.post(`${BASE_URL}/getattendStudent`, { batch_code: value.batch });
 
-        const data = [{ batchid: value.batch, students: res.data }];
+        const data = [{ batchid: value.batch, students: res.data.students,lecture_count:res.data.lecture_count}];
 
         const blob = await pdf(<BlankAttendance data={data} />).toBlob();
         const url = URL.createObjectURL(blob);

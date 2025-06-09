@@ -67,9 +67,11 @@ const styles = StyleSheet.create({
 
 // Create Document Component
 const BlankAttendance = (props) => {
+    console.log(props)
     const data = props.data[0].students;
     const Course_Name = props.data[0].students[0].Course_Name;
     const batch_id = props.data[0].batchid;
+    const lecture_count = props.data[0].lecture_count + 1;
 
     const date = new Date();
 
@@ -97,7 +99,7 @@ const BlankAttendance = (props) => {
                             src={`https://webapp.sitsuvidya.in/static/media/logo.66d383f907e5f7ec4411.jpg`}
                             style={{ width: "60px" }}
                         ></Image>
-                        <Text style={{ fontSize: 10 }}>Total Lecture : 57</Text>
+                        <Text style={{ fontSize: 10 }}>Total Lecture : {lecture_count}</Text>
                     </View>
 
                     <View
@@ -199,12 +201,21 @@ const BlankAttendance = (props) => {
                             }}
                         >
                             <View style={{ flex: "7" }}>
-                                <Text style={{ color: "black" }}></Text>
+                                <Text style={{ color: "lighgrey", fontSize: "10px", textAlign: "center" }}>
+                                    
+                                </Text>
                             </View>
                             <View style={{ flex: "3" }}>
                                 <Text
-                                    style={{ color: "black", borderLeft: "1px solid black", padding: "0px 10px" }}
-                                ></Text>
+                                    style={{
+                                        color: "white",
+                                        borderLeft: "1px solid black",
+                                        padding: "0px 10px",
+                                        fontSize: "10px",
+                                    }}
+                                >
+                                    Date
+                                </Text>
                             </View>
                         </View>
                     </View>
