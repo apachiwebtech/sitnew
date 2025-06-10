@@ -43,10 +43,10 @@ const BatchMoving = () => {
     const [batch, setBatch] = useState([])
     const [batchid, setBatchid] = useState('')
     const [student, setStudent] = useState([])
-     const [paginationModel, setPaginationModel] = useState({
-            pageSize: 50,
-            page: 0,
-          });
+    const [paginationModel, setPaginationModel] = useState({
+        pageSize: 50,
+        page: 0,
+    });
 
 
     const handleChange1 = (event) => {
@@ -102,7 +102,7 @@ const BatchMoving = () => {
 
 
     async function getMovingData() {
-  
+
         axios.get(`${BASE_URL}/getbatchmoving`)
             .then((res) => {
                 console.log(res.data)
@@ -161,7 +161,7 @@ const BatchMoving = () => {
 
     }
 
-    
+
     const getStudent = async (code) => {
         setBatchid(code)
         const data = {
@@ -255,41 +255,50 @@ const BatchMoving = () => {
     }
 
     const handleSubmit = (e) => {
-        e.preventDefault()
+        e.preventDefault();
 
-        // if(validateForm()){
         const data = {
             selectcourse: courseid,
             batchno: batchid,
             student: value.student,
             newbatch: value.newbatch,
-            uid: uid.id
-        }
-
+            uid: uid.id || undefined // Send undefined if uid.id doesn't exist
+        };
 
         axios.post(`${BASE_URL}/add_batchmoving`, data)
             .then((res) => {
-                alert("Data Added")
-                getMovingData()
+                // Check the response message to show appropriate alert
+                if (res.data === "Data Inserted") {
+                    alert("Student Move  successfully!");
+                } else if (res.data === "Data Updated") {
+                    alert("Batch movement record updated successfully!");
+                } else if (res.data === "No data updated") {
+                    alert("No changes were made to the record.");
+                } else {
+                    alert("Operation completed: " + res.data);
+                }
 
+                getMovingData();
+
+                // Reset form fields
                 setValue({
-                    student: "" ,
+                    student: "",
                     newbatch: "",
-                })
-                setUid([])
-                setCourseid("")
-                setBatchid("")
+                });
+                setUid({}); // Changed from array to object if that's what you're using
+                setCourseid("");
+                setBatchid("");
             })
             .catch((err) => {
-                console.log(err)
-            })
-        // }
-
-
-
-
-
-    }
+                console.error("Error:", err);
+                if (err.response) {
+                    // Show more detailed error message from backend if available
+                    alert(`Error: ${err.response.data.error || 'Something went wrong'}`);
+                } else {
+                    alert("Network error or server is not responding");
+                }
+            });
+    };
 
 
     const onhandleChange = (e) => {
@@ -298,7 +307,7 @@ const BatchMoving = () => {
 
 
 
-const roledata = {
+    const roledata = {
         role: Cookies.get(`role`),
         pageid: 86,
     };
@@ -327,20 +336,20 @@ const roledata = {
         { field: 'Student_Name', headerName: 'Student', flex: 1.5 },
         { field: 'newbatch_code', headerName: 'New Batch', flex: 1.5 },
 
-        {
-            field: 'actions',
-            type: 'actions',
-            headerName: 'Action',
-            flex: 1,
-            renderCell: (params) => {
-                return (
-                    <>
-                         {roleaccess > 2 && <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />}
-                         {roleaccess > 3 && <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />}
-                    </>
-                )
-            }
-        },
+        // {
+        //     field: 'actions',
+        //     type: 'actions',
+        //     // headerName: 'Action',
+        //     flex: 1,
+        //     renderCell: (params) => {
+        //         return (
+        //             <>
+        //                 {/* {roleaccess > 2 && <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />}
+        //                 {roleaccess > 3 && <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />} */}
+        //             </>
+        //         )
+        //     }
+        // },
     ];
 
 
@@ -361,7 +370,7 @@ const roledata = {
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
 
-                                        <div class="form-group col-lg-3">
+                                            <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">Course<span className="text-danger">*</span></label>
                                                 <select class="form-control" id="exampleFormControlSelect1"
                                                     value={courseid} name='course' onChange={(e) => getBatch(e.target.value)}>
@@ -376,7 +385,7 @@ const roledata = {
                                                 {<span className='text-danger'> {error.course} </span>}
                                             </div>
 
-                                                 <div class="form-group col-lg-2">
+                                            <div class="form-group col-lg-2">
                                                 <label for="exampleFormControlSelect1">Old Batch No.</label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1"
                                                     value={batchid} name='batchno' onChange={(e) => getStudent(e.target.value)}>
@@ -408,8 +417,8 @@ const roledata = {
                                                 <lable for="exampleFormControlSelect1">New Batch No</lable>
                                                 <select className='form-control form-control-lg' id="exampleFormControlSelect1" value={value.newbatch} name='newbatch' onChange={onhandleChange}>
 
-                                                    <option value={``}>Selct Batch</option>
-                                                {batch.map((item) => {
+                                                    <option value={``}>Select New Batch</option>
+                                                    {batch.map((item) => {
                                                         return (
                                                             <option value={item.Batch_code}>{item.Batch_code}</option>
 
@@ -437,14 +446,14 @@ const roledata = {
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <div className='d-flex justify-content-between'style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
+                                    <div className='d-flex justify-content-between' style={{ borderBottom: "2px solid #dce4ec", width: "100%" }}>
                                         <div>
                                             <h4 class="card-title">View Moving Batch Details</h4>
                                         </div>
 
                                     </div>
 
-                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "hidden"}}>
+                                    <div style={{ borderLeft: "1px solid #dce4ec", height: "510px", overflow: "hidden" }}>
                                         <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
@@ -456,18 +465,18 @@ const roledata = {
                                             pagination
                                             paginationModel={paginationModel}
                                             onPaginationModelChange={setPaginationModel}
-                                            pageSizeOptions= {[50]}
+                                            pageSizeOptions={[50]}
                                             autoHeight={false}
                                             sx={{
-                                              height: 500, // Ensure enough height for pagination controls
-                                              '& .MuiDataGrid-footerContainer': {
-                                                justifyContent: 'flex-end',
-                                              },
+                                                height: 500, // Ensure enough height for pagination controls
+                                                '& .MuiDataGrid-footerContainer': {
+                                                    justifyContent: 'flex-end',
+                                                },
                                             }}
                                             slotProps={{
-                                              toolbar: {
-                                                showQuickFilter: true,
-                                              },
+                                                toolbar: {
+                                                    showQuickFilter: true,
+                                                },
                                             }}
                                         />
 

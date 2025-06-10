@@ -21,9 +21,9 @@ const SalaryMaster = () => {
 
     const [brand, setBrand] = useState([])
     const [paginationModel, setPaginationModel] = useState({
-            pageSize: 50,
-            page: 0,
-          });
+        pageSize: 50,
+        page: 0,
+    });
     const [vendordata, setVendorData] = useState([])
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
@@ -200,7 +200,12 @@ const SalaryMaster = () => {
             axios.post(`${BASE_URL}/add_awt_salarymaster`, data)
                 .then((res) => {
                     console.log(res)
-                    getEmployeeData()
+                    alert(res.data);
+                    getEmployeeData();
+                    setValue({
+                        formdate: '', todate: '', service: '', empcontri: '', salaryda: '',
+                        minbasic: '', created_date: ''
+                    })
 
                 })
                 .catch((err) => {
@@ -216,7 +221,7 @@ const SalaryMaster = () => {
     }
 
 
-const roledata = {
+    const roledata = {
         role: Cookies.get(`role`),
         pageid: 84,
     };
@@ -244,43 +249,43 @@ const roledata = {
             headerName: "Form Date",
             flex: 2,
             renderCell: (params) => {
-              if (!params.value) return ""; // Handle empty values
-          
-              // Check if already in DD-MM-YYYY format
-              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
-              if (ddmmyyyyRegex.test(params.value)) {
-                return params.value; // Return as-is if already formatted
-              }
-          
-              const date = new Date(params.value);
-              if (isNaN(date.getTime())) return params.value; // Return original value if not a valid date
-          
-              // Convert valid date to DD-MM-YYYY format
-              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+                if (!params.value) return ""; // Handle empty values
+
+                // Check if already in DD-MM-YYYY format
+                const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+                if (ddmmyyyyRegex.test(params.value)) {
+                    return params.value; // Return as-is if already formatted
+                }
+
+                const date = new Date(params.value);
+                if (isNaN(date.getTime())) return params.value; // Return original value if not a valid date
+
+                // Convert valid date to DD-MM-YYYY format
+                return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
             },
-          },
-          
+        },
+
         {
             field: "todate",
             headerName: "To Date",
             flex: 2,
             renderCell: (params) => {
-              if (!params.value) return ""; // Handle empty values
-          
-              // Check if already in DD-MM-YYYY format
-              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
-              if (ddmmyyyyRegex.test(params.value)) {
-                return params.value; // Return as-is if already formatted
-              }
-          
-              const date = new Date(params.value);
-              if (isNaN(date.getTime())) return params.value; // Return original value if it's not a valid date
-          
-              // Convert valid date to DD-MM-YYYY format
-              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+                if (!params.value) return ""; // Handle empty values
+
+                // Check if already in DD-MM-YYYY format
+                const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+                if (ddmmyyyyRegex.test(params.value)) {
+                    return params.value; // Return as-is if already formatted
+                }
+
+                const date = new Date(params.value);
+                if (isNaN(date.getTime())) return params.value; // Return original value if it's not a valid date
+
+                // Convert valid date to DD-MM-YYYY format
+                return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
             },
-          },
-          
+        },
+
         { field: 'service', headerName: 'Service', flex: 2 },
         { field: 'empcontri', headerName: 'Empcontri', flex: 2 },
         { field: 'salaryda', headerName: 'DA', flex: 2 },
@@ -290,23 +295,23 @@ const roledata = {
             headerName: "Date",
             flex: 2,
             renderCell: (params) => {
-              if (!params.value) return ""; // Handle empty values
-          
-              // Check if already in DD-MM-YYYY format
-              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
-              if (ddmmyyyyRegex.test(params.value)) {
-                return params.value; // Return as-is if already formatted
-              }
-          
-              const date = new Date(params.value);
-              if (isNaN(date.getTime())) return params.value; // Return original value if not a valid date
-          
-              // Convert valid date to DD-MM-YYYY format
-              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+                if (!params.value) return ""; // Handle empty values
+
+                // Check if already in DD-MM-YYYY format
+                const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+                if (ddmmyyyyRegex.test(params.value)) {
+                    return params.value; // Return as-is if already formatted
+                }
+
+                const date = new Date(params.value);
+                if (isNaN(date.getTime())) return params.value; // Return original value if not a valid date
+
+                // Convert valid date to DD-MM-YYYY format
+                return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
             },
-          },
-          
-        
+        },
+
+
 
         {
             field: 'actions',
@@ -316,8 +321,8 @@ const roledata = {
             renderCell: (params) => {
                 return (
                     <>
-                         {roleaccess > 2 && <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />}
-                         {roleaccess > 3 && <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />}
+                        {roleaccess > 2 && <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />}
+                        {roleaccess > 3 && <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />}
                     </>
                 )
             }
@@ -342,31 +347,31 @@ const roledata = {
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
 
-                                            <div class="form-group col-lg-3" style={{display: "flex", flexDirection: "column"}}>
+                                            <div class="form-group col-lg-3" style={{ display: "flex", flexDirection: "column" }}>
                                                 <label for="exampleInputUsername1">Form Date<span className="text-danger">*</span></label>
                                                 <DatePicker
-        selected={value.formdate}
-        onChange={(date) => onhandleChange({ target: { name: "formdate", value: date } })}
-        className="form-control"
-        id="formdate"
-        placeholderText="Select Form Date"
-        dateFormat="yyyy-MM-dd"
-        minDate={new Date()} // Prevents past dates
-      />
+                                                    selected={value.formdate}
+                                                    onChange={(date) => onhandleChange({ target: { name: "formdate", value: date } })}
+                                                    className="form-control"
+                                                    id="formdate"
+                                                    placeholderText="Select Form Date"
+                                                    dateFormat="yyyy-MM-dd"
+                                                    // minDate={new Date()} // Prevents past dates
+                                                />
                                                 {<span className='text-danger'> {error.formdate} </span>}
                                             </div>
 
-                                            <div class="form-group col-lg-3" style={{display: "flex", flexDirection: "column"}}>
+                                            <div class="form-group col-lg-3" style={{ display: "flex", flexDirection: "column" }}>
                                                 <label for="exampleInputUsername1">To Date<span className="text-danger">*</span></label>
                                                 <DatePicker
-        selected={value.todate}
-        onChange={(date) => onhandleChange({ target: { name: "todate", value: date } })}
-        className="form-control"
-        id="todate"
-        placeholderText="Select To Date"
-        dateFormat="yyyy-MM-dd"
-        minDate={new Date()} // Prevents past dates
-      />
+                                                    selected={value.todate}
+                                                    onChange={(date) => onhandleChange({ target: { name: "todate", value: date } })}
+                                                    className="form-control"
+                                                    id="todate"
+                                                    placeholderText="Select To Date"
+                                                    dateFormat="yyyy-MM-dd"
+                                                    // minDate={new Date()} // Prevents past dates
+                                                />
                                                 {<span className='text-danger'> {error.todate} </span>}
 
                                             </div>
@@ -417,14 +422,14 @@ const roledata = {
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <div className='d-flex justify-content-between' style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
+                                    <div className='d-flex justify-content-between' style={{ borderBottom: "2px solid #dce4ec", width: "100%" }}>
                                         <div>
                                             <h4 class="card-title">View Salary Structure Details</h4>
                                         </div>
 
                                     </div>
 
-                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "hidden"}}>
+                                    <div style={{ borderLeft: "1px solid #dce4ec", height: "510px", overflow: "hidden" }}>
                                         <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
@@ -436,21 +441,21 @@ const roledata = {
                                             pagination
                                             paginationModel={paginationModel}
                                             onPaginationModelChange={setPaginationModel}
-                                            pageSizeOptions= {[50]}
+                                            pageSizeOptions={[50]}
                                             autoHeight={false}
                                             sx={{
-                                              height: 500, // Ensure enough height for pagination controls
-                                              '& .MuiDataGrid-footerContainer': {
-                                                justifyContent: 'flex-end',
-                                              },
+                                                height: 500, // Ensure enough height for pagination controls
+                                                '& .MuiDataGrid-footerContainer': {
+                                                    justifyContent: 'flex-end',
+                                                },
                                             }}
                                             slots={{
                                                 toolbar: GridToolbar
                                             }}
                                             slotProps={{
-                                              toolbar: {
-                                                showQuickFilter: true,
-                                              },
+                                                toolbar: {
+                                                    showQuickFilter: true,
+                                                },
                                             }}
                                         />
 

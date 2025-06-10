@@ -205,7 +205,7 @@ const InnerHeader = () => {
             case '/batchleft':
                 return 'Batch Left'
             case '/batchmoving':
-                return 'Bath Moving';
+                return 'Batch Moving';
             case '/employeeloan':
                 return 'Employee Loan';
             case '/projectmaster':
