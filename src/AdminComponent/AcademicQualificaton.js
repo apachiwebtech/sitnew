@@ -5,7 +5,9 @@ import { Link, useParams } from 'react-router-dom';
 
 const AcademicQualification = () => {
     const { feedback1id } = useParams();
-
+    const { facultyid } = useParams();
+        const [uid, setUid] = useState([])
+        const [error, setError] = useState({})
 
 
     const [value, setValue] = useState({
@@ -103,9 +105,10 @@ const AcademicQualification = () => {
                     <div class="row">
                         <div class="d-flex">
 
-                            <div className='px-2 mx-2'><Link to="/faculty/:facultyid"><h4>Personal Information</h4></Link></div>
+                            <div className='px-2 mx-2'><Link to={`/faculty/${facultyid}`}><h4>Personal Information</h4></Link></div>
+                            
+                            <div className='px-2 mx-2'><Link to={`/addfacultymaster/${facultyid}` }><h4>Current Experience/Other Details</h4></Link></div>
                             <div className='px-2 mx-2'><Link to="/academicqualification"><h4>Academic Qualification</h4></Link></div>
-                            <div className='px-2 mx-2'><Link to="/addfacultymaster"><h4>Current Experience/Other Details</h4></Link></div>
 
                             <div className='px-2 mx-2'><Link to="/facultyexperience"><h4>Total Experience and Documents</h4></Link></div>
                             <div className='px-2 mx-2'><Link to="/facultydiscussion"><h4>Discussion</h4></Link></div>

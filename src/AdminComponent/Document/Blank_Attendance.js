@@ -67,14 +67,16 @@ const styles = StyleSheet.create({
 
 // Create Document Component
 const BlankAttendance = (props) => {
-    console.log(props)
+    if (!props.data || props.data.length === 0 || !props.data[0].students || props.data[0].students.length === 0) {
+        return <Text>No data available</Text>; // or return null / loader
+    }
+
     const data = props.data[0].students;
-    const Course_Name = props.data[0].students[0].Course_Name;
+    const Course_Name = data[0].Course_Name;
     const batch_id = props.data[0].batchid;
     const lecture_count = props.data[0].lecture_count + 1;
 
     const date = new Date();
-
     const currentdate = date.toISOString().split("T")[0];
 
     const getShortText = (text, maxChars = 30) => {

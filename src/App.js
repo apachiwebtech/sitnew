@@ -463,19 +463,19 @@ const Router = createBrowserRouter([
                 element: <Faculty />,
             },
             {
-                path: "/addfacultymaster",
+                path: "/addfacultymaster/:facultyid",
                 element: <AddFacultyMaster />,
             },
             {
-                path: "/facultyexperience",
+                path: "/facultyexperience/:facultyid",
                 element: <FacultyExperience />,
             },
             {
-                path: "/facultydiscussion",
+                path: "/facultydiscussion/:facultyid",
                 element: <FacultyDiscussion />,
             },
             {
-                path: "/facademicqualification",
+                path: "/facademicqualification/:facultyid",
                 element: <FAcademicQualification />,
             },
             {

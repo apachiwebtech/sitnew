@@ -7,6 +7,7 @@ import { FormControl } from '@mui/material';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
+import axios from 'axios';
 //import FormControlLabel from '@mui/material/FormControlLabel';
 
 const AddFacultyMaster = () => {
@@ -16,7 +17,7 @@ const AddFacultyMaster = () => {
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
-
+    const storedFacultyId = localStorage.getItem("faculty_id");
 
 
     const [value, setValue] = useState({
@@ -67,18 +68,12 @@ const AddFacultyMaster = () => {
     // }
 
 
-    async function getStudentDetail() {
-        const response = await fetch(`${BASE_URL}/studentDetail`, {
-            method: 'POST',
-            body: JSON.stringify({
-                id: facultyid,
-            }),
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
-
-        const data = await response.json();
+    async function getFacultyDetail() {
+        axios.post(`${BASE_URL}/getfacultydata`, { facultyid: facultyid })
+        
+                    .then((res) => {
+        
+                        const data = res.data;
 
 
         setValue(prevState => ({
@@ -101,10 +96,11 @@ const AddFacultyMaster = () => {
             TDS: data[0].TDS,
             PAN: data[0].PAN,
         }))
+         })
     }
     useEffect(() => {
-        if (':facultyid' !== ":facultyid") {
-            getStudentDetail()
+        if (facultyid !== ":facultyid") {
+            getFacultyDetail()
         }
 
         value.title = ""
@@ -116,7 +112,8 @@ const AddFacultyMaster = () => {
         e.preventDefault()
         let response
         // if (validateForm()) {
-        if (facultyid == ":facultyid") {
+        // if (!localStorage.getItem("faculty_id")) {
+        if (facultyid === ":facultyid") {
             response = await fetch(`${BASE_URL}/add_faculty_master`, {
                 method: 'POST',
                 body: JSON.stringify({
@@ -144,11 +141,11 @@ const AddFacultyMaster = () => {
             })
         } else {
 
-            response = await fetch(`${BASE_URL}/updatefaculty`, {
+            response = await fetch(`${BASE_URL}/Current_Experience`, {
                 method: 'POST',
                 body: JSON.stringify({
-
-                    Experience: value.Experience,
+                    // Faculty_Id: localStorage.getItem("faculty_id"), 
+                    Experience: value.Experience === '' ? null : parseInt(value.Experience),
                     Company_Name: value.Company_Name,
                     Specialization: value.Specialization,
                     Company_Address: value.Company_Address,
@@ -157,25 +154,25 @@ const AddFacultyMaster = () => {
                     Interview_Date: value.Interview_Date,
                     Reference_by: value.Reference_by,
                     designexperience: value.designexperience,
-                    DesignExp: value.DesignExp,
+                    DesignExp: value.DesignExp === '' ? null : parseInt(value.DesignExp),
                     Working_Status: value.Working_Status,
                     Comments: value.Comments,
                     Interviewer: value.Interviewer,
                     Interview_Status: value.Interview_Status,
-                    Salary: value.Salary,
-                    TDS: value.TDS,
+                    Salary: value.Salary === '' ? null : parseInt(value.Salary),
+
+                    TDS: value.TDS === '' ? null : parseInt(value.TDS),
                     PAN: value.PAN,
-
-
-
-
+                    uid: facultyid,
+                    form_type:2,
                 }),
                 headers: {
                     'Content-Type': 'application/json'
                 }
             })
         }
-
+// alert("Page 2 submitted successfully!");
+//   localStorage.removeItem("faculty_uid");
 
 
         // }
@@ -196,17 +193,12 @@ const AddFacultyMaster = () => {
 
                         <div class="d-flex">
 
-                            {
-                                facultyid == ":facultyid" ? (<>   <div className='px-2 mx-2'><Link to="/faculty/:facultyid"><h4>Personal Information</h4></Link></div>
-
-                                    <div className='px-2 mx-2'><Link to="/addfacultymaster"><h4>Current Experience/Other Details</h4></Link></div> </>) :
-                                    <>
-                                        <div className='px-2 mx-2'><Link to="/faculty/:facultyid"><h4>Personal Information</h4></Link></div>
-                                        <div className='px-2 mx-2'><Link to="/addfacultymaster"><h4>Current Experience/Other Details</h4></Link></div>
+                          
+                            <div className='px-2 mx-2'><Link to={`/faculty/${facultyid}`}><h4>Personal Information</h4></Link></div>
+                                        <div className='px-2 mx-2'><Link to={`/addfacultymaster/${facultyid}`}><h4>Current Experience/Other Details</h4></Link></div>
                                         <div className='px-2 mx-2'><Link to="/academicqualification"><h4>Academic Qualification</h4></Link></div>
                                         <div className='px-2 mx-2'><Link to="/facultyexperience"><h4>Total Experience and Documents</h4></Link></div>
-                                        <div className='px-2 mx-2'><Link to="/facultydiscussion"><h4>Discussion</h4></Link></div> </>
-                            }
+                                        <div className='px-2 mx-2'><Link to="/facultydiscussion"><h4>Discussion</h4></Link></div> 
                         </div>
 
                         
@@ -408,3 +400,201 @@ const AddFacultyMaster = () => {
 }
 
 export default AddFacultyMaster
+// app.post("/nodeapp/add_faculty_master", (req, res) => {
+//     let {
+//         Faculty_Code,
+//         Faculty_Name,
+//         Married,
+//         DOB,
+//         Nationality,
+//         Faculty_Type,
+//         Office_Tel,
+//         Res_Tel,
+//         Mobile,
+//         EMail,
+//         Present_Address,
+//         Present_City,
+//         Present_State,
+//         Present_Country,
+//         Present_Pin,
+//         Present_Tel,
+//         Permanent_Address,
+//         Permanent_City,
+//         Permanent_State,
+//         Permanent_Country,
+//         Permanent_Pin,
+//         Permanent_Tel,
+//         Service_Offered,
+//         Specialization,
+//         Experience,
+//         Company_Name,
+//         Company_Address,
+//         Company_Phone,
+//         Interview_Date,
+//         Working_At,
+//         Qualified,
+//         Joining_Date,
+//         Comments,
+//         Interviewer,
+//         Sal_Struct,
+//         Salary,
+//         Date_added,
+//         TDS,
+//         PAN,
+//         Resigned,
+//         InvoiceName,
+//         IsActive,
+//         IsDelete,
+//         CourseId,
+//         DesignExp,
+//         KnowSw,
+//         Working_Status,
+//         TrainingCategory,
+//         Interview_Status,
+//         Reference_by,
+//         uid,
+//     } = req.body;
+    
+
+
+
+
+
+
+//     if (uid == undefined) {
+//         const getMaxCodeQuery = "SELECT Faculty_Code AS maxCode FROM faculty_master order by Faculty_Id desc limit 1";
+
+//     con.query(getMaxCodeQuery, (err, result) => {
+//         if (err) return res.json(err);
+
+//         const newFacultyCode = (result[0].maxCode || 0) + 1;  
+//       const insertSql =
+//             "insert into faculty_master(`Faculty_Code`, `Faculty_Name`, `Married`, `DOB`, `Nationality`, `Faculty_Type`, `Office_Tel`, `Res_Tel`, `Mobile`, `EMail`, `Present_Address`, `Present_City`, `Present_State`, `Present_Country`, `Present_Pin`, `Present_Tel`, `Permanent_Address`, `Permanent_City`, `Permanent_State`, `Permanent_Country`, `Permanent_Pin`, `Permanent_Tel`, `Service_Offered`, `Specialization`,`Experience`,`Company_Name`,`Company_Address`,`Company_Phone`,`Interview_Date`,`Working_At`,`Qualified`,`Joining_Date`,`Comments`,`Interviewer`,`Sal_Struct`,`Salary`,`Date_added`,`TDS`,`PAN`,`Resigned`,`InvoiceName`,`IsActive`,`IsDelete`,`CourseId`,`DesignExp`,`KnowSw`,`Working_Status`,`TrainingCategory`,`Interview_Status`,`Reference_by`) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
+//          const insertParams = [
+//             newFacultyCode,
+//             Faculty_Name,
+//             Married,
+//             DOB,
+//             Nationality,
+//             Faculty_Type,
+//             Office_Tel,
+//             Res_Tel,
+//             Mobile,
+//             EMail,
+//             Present_Address,
+//             Present_City,
+//             Present_State,
+//             Present_Country,
+//             Present_Pin,
+//             Present_Tel,
+//             Permanent_Address,
+//             Permanent_City,
+//             Permanent_State,
+//             Permanent_Country,
+//             Permanent_Pin,
+//             Permanent_Tel,
+//             Service_Offered,
+//             Specialization,
+//             Experience,
+//             Company_Name,
+//             Company_Address,
+//             Company_Phone,
+//             Interview_Date,
+//             Working_At,
+//             Qualified,
+//             Joining_Date,
+//             Comments,
+//             Interviewer,
+//             Sal_Struct,
+//             Salary,
+//             Date_added,
+//             TDS,
+//             PAN,
+//             Resigned,
+//             InvoiceName,
+//             IsActive,
+//             IsDelete,
+//             CourseId,
+//             DesignExp,
+//             KnowSw,
+//             Working_Status,
+//             TrainingCategory,
+//             Interview_Status,
+//             Reference_by,
+//         ];
+//         con.query(insertSql, insertParams, (err, data) => {
+//             if (err) return res.json(err);
+//             return res.json({ message: "Faculty added", Faculty_Code: newFacultyCode, result: data });
+//         });
+//         });
+//     }
+//         else {
+// const sql =
+//             "update `faculty_master` set `Faculty_Code` =? , `Faculty_Name` =? , `Married` =? , `DOB` =? , `Nationality` =? , `Faculty_Type` =? , `Office_Tel` =? , `Res_Tel` =? , `Mobile` =? , `EMail` =? , `Present_Address` =? , `Present_City` =? , `Present_State` =? , `Present_Country` =? , `Present_Pin` =? , `Present_Tel` =? , `Permanent_Address` =? , `Permanent_City` =? , `Permanent_State` =? , `Permanent_Country` =? , `Permanent_Pin` =? , `Permanent_Tel` =? , `Service_Offered` =? , `Specialization` =? ,`Experience` =? ,`Company_Name` =? ,`Company_Address` =? ,`Company_Phone` =? ,`Interview_Date` =? ,`Working_At` =? ,`Qualified` =? ,`Joining_Date` =? ,`Comments` =? ,`Interviewer` =? ,`Sal_Struct` =? ,`Salary` =? ,`Date_added` =? ,`TDS` =? ,`PAN` =? ,`Resigned` =? ,`InvoiceName` =? ,`IsActive` =? ,`IsDelete` =? ,`CourseId` =? ,`DesignExp` =? ,`KnowSw` =? ,`Working_Status` =? ,`TrainingCategory` =? ,`Interview_Status` =? ,`Reference_by` =? where id = ?";
+
+//        const  param = [
+//             Faculty_Code,
+//             Faculty_Name,
+//             Married,
+//             DOB,
+//             Nationality,
+//             Faculty_Type,
+//             Office_Tel,
+//             Res_Tel,
+//             Mobile,
+//             EMail,
+//             Present_Address,
+//             Present_City,
+//             Present_State,
+//             Present_Country,
+//             Present_Pin,
+//             Present_Tel,
+//             Permanent_Address,
+//             Permanent_City,
+//             Permanent_State,
+//             Permanent_Country,
+//             Permanent_Pin,
+//             Permanent_Tel,
+//             Service_Offered,
+//             Specialization,
+//             Experience,
+//             Company_Name,
+//             Company_Address,
+//             Company_Phone,
+//             Interview_Date,
+//             Working_At,
+//             Qualified,
+//             Joining_Date,
+//             Comments,
+//             Interviewer,
+//             Sal_Struct,
+//             Salary,
+//             Date_added,
+//             TDS,
+//             PAN,
+//             Resigned,
+//             InvoiceName,
+//             IsActive,
+//             IsDelete,
+//             CourseId,
+//             DesignExp,
+//             KnowSw,
+//             Working_Status,
+//             TrainingCategory,
+//             Interview_Status,
+//             Reference_by,
+//             uid,
+//         ];
+        
+//             con.query(sql, param, (err, data) => {
+//         if (err) {
+//             return res.json(err);
+//         } else {
+//             return res.json(data);
+//         }
+//     });
+//     }
+
+
+// });

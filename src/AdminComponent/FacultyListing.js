@@ -212,7 +212,7 @@ const FacultyListing = () => {
                                 <div className="card-body">
                                     <div className='d-flex justify-content-between gap-3' style={{ width: "100%", padding: "10px 0",borderBottom: "2px solid #dce4ec", }}>
                                         <div >
-                                            <h4 class="card-title">View  Final Result</h4>
+                                            <h4 class="card-title">View  Final Result </h4>
                                         </div>
                                         <Link to='/faculty/:facultyid'> <button className='btn btn-success'>Add +</button></Link>
 

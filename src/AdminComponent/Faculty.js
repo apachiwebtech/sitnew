@@ -4,6 +4,7 @@ import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
+import { data } from 'jquery';
 //import FormControlLabel from '@mui/material/FormControlLabel';
 
 const Faculty = () => {
@@ -14,6 +15,8 @@ const Faculty = () => {
         pageSize: 50,
         page: 0,
     });
+    
+
 
     console.log(facultyid, "facultyid")
 
@@ -73,6 +76,22 @@ const Faculty = () => {
     //     return isValid
     // }
 
+ const [disciplineOptions, setDisciplineOptions] = useState([]);
+
+const discipline_f = async () => {
+  try {
+    const res = await axios.get(`${BASE_URL}/getDiscipline`);
+    setDisciplineOptions(res.data); // ✅ Store fetched data in state
+    console.log(res.data); // ✅ Log the fetched data
+  } catch (err) {
+    console.error("Error fetching discipline data", err);
+  }
+};
+
+useEffect(() => {
+  discipline_f();
+}, []);
+
 
     async function getFacultyDetail() {
         axios.post(`${BASE_URL}/getfacultydata`, { facultyid: facultyid })
@@ -116,7 +135,7 @@ const Faculty = () => {
 
     }
     useEffect(() => {
-        if (facultyid != ":facultyid") {
+        if (facultyid !== ":facultyid") {
             getFacultyDetail()
         }
 
@@ -127,9 +146,34 @@ const Faculty = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+         let newErrors = {};
+  let isValid = true;
+
+  if (!value.Faculty_Name.trim()) {
+    newErrors.Faculty_Name = "Faculty Name is required";
+    isValid = false;
+  }
+
+  if (!value.Married) {
+    newErrors.maritalstatus = "Marital Status is required";
+    isValid = false;
+  }
+
+  if (!value.Present_Address) {
+    newErrors.Present_Address = "Present Address is required";
+    isValid = false;
+  }
+
+  setError(newErrors);
+
+  if (!isValid) {
+    
+    return;
+  }
+
         let response
         // if (validateForm()) {
-        if (facultyid == ":facultyid") {
+        if (facultyid === ":facultyid") {
             response = await fetch(`${BASE_URL}/add_faculty_master`, {
                 method: 'POST',
                 body: JSON.stringify({
@@ -162,10 +206,17 @@ const Faculty = () => {
                 headers: {
                     'Content-Type': 'application/json'
                 }
-            })
+            });
+
+            // const data = await response.json();
+            // localStorage.setItem("faculty_id", data.result.insertId);
+
+
+            
+            
         } else {
 
-            response = await fetch(`${BASE_URL}/updatefaculty_master`, {
+            response = await fetch(`${BASE_URL}/update_faculty_profile`, {
                 method: 'POST',
                 body: JSON.stringify({
                     Faculty_Name: value.Faculty_Name,
@@ -193,7 +244,7 @@ const Faculty = () => {
                     Permanent_State: value.Permanent_State,
                     Permanent_Country: value.Permanent_Country,
                     Permanent_Tel: value.Permanent_Tel,
-
+                    uid: facultyid,
 
 
 
@@ -204,15 +255,18 @@ const Faculty = () => {
             })
         }
 
+     alert ("submitted")
 
-
-        // }
+        
     }
 
 
     const onhandleChange = (e) => {
-        setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+        setValue((prev) => ({ ...prev, [e.target.name]: e.target.value}))
+         
+        
     }
+    
 
     return (
 
@@ -224,14 +278,14 @@ const Faculty = () => {
                         <div class="d-flex">
 
                             {
-                                facultyid == ":facultyid" ? (<>
+                                facultyid === ":facultyid" ? (<>
                                     <div className='px-2 mx-2'><Link to="/faculty/:facultyid"><h4>Personal Information</h4></Link></div>
 
-                                    <div className='px-2 mx-2'><Link to="/addfacultymaster"><h4>Current Experience/Other Details</h4></Link></div> </>) :
+                                     </>) :
                                     <>
-                                        <div className='px-2 mx-2'><Link to="/faculty/:facultyid"><h4>Personal Information</h4></Link></div>
+                                        <div className='px-2 mx-2'><Link to={`/faculty/${facultyid}`}><h4>Personal Information</h4></Link></div>
+                                        <div className='px-2 mx-2'><Link to={`/addfacultymaster/${facultyid}` }><h4>Current Experience/Other Details</h4></Link></div>
                                         <div className='px-2 mx-2'><Link to="/academicqualification"><h4>Academic Qualification</h4></Link></div>
-                                        <div className='px-2 mx-2'><Link to="/addfacultymaster"><h4>Current Experience/Other Details</h4></Link></div>
                                         <div className='px-2 mx-2'><Link to="/facultyexperience"><h4>Total Experience and Documents</h4></Link></div>
                                         <div className='px-2 mx-2'><Link to="/facultydiscussion"><h4>Discussion</h4></Link></div> </>
                             }
@@ -258,7 +312,7 @@ const Faculty = () => {
                                                 </div>
                                                 <div class="form-group col-lg-3">
                                                     <label for="exampleInputUsername1">Faculty Code</label>
-                                                    <input type="text" class="form-control" id="exampleInputUsername1"
+                                                    <input type="text" class="form-control" id="exampleInputUsername1" readOnly
                                                         value={value.Faculty_Code} placeholder="Faculty Code" name='Faculty_Code'
                                                         onChange={onhandleChange} />
 
@@ -278,19 +332,41 @@ const Faculty = () => {
                                                 </div>
                                                 <div class="form-group col-lg-3">
                                                     <label for="exampleInputUsername1">Discipline</label>
-                                                    <select class="form-control form-control-lg" id="exampleFormControlSelect1"
-                                                        value={value.discipline} name='discipline' onChange={onhandleChange} >
-                                                        <option>Select</option>
+                                                    <select
+                                                      className="form-control form-control-lg"
+                                                      name="discipline"
+                                                      value={value.disciplin}
+                                                      onChange={onhandleChange}
+                                                    >
+                                                      <option value="">Select</option>
+                                                      {disciplineOptions.map((item) => (
+                                                        <option key={item.Id} value={item.Deciplin}>
+                                                          {item.Deciplin}
+                                                        </option>
+                                                      ))}
                                                     </select>
+
                                                 </div>
 
                                                 <div class="form-group col-lg-3">
                                                     <label for="exampleFormControlSelect1">Status </label>
-                                                    <select class="form-control form-control-lg" id="exampleFormControlSelect1"
-                                                        value={value.status} onChange={onhandleChange} name='status'>
-                                                        <option>Select Course</option>
-                                                        <option value="1">Active</option>
-                                                        <option value="2">Non-Active</option>
+                                                    <select
+                                                      className="form-control form-control-lg"
+                                                      id="exampleFormControlSelect1"
+                                                      name="status"
+                                                      value={value.status}
+                                                      onChange={(e) =>
+                                                        onhandleChange({
+                                                          target: {
+                                                            name: 'status',
+                                                            value: parseInt(e.target.value) || 0,
+                                                          },
+                                                        })
+                                                      }
+                                                    >
+                                                      <option value="">Select Status</option>
+                                                      <option value="1">Active</option>
+                                                      <option value="2">Non-Active</option>
                                                     </select>
                                                 </div>
 
@@ -402,15 +478,20 @@ const Faculty = () => {
                                                                 value={value.Mobile} placeholder="Mobile" name='Mobile' onChange={onhandleChange} />
 
                                                         </div>
-                                                        <div class="form-group col-lg-4">
+                                                         <div class="form-group col-lg-4">
                                                             <label for="exampleInputUsername1">E-Mail</label>
                                                             <input type="email" class="form-control" id="exampleInputUsername1"
                                                                 value={value.EMail} placeholder="E-Mail ID" name='EMail' onChange={onhandleChange} />
 
                                                         </div>
                                                     </div>
-                                                    <button type="submit" class="btn btn-primary mr-2" >Submit</button>
-
+                                                    <button 
+                                                      type="submit" 
+                                                      className="btn btn-primary mr-2" 
+                                                    
+                                                    >
+                                                      Submit
+                                                    </button>
                                                     <button type='button' onClick={() => {
                                                         window.location.reload()
                                                     }} class="btn btn-light">Cancel</button>
@@ -484,3 +565,5 @@ const Faculty = () => {
 }
 
 export default Faculty
+
+
