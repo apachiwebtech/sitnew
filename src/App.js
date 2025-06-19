@@ -467,8 +467,8 @@ const Router = createBrowserRouter([
                 element: <AddFacultyMaster />,
             },
             {
-                path: "/facultyexperience/:facultyid",
-                element: <FacultyExperience />,
+              path: "/facultyexperience/:facultyid",
+              element: <FacultyExperience />,
             },
             {
                 path: "/facultydiscussion/:facultyid",

@@ -38,6 +38,8 @@ const AddFacultyMaster = () => {
         Salary: '',
         TDS: '',
         PAN: '',
+        Sal_Struct: '',
+        Qualified: '',
 
     })
 
@@ -95,6 +97,8 @@ const AddFacultyMaster = () => {
             Salary: data[0].Salary,
             TDS: data[0].TDS,
             PAN: data[0].PAN,
+            Qualified:data[0].Qualified,
+            Sal_Struct: data[0].Sal_Struct
         }))
          })
     }
@@ -140,37 +144,50 @@ const AddFacultyMaster = () => {
                 }
             })
         } else {
+  // ✅ Format Interview_Date to YYYY-MM-DD
+  const formatDate = (date) => {
+    if (!date) return null;
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = (`0${d.getMonth() + 1}`).slice(-2);
+    const day = (`0${d.getDate()}`).slice(-2);
+    return `${year}-${month}-${day}`;
+  };
 
-            response = await fetch(`${BASE_URL}/Current_Experience`, {
-                method: 'POST',
-                body: JSON.stringify({
-                    // Faculty_Id: localStorage.getItem("faculty_id"), 
-                    Experience: value.Experience === '' ? null : parseInt(value.Experience),
-                    Company_Name: value.Company_Name,
-                    Specialization: value.Specialization,
-                    Company_Address: value.Company_Address,
-                    Company_Phone: value.Company_Phone,
-                    Service_Offered: value.Service_Offered,
-                    Interview_Date: value.Interview_Date,
-                    Reference_by: value.Reference_by,
-                    designexperience: value.designexperience,
-                    DesignExp: value.DesignExp === '' ? null : parseInt(value.DesignExp),
-                    Working_Status: value.Working_Status,
-                    Comments: value.Comments,
-                    Interviewer: value.Interviewer,
-                    Interview_Status: value.Interview_Status,
-                    Salary: value.Salary === '' ? null : parseInt(value.Salary),
+  const formattedInterviewDate = formatDate(value.Interview_Date);
 
-                    TDS: value.TDS === '' ? null : parseInt(value.TDS),
-                    PAN: value.PAN,
-                    uid: facultyid,
-                    form_type:2,
-                }),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-        }
+  response = await fetch(`${BASE_URL}/Current_Experience`, {
+    method: 'POST',
+    body: JSON.stringify({
+      Experience: value.Experience === '' ? null : parseInt(value.Experience),
+      Company_Name: value.Company_Name,
+      Specialization: value.Specialization,
+      Company_Address: value.Company_Address,
+      Company_Phone: value.Company_Phone,
+      Service_Offered: value.Service_Offered,
+      Interview_Date: formattedInterviewDate,  // ✅ formatted date
+      Reference_by: value.Reference_by,
+      designexperience: value.designexperience,
+      DesignExp: value.DesignExp === '' ? null : parseInt(value.DesignExp),
+      Working_Status: value.Working_Status,
+      Comments: value.Comments,
+      Interviewer: value.Interviewer,
+      Interview_Status: value.Interview_Status,
+      Salary: value.Salary === '' ? null : parseInt(value.Salary),
+      TDS: value.TDS === '' ? null : parseInt(value.TDS),
+      PAN: value.PAN,
+      Qualified: value.Qualified,
+      Sal_Struct: value.Sal_Struct, // ✅ Salary Type added here
+      uid: facultyid,
+      form_type: 2,
+    }),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+}
+
+
 // alert("Page 2 submitted successfully!");
 //   localStorage.removeItem("faculty_uid");
 
@@ -179,9 +196,14 @@ const AddFacultyMaster = () => {
     }
 
 
-    const onhandleChange = (e) => {
-        setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
-    }
+   const onhandleChange = (e) => {
+  const { name, value } = e.target;
+  setValue(prev => ({
+    ...prev,
+    [name]: value
+  }));
+};
+
 
     return (
 
@@ -196,9 +218,9 @@ const AddFacultyMaster = () => {
                           
                             <div className='px-2 mx-2'><Link to={`/faculty/${facultyid}`}><h4>Personal Information</h4></Link></div>
                                         <div className='px-2 mx-2'><Link to={`/addfacultymaster/${facultyid}`}><h4>Current Experience/Other Details</h4></Link></div>
-                                        <div className='px-2 mx-2'><Link to="/academicqualification"><h4>Academic Qualification</h4></Link></div>
-                                        <div className='px-2 mx-2'><Link to="/facultyexperience"><h4>Total Experience and Documents</h4></Link></div>
-                                        <div className='px-2 mx-2'><Link to="/facultydiscussion"><h4>Discussion</h4></Link></div> 
+                                        <div className='px-2 mx-2'><Link to={`/facademicqualification/${facultyid}`}><h4>Academic Qualification</h4></Link></div>
+                                       <div className='px-2 mx-2'><Link to={`/facultyexperience/${facultyid}`}><h4>Total Experience and Documents</h4></Link></div>
+                                        <div className='px-2 mx-2'><Link to={`/facultydiscussion/${facultyid}`}><h4>Discussion</h4></Link></div>
                         </div>
 
                         
@@ -287,10 +309,18 @@ const AddFacultyMaster = () => {
                                                         </div>
                                                         <div class="form-group col-lg-4">
                                                             <label for="exampleInputUsername1">Working Status</label>
-                                                            <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.Working_Status}
-                                                                name='Working_Status' onChange={onhandleChange} >
-                                                                <option>--Select--</option>
+                                                            <select 
+                                                              className="form-control form-control-lg" 
+                                                              id="exampleFormControlSelect1" 
+                                                              value={value.Working_Status}
+                                                              name="Working_Status" 
+                                                              onChange={onhandleChange}
+                                                            >
+                                                              <option value="">--Select--</option>
+                                                              <option value="Working">Working</option>
+                                                              <option value="Not Working">Not Working</option>
                                                             </select>
+
                                                         </div>
 
 
@@ -319,15 +349,18 @@ const AddFacultyMaster = () => {
                                                         </div>
 
                                                         <div class="form-group col-lg-4">
-                                                            <FormControl>Qualified
-                                                                <RadioGroup
-                                                                    row
-                                                                    aria-labelledby="demo-row-radio-buttons-group-label"
-                                                                    name="row-radio-buttons-group"  >
-                                                                    <FormControlLabel value="0116" control={<Radio />} label="Yes" />
-                                                                    <FormControlLabel value="0117" control={<Radio />} label="No" />
-
-                                                                </RadioGroup>
+                                                            <FormControl component="fieldset">
+                                                              <label>Qualified</label>
+                                                              <RadioGroup
+                                                                row
+                                                                aria-labelledby="qualified-radio-group"
+                                                                name="Qualified" // 🔑 Must match your state key (e.g., value.Qualified)
+                                                                value={value.Qualified} // Controlled value
+                                                                onChange={onhandleChange} // Change handler
+                                                              >
+                                                                <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                                                                <FormControlLabel value="No" control={<Radio />} label="No" />
+                                                              </RadioGroup>
                                                             </FormControl>
                                                         </div>
 
@@ -340,10 +373,17 @@ const AddFacultyMaster = () => {
 
                                                         <div class="form-group col-lg-4">
                                                             <label for="exampleFormControlSelect1">Interview Status</label>
-                                                            <select class="form-control" id="exampleFormControlSelect1" value={value.Interview_Status}
-                                                                placeholder="Interview Status" name='Interview_Status' onChange={onhandleChange}>
-                                                                <option>--Interviewer Status--</option>
-                                                            </select>
+                                                            <select
+  className="form-control"
+  id="exampleFormControlSelect1"
+  value={value.Interview_Status}
+  name="Interview_Status"
+  onChange={onhandleChange}
+>
+  <option value="">--Interviewer Status--</option>
+  <option value="Appointed">Appointed</option>
+</select>
+
                                                         </div>
                                                         <div class="form-group col-lg-4">
                                                             <label for="exampleInputUsername1">Salary Offered</label>
@@ -352,18 +392,22 @@ const AddFacultyMaster = () => {
 
                                                         </div>
 
-                                                        <div class="form-group col-lg-4">
-                                                            <FormControl>Salary Type
-                                                                <RadioGroup
-                                                                    row
-                                                                    aria-labelledby="demo-row-radio-buttons-group-label"
-                                                                    name="row-radio-buttons-group"  >
-                                                                    <FormControlLabel value="0116" control={<Radio />} label="Hourly" />
-                                                                    <FormControlLabel value="0117" control={<Radio />} label="Monthly" />
-
-                                                                </RadioGroup>
-                                                            </FormControl>
+                                                       <div className="form-group col-lg-4">
+                                                          <FormControl component="fieldset">
+                                                            <label>Salary Type</label>
+                                                            <RadioGroup
+                                                              row
+                                                              aria-labelledby="salary-type-radio-group"
+                                                              name="Sal_Struct"             // ✅ This will work correctly with state
+                                                              value={value.Sal_Struct}      // ✅ Controlled component
+                                                              onChange={onhandleChange}      // ✅ Event handler
+                                                            >
+                                                              <FormControlLabel value="Hourly" control={<Radio />} label="Hourly" />
+                                                              <FormControlLabel value="Monthly" control={<Radio />} label="Monthly" />
+                                                            </RadioGroup>
+                                                          </FormControl>
                                                         </div>
+
 
                                                         <div class="form-group col-lg-4">
                                                             <label for="exampleInputUsername1">TDS</label>

@@ -27,15 +27,15 @@ const Faculty = () => {
         DOB: '',
         Nationality: '',
         discipline: '',
-        status: '',
-        invoicename: '',
+        IsActive: '',
+        InvoiceName: '',
         Married: '',
-        joiningdate: '',
+        Joining_Date: '',
         Faculty_Type: '',
-        software: '',
-        training: '',
+        KnowSw: '',
+        TrainingCategory: '',
         Present_Address: '',
-        Permanent_City: '',
+        Present_City: '',
         Present_Pin: '',
         Present_State: '',
         Present_Country: '',
@@ -108,13 +108,13 @@ useEffect(() => {
                     DOB: data[0].DOB,
                     Nationality: data[0].Nationality,
                     discipline: data[0].discipline,
-                    status: data[0].status,
-                    invoicename: data[0].invoicename,
+                    IsActive: data[0].IsActive,
+                    InvoiceName: data[0].InvoiceName,
                     Married: data[0].Married,
-                    joiningdate: data[0].joiningdate,
+                    Joining_Date: data[0].Joining_Date,
                     Faculty_Type: data[0].Faculty_Type,
-                    software: data[0].software,
-                    training: data[0].training,
+                    KnowSw: data[0].KnowSw,
+                    TrainingCategory: data[0].TrainingCategory,
                     Present_Address: data[0].Present_Address,
                     Present_City: data[0].Present_City,
                     Present_Pin: data[0].Permanent_Pin,
@@ -182,13 +182,13 @@ useEffect(() => {
                     DOB: value.DOB,
                     Nationality: value.Nationality,
                     discipline: value.discipline,
-                    status: value.status,
-                    invoicename: value.invoicename,
+                    IsActive: value.IsActive,
+                    InvoiceName: value.InvoiceName,
                     Married: value.Married,
-                    joiningdate: value.joiningdate,
+                    Joining_Date: value.Joining_Date,
                     Faculty_Type: value.Faculty_Type,
-                    software: value.software,
-                    training: value.training,
+                    KnowSw: value.KnowSw,
+                    TrainingCategory: value.TrainingCategory,
                     Present_Address: value.Present_Address,
                     Permanent_City: value.Present_City,
                     Present_Pin: value.Present_Pin,
@@ -215,6 +215,16 @@ useEffect(() => {
             
             
         } else {
+            const formatDate = (date) => {
+  if (!date) return null;
+  const d = new Date(date);
+  const year = d.getFullYear();
+  const month = (`0${d.getMonth() + 1}`).slice(-2);
+  const day = (`0${d.getDate()}`).slice(-2);
+  return `${year}-${month}-${day}`;
+};
+
+const formattedJoiningDate = formatDate(value.Joining_Date);
 
             response = await fetch(`${BASE_URL}/update_faculty_profile`, {
                 method: 'POST',
@@ -224,15 +234,15 @@ useEffect(() => {
                     DOB: value.DOB,
                     Nationality: value.Nationality,
                     discipline: value.discipline,
-                    status: value.status,
-                    invoicename: value.invoicename,
+                    IsActive: value.IsActive,
+                    InvoiceName: value.InvoiceName,
                     Married: value.Married,
-                    joiningdate: value.joiningdate,
+                    Joining_Date: formattedJoiningDate,
                     Faculty_Type: value.Faculty_Type,
-                    software: value.software,
-                    training: value.training,
+                    KnowSw: value.KnowSw,
+                    TrainingCategory: value.TrainingCategory,
                     Present_Address: value.Present_Address,
-                    Permanent_City: value.Present_City,
+                    Present_City: value.Present_City,
                     Present_Pin: value.Present_Pin,
                     Present_State: value.Present_State,
                     Present_Country: value.Present_Country,
@@ -285,9 +295,9 @@ useEffect(() => {
                                     <>
                                         <div className='px-2 mx-2'><Link to={`/faculty/${facultyid}`}><h4>Personal Information</h4></Link></div>
                                         <div className='px-2 mx-2'><Link to={`/addfacultymaster/${facultyid}` }><h4>Current Experience/Other Details</h4></Link></div>
-                                        <div className='px-2 mx-2'><Link to="/academicqualification"><h4>Academic Qualification</h4></Link></div>
-                                        <div className='px-2 mx-2'><Link to="/facultyexperience"><h4>Total Experience and Documents</h4></Link></div>
-                                        <div className='px-2 mx-2'><Link to="/facultydiscussion"><h4>Discussion</h4></Link></div> </>
+                                        <div className='px-2 mx-2'><Link to={`/facademicqualification/${facultyid}`}><h4>Academic Qualification</h4></Link></div>
+                                        <div className='px-2 mx-2'><Link to={`/facultyexperience/${facultyid}`}><h4>Total Experience and Documents</h4></Link></div>
+                                        <div className='px-2 mx-2'><Link to={`/facultydiscussion/${facultyid}`}><h4>Discussion</h4></Link></div> </>
                             }
                         </div>
 
@@ -350,30 +360,23 @@ useEffect(() => {
 
                                                 <div class="form-group col-lg-3">
                                                     <label for="exampleFormControlSelect1">Status </label>
-                                                    <select
-                                                      className="form-control form-control-lg"
-                                                      id="exampleFormControlSelect1"
-                                                      name="status"
-                                                      value={value.status}
-                                                      onChange={(e) =>
-                                                        onhandleChange({
-                                                          target: {
-                                                            name: 'status',
-                                                            value: parseInt(e.target.value) || 0,
-                                                          },
-                                                        })
-                                                      }
-                                                    >
-                                                      <option value="">Select Status</option>
-                                                      <option value="1">Active</option>
-                                                      <option value="2">Non-Active</option>
-                                                    </select>
+                                                   <select
+  className="form-control"
+  name="IsActive"
+  value={value.IsActive}  // ensure it's a string
+  onChange={onhandleChange}
+>
+  <option value="">Select Status</option>
+  <option value="1">Active</option>
+  <option value="0">Not Active</option>
+</select>
+
                                                 </div>
 
                                                 <div class="form-group col-lg-3">
                                                     <label for="exampleInputUsername1">Invoice Name</label>
                                                     <input type="text" class="form-control" id="exampleInputUsername1"
-                                                        value={value.invoicename} placeholder="Invoice Name" name='invoicename' onChange={onhandleChange} />
+                                                        value={value.InvoiceName} placeholder="Invoice Name" name='InvoiceName' onChange={onhandleChange} />
 
                                                 </div>
                                                 <div class="form-group col-lg-3">
@@ -389,7 +392,7 @@ useEffect(() => {
                                                 <div class="form-group col-lg-3">
                                                     <label for="exampleInputUsername1">Joining Date</label>
                                                     <input type="date" class="form-control" id="exampleInputUsername1"
-                                                        value={value.joiningdate} placeholder="Joining Date" name='joiningdate'
+                                                        value={value.Joining_Date} placeholder="Joining Date" name='Joining_Date'
                                                         onChange={onhandleChange} />
 
                                                 </div>
@@ -406,15 +409,16 @@ useEffect(() => {
                                                 <div class="form-group col-lg-3">
                                                     <label for="exampleInputUsername1">Software Knowledge</label>
                                                     <input type="mobile" class="form-control" id="exampleInputUsername1"
-                                                        value={value.software} placeholder="Software Knowledge" name='software'
+                                                        value={value.KnowSw} placeholder="Software Knowledge" name='KnowSw'
                                                         onChange={onhandleChange} />
 
                                                 </div>
 
                                                 <div class="form-group col-lg-3">
                                                     <label for="exampleInputUsername1">Training Category</label>
-                                                    <select class="form-control form-control-lg" id="exampleFormControlSelect1"
-                                                        value={value.training} name='training' onChange={onhandleChange} >
+                                                    <select class="form-control form-control-lg"
+                                                        id="exampleFormControlSelect1"
+                                                        value={value.TrainingCategory} name='TrainingCategory' onChange={onhandleChange} >
                                                         <option>Select</option>
                                                         <option>Local</option>
                                                         <option>International</option>
