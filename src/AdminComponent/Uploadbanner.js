@@ -3,7 +3,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { BASE_URL } from "./BaseUrl";
+import { BASE_URL ,IMG_URL  } from "./BaseUrl";
 import InnerHeader from "./InnerHeader";
 import { StyledDataGrid } from "./StyledDataGrid";
 //import FormControlLabel from '@mui/material/FormControlLabel';
@@ -23,9 +23,9 @@ const UploadBanner = () => {
   const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
   const [checked, setChecked] = React.useState([true, false]);
   const [paginationModel, setPaginationModel] = useState({
-          pageSize: 50,
-          page: 0,
-        });
+    pageSize: 50,
+    page: 0,
+  });
 
   const [value, setValue] = useState({
     titlename: "",
@@ -130,7 +130,7 @@ const UploadBanner = () => {
         });
         console.log(res.data);
         getVendorData();
-        
+
         setValue({ titlename: "", seqno: "" });
         setImage(null);
         document.getElementById("fileInput").value = "";
@@ -141,7 +141,7 @@ const UploadBanner = () => {
         );
         alert(
           "Error uploading banner: " +
-            (err.response ? err.response.data : "Something went wrong!")
+          (err.response ? err.response.data : "Something went wrong!")
         );
       }
     }
@@ -159,17 +159,17 @@ const UploadBanner = () => {
 
   const onhandleupload = (e) => setImage(e.target.files[0]);
 
-const roledata = {
-        role: Cookies.get(`role`),
-        pageid: 97,
-    };
+  const roledata = {
+    role: Cookies.get(`role`),
+    pageid: 97,
+  };
 
-    const dispatch = useDispatch();
-    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+  const dispatch = useDispatch();
+  const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
 
-    useEffect(() => {
-        dispatch(getRoleData(roledata));
-    }, []);
+  useEffect(() => {
+    dispatch(getRoleData(roledata));
+  }, []);
 
   const columns = [
     {
@@ -190,11 +190,11 @@ const roledata = {
       flex: 1,
       renderCell: (params) => (
         <>
-          {roleaccess > 2 &&<EditIcon
+          {roleaccess > 2 && <EditIcon
             style={{ cursor: "pointer" }}
             onClick={() => handleUpdate(params.row.id)}
           />}
-           {roleaccess > 3 &&<DeleteIcon
+          {roleaccess > 3 && <DeleteIcon
             style={{ color: "red", cursor: "pointer" }}
             onClick={() => handleClick(params.row.id)}
           />}
@@ -259,6 +259,16 @@ const roledata = {
                         />
                         <span className="text-danger">{error.seqno}</span>
                       </div>
+                      {uid?.file && (
+                        <div className="form-group col-lg-2" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                          <label>Preview</label>
+                          <img
+                            src={`${IMG_URL}/banner/${uid.file}`}
+                            alt="Preview"
+                            style={{ width: "100px", height: "100px", objectFit: "cover", border: "1px solid #ccc", borderRadius: "4px" }}
+                          />
+                        </div>
+                      )}
                     </div>
                     <button type="submit" className="btn btn-primary mr-2">
                       Submit
@@ -275,8 +285,8 @@ const roledata = {
               </div>
             </div>
             <div className="col-lg-12">
-              <div className="card" style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
-                <div className="card-body" style={ { border: "1px solid #dce4ec", height: "510px", overflow: "hidden"}}>
+              <div className="card" style={{ borderBottom: "2px solid #dce4ec", width: "100%" }}>
+                <div className="card-body" style={{ border: "1px solid #dce4ec", height: "510px", overflow: "hidden" }}>
                   <h4 className="card-title">View Banner Image</h4>
                   <StyledDataGrid
                     rows={rowsWithIds}
@@ -286,7 +296,7 @@ const roledata = {
                     pagination
                     paginationModel={paginationModel}
                     onPaginationModelChange={setPaginationModel}
-                    pageSizeOptions= {[50]}
+                    pageSizeOptions={[50]}
                     autoHeight={false}
                     disableColumnSelector
                     disableDensitySelector
@@ -298,7 +308,7 @@ const roledata = {
                     }}
                     slots={{
                       toolbar: GridToolbar
-                  }}
+                    }}
                     slotProps={{
                       toolbar: {
                         showQuickFilter: true,

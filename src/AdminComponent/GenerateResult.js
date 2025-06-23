@@ -191,10 +191,20 @@ const GenerateResult = () => {
                     enddate: value.enddate,
                 };
 
-                axios.post(`${BASE_URL}/add_generateresult`, data).then((res) => {
-                    setLoading(false);
-                    alert("Data Added Successfully");
-                });
+                axios.post(`${BASE_URL}/add_generateresult`, data)
+                    .then((res) => {
+                        setLoading(false);
+                        alert("Data Added Successfully");
+                        window.location.href = "/generateresult";
+                    })
+                    .catch((err) => {
+                        setLoading(false);
+                        if (err.response && err.response.status === 409) {
+                            alert("Batch Code Already Generated");
+                        } else {
+                            alert("Something went wrong. Please try again.");
+                        }
+                    });
 
             } else {
                 setLoading(true);
@@ -218,11 +228,10 @@ const GenerateResult = () => {
                     alert("Data Updated Successfully");
                     getchilddata()
                 });
-
             }
-
         }
     };
+
 
     const onhandleChange = (e) => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }));

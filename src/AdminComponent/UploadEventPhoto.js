@@ -3,7 +3,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { BASE_URL } from "./BaseUrl";
+import { BASE_URL, IMG_URL } from "./BaseUrl";
 import InnerHeader from "./InnerHeader";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
@@ -25,10 +25,13 @@ const UploadEventPhoto = () => {
   const [images, setImages] = useState([]);
   const [imageNames, setImageNames] = useState([]);
   const [eventPhotoId, setEventPhotoId] = useState(null);
+  const [isEditing, setIsEditing] = useState(false); // true = edit mode
+  const [existingImages, setExistingImages] = useState([]); // preview image urls
+
   const [paginationModel, setPaginationModel] = useState({
-          pageSize: 50,
-          page: 0,
-        });
+    pageSize: 50,
+    page: 0,
+  });
 
   const [value, setValue] = useState({
     event: "" || uid.event,
@@ -91,6 +94,30 @@ const UploadEventPhoto = () => {
       .then((res) => {
         setUid(res.data[0]);
         console.log(res.data, "update");
+
+        // ✅ Apply Edit Mode Logic Below
+        setIsEditing(true); // enable edit mode
+        setIsModalOpen(false); // prevent modal on edit
+
+        // Pre-fill form fields
+        setValue({
+          event: res.data[0].event || "",
+          eventheader: res.data[0].eventheader || "",
+        });
+
+        // Set CKEditor content
+        setSpecification(res.data[0].description || "");
+
+        // ✅ Load image preview array (adjust key as needed)
+        // Assuming image URLs are in a comma-separated string or array
+        const images = res.data[0].imageUrls; // Update this key if needed
+        if (images) {
+          // If it's a comma-separated string from DB
+          const imageArray = typeof images === "string" ? images.split(",") : images;
+          setExistingImages(imageArray);
+        } else {
+          setExistingImages([]);
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -119,7 +146,7 @@ const UploadEventPhoto = () => {
   };
 
   const handleSubmit = (e) => {
-    
+
     e.preventDefault();
     const formData = new FormData();
     const data = {
@@ -150,7 +177,7 @@ const UploadEventPhoto = () => {
   };
 
   const uploadImages = () => {
-    const formData = new FormData();    
+    const formData = new FormData();
     formData.append('event_photo_id', eventPhotoId);
     images.forEach((image, index) => {
       formData.append(`image`, image);
@@ -165,7 +192,7 @@ const UploadEventPhoto = () => {
         setIsModalOpen(false);
         getEmployeeData();
         setImages([]); // Clear the selected images
-        setImageNames([]); 
+        setImageNames([]);
       })
       .catch((err) => {
         console.log("Error uploading images:", err);
@@ -175,17 +202,17 @@ const UploadEventPhoto = () => {
   const onhandleChange = (e) => {
     setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
-const roledata = {
-        role: Cookies.get(`role`),
-        pageid: 95,
-    };
+  const roledata = {
+    role: Cookies.get(`role`),
+    pageid: 95,
+  };
 
-    const dispatch = useDispatch();
-    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+  const dispatch = useDispatch();
+  const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
 
-    useEffect(() => {
-        dispatch(getRoleData(roledata));
-    }, []);
+  useEffect(() => {
+    dispatch(getRoleData(roledata));
+  }, []);
 
   const columns = [
     { field: "index", headerName: "Id", type: "number", align: "center", headerAlign: "center", flex: 1, filterable: false },
@@ -206,7 +233,7 @@ const roledata = {
       flex: 1,
       renderCell: (params) => (
         <>
-          {roleaccess > 2 &&<EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />}
+          {roleaccess > 2 && <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />}
           {roleaccess > 3 && <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />}
         </>
       ),
@@ -233,7 +260,13 @@ const roledata = {
                     <div class="row">
                       <div class="form-group col-lg-4">
                         <label for="exampleFormControlSelect1">Select Event Type</label>
-                        <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.event} onChange={onhandleChange} name="event">
+                        <select
+                          class="form-control form-control-lg"
+                          id="exampleFormControlSelect1"
+                          value={value.event}
+                          onChange={onhandleChange}
+                          name="event"
+                        >
                           <option>Select</option>
                           <option>Convocation</option>
                           <option>Seminar</option>
@@ -244,24 +277,62 @@ const roledata = {
                       </div>
                       <div class="form-group col-lg-4">
                         <label for="exampleInputUsername1">Event Header</label>
-                        <input type="text" class="form-control" id="exampleInputUsername1" value={value.eventheader} name="eventheader" onChange={onhandleChange} />
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="exampleInputUsername1"
+                          value={value.eventheader}
+                          name="eventheader"
+                          onChange={onhandleChange}
+                        />
                       </div>
                       <div class="form-group col-lg-12">
                         <label for="exampleTextarea1">Event Description</label>
                         <CKEditor
                           editor={ClassicEditor}
                           data={uid.specification}
-                          onReady={(editor) => { editor.ui.view.editable.element.style.minHeight = "300px"; }}
-                          onChange={(event, editor) => { setSpecification(editor.getData()); }}
+                          onReady={(editor) => {
+                            editor.ui.view.editable.element.style.minHeight = "300px";
+                          }}
+                          onChange={(event, editor) => {
+                            setSpecification(editor.getData());
+                          }}
                         />
                       </div>
+
+                      {/* 🟡 Only show this block if editing */}
+                      {isEditing && (
+                        <>
+                          <div className="form-group col-lg-2" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                            <label>Preview</label>
+                            <img
+                              src={`${IMG_URL}/event/${uid.file}`}
+                              alt="Preview"
+                              style={{ width: "100px", height: "100px", objectFit: "cover", border: "1px solid #ccc", borderRadius: "4px" }}
+                            />
+                          </div>
+
+                          <div class="form-group col-lg-12">
+                            <label></label>
+                            <input
+                              type="file"
+                              multiple
+                              onChange={handleImageChange}
+                              className="form-control"
+                              style={{ border: "1px solid #ced4da", borderRadius: "5px" }}
+                            />
+                          </div>
+                        </>
+                      )}
                     </div>
+
                     <button type="submit" class="btn btn-primary mr-2">Submit</button>
                     <button type="button" onClick={() => { window.location.reload(); }} class="btn btn-light">Cancel</button>{" "}
                     <span className="text-danger"> *Save the event then upload the images</span>
                   </form>
 
-                  {isModalOpen && (
+                  {/* 🟢 Show modal only if inserting */}
+                  {!isEditing && isModalOpen && (
                     <div style={{
                       position: "fixed",
                       top: "50%",
@@ -276,13 +347,19 @@ const roledata = {
                       textAlign: "center",
                     }}>
                       <h5 style={{ marginBottom: "15px", fontWeight: "bold" }}>Upload Images</h5>
-                      <input type="file" multiple onChange={handleImageChange} className="form-control" style={{ border: "1px solid #ced4da", borderRadius: "5px", marginBottom: "15px", width: "100%" }} />
+                      <input
+                        type="file"
+                        multiple
+                        onChange={handleImageChange}
+                        className="form-control"
+                        style={{ border: "1px solid #ced4da", borderRadius: "5px", marginBottom: "15px", width: "100%" }}
+                      />
                       {imageNames.length > 0 && <ul>{imageNames.map((name, index) => (<li key={index}>{name}</li>))}</ul>}
                       <button onClick={uploadImages} className="btn btn-primary">Upload</button>
                     </div>
                   )}
 
-                  <div class="table-responsive" style={ { border: "1px solid #dce4ec", height: "510px", overflow: "hidden"}}>
+                  <div class="table-responsive" style={{ border: "1px solid #dce4ec", height: "510px", overflow: "hidden" }}>
                     <StyledDataGrid
                       rows={rowsWithIds}
                       columns={columns}
@@ -293,21 +370,20 @@ const roledata = {
                       disableColumnSelector
                       disableDensitySelector
                       pagination
-                                            paginationModel={paginationModel}
-                                            onPaginationModelChange={setPaginationModel}
-                                            pageSizeOptions= {[50]}
-                                            // autoHeight={false}
-                                            sx={{
-                                              height: 500, // Ensure enough height for pagination controls
-                                              '& .MuiDataGrid-footerContainer': {
-                                                justifyContent: 'flex-end',
-                                              },
-                                            }}
-                                            slotProps={{
-                                              toolbar: {
-                                                showQuickFilter: true,
-                                              },
-                                            }}
+                      paginationModel={paginationModel}
+                      onPaginationModelChange={setPaginationModel}
+                      pageSizeOptions={[50]}
+                      sx={{
+                        height: 500,
+                        '& .MuiDataGrid-footerContainer': {
+                          justifyContent: 'flex-end',
+                        },
+                      }}
+                      slotProps={{
+                        toolbar: {
+                          showQuickFilter: true,
+                        },
+                      }}
                     />
                   </div>
 
@@ -339,5 +415,4 @@ const roledata = {
     </div>
   );
 };
-
 export default UploadEventPhoto;

@@ -75,6 +75,14 @@ const StandardLecturePlan = () => {
   };
 
 
+  const formatdate = (dateStr) => {
+  if (!dateStr) return '';
+  const [year, month, day] = dateStr.split('-');
+  return `${day}-${month}-${year}`;
+};
+
+
+
   async function getfaculty() {
 
     axios.get(`${BASE_URL}/getfaculty`)
@@ -270,11 +278,11 @@ const StandardLecturePlan = () => {
     { field: "lecture_no", headerName: "Lecture No", width: 100 },
     { field: "subject", headerName: "Subject", width: 150 },
     { field: "subject_topic", headerName: "Subject Topics", width: 150 },
-    { field: "date", headerName: "Date", width: 100 },
+    { field: "date", headerName: "Date", width: 100 ,valueFormatter: (params) => formatdate(params.value),},
     { field: "starttime", headerName: "Start Time", width: 100 },
     { field: "endtime", headerName: "End Time", width: 100 },
     { field: "assignmentname", headerName: "Assignment", width: 100 },
-    { field: "assignment_date", headerName: "Assignment Date", width: 150 },
+    { field: "assignment_date", headerName: "Assignment Date", width: 150 ,valueFormatter: (params) => formatdate(params.value),},
     { field: "faculty_name", headerName: "Faculty Name", width: 100 },
     { field: "class_room", headerName: "Class Room", width: 100 },
     { field: "documents", headerName: "Documents", width: 150 },

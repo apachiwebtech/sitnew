@@ -8,7 +8,7 @@ import InnerHeader from './InnerHeader';
 import { StyledDataGrid } from "./StyledDataGrid";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux'; 
 import Cookies from 'js-cookie';
 import { getRoleData } from '../Store/Role/role-action';
 
@@ -17,49 +17,49 @@ const FestivalPhoto = () => {
     const [brand, setBrand] = useState([])
     const [vendordata, setVendorData] = useState([])
     const [uid, setUid] = useState([])
-    const [image , setImage] = useState()
+    const [image, setImage] = useState()
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [paginationModel, setPaginationModel] = useState({
-            pageSize: 50,
-            page: 0,
-          });
+        pageSize: 50,
+        page: 0,
+    });
     const [checked, setChecked] = React.useState([true, false]);
 
 
     const [value, setValue] = useState({
-        startdate : ""|| uid.startdate,
-        enddate : ""|| uid.enddate,
-        file : ""|| uid.file,
-        description : ""|| uid.description,
+        startdate: "" || uid.startdate,
+        enddate: "" || uid.enddate,
+        file: "" || uid.file,
+        description: "" || uid.description,
 
-        
+
 
 
     })
 
     useEffect(() => {
         setValue({
-            startdate : uid.startdate,
-            enddate : uid.enddate,
-            file : uid.file,
-            description :uid.description,
+            startdate: uid.startdate,
+            enddate: uid.enddate,
+            file: uid.file,
+            description: uid.description,
 
         })
     }, [uid])
 
-    
+
 
     const validateForm = () => {
         let isValid = true
         const newErrors = {}
 
 
-       if (!value.startdate) {
-        isValid = false;
-        newErrors.startdate = "Date is Required"
-       }
+        if (!value.startdate) {
+            isValid = false;
+            newErrors.startdate = "Date is Required"
+        }
         if (!value.enddate) {
             isValid = false;
             newErrors.enddate = "Date is Required"
@@ -86,12 +86,12 @@ const FestivalPhoto = () => {
     }
 
 
-    
+
     async function getEmployeeData() {
         const data = {
-            tablename : "awt_festival_photo"
+            tablename: "awt_festival_photo"
         }
-        axios.post(`${BASE_URL}/get_data`,data)
+        axios.post(`${BASE_URL}/get_data`, data)
             .then((res) => {
                 console.log(res.data)
                 setVendorData(res.data)
@@ -126,14 +126,14 @@ const FestivalPhoto = () => {
 
     const handleUpdate = (id) => {
         const data = {
-            u_id : id,
-            tablename : "awt_festival_photo"
+            u_id: id,
+            tablename: "awt_festival_photo"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
                 setUid(res.data[0])
 
-                console.log(res.data , "update")
+                console.log(res.data, "update")
             })
             .catch((err) => {
                 console.log(err)
@@ -143,7 +143,7 @@ const FestivalPhoto = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename : "awt_festival_photo"
+            tablename: "awt_festival_photo"
         }
 
         axios.post(`${BASE_URL}/delete_data`, data)
@@ -163,43 +163,35 @@ const FestivalPhoto = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-    if(validateForm()){
-        // const data = {
-            
-        // startdate : value.startdate,
-        // enddate : value.enddate,
-        // file : value.file,
-        // description :value.description,
-        // uid : uid.id
-        // }
+        if (validateForm()) {
 
-         const formdata = new FormData()
+            const formdata = new FormData()
 
-         formdata.append('image' , image)
-         formdata.append('startdate' , value.startdate)
-         formdata.append('enddate', value.enddate)
-         formdata.append('description', value.description)
-         formdata.append('uid', uid.id)
-     
+            formdata.append('image', image)
+            formdata.append('startdate', value.startdate)
+            formdata.append('enddate', value.enddate)
+            formdata.append('description', value.description)
+            formdata.append('uid', uid.id)
 
-        axios.post(`${BASE_URL}/add_festival_photo`, formdata)
-            .then((res) => {
-               console.log(res)
-               getEmployeeData()
-               
-               setValue({
-                startdate: "",
-                enddate: "",
-                file: "",
-                description: "",
-            });
-            setImage(null);
 
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
+            axios.post(`${BASE_URL}/add_festival_photo`, formdata)
+                .then((res) => {
+                    console.log(res)
+                    getEmployeeData()
+
+                    setValue({
+                        startdate: "",
+                        enddate: "",
+                        image: "",
+                        description: "",
+                    });
+                    setImage(null);
+                    setUid([]);
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        }
 
     }
 
@@ -208,15 +200,15 @@ const FestivalPhoto = () => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
 
- 
-    
-   const onhandleupload = (e) =>{
-   const image = e.target.files[0]
-   setImage(image)
-   }
 
 
-   const roledata = {
+    const onhandleupload = (e) => {
+        const image = e.target.files[0]
+        setImage(image)
+    }
+
+
+    const roledata = {
         role: Cookies.get(`role`),
         pageid: 91,
     };
@@ -237,45 +229,45 @@ const FestivalPhoto = () => {
             headerAlign: 'center',
             flex: 1,
             filterable: false,
-                                              
+
         },
         {
             field: "startdate",
             headerName: "Start Date",
             flex: 2,
             renderCell: (params) =>
-              params.value
-                ? /^\d{2}-\d{2}-\d{4}$/.test(params.value) // Check if already in DD-MM-YYYY format
-                  ? params.value
-                  : new Date(params.value).toLocaleDateString("en-GB") // Convert valid dates
-                : "",
-          },
-          
+                params.value
+                    ? /^\d{2}-\d{2}-\d{4}$/.test(params.value) // Check if already in DD-MM-YYYY format
+                        ? params.value
+                        : new Date(params.value).toLocaleDateString("en-GB") // Convert valid dates
+                    : "",
+        },
+
         {
             field: "enddate",
             headerName: "End Date",
             flex: 2,
             renderCell: (params) =>
-              params.value
-                ? /^\d{2}-\d{2}-\d{4}$/.test(params.value) // Check if already in DD-MM-YYYY format
-                  ? params.value
-                  : new Date(params.value).toLocaleDateString("en-GB") // Convert valid dates
-                : "",
-          },
-          
-        { field: 'description', headerName: 'Description', flex: 2},
-        {
-            field: 'file',
-            headerName: 'Image',
-            flex: 2,
-            renderCell: (params) => (
-                <img 
-                    src={`${IMG_URL}/${params.row.file}`} 
-                    alt="Festival photo" 
-                    style={{ width: '50px',padding:'5px', objectFit: 'cover' }}
-                />
-            ),
+                params.value
+                    ? /^\d{2}-\d{2}-\d{4}$/.test(params.value) // Check if already in DD-MM-YYYY format
+                        ? params.value
+                        : new Date(params.value).toLocaleDateString("en-GB") // Convert valid dates
+                    : "",
         },
+
+        { field: 'description', headerName: 'Description', flex: 2 },
+        // {
+        //     field: 'file',
+        //     headerName: 'Image',
+        //     flex: 2,
+        //     renderCell: (params) => (
+        //         <img
+        //             src={`${IMG_URL}/${params.row.file}`}
+        //             alt="Festival photo"
+        //             style={{ width: '50px', padding: '5px', objectFit: 'cover' }}
+        //         />
+        //     ),
+        // },
         {
             field: 'actions',
             type: 'actions',
@@ -284,8 +276,8 @@ const FestivalPhoto = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        {roleaccess > 2 &&  <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />}
-                         {roleaccess > 3 && <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />}
+                        {roleaccess > 2 && <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />}
+                        {roleaccess > 3 && <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />}
                     </>
                 )
             }
@@ -310,50 +302,61 @@ const FestivalPhoto = () => {
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
 
-                                            <div class="form-group col-lg-2" style={{ display: "flex", flexDirection: "column"}}>
+                                            <div class="form-group col-lg-2" style={{ display: "flex", flexDirection: "column" }}>
                                                 <label for="exampleInputUsername1">Start Date<span className="text-danger">*</span></label>
                                                 <DatePicker
-        selected={value.startdate ? new Date(value.startdate) : null}
-        onChange={(date) => onhandleChange({ target: { name: "startdate", value: date.toISOString().split("T")[0] } })}
-        className="form-control"
-        id="startdate"
-        placeholderText="Select Start Date"
-        dateFormat="dd-MM-yyyy"
-        minDate={new Date()} // Prevents past dates
-      />
+                                                    selected={value.startdate ? new Date(value.startdate) : null}
+                                                    onChange={(date) => onhandleChange({ target: { name: "startdate", value: date.toISOString().split("T")[0] } })}
+                                                    className="form-control"
+                                                    id="startdate"
+                                                    placeholderText="Select Start Date"
+                                                    dateFormat="dd-MM-yyyy"
+                                                    // minDate={new Date()} 
+                                                />
                                                 {<span className='text-danger'> {error.startdate} </span>}
                                             </div>
 
-                                            <div class="form-group col-lg-2" style={{ display: "flex", flexDirection: "column"}}>
+                                            <div class="form-group col-lg-2" style={{ display: "flex", flexDirection: "column" }}>
                                                 <label for="exampleInputUsername1">End Date <span className="text-danger">*</span></label>
                                                 <DatePicker
-        selected={value.enddate ? new Date(value.enddate) : null}
-        onChange={(date) => onhandleChange({ target: { name: "enddate", value: date.toISOString().split("T")[0] } })}
-        className="form-control"
-        id="enddate"
-        placeholderText="Select End Date"
-        dateFormat="dd-MM-yyyy"
-        minDate={value.startdate ? new Date(value.startdate) : new Date()} // Prevents selecting before start date
-      />
+                                                    selected={value.enddate ? new Date(value.enddate) : null}
+                                                    onChange={(date) => onhandleChange({ target: { name: "enddate", value: date.toISOString().split("T")[0] } })}
+                                                    className="form-control"
+                                                    id="enddate"
+                                                    placeholderText="Select End Date"
+                                                    dateFormat="dd-MM-yyyy"
+                                                    // minDate={value.startdate ? new Date(value.startdate) : new Date()}   
+                                                />
                                                 {<span className='text-danger'> {error.enddate} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1"></label>
+                                                <label for="exampleInputUsername1">Image</label>
                                                 <input type="file" class="form-control" id="exampleInputUsername1"
-                                                 value={value.image} name='file' onChange={onhandleupload} />
-                                                
+                                                    value={value.image} name='file' onChange={onhandleupload} />
+
                                             </div>
 
-                                            <div class="form-group col-lg-6">
+                                            <div class="form-group col-lg-4">
                                                 <label for="exampleTextarea1">Description<span className='text-danger'>*</span></label>
-                                                <textarea class="form-control" id="exampleTextarea1" 
-                                                value={value.description} placeholder="Description" 
-                                                name='description' onChange={onhandleChange}></textarea>
+                                                <textarea class="form-control" id="exampleTextarea1"
+                                                    value={value.description} placeholder="Description"
+                                                    name='description' onChange={onhandleChange}></textarea>
                                                 {<span className='text-danger'> {error.description} </span>}
                                             </div>
 
-                                            
+                                            {uid?.file && (
+                                                <div className="form-group col-lg-2" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                                                    <label>Preview</label>
+                                                    <img
+                                                        src={`${IMG_URL}/festival/${uid.file}`}
+                                                        alt="Preview"
+                                                        style={{ width: "100px", height: "100px", objectFit: "cover", border: "1px solid #ccc", borderRadius: "4px" }}
+                                                    />
+                                                </div>
+                                            )}
+
+
 
                                         </div>
 
@@ -362,7 +365,7 @@ const FestivalPhoto = () => {
                                         <button type='button' onClick={() => {
                                             window.location.reload()
                                         }} class="btn btn-light">Cancel</button>
-                                       
+
                                     </form>
 
                                 </div>
@@ -371,14 +374,14 @@ const FestivalPhoto = () => {
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <div className='d-flex justify-content-between' style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
+                                    <div className='d-flex justify-content-between' style={{ borderBottom: "2px solid #dce4ec", width: "100%" }}>
                                         <div>
                                             <h4 class="card-title">View Festival Photos</h4>
                                         </div>
 
                                     </div>
 
-                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "hidden"}}>
+                                    <div style={{ borderLeft: "1px solid #dce4ec", height: "510px", overflow: "hidden" }}>
                                         <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
@@ -390,21 +393,21 @@ const FestivalPhoto = () => {
                                             pagination
                                             paginationModel={paginationModel}
                                             onPaginationModelChange={setPaginationModel}
-                                            pageSizeOptions= {[50]}
+                                            pageSizeOptions={[50]}
                                             autoHeight={false}
                                             sx={{
-                                              height: 500, // Ensure enough height for pagination controls
-                                              '& .MuiDataGrid-footerContainer': {
-                                                justifyContent: 'flex-end',
-                                              },
+                                                height: 500, // Ensure enough height for pagination controls
+                                                '& .MuiDataGrid-footerContainer': {
+                                                    justifyContent: 'flex-end',
+                                                },
                                             }}
                                             slots={{
                                                 toolbar: GridToolbar
                                             }}
                                             slotProps={{
-                                              toolbar: {
-                                                showQuickFilter: true,
-                                              },
+                                                toolbar: {
+                                                    showQuickFilter: true,
+                                                },
                                             }}
                                         />
 
@@ -417,8 +420,8 @@ const FestivalPhoto = () => {
                                         )}
                                     </div>
 
-                                    
-                                      {/* <div>
+
+                                    {/* <div>
                                       <button type='button' onClick={() => {
                                             window.location.reload()
                                         }} class="btn btn-primary mr-2">Excel</button>
