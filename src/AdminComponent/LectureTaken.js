@@ -51,6 +51,7 @@ const LectureTaken = () => {
             topicdescuss: '',
             nextplanning: '',
             In_Time: "",
+            endtime : "",
         })
 
 
@@ -179,7 +180,7 @@ const LectureTaken = () => {
     useEffect(() => {
         gettakedata()
         getbatch()
-        getlecture()
+        // getlecture()
     }, [])
 
 
@@ -188,13 +189,15 @@ const LectureTaken = () => {
 
         setBatchid(id)
 
+        console.log(id , 'hbdshg')
+
         const data = {
-            batch_id: id,
+            batch_id: id ,
             AnnulBatch: id
         }
 
 
-        if (id) {
+        if (id ) {
             try {
                 const res = await axios.post(`${BASE_URL}/getbatchwiselecture`, data);
                 SetLecture(res.data);
@@ -202,14 +205,7 @@ const LectureTaken = () => {
             } catch (err) {
                 console.error("Error fetching data:", err);
             }
-        } else {
-            try {
-                const res = await axios.post(`${BASE_URL}/get_data`, { tablename: "Batch_Lecture_Master", columnname: "id,subject_topic" });
-                SetLecture(res.data);
 
-            } catch (err) {
-                console.error("Error fetching data:", err);
-            }
         }
 
 
@@ -222,16 +218,7 @@ const LectureTaken = () => {
             } catch (err) {
                 console.error("Error fetching data:", err);
             }
-        } else {
-            try {
-                const res = await axios.post(`${BASE_URL}/get_data`, { tablename: "assignmentstaken", columnname: "id,assignmentname" });
-                Setassign(res.data);
-
-            } catch (err) {
-                console.error("Error fetching data:", err);
-            }
         }
-
 
         if (id) {
             try {
@@ -276,16 +263,19 @@ const LectureTaken = () => {
             .then((res) => {
                 setLecturedata(res.data)
                 const data = res.data[0]
-                setValue({
-                    lecturedate: data.date,
-                    starttime: data.starttime,
-                    endtime: data.endtime,
-                    faculty_name: data.faculty_name,
-                    assignmentadate: data.assignment_date,
-                    assignment: data.assignment,
-                    test: data.unit_test,
+                // setValue({
+                //     lecturedate: data.date || '',
+                //     starttime: data.starttime || '',
+                //     endtime: data.endtime || '',
+                //     faculty_name: data.faculty_name || '',
+                //     assignmentadate: data.assignment_date || '',
+                //     assignment: data.assignment || '',
+                //     test: data.unit_test || '',
 
-                })
+                // })
+                setValue(data)
+                console.log(value.endtime,'date ');
+
             })
     }
 
@@ -316,7 +306,7 @@ const LectureTaken = () => {
         Setassignid(data[0].Assignment_Id)
         setLectureid(data[0].Lecture_Id)
         setUid(data[0])
-
+        getlecture(data[0].Batch_Id)
         setValue(prevState => ({
             ...prevState,
             course: data[0].Course_Id,
@@ -666,7 +656,8 @@ const LectureTaken = () => {
                                                             {/* <input type="time" class="form-control" id="exampleInputUsername1" value={value.lectureto}
                                                                 name='lectureto' onChange={onhandleChange} /> */}
 
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" name='endtime' value={value.endtime} onChange={onhandleChange}  >
+                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" name='endtime' value={value.endtime0} onChange={onhandleChange}  >
+
 
                                                                 <option>Select Time</option>
                                                                 {time.map((item) => {
@@ -679,12 +670,14 @@ const LectureTaken = () => {
 
                                                             </select>
 
+
+
                                                         </div>
 
                                                         <div class="form-group col-lg-2">
                                                             <label for="exampleFormControlSelect1">Faculty</label>
-                                                            <select class="form-control" id="exampleFormControlSelect1" value={value.faculty}
-                                                                name='faculty' onChange={onhandleChange}>
+                                                            <select class="form-control" id="exampleFormControlSelect1" value={value.faculty_name}
+                                                                name='faculty_name' onChange={onhandleChange}>
                                                                 <option>--Select Faculty--</option>
                                                                 {faculty.map((item) => {
                                                                     return (
