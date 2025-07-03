@@ -30,6 +30,7 @@ const AddFeesDetails = () => {
     const [feesDetailsList, setFeesDetailsList] = useState([]);
     const [isEdit, setIsEdit] = useState(false);
     const [FeesDetailsById, setFeesDetailsById] = useState({});
+    const [debit, setDebit] = useState({});
 
     const [formState, setFormState] = useState({
         Student_Name: "",
@@ -56,7 +57,7 @@ const AddFeesDetails = () => {
     });
 
 
-    const debit = Number(formState.Fees_Full_Payment || 0);
+    // const debit = Number(formState.Fees_Full_Payment || 0);
     // const debit = feesDetailsList.reduce((acc, item) => {
     //     const value = item.TypeR === "D" ? item.Amount: 0;
 
@@ -245,6 +246,10 @@ const AddFeesDetails = () => {
                 Fees_Full_Payment: data.Fees_Full_Payment || "",
 
             }));
+
+            setDebit(data.Fees_Full_Payment || 0);
+
+
         } catch (err) {
             console.log("getStudentDetails err", err);
         }

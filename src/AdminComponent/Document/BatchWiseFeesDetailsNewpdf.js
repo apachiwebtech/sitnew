@@ -61,10 +61,16 @@ export const BatchWiseFeesDetailsNewpdf = ({ batchwisefee }) => {
     console.log(batchwisefee)
 
     const data = batchwisefee
+
+    const Batch_code = data[0].Batch_code;
+    const Course_Name = data[0].Course_Name;    
+    const SDate = formatdate(data[0].SDate);
+    const EDate = formatdate(data[0].EDate);
     return (
         <Document>
             {chunkArray(data, 32).map((chunk, pageIndex) => (
                 <Page size="A4" style={{ padding: 30, fontSize: 10 }}>
+                    {console.log(chunk , "chiu")}
 
                     <View style={{ textAlign: "left", marginLeft: "15px" }}>
                         <Text style={{
@@ -107,7 +113,7 @@ export const BatchWiseFeesDetailsNewpdf = ({ batchwisefee }) => {
                                     fontFamily: 'Poppins',
                                     marginLeft: "25px"
                                 }}>
-                                    Training Programme :
+                                    Training Programme : {Course_Name ? Course_Name : 'N/A'}
                                 </Text>
                             </View>
                             <View style={{
@@ -119,7 +125,7 @@ export const BatchWiseFeesDetailsNewpdf = ({ batchwisefee }) => {
                                     fontFamily: 'Poppins',
                                     marginLeft: "40%"
                                 }}>
-                                    Batch Start Date :
+                                    Batch Start Date : {SDate ? SDate : 'N/A'}
                                 </Text>
                             </View>
                         </View>
@@ -139,7 +145,7 @@ export const BatchWiseFeesDetailsNewpdf = ({ batchwisefee }) => {
                                     fontFamily: 'Poppins',
                                     marginLeft: "25px"
                                 }}>
-                                    Batch Code :
+                                    Batch Code : {Batch_code ? Batch_code : 'N/A'}
                                 </Text>
                             </View>
                             <View style={{
@@ -151,7 +157,7 @@ export const BatchWiseFeesDetailsNewpdf = ({ batchwisefee }) => {
                                     fontFamily: 'Poppins',
                                     marginLeft: "40%"
                                 }}>
-                                    Batch End Date :
+                                    Batch End Date :  {EDate ? EDate : 'N/A'}
                                 </Text>
                             </View>
                         </View>
@@ -240,6 +246,9 @@ export const BatchWiseFeesDetailsNewpdf = ({ batchwisefee }) => {
 
 
                         {chunk.map((item, index) => {
+
+                            const RemainingAmount = item.Fees_Full_Payment - item.Total_Amt;
+
                             return (
                                 <View style={{
                                     width: "100%",
@@ -289,7 +298,7 @@ export const BatchWiseFeesDetailsNewpdf = ({ batchwisefee }) => {
                                             fontSize: 8,
                                             fontFamily: 'Poppins',
                                             fontWeight: 600
-                                        }}>{item.Amount}</Text>
+                                        }}>{item.Fees_Full_Payment}</Text>
                                     </View>
                                     <View style={{
                                         width: "14.66%",
@@ -316,7 +325,7 @@ export const BatchWiseFeesDetailsNewpdf = ({ batchwisefee }) => {
                                             fontSize: 8,
                                             fontFamily: 'Poppins',
                                             fontWeight: 600
-                                        }}>{item.UnPaid_Amt}</Text>
+                                        }}>{RemainingAmount}</Text>
                                     </View>
                                 </View>
                             )

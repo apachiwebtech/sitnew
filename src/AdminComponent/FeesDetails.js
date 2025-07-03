@@ -359,8 +359,7 @@ const FeesDetails = () => {
                                                                     name='amounttype' onChange={onhandleChange}>
                                                                     <option>All</option>
 
-                                                                    
-
+                                                                
                                                                 </select>
                                                             </div>
 
