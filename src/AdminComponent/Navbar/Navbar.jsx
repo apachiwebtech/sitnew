@@ -38,7 +38,6 @@ const NavbarWithDropdowns = () => {
                                 <li><Link className="dropdown-item" to="/bank">Bank</Link></li>
                                 <li><Link className="dropdown-item" to="/feesnotes">Fees Notes</Link></li>
                                 <li><Link className="dropdown-item" to="/holiday">Holiday</Link></li>
-
                                 <li><Link className="dropdown-item" to="/location">Location</Link></li>
                                 <li><Link className="dropdown-item" to={`/onefieldform/${"awt_extention"}/${"Extension"}`}>Extention</Link></li>
                                 <li><Link className="dropdown-item" to={`/onefieldform/${"awt_rack"}/${"Rack"}`}>Rack</Link></li>
@@ -46,6 +45,12 @@ const NavbarWithDropdowns = () => {
                                 <li><Link className="dropdown-item" to={`/twofieldform/${"awt_vendor_type"}/${"Category"}/${"Comments"}/${"text"}/${"Vendor Type"}`}>Vendor Type Master</Link></li>
                                 <li><Link className="dropdown-item" to="/vendormaster">Vendor Master</Link></li>
                                 <li><Link className="dropdown-item" to={`/threefieldform/${"awt_material_price"}/${"Item"}/${"Vendor"}/${"Price"}/${"text"}/${"Material Price"}`}>Material Price</Link></li>
+                                <li><Link className="dropdown-item" to={`/onefieldform/${"awt_tds"}/${"TDS"}`}>TDS</Link></li>
+                                <li><Link className="dropdown-item" to="/taxmaster">Tax</Link></li>
+                                <li><Link className="dropdown-item" to="/salarymaster">Salary Master</Link></li>
+                                <li><Link className="dropdown-item" to="/projectmaster">Project Master</Link></li>
+                                <li><Link className="dropdown-item" to="/mlwfmaster">MLWF Master</Link></li>
+                                <li><Link className="dropdown-item" to="/qmsmaster">QMA Master</Link></li>
                             </ul>
                         </li>
                         <li className="nav-item dropdown">
@@ -225,8 +230,7 @@ const NavbarWithDropdowns = () => {
                             </Link>
                             <ul className="dropdown-menu" aria-labelledby="dropdownMenu9">
                                 <li><Link className="dropdown-item" to="/employeeprofessiontaxmaster">Employee Profession Tax</Link></li>
-                                <li><Link className="dropdown-item" to={`/onefieldform/${"awt_tds"}/${"TDS"}`}>TDS</Link></li>
-                                <li><Link className="dropdown-item" to="/taxmaster">Tax</Link></li>
+
                                 <li><Link className="dropdown-item" to={`/onefieldform/${"sit_account_head"}/${"Account Head"}`}>Account Head</Link></li>
                                 <li><Link className="dropdown-item" to="/assets">Assets</Link></li>
                                 <li><Link className="dropdown-item" to={`/onefieldform/${"awt_asset_category"}/${"Asset Category"}`}>Asset Category</Link></li>
@@ -238,11 +242,7 @@ const NavbarWithDropdowns = () => {
                                 <li><Link className="dropdown-item" to="/materialconsumption">Material Consumption</Link></li>
                                 <li><Link className="dropdown-item" to="/employeesalary">Employee Salary</Link></li>
                                 <li><Link className="dropdown-item" to="/addemployeeattendance">Employee Attendance</Link></li>
-                                <li><Link className="dropdown-item" to="/salarymaster">Salary Master</Link></li>
                                 <li><Link className="dropdown-item" to="/employeeloan">Employee Loan</Link></li>
-                                <li><Link className="dropdown-item" to="/projectmaster">Project Master</Link></li>
-                                <li><Link className="dropdown-item" to="/mlwfmaster">MLWF Master</Link></li>
-                                <li><Link className="dropdown-item" to="/qmsmaster">QMA Master</Link></li>
                                 <li><Link className="dropdown-item" to="/batchleft">Batch Left</Link></li>
                                 <li><Link className="dropdown-item" to="/batchmoving">Batch Moving</Link></li>
                                 <li><Link className="dropdown-item" to="/batchtransfer">Batch Transfer</Link></li>
