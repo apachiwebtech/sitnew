@@ -76,7 +76,6 @@ import PerssonalInfo from "./AdminComponent/PerssonalInfo.js";
 import AcademicQualification from "./AdminComponent/AcademicQualification.js";
 import CompanyInfo from "./AdminComponent/CompanyInfo.js";
 import Discussion from "./AdminComponent/Discussion.js";
-import Documents from "./AdminComponent/Documents.js";
 import AdmissionListing from "./AdminComponent/AdmissionListing.js";
 import Admission from "./AdminComponent/Admission.js";
 import AddCorporateInquiry from "./AdminComponent/AddCorporateInquiry.js";
@@ -234,6 +233,8 @@ import { BatchWiseFeesDetailsNewpdf } from "./AdminComponent/Document/BatchWiseF
 import StudentListR from "./AdminComponent/Document/StudentListR.js";
 import InquiryCorporateAdd from "./AdminComponent/InquiryCorporateAdd.js";
 
+import Documents from "./AdminComponent/Document/Documents.js";
+import PlacedStudents from "./AdminComponent/Document/PlacedStudents.js";
 
 
 
@@ -574,12 +575,14 @@ const Router = createBrowserRouter([
                 element: (
                     <div style={{ width: "100vw", height: "100vh" }}>
                         <PDFViewer style={{ width: "100%", height: "100%" }}>
-                            {/* <Voucher/> */}
-                            {/* <ID_CardDoc/> */}
-                            {/* <StudentLabelDoc/> */}
-                            {/* <AnalysisDoc/> */}
-                            {/* <BatchWiseFeesDetailsNewpdf/> */}
-                            <StudentListR />
+                           {/* <Voucher/> */}
+                           {/* <ID_CardDoc/> */}
+                           {/* <StudentLabelDoc/> */}
+                           {/* <AnalysisDoc/> */}
+                           {/* <BatchWiseFeesDetailsNewpdf/> */}
+                           {/* <StudentListR/> */}
+                           {/* <Documents/> */}
+                           <PlacedStudents/>
                         </PDFViewer>
                     </div>
                 ),
