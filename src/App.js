@@ -232,6 +232,7 @@ import StudentReports from "./AdminComponent/Document/StudentReports.js";
 import Forcardlist from "./AdminComponent/Document/Forcardlist.js";
 import { BatchWiseFeesDetailsNewpdf } from "./AdminComponent/Document/BatchWiseFeesDetailsNewpdf.js";
 import StudentListR from "./AdminComponent/Document/StudentListR.js";
+import InquiryCorporateAdd from "./AdminComponent/InquiryCorporateAdd.js";
 
 
 
@@ -467,8 +468,8 @@ const Router = createBrowserRouter([
                 element: <AddFacultyMaster />,
             },
             {
-              path: "/facultyexperience/:facultyid",
-              element: <FacultyExperience />,
+                path: "/facultyexperience/:facultyid",
+                element: <FacultyExperience />,
             },
             {
                 path: "/facultydiscussion/:facultyid",
@@ -573,12 +574,12 @@ const Router = createBrowserRouter([
                 element: (
                     <div style={{ width: "100vw", height: "100vh" }}>
                         <PDFViewer style={{ width: "100%", height: "100%" }}>
-                           {/* <Voucher/> */}
-                           {/* <ID_CardDoc/> */}
-                           {/* <StudentLabelDoc/> */}
-                           {/* <AnalysisDoc/> */}
-                           {/* <BatchWiseFeesDetailsNewpdf/> */}
-                           <StudentListR/>
+                            {/* <Voucher/> */}
+                            {/* <ID_CardDoc/> */}
+                            {/* <StudentLabelDoc/> */}
+                            {/* <AnalysisDoc/> */}
+                            {/* <BatchWiseFeesDetailsNewpdf/> */}
+                            <StudentListR />
                         </PDFViewer>
                     </div>
                 ),
@@ -645,6 +646,10 @@ const Router = createBrowserRouter([
             {
                 path: "/inquirycorporate",
                 element: <InquiryCorporate />,
+            },
+            {
+                path: "/inquirycorporate/:inquiryid",
+                element: <InquiryCorporateAdd />,
             },
             {
                 path: "/addcorporateinquiry/:corpid",
@@ -1092,7 +1097,7 @@ function WebApp() {
     useEffect(() => {
         accessSession(navigate);
 
-        return () => {};
+        return () => { };
     }, []);
 
     useEffect(() => {

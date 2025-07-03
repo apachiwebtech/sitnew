@@ -15,12 +15,12 @@ import { getRoleData } from '../Store/Role/role-action';
 
 function CustomToolbar() {
     return (
-      <GridToolbarContainer>
-        {/* <GridToolbarExport /> */}
-        <GridToolbarFilterButton />
-      </GridToolbarContainer>
+        <GridToolbarContainer>
+            {/* <GridToolbarExport /> */}
+            <GridToolbarFilterButton />
+        </GridToolbarContainer>
     );
-  }
+}
 
 const InquiryCorporate = () => {
 
@@ -33,46 +33,46 @@ const InquiryCorporate = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true)
     const [paginationModel, setPaginationModel] = useState({
-            pageSize: 50,
-            page: 0,
-          });
+        pageSize: 50,
+        page: 0,
+    });
 
 
-  async function getlisting(){
-    axios.post(`${BASE_URL}/getcorporateinquiry`)
-    .then((res)=>{
-        setData(res.data)
-        setLoading(false)
+    async function getlisting() {
+        axios.post(`${BASE_URL}/getcorporateinquiry`)
+            .then((res) => {
+                setData(res.data)
+                setLoading(false)
+            })
+    }
+
+
+    const [value, setValue] = useState({
+        firstname: '',
+        gender: '',
+        dob: '',
+        mobile: '',
+        whatsapp: '',
+        email: '',
+        nationality: '',
+        discussion: '',
+        country: '',
+        InquiryDate: '',
+        modeEnquiry: '',
+        advert: '',
+        programmeEnquired: '',
+        selectedProgramme: '',
+        category: '',
+        batch: '',
+        qualification: '',
+        descipline: '',
+        percentage: '',
     })
-  }
-  
-
-  const [value, setValue] = useState({
-    firstname: '',
-    gender: '',
-    dob: '',
-    mobile: '',
-    whatsapp: '',
-    email: '',
-    nationality: '',
-    discussion: '',
-    country: '',
-    InquiryDate: '',
-    modeEnquiry: '',
-    advert: '',
-    programmeEnquired: '',
-    selectedProgramme: '',
-    category: '',
-    batch: '',
-    qualification: '',
-    descipline: '',
-    percentage: '',
-})
 
 
     useEffect(() => {
 
-     getlisting()
+        getlisting()
         setError({})
         setUid([])
     }, [])
@@ -116,19 +116,19 @@ const InquiryCorporate = () => {
     }
 
 
- const handleswitchchange = (value,Inquiry_Id) =>{
-    const newval = value == 0 ? 1 : 0
+    const handleswitchchange = (value, Inquiry_Id) => {
+        const newval = value == 0 ? 1 : 0
 
-    axios.post(`${BASE_URL}/data_status` , {status : newval, Inquiry_Id : Inquiry_Id, table_name : "CorporateInquiry"})
-    .then((res)=>{
-        console.log(res)
-        setLoading(false)
-   
-    })
- }
+        axios.post(`${BASE_URL}/data_status`, { status: newval, Inquiry_Id: Inquiry_Id, table_name: "CorporateInquiry" })
+            .then((res) => {
+                console.log(res)
+                setLoading(false)
+
+            })
+    }
 
 
- const roledata = {
+    const roledata = {
         role: Cookies.get(`role`),
         pageid: 26
     }
@@ -156,7 +156,7 @@ const InquiryCorporate = () => {
         { field: 'FullName', headerName: 'Inquirer', flex: 1.5 },
         { field: 'Course_Id', headerName: 'Course', flex: 1.5 },
         { field: 'Email', headerName: 'Email', flex: 1.5 },
-        
+
         ...(roleaccess > 2 ? [{
             field: 'actions',
             type: 'actions',
@@ -165,9 +165,9 @@ const InquiryCorporate = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        {roleaccess >= 2 && (<Link to={`/addcorporateinquiry/${params.row.Id}`} ><EditIcon style={{ cursor: "pointer" }}  /></Link>)}
+                        {roleaccess >= 2 && (<Link to={`/addcorporateinquiry/${params.row.Id}`} ><EditIcon style={{ cursor: "pointer" }} /></Link>)}
                         {roleaccess > 3 && (<DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.Id)} />)}
-                        {roleaccess >= 2 && (<Switch {...label} onChange={() => handleswitchchange(params.row.isActive,params.row.id )} defaultChecked={params.row.isActive == 0 ? false : true} color="secondary" />)}
+                        {roleaccess >= 2 && (<Switch {...label} onChange={() => handleswitchchange(params.row.isActive, params.row.id)} defaultChecked={params.row.isActive == 0 ? false : true} color="secondary" />)}
                     </>
                 )
             }
@@ -183,12 +183,12 @@ const InquiryCorporate = () => {
         <div className="container-fluid page-body-wrapper ">
             <InnerHeader />
             {loading && <Loader />}
-            <div className="main-panel" style={{display : loading ? "none" : "block"}} >
+            <div className="main-panel" style={{ display: loading ? "none" : "block" }} >
 
                 <div className="content-wrapper">
-                 
+
                     <div className="row">
-                     
+
                         <div className="col-lg-12">
                             <div className="card">
                                 <div className="card-body">
@@ -196,12 +196,16 @@ const InquiryCorporate = () => {
                                         <div >
                                             <h4 class="card-title">List Of Corporate Inquiry</h4>
                                         </div>
-                                           {/* <Link to='/inquiry/:inquiryid'> <button className='btn btn-success'>Add +</button></Link> */}
-                                       
+                                        {/* <Link to='/inquiry/:inquiryid'> <button className='btn btn-success'>Add +</button></Link> */}
+                                        {roleaccess > 1 && <Link to="/lecturetaken/:inquiryid">
+                                            {" "}   
+                                            <button className="btn btn-success">Add +</button>
+                                        </Link>}
+
 
                                     </div>
 
-                                    <div  style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "hidden"}}>
+                                    <div style={{ borderLeft: "1px solid #dce4ec", height: "510px", overflow: "hidden" }}>
                                         <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
@@ -213,21 +217,21 @@ const InquiryCorporate = () => {
                                             pagination
                                             paginationModel={paginationModel}
                                             onPaginationModelChange={setPaginationModel}
-                                            pageSizeOptions= {[50]}
+                                            pageSizeOptions={[50]}
                                             autoHeight={false}
                                             sx={{
-                                              height: 500, // Ensure enough height for pagination controls
-                                              '& .MuiDataGrid-footerContainer': {
-                                                justifyContent: 'flex-end',
-                                              },
+                                                height: 500, // Ensure enough height for pagination controls
+                                                '& .MuiDataGrid-footerContainer': {
+                                                    justifyContent: 'flex-end',
+                                                },
                                             }}
                                             slots={{
                                                 toolbar: GridToolbar
                                             }}
                                             slotProps={{
-                                              toolbar: {
-                                                showQuickFilter: true,
-                                              },
+                                                toolbar: {
+                                                    showQuickFilter: true,
+                                                },
                                             }}
                                         />
 
