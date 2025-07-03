@@ -164,7 +164,7 @@ const FeesStructure = () => {
 
             axios.post(`${BASE_URL}/Update_fees_structure`, data)
 
-                .then((res) => {
+                .then((res) => {         
                     console.log(res)
                     alert("Date Submitted successfully")
 

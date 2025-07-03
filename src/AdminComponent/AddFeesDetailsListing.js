@@ -2,10 +2,11 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import Switch from "@mui/material/Switch";
 import { Button } from "@mui/material";
+import ReceiptIcon from '@mui/icons-material/Receipt';
 import { DataGrid, GridToolbar, GridToolbarContainer, GridToolbarFilterButton } from "@mui/x-data-grid";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Await, Link, useParams } from "react-router-dom";
 import { BASE_URL } from "./BaseUrl";
 import InnerHeader from "./InnerHeader";
 import { StyledDataGrid } from "./StyledDataGrid";
@@ -19,6 +20,9 @@ import Select from "@mui/material/Select";
 import { useDispatch, useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
 import { getRoleData } from '../Store/Role/role-action';
+import Sitpayment from "./Document/payment";
+import { pdf } from "@react-pdf/renderer";
+
 
 const AddFeesDetailsListing = () => {
     const [cid, setCid] = useState("");
@@ -199,6 +203,59 @@ const AddFeesDetailsListing = () => {
         }
     };
 
+    const [pdfdata, setpdfData] = useState([]);
+
+    async function getDetails(params) {
+
+    }
+
+const printReceipt = async (data) => {
+    setLoading(true);
+
+    const param = {
+        Fees_Id: data,
+    };
+
+    let datafromapi = '';
+
+    try {
+        const res = await axios.post(`${BASE_URL}/getFeesdetailspdf`, param);
+        datafromapi = res.data[0];
+        console.log(res.data[0], 'jygyj');
+    } catch (error) {
+        console.error('Error fetching receipt data:', error);
+        alert("Failed to fetch receipt data.");
+        setLoading(false);
+        return;
+    }
+
+    if (!datafromapi) {
+        alert("No receipt data returned.");
+        setLoading(false);
+        return;
+    }
+
+    // Intentional 3-second delay
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+
+    const blob = await pdf(
+        <Sitpayment
+            data={datafromapi}
+            receipt_no={value.generatereceipt}
+            Cheque_number={value.Cheque_No}
+            Cheque_branch={value.Cheque_Branch}
+            notes={value.Notes}
+        />
+    ).toBlob();
+
+    const url = URL.createObjectURL(blob);
+    window.open(url);
+    URL.revokeObjectURL(url);
+    setLoading(false);
+};
+
+
+
     const handleSearchChange = (newValue) => {
         setSelectedStudent(newValue); // Update state
 
@@ -265,7 +322,7 @@ const AddFeesDetailsListing = () => {
     };
 
 
-const roledata = {
+    const roledata = {
         role: Cookies.get(`role`),
         pageid: 13
     }
@@ -348,6 +405,10 @@ const roledata = {
                             onChange={() => handleswitchchange(params.row.isActive, params.row.id)}
                             defaultChecked={params.row.isActive == 0 ? false : true}
                             color="secondary"
+                        />
+                        <ReceiptIcon
+                            style={{ color: "blue", cursor: "pointer" }}
+                            onClick={() => printReceipt(params.row.Fees_Id)}
                         />
                     </>
                 );
@@ -447,7 +508,7 @@ const roledata = {
                                                     onClick={() => {
                                                         setPageExpand();
                                                     }}
-                                                    style={{marginLeft:'50px'}}
+                                                    style={{ marginLeft: '50px' }}
                                                     variant="contained"
                                                 >
                                                     Search
@@ -459,7 +520,7 @@ const roledata = {
                                                     onClick={() => {
                                                         window.location.reload();
                                                     }}
-                                                    style={{marginLeft:'60px'}}
+                                                    style={{ marginLeft: '60px' }}
                                                     variant="contained"
                                                 >
                                                     Clear
@@ -489,9 +550,9 @@ const roledata = {
                                                     paginationModel: { pageSize: 100, page: 0 },
                                                 },
                                             }}
-                                            // slots={{
-                                            //     toolbar: GridToolbar
-                                            // }}
+                                        // slots={{
+                                        //     toolbar: GridToolbar
+                                        // }}
 
                                         />
 

@@ -391,7 +391,7 @@ const AddFeesDetails = () => {
             console.log(res.data[0]);
 
         });
-    }
+    } 
 
     useEffect(() => {
         getDetails();
