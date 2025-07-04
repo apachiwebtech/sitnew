@@ -15,7 +15,8 @@ const InquiryCorporateAdd = () => {
     const [courseid, SetCoursid] = useState('')
     const [batchid, setBatchid] = useState('')
     const [lecture, SetLecture] = useState([])
-    const [faculty, setFacilty] = useState([])
+    const [Email, setFacilty] = useState([])
+    const { inquiryid } = useParams();
     const [batch, setAnnulBatch] = useState([])
     const [assign, Setassign] = useState([])
     const [unit, SetUnit] = useState([])
@@ -30,28 +31,24 @@ const InquiryCorporateAdd = () => {
     const [updateloading, setupdateLoding] = useState()
     const [value, setValue] = useState(
         {
-            course: '',
-            batch: '',
-            lecture: '',
-            classroom: '',
-            lecturedate: '',
-            lecturefrom: '',
-            lectureto: '',
-            faculty: '',
-            facultytime: '',
-            timeto: '',
-            assignmentadate: '',
-            enddate: '',
-            materialissued: '',
-            material: '',
-            assignmentgive: '',
-            assignment: 0 || '',
-            testgiven: '',
-            test: 0 || '',
-            topicdescuss: '',
-            nextplanning: '',
-            In_Time: "",
-            endtime : "",
+            Course_Id: '',
+            Fname: '',
+            MName: '',
+            Lname: '',
+            Mobile: '',
+            Idate: '',
+            Phone: '',
+            Email: '',
+            business: '',
+            CompanyName: '',
+            Designation: '',
+            Remark: '',
+            Address: '',
+            State: '',
+            City: '',
+            Pin: '',
+            Place: '',
+            Country: '',
         })
 
 
@@ -59,34 +56,126 @@ const InquiryCorporateAdd = () => {
 
 
     const validateForm = () => {
-        let isValid = true
-        const newErrors = {}
+        let isValid = true;
+        const newErrors = {};
 
-
-        if (!courseid) {
+        // First Name
+        if (!value.Fname) {
             isValid = false;
-            newErrors.course = "Name is Required"
+            newErrors.Fname = "First Name is required";
         }
 
-        if (!batchid) {
+        // Last Name
+        if (!value.Lname) {
             isValid = false;
-            newErrors.batch = "Batch is Required"
+            newErrors.Lname = "Last Name is required";
         }
 
-        if (!lectureid) {
+        // Middle Name
+        if (!value.MName) {
             isValid = false;
-            newErrors.lecture = "Lecture is Required"
-        }
-        if (!value.classroom) {
-            isValid = false;
-            newErrors.classroom = "Classroom is Required"
+            newErrors.MName = "Middle Name is required";
         }
 
+        // Mobile - 10 digit number only
+        if (!value.Mobile) {
+            isValid = false;
+            newErrors.Mobile = "Mobile number is required";
+        } else if (!/^\d{10}$/.test(value.Mobile)) {
+            isValid = false;
+            newErrors.Mobile = "Mobile number must be 10 digits only";
+        }
+
+        // Email
+        if (!value.Email) {
+            isValid = false;
+            newErrors.Email = "Email is required";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.Email)) {
+            isValid = false;
+            newErrors.Email = "Invalid email format";
+        }
+
+        // Course_Id
+        if (!value.Course_Id) {
+            isValid = false;
+            newErrors.Course_Id = "Course is required";
+        }
+
+        // Idate (assumed to be a date field)
+        if (!value.Idate) {
+            isValid = false;
+            newErrors.Idate = "Date is required";
+        }
+
+        // Set all errors in state
+        setError(newErrors);
+        return isValid;
+    };
 
 
-        setError(newErrors)
-        return isValid
+    async function getcorporateinquiry() {
+
+        axios.post(`${BASE_URL}/getcorporateinquiry`)
+            .then((res) => {
+                console.log(res.data)
+                setLoading(false)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
     }
+
+
+    async function getStudentDetail(Id) {
+        const response = await fetch(`${BASE_URL}/new_update_data`, {
+            method: 'POST',
+            body: JSON.stringify({
+                u_id: Id || inquiryid,
+                uidname: "Id",
+                tablename: "Corporate_Inquiry"
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        const data = await response.json();
+
+        SetCoursid(data[0].Course_Id)
+        setUid(data[0])
+
+        setValue(prevState => ({
+            ...prevState,
+            Fname: data[0].Fname || '',
+            MName: data[0].MName || '',   // Fix here
+            Lname: data[0].Lname || '',
+            Mobile: data[0].Mobile || '',
+            Phone: data[0].Phone || '',
+            Email: data[0].Email || '',
+            CompanyName: data[0].CompanyName || '',
+            Designation: data[0].Designation || '',
+            Country: data[0].Country || '',
+            Address: data[0].Address || '',
+            Pin: data[0].Pin || '',
+            City: data[0].City || '',
+            State: data[0].State || '',
+            Place: data[0].Place || '',
+            Remark: data[0].Remark || '',
+            Course_Id: data[0].Course_Id || '',
+            Idate: data[0].Idate || '',
+            business: data[0].business || ''
+        }));
+    }
+    useEffect(() => {
+        if (inquiryid !== ":inquiryid") {
+            getStudentDetail()
+            setHide(true)
+        }
+
+
+        setUid([])
+    }, [])
+
 
 
     async function getCourseData() {
@@ -101,74 +190,17 @@ const InquiryCorporateAdd = () => {
                 console.log(err)
             })
     }
-    async function getfaculty() {
-
-        axios.get(`${BASE_URL}/getfaculty`)
-            .then((res) => {
-
-                setFacilty(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
-
-    async function gettime(params) {
 
 
-        axios.get(`${BASE_URL}/gettime`)
-
-            .then((res) => {
-                setTime(res.data)
-            })
-    }
 
     useEffect(() => {
-        gettime()
         getCourseData()
-        getfaculty()
         setUid([])
     }, [])
+    const Navigate = useNavigate()
 
-
-    const getbatch = async (id) => {
-
-        SetCoursid(id)
-
-        const data = {
-            courseid: id
-        }
-
-
-
-
-        if (id) {
-            try {
-                const res = await axios.post(`${BASE_URL}/getcoursewisebatch`, data);
-                setAnnulBatch(res.data);
-
-            } catch (err) {
-                console.error("Error fetching data:", err);
-            }
-        } else {
-            try {
-                const res = await axios.get(`${BASE_URL}/getbatch`, data);
-
-                setAnnulBatch(res.data);
-
-            } catch (err) {
-                console.error("Error fetching data:", err);
-            }
-        }
-
-
-
-
-
-    };
-
-    async function gettakedata(params) {
-        axios.post(`${BASE_URL}/geteditlecturetaken`, { Takeid: params || lecturetakenid })
+    async function geteditdata(params) {
+        axios.post(`${BASE_URL}/geteditcorporate`, { Id: params || inquiryid })
             .then((res) => {
                 console.log(res)
                 setStudentdata(res.data)
@@ -177,240 +209,86 @@ const InquiryCorporateAdd = () => {
             })
     }
 
-    useEffect(() => {
-        gettakedata()
-        getbatch()
-        // getlecture()
-    }, [])
-
-
-
-    const getlecture = async (id) => {
-
-        setBatchid(id)
-
-        console.log(id , 'hbdshg')
-
-        const data = {
-            batch_id: id ,
-            AnnulBatch: id
-        }
-
-
-        if (id ) {
-            try {
-                const res = await axios.post(`${BASE_URL}/getbatchwiselecture`, data);
-                SetLecture(res.data);
-
-            } catch (err) {
-                console.error("Error fetching data:", err);
-            }
-
-        }
-
-
-
-        if (id) {
-            try {
-                const res = await axios.post(`${BASE_URL}/getbatchwiseassignment`, data);
-                Setassign(res.data);
-
-            } catch (err) {
-                console.error("Error fetching data:", err);
-            }
-        }
-
-        if (id) {
-            try {
-                const res = await axios.post(`${BASE_URL}/getbatchwiseunittest`, data);
-                if (res.data[0].id) {
-
-                    SetUnit(res.data);
-                }
-
-            } catch (err) {
-                console.error("Error fetching data:", err);
-            }
-        } else {
-            try {
-                const res = await axios.post(`${BASE_URL}/get_data`, { tablename: "awt_unittesttaken", columnname: "id,subject" });
-                if (res.data[0].id) {
-
-                    SetUnit(res.data);
-                }
-
-            } catch (err) {
-                console.error("Error fetching data:", err);
-            }
-        }
-
-
-
-
-
-
-    };
-
-
-    const onlectureselect = (id) => {
-        setLectureid(id)
-
-        const data = {
-            lectureid: id
-        }
-
-        axios.post(`${BASE_URL}/getlecturedetails`, data)
-            .then((res) => {
-                setLecturedata(res.data)
-                const data = res.data[0]
-                // setValue({
-                //     lecturedate: data.date || '',
-                //     starttime: data.starttime || '',
-                //     endtime: data.endtime || '',
-                //     faculty_name: data.faculty_name || '',
-                //     assignmentadate: data.assignment_date || '',
-                //     assignment: data.assignment || '',
-                //     test: data.unit_test || '',
-
-                // })
-                setValue(data)
-                console.log(value.endtime,'date ');
-
-            })
-    }
-
-
-
-
-
-
-    async function getStudentDetail(Take_Id) {
-        const response = await fetch(`${BASE_URL}/new_update_data`, {
-            method: 'POST',
-            body: JSON.stringify({
-                u_id: Take_Id || lecturetakenid,
-                uidname: "Take_Id",
-                tablename: "lecture_taken_master"
-            }),
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
-
-        const data = await response.json();
-
-
-        SetCoursid(data[0].Course_Id)
-        setBatchid(data[0].Batch_Id)
-        SetUnitid(data[0].Test_Id)
-        Setassignid(data[0].Assignment_Id)
-        setLectureid(data[0].Lecture_Id)
-        setUid(data[0])
-        getlecture(data[0].Batch_Id)
-        setValue(prevState => ({
-            ...prevState,
-            course: data[0].Course_Id,
-            batch: data[0].Batch_Id,
-            lecture: data[0].Lecture_Id,
-            classroom: data[0].ClassRoom,
-            lecturedate: data[0].Take_Dt,
-            lecturefrom: data[0].Lecture_Start,
-            lectureto: data[0].Lecture_End,
-            faculty: data[0].Faculty_Id,
-            facultytime: data[0].Faculty_Start,
-            timeto: data[0].Faculty_End,
-            assignmentadate: data[0].Assign_Start,
-            enddate: data[0].Assign_End,
-            materialissued: data[0].Material,
-            // material: data[0].material,
-            assignmentgive: data[0].Assign_Given,
-            assignment: data[0].assignid,
-            testgiven: data[0].Test_Given,
-            test: data[0].Test_Id,
-            topicdescuss: data[0].Topic,
-            nextplanning: data[0].Next_Planning,
-        }))
-    }
-    useEffect(() => {
-        if (lecturetakenid !== ":lecturetakenid") {
-            getStudentDetail()
-            setHide(true)
-        }
-
-        setUid([])
-    }, [])
-
-
-
-
-    const Navigate = useNavigate()
-
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
+        e.preventDefault();
 
         if (validateForm()) {
-
             const data = {
-                course: courseid,
-                batch: batchid,
-                lecture: lectureid,
-                classroom: value.classroom,
-                lecturedate: value.lecturedate,
-                lecturefrom: value.lecturefrom,
-                lectureto: value.lectureto,
-                faculty: value.faculty,
-                facultytime: value.facultytime,
-                timeto: value.timeto,
-                assignmentadate: value.assignmentadate,
-                enddate: value.enddate,
-                materialissued: value.materialissued,
-                material: value.material,
-                assignmentgive: value.assignmentgive,
-                assignment: assignid,
-                testgiven: value.testgiven,
-                test: unitid,
-                topicdescuss: value.topicdescuss,
-                nextplanning: value.nextplanning,
-                uid: uid.Take_Id
-            }
+                Course_Id: value.Course_Id,
+                Fname: value.Fname,
+                MName: value.MName,
+                Lname: value.Lname,
+                Mobile: value.Mobile,
+                Idate: value.Idate,
+                Phone: value.Phone,
+                Email: value.Email,
+                business: value.business,
+                CompanyName: value.CompanyName,
+                Designation: value.Designation,
+                Remark: value.Remark,
+                Address: value.Address,
+                State: value.State,
+                City: value.City,
+                Pin: value.Pin,
+                Place: value.Place,
+                Country: value.Country,
+                u_id: inquiryid !== ":inquiryid" ? inquiryid : undefined  // ✅ Use route param for update
+            };
 
-
-            axios.post(`${BASE_URL}/add_lecturetaken`, data)
+            axios.post(`${BASE_URL}/add_corporateinquiry`, data)
                 .then((res) => {
-                    console.log(res.data)
-                    alert("Data submitted successfully")
-                    // if (res.data.TakeId) {
-                    //     window.location.pathname = `/lecturetaken/${res.data.TakeId}`
-                    //     gettakedata(res.data.TakeId)
-                    //     setHide(true)
-                    // }
+                    console.log(res.data);
 
-                    const Take_Id = res.data?.TakeId
-                    if (Take_Id) {
-                        gettakedata(Take_Id);
-                        setHide(true);
-                        Navigate(`/lecturetaken/${Take_Id}`);
-                        getStudentDetail(Take_Id)
+                    if (res.data === "Data Inserted") {
+                        alert("Data Added Successfully");
+                    } else if (res.data === "Data Updated") {
+                        alert("Data Updated Successfully");
+                        Navigate(`/inquirycorporate`);
                     }
 
+                    const Id = res.data?.Id;
+                    if (Id) {
+                        setHide(true);
+                        geteditdata(Id);
+                        Navigate(`/inquirycorporate/${Id}`);
+                        getStudentDetail(Id);
+                    }
+
+                    setValue({
+                        Course_Id: '',
+                        Fname: '',
+                        MName: '',
+                        Lname: '',
+                        Mobile: '',
+                        Idate: '',
+                        Phone: '',
+                        Email: '',
+                        business: '',
+                        CompanyName: '',
+                        Designation: '',
+                        Remark: '',
+                        Address: '',
+                        State: '',
+                        City: '',
+                        Pin: '',
+                        Place: '',
+                        Country: '',
+                    });
+
                 })
-
-
-
-
-
+                .catch((err) => {
+                    if (err.response && err.response.status === 409) {
+                        alert(err.response.data.message || "Duplicate Inquiry!");
+                    } else {
+                        alert("Something went wrong!");
+                    }
+                    console.log(err);
+                });
         }
-    }
-
-
-
-    const handleInputChange = (index, event) => {
-        const { name, value } = event.target;
-        const updatedStudents = [...studentdata];
-        updatedStudents[index][name] = value;
-        setStudentdata(updatedStudents);
     };
+
+
 
 
 
@@ -418,124 +296,6 @@ const InquiryCorporateAdd = () => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
 
-
-    const handleSubmitTable = async (e) => {
-
-        setupdateLoding(true)
-
-
-        try {
-            const response = await axios.post(`${BASE_URL}/update_lecture_child`, studentdata);
-            if (response) {
-                setupdateLoding(false)
-                alert("Data updated successfully")
-                Navigate('/lecturetaken')
-            }
-
-
-        } catch (error) {
-            console.error('Error saving data', error);
-            // Handle the error
-        }
-    };
-
-    const handleImport = () => {
-
-        const studentIds = studentdata.map((item) => item.Student_Id);
-
-        const data = {
-            date: value.lecturedate
-        }
-
-        const url = `${BASE_URL}/getAttendence`;
-
-        axios.post(url, data)
-            .then((res) => {
-                const logdata = res.data;
-
-                // Function to format the date
-                const formatLogDate = (logDate) => {
-                    const date = new Date(logDate);
-                    let hours = date.getHours();
-                    const minutes = date.getMinutes().toString().padStart(2, "0");
-                    const ampm = hours >= 12 ? "PM" : "AM";
-                    hours = hours % 12 || 12; // Convert 0 to 12 for midnight
-                    return `${hours}:${minutes} ${ampm}`;
-                };
-
-                // Group logs by EmployeeCode
-                const groupedLogs = studentIds.reduce((acc, id) => {
-                    acc[id] = logdata
-                        .filter((item) => Number(item.EmployeeCode) === id)
-                        .sort((a, b) => new Date(a.LogDate) - new Date(b.LogDate)); // Sort logs by date
-                    return acc;
-                }, {});
-
-                // Map student data to include In_Time and Out_Time
-                const updatedStudentData = studentdata.map((student) => {
-                    const logs = groupedLogs[student.Student_Id] || [];
-
-                    return {
-                        ...student,
-                        In_Time: logs.length > 0 ? formatLogDate(logs[0].LogDate) : null, // First log
-                        Out_Time: logs.length > 1 ? formatLogDate(logs[logs.length - 1].LogDate) : null, // Last log
-                    };
-                });
-
-
-                // Update your state with the formatted data
-                setStudentdata(updatedStudentData);
-
-                const parseTime = (timeStr) => {
-                    const [time, modifier] = timeStr.split(" ");
-                    let [hours, minutes] = time.split(":").map(Number);
-
-                    if (modifier === "PM" && hours < 12) hours += 12;
-                    if (modifier === "AM" && hours === 12) hours = 0;
-
-                    const date = new Date();
-                    date.setHours(hours, minutes, 0, 0);
-                    return date;
-                };
-
-                const formatTimeString = (str) => {
-                    return str.replace(/(AM|PM)$/, ' $1'); // Ensures there's a space before AM/PM
-                };
-
-
-                setStudentdata((prevData) =>
-                    prevData.map((item) => {
-
-                        const inTime = item.In_Time ? parseTime(formatTimeString(item.In_Time)) : null;
-                        const lectureStart = parseTime(formatTimeString(value.lecturefrom));
-
-
-                        let lateStatus = "";
-                        if (inTime && lectureStart) {
-                            lateStatus = inTime > lectureStart ? "Yes" : "No";
-                        }
-
-
-                        return {
-                            ...item,
-                            Student_Atten: item.In_Time ? "Present" : "Absent",
-                            Late: lateStatus,
-                            In_Time: item.In_Time, // make sure you keep these
-                            Out_Time: item.Out_Time // and any other fields
-                        };
-                    })
-                );
-
-            })
-            .catch((err) => {
-                console.error('Error fetching data:', err);
-            });
-
-
-    };
-
-
-    console.log(studentdata, "$%^&*")
 
 
     return (
@@ -557,250 +317,285 @@ const InquiryCorporateAdd = () => {
                                         <div className='col-md-12 col-lg-12'>
                                             <div className='row justify-content-center'>
                                                 <div className='p-3' style={{ width: "100%" }}>
-                                                    <div>
-                                                        <h4 className="card-title titleback">Corporate Inquiry</h4>
-
-                                                    </div>
                                                     <div className='row'>
-        
+                                                        <div className='col-md-6'>
+                                                            <div>
+                                                                <h4 className="card-title titleback">Inquiry Information</h4>
 
-                                                        <div className="form-group col-lg-2 ">
-                                                            <label for="exampleFormControlSelect1">Batch<span className="text-danger">*</span></label>
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" name='batch' value={batchid} onChange={(e) => getlecture(e.target.value)} >
+                                                            </div>
+                                                            <div className='row'>
 
-                                                                <option>Select Batch</option>
-                                                                {batch.map((item) => {
+                                                                <div className="form-group col-lg-4">
+                                                                    <label htmlFor="Fname">FirstName<span className="text-danger">*</span> </label>
+                                                                    <input
+                                                                        type="text"
+                                                                        className="form-control form-control-lg"
+                                                                        id="Fname"
+                                                                        name="Fname"
+                                                                        value={value.Fname}
+                                                                        onChange={onhandleChange}
+                                                                        placeholder="Enter Fname"
+                                                                    />
+                                                                    {error.Fname && <span className="text-danger">{error.Fname}</span>}
+                                                                </div>
+                                                                <div className="form-group col-lg-4">
+                                                                    <label htmlFor="MName">MiddleName <span className="text-danger">*</span></label>
+                                                                    <input
+                                                                        type="text"
+                                                                        className="form-control form-control-lg"
+                                                                        id="MName"
+                                                                        name="MName"
+                                                                        value={value.MName}
+                                                                        onChange={onhandleChange}
+                                                                        placeholder='Enter MName'
+                                                                    />
+                                                                    {<span className="text-danger">{error.MName}</span>}
+                                                                </div>
+                                                                <div className="form-group col-lg-4">
+                                                                    <label htmlFor="Lname">LastName <span className="text-danger">*</span></label>
+                                                                    <input
+                                                                        type="text"
+                                                                        className="form-control form-control-lg"
+                                                                        id="Lname"
+                                                                        name="Lname"
+                                                                        value={value.Lname}
+                                                                        onChange={onhandleChange}
+                                                                        placeholder='Enter Lname'
+                                                                    />
+                                                                    {error.Lname && <span className="text-danger">{error.Lname}</span>}
+                                                                </div>
+                                                                <div className="form-group col-lg-4">
+                                                                    <label htmlFor="Mobile">Mobile <span className="text-danger">*</span></label>
+                                                                    <input
+                                                                        type="tel"
+                                                                        className="form-control form-control-lg"
+                                                                        id="Mobile"
+                                                                        name="Mobile"
+                                                                        value={value.Mobile}
+                                                                        onChange={(e) => {
+                                                                            const onlyNums = e.target.value.replace(/\D/g, ''); // remove non-digits
+                                                                            if (onlyNums.length <= 10) {
+                                                                                onhandleChange({
+                                                                                    target: {
+                                                                                        name: 'Mobile',
+                                                                                        value: onlyNums
+                                                                                    }
+                                                                                });
+                                                                            }
+                                                                        }}
+                                                                        maxLength={10}
+                                                                        inputMode="numeric"
+                                                                        placeholder='Enter Mobile Number'
+                                                                    />
+                                                                    {error.Mobile && (
+                                                                        <span className="text-danger">{error.Mobile}</span>
+                                                                    )}
+                                                                </div>
 
-                                                                    return (
-                                                                        <option value={item.Batch_Id}>{item.Batch_code}</option>
-                                                                    )
+                                                                <div className="form-group col-lg-4">
+                                                                    <label htmlFor="Phone">Phone</label>
+                                                                    <input
+                                                                        type="tel"
+                                                                        className="form-control form-control-lg"
+                                                                        id="Phone"
+                                                                        name="Phone"
+                                                                        value={value.Phone}
+                                                                        onChange={(e) => {
+                                                                            const onlyNums = e.target.value.replace(/\D/g, ''); // remove non-digits
+                                                                            if (onlyNums.length <= 10) {
+                                                                                onhandleChange({
+                                                                                    target: {
+                                                                                        name: 'Phone',
+                                                                                        value: onlyNums
+                                                                                    }
+                                                                                });
+                                                                            }
+                                                                        }}
+                                                                        maxLength={10}
+                                                                        inputMode="numeric"
+                                                                        placeholder='Enter Phone Number'
+                                                                    />
+                                                                    <span className="text-danger">{error.Phone}</span>
+                                                                </div>
+                                                                <div className="form-group col-lg-4">
+                                                                    <label htmlFor="Email">Email ID <span className="text-danger">*</span></label>
+                                                                    <input
+                                                                        type="Email"
+                                                                        className="form-control form-control-lg"
+                                                                        id="Email"
+                                                                        name="Email"
+                                                                        value={value.Email}
+                                                                        onChange={onhandleChange}
+                                                                        placeholder="Enter Email ID"
+                                                                    />
+                                                                    {error.Email && (
+                                                                        <span className="text-danger">{error.Email}</span>
+                                                                    )}
+                                                                </div>
 
-                                                                })}
-
-                                                            </select>
-                                                            {<span className="text-danger">{error.batch}</span>}
+                                                                <div className="form-group col-lg-4">
+                                                                    <label htmlFor="business">Business </label>
+                                                                    <input
+                                                                        type="text"
+                                                                        className="form-control form-control-lg"
+                                                                        id="business"
+                                                                        name="business"
+                                                                        value={value.business}
+                                                                        onChange={onhandleChange}
+                                                                        placeholder='Enter business'
+                                                                    />
+                                                                    {<span className="text-danger">{error.business}</span>}
+                                                                </div>
+                                                                <div className="form-group col-lg-4">
+                                                                    <label htmlFor="CompanyName">Company Name </label>
+                                                                    <input
+                                                                        type="text"
+                                                                        className="form-control form-control-lg"
+                                                                        id="CompanyName"
+                                                                        name="CompanyName"
+                                                                        value={value.CompanyName}
+                                                                        onChange={onhandleChange}
+                                                                        placeholder='Enter CompanyName'
+                                                                    />
+                                                                    {<span className="text-danger">{error.CompanyName}</span>}
+                                                                </div>
+                                                                <div className="form-group col-lg-4">
+                                                                    <label htmlFor="Designation">Designation </label>
+                                                                    <input
+                                                                        type="text"
+                                                                        className="form-control form-control-lg"
+                                                                        id="Designation"
+                                                                        name="Designation"
+                                                                        value={value.Designation}
+                                                                        onChange={onhandleChange}
+                                                                        placeholder='Enter Designation'
+                                                                    />
+                                                                    {<span className="text-danger">{error.Designation}</span>}
+                                                                </div>
+                                                                <div class="form-group col-lg-8">
+                                                                    <label for="exampleTextarea1">Discussion</label>
+                                                                    <textarea class="form-control" id="exampleTextarea1" name='Remark' value={value.Remark} placeholder="Topic Descuss*" onChange={onhandleChange}></textarea>
+                                                                    {<span className='text-danger'> {error.Remark} </span>}
+                                                                </div>
+                                                            </div>
                                                         </div>
+                                                        <div className='col-md-6'>
+                                                            {/* Training Programme Section */}
+                                                            <div>
+                                                                <h4 className="card-title titleback">Training Programme & Batch Details</h4>
+                                                            </div>
+                                                            <div className='row'>
+                                                                <div className="form-group col-lg-4">
+                                                                    <label htmlFor="exampleFormControlSelect1">
+                                                                        Course Name <span className="text-danger">*</span>
+                                                                    </label>
+                                                                    <select
+                                                                        className="form-control form-control-lg"
+                                                                        id="exampleFormControlSelect1"
+                                                                        name="Course_Id"
+                                                                        value={value.Course_Id}
+                                                                        onChange={onhandleChange}
+                                                                    >
+                                                                        <option value="">--Select Course--</option>
+                                                                        {course.map((course) => (
+                                                                            <option key={course.Course_Id} value={course.Course_Id}>
+                                                                                {course.Course_Name}
+                                                                            </option>
+                                                                        ))}
+                                                                    </select>
 
 
-                                                        <div className="form-group col-lg-2 ">
-                                                            <label for="exampleexampleFormControlSelect1InputUsername1">Lecture<span className="text-danger">*</span></label>
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" name='lecture' value={lectureid} onChange={(e) => onlectureselect(e.target.value)} >
+                                                                    {error.Course_Id && (
+                                                                        <span className="text-danger">{error.Course_Id}</span>
+                                                                    )}
+                                                                </div>
 
-                                                                <option>Select Lecture</option>
-                                                                {lecture.map((item) => {
-                                                                    return (
-                                                                        <option value={item.id}>{item.subject_topic}</option>
+                                                                <div className='form-group col-4'>
+                                                                    <label htmlFor="exampleInputUsername1">Date of Inquiry<span className="text-danger">*</span></label>
+                                                                    <input type="date" className="form-control" id="exampleInputUsername1" value={value.Idate} placeholder="Date" name='Idate' onChange={onhandleChange} />
+                                                                    <span className="text-danger"> {error.Idate} </span>
+                                                                </div>
+                                                            </div>
 
-                                                                    )
-                                                                })}
+                                                            {/* Address Section */}
+                                                            <div className='mt-4'>
+                                                                <h4 className="card-title titleback">Address Details</h4>
+                                                            </div>
+                                                            <div className='row'>
+                                                                <div className="form-group col-lg-4">
+                                                                    <label htmlFor="State">State</label>
+                                                                    <input
+                                                                        type="text"
+                                                                        className="form-control form-control-lg"
+                                                                        id="State"
+                                                                        name="State"
+                                                                        value={value.State}
+                                                                        onChange={onhandleChange}
+                                                                        placeholder='Enter State'
+                                                                    />
+                                                                    {<span className="text-danger">{error.State}</span>}
+                                                                </div>
+                                                                <div className="form-group col-lg-4">
+                                                                    <label htmlFor="Pin">Pin</label>
+                                                                    <input
+                                                                        type="text"
+                                                                        className="form-control form-control-lg"
+                                                                        id="Pin"
+                                                                        name="Pin"
+                                                                        value={value.Pin}
+                                                                        onChange={onhandleChange}
+                                                                        placeholder='Enter Pin'
+                                                                    />
+                                                                    {<span className="text-danger">{error.Pin}</span>}
+                                                                </div>
+                                                                <div className="form-group col-lg-4">
+                                                                    <label htmlFor="City">City</label>
+                                                                    <input
+                                                                        type="text"
+                                                                        className="form-control form-control-lg"
+                                                                        id="City"
+                                                                        name="City"
+                                                                        value={value.City}
+                                                                        onChange={onhandleChange}
+                                                                        placeholder='Enter City'
+                                                                    />
+                                                                    {<span className="text-danger">{error.City}</span>}
+                                                                </div>
+                                                                <div className="form-group col-lg-4">
+                                                                    <label htmlFor="Place">Place </label>
+                                                                    <input
+                                                                        type="text"
+                                                                        className="form-control form-control-lg"
+                                                                        id="Place"
+                                                                        name="Place"
+                                                                        value={value.Place}
+                                                                        onChange={onhandleChange}
+                                                                        placeholder='Enter Place'
+                                                                    />
+                                                                    {<span className="text-danger">{error.Place}</span>}
+                                                                </div>
+                                                                <div className="form-group col-lg-4">
+                                                                    <label htmlFor="Country">Country</label>
+                                                                    <input
+                                                                        type="text"
+                                                                        className="form-control form-control-lg"
+                                                                        id="Country"
+                                                                        name="Country"
+                                                                        value={value.Country}
+                                                                        onChange={onhandleChange}
+                                                                        placeholder='Enter Country'
+                                                                    />
+                                                                    {<span className="text-danger">{error.Country}</span>}
+                                                                </div>
+                                                                <div class="form-group col-lg-8">
+                                                                    <label for="Address">Address</label>
+                                                                    <textarea class="form-control" id="Address" name='Address' value={value.Address} placeholder="Enter Address" onChange={onhandleChange}></textarea>
+                                                                    {<span className='text-danger'> {error.Address} </span>}
+                                                                </div>
 
-                                                                {<span className="text-danger">{error.lecture}</span>}
-                                                            </select>
+                                                                {/* Add more Address fields as needed */}
+                                                            </div>
                                                         </div>
-
-                                                        <div className="form-group col-lg-2 ">
-                                                            <label for="exampleFormControlSelect1">Class Room<span className="text-danger">*</span></label>
-                                                            <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.classroom} name='classroom' onChange={onhandleChange} >
-                                                                <option  >Select class</option>
-                                                                <option value="1">1</option>
-                                                                <option value="2">2</option>
-                                                                <option value="3">3</option>
-                                                                <option value="4">4</option>
-                                                            </select>
-                                                            {<span className="text-danger"> {error.classroom} </span>}
-                                                        </div>
-                                                        <div className='form-group col-2'>
-                                                            <label for="exampleInputUsername1">Lecture Date</label>
-                                                            <input type="date" className="form-control" id="exampleInputUsername1" value={value.lecturedate} placeholder="Date" name='lecturedate' onChange={onhandleChange} />
-
-                                                            {<span className="text-danger"> {error.lecturedate} </span>}
-                                                        </div>
-
-                                                        <div class="form-group col-lg-2">
-                                                            <label for="exampleFormControlSelect1">From - Time</label>
-                                                            {/* <input type="time" class="form-control" id="exampleInputUsername1" value={value.lecturefrom} name='lecturefrom' onChange={onhandleChange} /> */}
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" name='starttime' value={value.starttime} onChange={onhandleChange}  >
-
-                                                                <option>Select Time</option>
-                                                                {time.map((item) => {
-
-                                                                    return (
-                                                                        <option value={item.Timing}>{item.Timing}</option>
-                                                                    )
-
-                                                                })}
-
-                                                            </select>
-
-                                                        </div>
-
-                                                        <div class="form-group col-lg-2">
-                                                            <label for="exampleFormControlSelect1">To</label>
-                                                            {/* <input type="time" class="form-control" id="exampleInputUsername1" value={value.lectureto}
-                                                                name='lectureto' onChange={onhandleChange} /> */}
-
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" name='endtime' value={value.endtime0} onChange={onhandleChange}  >
-
-
-                                                                <option>Select Time</option>
-                                                                {time.map((item) => {
-
-                                                                    return (
-                                                                        <option value={item.Timing}>{item.Timing}</option>
-                                                                    )
-
-                                                                })}
-
-                                                            </select>
-
-
-
-                                                        </div>
-
-                                                        <div class="form-group col-lg-2">
-                                                            <label for="exampleFormControlSelect1">Faculty</label>
-                                                            <select class="form-control" id="exampleFormControlSelect1" value={value.faculty_name}
-                                                                name='faculty_name' onChange={onhandleChange}>
-                                                                <option>--Select Faculty--</option>
-                                                                {faculty.map((item) => {
-                                                                    return (
-                                                                        <option value={item.Faculty_Id}>{item.Faculty_Name}</option>
-                                                                    )
-                                                                })}
-                                                            </select>
-                                                            {<span className="text-danger"> {error.faculty} </span>}
-                                                        </div>
-
-                                                        <div class="form-group col-lg-2">
-                                                            <label for="exampleInputUsername1">Faculty - Time</label>
-                                                            {/* <input type="time" class="form-control" id="exampleInputUsername1" value={value.facultytime} name='facultytime' onChange={onhandleChange} /> */}
-
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" name='facultytime' value={value.facultytime} onChange={onhandleChange}  >
-
-                                                                <option>Select Time</option>
-                                                                {time.map((item) => {
-
-                                                                    return (
-                                                                        <option value={item.Timing}>{item.Timing}</option>
-                                                                    )
-
-                                                                })}
-
-                                                            </select>
-                                                        </div>
-
-                                                        <div class="form-group col-lg-2">
-                                                            <label for="exampleInputUsername1">Time - To</label>
-                                                            {/* <input type="time" class="form-control" id="exampleInputUsername1" value={value.timeto} name='timeto' onChange={onhandleChange} /> */}
-
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" name='timeto' value={value.timeto} onChange={onhandleChange}  >
-
-                                                                <option>Select Time</option>
-                                                                {time.map((item) => {
-
-                                                                    return (
-                                                                        <option value={item.Timing}>{item.Timing}</option>
-                                                                    )
-
-                                                                })}
-
-                                                            </select>
-
-                                                        </div>
-
-
-                                                        <div className="form-group col-lg-2 ">
-                                                            <label for="exampleInputUsername1">Assignment/Test Start Date</label>
-                                                            <input type="date" class="form-control" id="exampleInputUsername1" value={value.assignmentadate} placeholder="Assignment*" name='assignmentadate' onChange={onhandleChange} />
-                                                            {<span className='text-danger'>{error.assignmentdate}</span>}
-                                                        </div>
-
-                                                        <div className="form-group col-lg-2 ">
-                                                            <label for="exampleInputUsername1">End Date</label>
-                                                            <input type="date" class="form-control" id="exampleInputUsername1" value={value.enddate} placeholder="End Date*" name='enddate' onChange={onhandleChange} />
-                                                            {error.enddate && <span className='text-danger'>{error.enddate}</span>}
-                                                        </div>
-
-                                                        <div className="form-group col-lg-2 ">
-                                                            <label for="exampleFormControlSelect1">Material Issued</label>
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.materialissued} name='materialissued' onChange={onhandleChange} >
-
-                                                                <option value="">selelct option</option>
-                                                                <option value="No">No</option>
-                                                                <option value="Yes">Yes</option>
-                                                            </select>
-                                                        </div>
-                                                        <div className="form-group col-lg-2 ">
-                                                            <label for="exampleFormControlSelect1">Material</label>
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.material} name='material' onChange={onhandleChange} >
-                                                                <option>Documents</option>
-                                                                <option>LCD</option>
-                                                                <option>None</option>
-                                                                <option>Course Material</option>
-                                                                <option>Xerox</option>
-                                                            </select>
-                                                            {<span className="text-danger"> {error.material} </span>}
-                                                        </div>
-
-                                                        <div className="form-group col-lg-2 ">
-                                                            <label for="exampleFormControlSelect1">Assignment Given</label>
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.assignmentgive} name='assignmentgive' onChange={onhandleChange} >
-                                                                <option value="">selelct option</option>
-                                                                <option value="No">No</option>
-                                                                <option value="Yes">Yes</option>
-                                                            </select>
-                                                            {<span className="text-danger"> {error.assignmentgiven} </span>}
-                                                        </div>
-
-
-                                                        <div className="form-group col-lg-2">
-                                                            <label for="exampleFormControlSelect1">Assignment</label>
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={assignid} name='assignment' onChange={(e) => Setassignid(e.target.value)} >
-
-                                                                <option>select assignment</option>
-                                                                {assign.map((item) => {
-                                                                    return (
-                                                                        <option value={item.id}>{item.assignmentname}</option>
-                                                                    )
-                                                                })}
-
-                                                            </select>
-                                                            {<span className='text-danger'> {error.assignment} </span>}
-                                                        </div>
-
-                                                        <div className="form-group col-lg-2 ">
-                                                            <label for="exampleFormControlSelect1">Test Given</label>
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={value.testgiven} name='testgiven' onChange={onhandleChange} >
-                                                                <option>select option</option>
-                                                                <option value="No">No</option>
-                                                                <option value="Yes">Yes</option>
-                                                            </select>
-                                                            {<span className='text-danger'> {error.testgiven} </span>}
-                                                        </div>
-                                                        <div className="form-group col-lg-2 ">
-                                                            <label for="exampleFormControlSelect1">Test</label>
-                                                            <select className="form-control form-control-lg" id="exampleFormControlSelect1" value={unitid} name='test' onChange={(e) => SetUnitid(e.target.value)} >
-                                                                <option>select test</option>
-                                                                {unit.map((item) => {
-                                                                    return (
-                                                                        <option value={item.id}>{item.subject}</option>
-                                                                    )
-                                                                })}
-                                                            </select>
-                                                            {<span className='text-danger'> {error.test} </span>}
-                                                        </div>
-
-                                                        <div class="form-group col-lg-4">
-                                                            <label for="exampleTextarea1">Topic Descuss</label>
-                                                            <textarea class="form-control" id="exampleTextarea1" name='topicdescuss' value={value.topicdescuss} placeholder="Topic Descuss*" onChange={onhandleChange}></textarea>
-                                                            {<span className='text-danger'> {error.topicdescuss} </span>}
-                                                        </div>
-                                                        <div class="form-group col-lg-4">
-                                                            <label for="exampleTextarea1">Next Planning</label>
-                                                            <textarea class="form-control" id="exampleTextarea1" name='nextplanning' value={value.nextplanning} placeholder="Next Panning*" onChange={onhandleChange}></textarea>
-                                                            {<span className='text-danger'> {error.nextplanning} </span>}
-                                                        </div>
-
                                                     </div>
 
 
@@ -809,150 +604,12 @@ const InquiryCorporateAdd = () => {
 
 
                                             <div className='row p-2 justify-content-end'>
-                                                <button className='mr-2 btn btn-primary' onClick={handleImport}>Import</button>
-                                                {/* <button className='col-2'>close</button> */}
                                                 <button className='mr-2 btn btn-primary' style={{ float: "right" }} onClick={handleSubmit} >Save</button>
                                                 {/* <button className='col-2'>close</button> */}
                                             </div>
 
 
                                         </div>
-
-                                        {hide && <div class="col-lg-12 mt-3">
-                                            <form class="card" >
-                                                <div class="card-body">
-                                                    <div className='d-flex justify-content-between'>
-                                                        {/* <div>
-                                                            <h4 class="card-title">Allot Roll Number List</h4>
-                                                        </div> */}
-
-                                                    </div>
-                                                    <div>
-
-
-
-
-                                                        <table class="table table-bordered p-0">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>
-                                                                        Id
-                                                                    </th>
-                                                                    <th>
-                                                                        Student Code
-                                                                    </th>
-
-                                                                    <th>
-                                                                        Student Name
-                                                                    </th>
-                                                                    <th>
-                                                                        Feedback
-                                                                    </th>
-                                                                    <th>
-                                                                        Attendence
-                                                                    </th>
-                                                                    <th>
-                                                                        In Time
-                                                                    </th>
-                                                                    <th>
-                                                                        Out Time
-                                                                    </th>
-                                                                    <th>
-                                                                        Assignment
-                                                                    </th>
-                                                                </tr>
-                                                            </thead>
-
-                                                            <tbody>
-                                                                {studentdata.map((item, index) => {
-                                                                    return (
-                                                                        <tr key={index}>
-                                                                            <td>
-                                                                                {index + 1}
-                                                                            </td>
-                                                                            <td>
-                                                                                {item.Student_Code}
-                                                                            </td>
-                                                                            <td>
-                                                                                {item.Student_Name}
-
-                                                                            </td>
-                                                                            <td>
-                                                                                <select
-                                                                                    className="form-control form-control-lg"
-                                                                                    name="Student_Reaction"
-                                                                                    onChange={(e) => handleInputChange(index, e)}
-                                                                                    value={item.Student_Reaction}
-                                                                                    id="exampleFromControlSelect1"
-                                                                                >
-                                                                                    <option value="">Select</option>
-                                                                                    <option value="0">Excellent</option>
-                                                                                    <option value="1">Very Good</option>
-                                                                                    <option value="2">Good</option>
-                                                                                    <option value="3">Satisfactory</option>
-                                                                                    <option value="4">Unsatisfactory</option>
-                                                                                </select>
-
-                                                                            </td>
-                                                                            <td>
-                                                                                <>
-                                                                                    <select class="form-control form-control-lg" value={item.Student_Atten} onChange={(e) => handleInputChange(index, e)} name='Student_Atten' id="exampleFromControlSelect1" >
-
-                                                                                        <option>Select</option>
-                                                                                        <option value='Present'>Present</option>
-                                                                                        <option value='Absent'>Absent</option>
-
-
-
-                                                                                    </select>
-                                                                                </>
-                                                                            </td>
-                                                                            <td>
-                                                                                <div class="form-group ">
-                                                                                    <label for="exampleFormControlSelect1"></label>
-                                                                                    <input type="text" class="form-control" id="exampleInputUsername1" name='In_Time' onChange={(e) => handleInputChange(index, e)} value={item.In_Time} />
-
-
-
-                                                                                </div>
-                                                                            </td>
-                                                                            <td>
-                                                                                <div class="form-group ">
-                                                                                    <label for="exampleFormControlSelect1"></label>
-                                                                                    <input type="text" class="form-control" id="exampleInputUsername1"
-                                                                                        name='Out_Time' onChange={(e) => handleInputChange(index, e)} value={item.Out_Time} />
-
-                                                                                </div>
-                                                                            </td>
-                                                                            <td>
-                                                                                <div class="form-group ">
-                                                                                    <label for="exampleFormControlSelect1"></label>
-                                                                                    <select class="form-control form-control-lg"
-                                                                                        name='AssignmentReceived' id="exampleFromControlSelect1" onChange={(e) => handleInputChange(index, e)} value={item.AssignmentReceived}>
-
-                                                                                        <option>Select </option>
-                                                                                        <option value='Yes'>Yes</option>
-                                                                                        <option value='No'>No</option>
-
-
-                                                                                    </select>
-                                                                                </div>
-                                                                            </td>
-                                                                        </tr>
-                                                                    )
-                                                                })}
-                                                            </tbody>
-                                                        </table>
-
-                                                    </div>
-                                                    <button type="button" onClick={handleSubmitTable} style={{ float: "right" }} class="btn btn-primary m-2">{updateloading ? "Processing.." : "Update Sheet"}</button>
-
-
-
-                                                </div>
-                                            </form>
-                                        </div>}
-
                                     </div>
                                 </div>
                             </div>

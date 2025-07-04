@@ -261,7 +261,7 @@ const InnerHeader = () => {
             case '/taxmaster':
                 return 'Tax';
 
-                
+
             case '/collegelisting':
                 return 'College Information';
             case '/college/:collegeid':
@@ -281,6 +281,8 @@ const InnerHeader = () => {
                 return 'Discussion';
             case location.pathname.match(/^\/onlineadmissionform\/documents\/\d+$/) ? location.pathname : '':
                 return 'Documents';
+            case '/inquirycorporate/:inquiryid':
+                return 'Add Corporate Inquiry';
             default:
                 return '';
         }
@@ -293,7 +295,7 @@ const InnerHeader = () => {
             <header class="main-header">
                 <div class="container-fluid">
                     <div class="main-header-inner">
-                    { location.pathname !== "/" &&   <ArrowCircleLeftSharpIcon onClick={() => navigate(-1)} class="arrow" /> }
+                        {location.pathname !== "/" && <ArrowCircleLeftSharpIcon onClick={() => navigate(-1)} class="arrow" />}
                         <div class="page-title px-2">
                             <h1>{getPageName()}</h1>
                         </div>

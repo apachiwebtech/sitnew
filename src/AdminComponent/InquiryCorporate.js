@@ -4,7 +4,7 @@ import Switch from '@mui/material/Switch';
 import { DataGrid, GridToolbar, GridToolbarContainer, GridToolbarFilterButton } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import Loader from "./Loader";
@@ -45,6 +45,8 @@ const InquiryCorporate = () => {
                 setLoading(false)
             })
     }
+
+
 
 
     const [value, setValue] = useState({
@@ -98,7 +100,7 @@ const InquiryCorporate = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename: "CorporateInquiry"
+            tablename: "Corporate_Inquiry"
         }
 
         axios.post(`${BASE_URL}/delete_corporate_data`, data)
@@ -119,7 +121,7 @@ const InquiryCorporate = () => {
     const handleswitchchange = (value, Inquiry_Id) => {
         const newval = value == 0 ? 1 : 0
 
-        axios.post(`${BASE_URL}/data_status`, { status: newval, Inquiry_Id: Inquiry_Id, table_name: "CorporateInquiry" })
+        axios.post(`${BASE_URL}/data_status`, { status: newval, Id: Inquiry_Id, table_name: "Corporate_Inquiry" })
             .then((res) => {
                 console.log(res)
                 setLoading(false)
@@ -165,7 +167,7 @@ const InquiryCorporate = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        {roleaccess >= 2 && (<Link to={`/addcorporateinquiry/${params.row.Id}`} ><EditIcon style={{ cursor: "pointer" }} /></Link>)}
+                        {roleaccess >= 2 && (<Link to={`/inquirycorporate/${params.row.Id}`} ><EditIcon style={{ cursor: "pointer" }} /></Link>)}
                         {roleaccess > 3 && (<DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.Id)} />)}
                         {roleaccess >= 2 && (<Switch {...label} onChange={() => handleswitchchange(params.row.isActive, params.row.id)} defaultChecked={params.row.isActive == 0 ? false : true} color="secondary" />)}
                     </>
@@ -197,8 +199,8 @@ const InquiryCorporate = () => {
                                             <h4 class="card-title">List Of Corporate Inquiry</h4>
                                         </div>
                                         {/* <Link to='/inquiry/:inquiryid'> <button className='btn btn-success'>Add +</button></Link> */}
-                                        {roleaccess > 1 && <Link to="/lecturetaken/:inquiryid">
-                                            {" "}   
+                                        {roleaccess > 1 && <Link to="/inquirycorporate/:inquiryid">
+                                            {" "}
                                             <button className="btn btn-success">Add +</button>
                                         </Link>}
 
