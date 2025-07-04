@@ -1,24 +1,28 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import axios from 'axios';
+import { DataGrid, GridToolbar, GridToolbarContainer, GridToolbarFilterButton, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import React, { useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
+import { saveAs } from "file-saver";
+import ExcelJS from "exceljs";
 import InnerHeader from './InnerHeader';
+import { StyledDataGrid } from "./StyledDataGrid";
 
 const ContactExport = () => {
 
-    const [brand, setBrand] = useState([])
     const [vendordata, setVendorData] = useState([])
     const [specification, setSpecification] = useState("")
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [checked, setChecked] = React.useState([true, false]);
     const [course, SetCourse] = useState([])
     const [batch, setAnnulBatch] = useState([])
-    const [hide, setHide] = useState([])
-    const [vindordata, setStudent] = useState([])
+    const [paginationModel, setPaginationModel] = useState({
+        pageSize: 50,
+        page: 0,
+    });
 
     console.log(specification)
 
@@ -39,6 +43,21 @@ const ContactExport = () => {
         })
     }, [uid])
 
+    const getStudentDetails = async () => {
+        const data = {
+            batchId: value.rollnumberallot, // send selected batchId
+        };
+
+        try {
+            const res = await axios.post(`${BASE_URL}/getStudentExcel`, data);
+            setVendorData(res.data); // assuming response contains student list
+            console.log(res.data, 'test');
+        } catch (err) {
+            console.error("Error fetching student details:", err);
+        }
+    };
+
+
 
     const getbatch = async (id) => {
 
@@ -47,8 +66,7 @@ const ContactExport = () => {
         }
 
         try {
-            const res = await
-                axios.post(`${BASE_URL}/getcoursewisebatch`, data);
+            const res = await axios.post(`${BASE_URL}/getcoursewisebatch`, data);
             setAnnulBatch(res.data);
 
         } catch (err) {
@@ -72,27 +90,16 @@ const ContactExport = () => {
 
     useEffect(() => {
         getCourseData()
+        // getStudentDetails()
 
         setUid([])
     }, [])
 
 
-    async function getEmployeeData() {
-        const data = {
-            tablename: "awt_noticeboard"
-        }
-        axios.post(`${BASE_URL}/get_data`, data)
-            .then((res) => {
-                console.log(res.data)
-                setVendorData(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
+
 
     useEffect(() => {
-        getEmployeeData()
+        // getStudentDetails()
         getCourseData()
         value.title = ""
         setError({})
@@ -107,75 +114,23 @@ const ContactExport = () => {
         }));
     };
 
-    const handleCancel = (id) => {
-        // Hide the confirmation dialog without performing the delete action
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
-    };
 
-    const handleUpdate = (id) => {
-        const data = {
-            u_id: id,
-            tablename: "awt_noticeboard"
-        }
-        axios.post(`${BASE_URL}/update_data`, data)
-            .then((res) => {
-                setUid(res.data[0])
 
-                console.log(res.data, "update")
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
 
-    const handleDelete = (id) => {
-        const data = {
-            cat_id: id,
-            tablename: "awt_noticeboard"
-        }
 
-        axios.post(`${BASE_URL}/delete_data`, data)
-            .then((res) => {
-                getEmployeeData()
 
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
-    }
 
     const handleSubmit = (e) => {
-        e.preventDefault()
+        e.preventDefault();
 
-            const data = {
+        if (!value.rollnumberallot) {
+            alert("Please select a batch");
+            return;
+        }
 
-
-
-                startdate: value.startdate,
-                enddate: value.enddate,
-                specification: specification,
-                uid: uid.id
-            }
-
-
-            axios.post(`${BASE_URL}/add_noticeboard`, data)
-                .then((res) => {
-                    console.log(res)
-                    getEmployeeData()
-
-                })
-                .catch((err) => {
-                    console.log(err)
-                })
-    }
+        // Simply call getStudentDetails which already uses value.rollnumberallot
+        getStudentDetails();
+    };
 
 
     const onhandleChange = (e) => {
@@ -189,40 +144,101 @@ const ContactExport = () => {
 
     const columns = [
         {
-            field: 'index',
-            headerName: 'Id',
+            field: 'id',
+            headerName: 'Sr No.',
             type: 'number',
             align: 'center',
             headerAlign: 'center',
-            flex: 1,
+            width: 100,
             filterable: false,
-
         },
-        // { field: 'companyname', headerName: 'Company Name', flex: 2 },
-        // { field: 'posteddate', headerName: 'Posted Date', flex: 2 },
-        // { field: 'course', headerName: 'Course', flex: 2 },
-        // { field: 'profile', headerName: 'Profile', flex: 2 },
-        // { field: 'location', headerName: 'Location', flex: 2 },
-
-
         {
-            field: 'actions',
-            type: 'actions',
-            headerName: 'Action',
+            field: 'Student_Name',
+            headerName: 'Name',
             flex: 1,
-            renderCell: (params) => {
-                return (
-                    <>
-                        <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />
-                        <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />
-                    </>
-                )
-            }
+            align: 'left',
+            headerAlign: 'left',
         },
+        {
+            field: 'Present_Mobile',
+            headerName: 'Mobile Number',
+            flex: 1,
+            align: 'left',
+            headerAlign: 'left',
+        },
+        {
+            field: 'Email',
+            headerName: 'Email',
+            flex: 1,
+            align: 'left',
+            headerAlign: 'left',
+        }
     ];
 
+    function CustomToolbar() {
+        return (
+            <GridToolbarContainer
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    padding: '8px',
+                }}
+            >
+                <GridToolbarFilterButton />
+                <GridToolbarQuickFilter />
+            </GridToolbarContainer>
+        );
+    }
 
-    const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
+
+    const exportToExcel = async () => {
+        if (!vendordata || vendordata.length === 0) {
+            alert("No data available to export.");
+            return;
+        }
+
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet("Export Contacts");
+
+        // Define columns
+        worksheet.columns = [
+            { header: "Student Name", key: "Student_Name", width: 30 },
+            { header: "Email", key: "Email", width: 30 },
+            { header: "Present Mobile", key: "Present_Mobile", width: 20 },
+        ];
+
+        // Add rows
+        vendordata.forEach(row => {
+            worksheet.addRow({
+                Student_Name: row.Student_Name || '',
+                Email: row.Email || '',
+                Present_Mobile: row.Present_Mobile || ''
+            });
+        });
+
+        // Export
+        try {
+            const buffer = await workbook.xlsx.writeBuffer();
+            const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+            saveAs(blob, "Export_Contacts.xlsx");
+        } catch (error) {
+            console.error("Excel export failed:", error);
+        }
+    };
+
+
+
+
+
+
+
+
+    const rowsWithIds = vendordata.map((row, index) => ({
+        ...row,
+        id: index + 1 // this will be used as the unique ID
+    }));
+
 
     return (
 
@@ -258,23 +274,30 @@ const ContactExport = () => {
 
                                             <div class="form-group col-lg-12">
                                                 <label for="exampleFormControlSelect1">Select Batch Code</label>
-                                                <select class="form-control form-control-lg" id="exampleFromControlSelect1"
-                                                    value={value.rollnumberallot} name='rollnumberallot' onChange={onhandleChange}>
-
-                                                    <option>Select Batch</option>
-
-                                                    {batch.map((item) => {
-                                                        return (
-                                                            <option value={item.Batch_code}>{item.Batch_code}</option>
-                                                        )
-                                                    })}
+                                                <select
+                                                    className="form-control form-control-lg"
+                                                    id="exampleFromControlSelect1"
+                                                    value={value.rollnumberallot}
+                                                    name="rollnumberallot"
+                                                    onChange={onhandleChange}
+                                                >
+                                                    <option value="">Select Batch</option>
+                                                    {batch.map((item) => (
+                                                        <option key={item.Batch_Id} value={item.Batch_Id}>
+                                                            {item.Batch_code}
+                                                        </option>
+                                                    ))}
                                                 </select>
+
                                             </div>
 
                                         </div>
-                                        <div className='row p-2 gap-2'>
-                                            <button className='mr-2 btn btn-primary' onClick={handleSubmit}>Go</button>
+                                        <div className="py-3">
+                                            <button type="button" className="btn btn-primary mr-2" onClick={getStudentDetails}>
+                                                Go
+                                            </button>
                                         </div>
+
 
 
                                     </form>
@@ -292,13 +315,56 @@ const ContactExport = () => {
                                                     <div>
                                                         <h3>Details</h3>
                                                     </div><hr></hr>
-                                                    <form class="forms-sample py-3" onSubmit={handleSubmit}>
+                                                    <form className="forms-sample py-3" onSubmit={handleSubmit}>
+                                                        {vendordata.length > 0 && (
+                                                            <div>
+                                                                {/* Top bar with Excel button aligned right */}
+                                                                <div className="d-flex justify-content-between align-items-center mb-3">
+                                                                    <h5></h5>
+                                                                    <button
+                                                                        type="button"
+                                                                        className="btn btn-primary"
+                                                                        onClick={exportToExcel}
+                                                                        disabled={vendordata.length === 0}
+                                                                    >
+                                                                        Excel
+                                                                    </button>
+                                                                </div>
 
-                                                        <button type="submit" class="btn btn-primary mr-2">Excel    </button>
-
-
-
+                                                                {/* DataGrid below with top margin */}
+                                                                <div
+                                                                    style={{
+                                                                        borderLeft: "1px solid #dce4ec",
+                                                                        height: "510px",
+                                                                        overflow: "hidden",
+                                                                    }}
+                                                                >
+                                                                    <StyledDataGrid
+                                                                        rows={rowsWithIds}
+                                                                        columns={columns}
+                                                                        disableColumnSelector
+                                                                        disableDensitySelector
+                                                                        rowHeight={37}
+                                                                        pagination
+                                                                        paginationModel={paginationModel}
+                                                                        onPaginationModelChange={setPaginationModel}
+                                                                        pageSizeOptions={[50]}
+                                                                        autoHeight={false}
+                                                                        sx={{
+                                                                            height: 500,
+                                                                            '& .MuiDataGrid-footerContainer': {
+                                                                                justifyContent: 'flex-end',
+                                                                            },
+                                                                        }}
+                                                                        slots={{
+                                                                            toolbar: CustomToolbar,
+                                                                        }}
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        )}
                                                     </form>
+
 
                                                 </div>
                                             </div>
@@ -322,3 +388,5 @@ const ContactExport = () => {
 }
 
 export default ContactExport
+
+
