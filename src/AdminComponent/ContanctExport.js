@@ -316,20 +316,21 @@ const ContactExport = () => {
                                                         <h3>Details</h3>
                                                     </div><hr></hr>
                                                     <form className="forms-sample py-3" onSubmit={handleSubmit}>
+                                                        <div className="d-flex justify-content-between align-items-center mb-3">
+                                                            <h5></h5>
+                                                            <button
+                                                                type="button"
+                                                                className="btn btn-primary"
+                                                                onClick={exportToExcel}
+                                                                disabled={vendordata.length === 0}
+                                                            >
+                                                                Excel
+                                                            </button>
+                                                        </div>
                                                         {vendordata.length > 0 && (
                                                             <div>
                                                                 {/* Top bar with Excel button aligned right */}
-                                                                <div className="d-flex justify-content-between align-items-center mb-3">
-                                                                    <h5></h5>
-                                                                    <button
-                                                                        type="button"
-                                                                        className="btn btn-primary"
-                                                                        onClick={exportToExcel}
-                                                                        disabled={vendordata.length === 0}
-                                                                    >
-                                                                        Excel
-                                                                    </button>
-                                                                </div>
+
 
                                                                 {/* DataGrid below with top margin */}
                                                                 <div
