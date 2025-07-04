@@ -38,8 +38,16 @@ const ID_CardDoc = ({ student }) => {
 
                     {student.map((item, index) => {
 
+                        const imageUrl = `${IMG_URL}/student_document/${item.Student_Id}/${item.upload_image}`;
+                        console.log('Image URL:', imageUrl); // Logs each image URL
+
+                        const validImage = (filename) => {
+                            return /\.(jpg|jpeg|png|gif)$/i.test(filename);
+                        };
+
+
                         return (
-                            
+
 
                             <View style={{
                                 flexDirection: "row",
@@ -47,29 +55,30 @@ const ID_CardDoc = ({ student }) => {
                                 height: "160px",
                                 gap: "3px",
                                 marginTop: "10px"
-                            }}>
+
+                            }} key={index}>
                                 <View break={index === 4} wrap={false}>
 
                                 </View>
                                 {/* left card */}
-                                
+
                                 <View style={{
                                     width: "50%",
                                     height: "160px",
                                     border: "1px solid black",
-                                    display:"flex",
-                                    justifyContent:'center',
-                                    alignItems:"center"
+                                    display: "flex",
+                                    justifyContent: 'center',
+                                    alignItems: "center"
                                 }}>
                                     <Text style={{
-                                        width:"80%",
-                                        height:"auto",
+                                        width: "80%",
+                                        height: "auto",
                                         fontSize: "20",
                                         fontFamily: 'Poppins',
                                         fontWeight: 600,
-                                        textAlign:"center",
-                                        whiteSpace: 'nowrap' ,
-                                    }}  wrap={false}>{item.Student_Name}</Text>
+                                        textAlign: "center",
+                                        whiteSpace: 'nowrap',
+                                    }} wrap={false}>{item.Student_Name}</Text>
                                 </View>
 
 
@@ -120,10 +129,15 @@ const ID_CardDoc = ({ student }) => {
 
                                                 }}>
 
-                                                <Image
-                                                                    src={`${IMG_URL}/student_document/${item.Student_Id}/` + item.upload_image} alt=''
-                                                                   style= {{width: "70px" }}
-                                                                ></Image>
+                                                {validImage(item.upload_image) ? (
+                                                    <Image
+                                                        src={`${IMG_URL}/student_document/${item.Student_Id}/${item.upload_image}`}
+                                                        style={{ width: '70px' }}
+                                                    />
+                                                ) : (
+                                                    <Text>Invalid Image</Text>
+                                                )}
+
                                             </View>
 
                                         </View>
@@ -178,7 +192,7 @@ const ID_CardDoc = ({ student }) => {
                                                         {item.Student_Name}
                                                     </Text>
                                                 </View>
-                                           
+
 
                                             </View>
                                             <View style={{
@@ -190,7 +204,7 @@ const ID_CardDoc = ({ student }) => {
                                                 paddingRight: "5px",
                                             }}>
                                                 <View style={{
-                                      
+
                                                 }}>
                                                     <Text style={{
                                                         fontSize: 7, fontFamily: 'Poppins',
@@ -288,7 +302,7 @@ const ID_CardDoc = ({ student }) => {
                                                     borderBottom: "1px solid black",
                                                     marginRight: "3px"
                                                 }}>
-                                                    <Text style={{ fontSize: 8 }}>{item.Valid_Date ? formatDate(item.Valid_Date): ''}</Text>
+                                                    <Text style={{ fontSize: 8 }}>{item.Valid_Date ? formatDate(item.Valid_Date) : ''}</Text>
                                                 </View>
                                             </View>
                                         </View></View>
