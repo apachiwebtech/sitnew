@@ -235,6 +235,7 @@ import InquiryCorporateAdd from "./AdminComponent/InquiryCorporateAdd.js";
 
 import Documents from "./AdminComponent/Document/Documents.js";
 import PlacedStudents from "./AdminComponent/Document/PlacedStudents.js";
+import StudentPlacement from "./AdminComponent/StudentPlacement.js";
 
 
 
@@ -270,6 +271,10 @@ const Router = createBrowserRouter([
         path: "/onlineadmissionform/documents/:admissionid",
         element: <Documents />,
     },
+    // {
+    //     path: "/onlineadmissionform/placement/:admissionid",
+    //     element: <Placement />,
+    // },
 
     {
         path: "/admissionform/personalinfo/:admissionid",
@@ -282,6 +287,10 @@ const Router = createBrowserRouter([
     {
         path: "/admissionform/companyinfo/:admissionid",
         element: <StudentCompanyInfo />,
+    },
+    {
+        path: "/admissionform/placement/:admissionid",
+        element: <StudentPlacement />,
     },
 
     {

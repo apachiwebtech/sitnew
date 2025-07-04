@@ -49,6 +49,8 @@ const InnerHeaderForm = () => {
                                 </Link>}
                                 {location.pathname.match(/^\/admissionform\/discussion\/\d+$/) && <Link to="/Student"><CancelIcon class="arrow" />
                                 </Link>}
+                                {location.pathname.match(/^\/admissionform\/placement\/\d+$/) && <Link to="/Student"><CancelIcon class="arrow" />
+                                </Link>}
                                 {location.pathname.match(/^\/admissionform\/documents\/\d+$/) && <Link to="/Student"><CancelIcon class="arrow" />
                                 </Link>}
                                 {location.pathname.match(/^\/onlineadmissionform\/personalinfo\/\d+$/) && <Link to="/onlineadmission"><CancelIcon class="arrow" />
