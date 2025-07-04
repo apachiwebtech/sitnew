@@ -247,6 +247,8 @@ export const BatchWiseFeesDetailsNewpdf = ({ batchwisefee }) => {
 
                         {chunk.map((item, index) => {
 
+                            console.log(item, "item")
+
                             const RemainingAmount = item.Fees_Full_Payment - item.Total_Amt;
 
                             return (
