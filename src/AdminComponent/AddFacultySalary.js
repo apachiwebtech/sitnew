@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { BASE_URL } from "./BaseUrl";
 import InnerHeader from "./InnerHeader";
 import axios from "axios";
 
 const AddFacultySalary = () => {
     const [error, setError] = useState({});
+    const [uid, setUid] = useState([])
+    const [hide, setHide] = useState(false)
     const [isEdit, setIsEdit] = useState(false);
     const [facultyList, setFacultyList] = useState([]);
+    const { addfacultysalaryid } = useParams();
     const [lectureList, setLectureList] = useState([]);
     const [salaryList, setSalaryList] = useState([]);
     const initialState = {
@@ -138,6 +141,73 @@ const AddFacultySalary = () => {
         }
     };
 
+    const navigate = useNavigate()
+
+    async function getfacultysalarypopulate(Salary_Id) {
+        const response = await fetch(`${BASE_URL}/new_update_data`, {
+            method: 'POST',
+            body: JSON.stringify({
+                u_id: Salary_Id || addfacultysalaryid,
+                uidname: "Salary_Id",
+                tablename: "Faculty_Salary"
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        const data = await response.json();
+
+        if (data && data.length > 0) {
+            const salaryData = data[0];
+            setUid(salaryData);
+
+            // 💡 Set the formState with fetched data
+            setFormState((prev) => ({
+                ...prev,
+                ...salaryData,
+                Salary_Id: salaryData.Salary_Id || "",
+                Sal_Month: salaryData.Sal_Month || "",
+                Sal_Year: salaryData.Sal_Year || "",
+                Faculty_Id: salaryData.Faculty_Id || "",
+                Faculty_Type: salaryData.Faculty_Type || "",
+                Salary_struct: salaryData.Salary_struct || "",
+                Rate: salaryData.Rate || "",
+                TDS_Per: salaryData.TDS_Per || "",
+                Total_Hours: salaryData.Total_Hours || "",
+                Salary: salaryData.Salary || "",
+                Bonus: salaryData.Bonus || "",
+                Award: salaryData.Award || "",
+                Other_Inc: salaryData.Other_Inc || "",
+                Tot_Inc: salaryData.Tot_Inc || "",
+                Tot_Amount: salaryData.Tot_Amount || "",
+                TDS: salaryData.TDS || "",
+                Advance: salaryData.Advance || "",
+                Other_Ded: salaryData.Other_Ded || "",
+                Total_Ded: salaryData.Total_Ded || "",
+                Net_Payment: salaryData.Net_Payment || "",
+                Payment_Type: salaryData.Payment_Type || "",
+                Cheque_No: salaryData.Cheque_No || "",
+                Payment_Dt: salaryData.Payment_Dt ? salaryData.Payment_Dt.slice(0, 10) : "",
+                Date_Added: salaryData.Date_Added || "",
+                Remark: salaryData.Remark || "",
+                IsActive: salaryData.IsActive ?? 1,
+                IsDelete: salaryData.IsDelete ?? 0,
+                NEFT_No: salaryData.NEFT_No || "",
+            }));
+
+            setIsEdit(true); // mark as edit mode
+        }
+    }
+
+    useEffect(() => {
+        if (addfacultysalaryid && addfacultysalaryid !== ":addfacultysalaryid") {
+            getfacultysalarypopulate();
+            setHide(true);
+        }
+    }, [addfacultysalaryid]);
+
+
     const getLectureDetails = async (month, year, id) => {
         try {
             const LectureDate = `${year}-${(months.indexOf(month) + 1).toString().padStart(2, "0")}%`;
@@ -199,22 +269,64 @@ const AddFacultySalary = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            if (validateForm()) {
-                const data = setToNum(formState);
-                console.log(data);
-                if (!isEdit) {
-                    const response = await axios.post(`${BASE_URL}/addFacultySalary`, data);
 
-                    console.log(response.data);
-                    alert("Faculty Salary Added");
+        if (validateForm()) {
+            const data = setToNum(formState);
+
+            try {
+                const res = await axios.post(`${BASE_URL}/addFacultySalary`, data);
+                const msg = res.data?.message;
+                const addfacultysalaryid = res.data?.Salary_Id;
+
+                if (msg === "Faculty Salary Added") {
+                    alert("Data Added Successfully");
+                } else if (msg === "Faculty Salary Updated") {
+                    alert("Data Updated Successfully");
+                    navigate(`/addfacultysalry`);
                 }
+
+                setFormState({
+                    Salary_Id: "",
+                    Faculty_Id: "",
+                    Sal_Month: "",
+                    Sal_Year: "",
+                    Faculty_Type: "",
+                    Salary_struct: "",
+                    Rate: "",
+                    Total_Hours: "",
+                    Salary: "",
+                    Bonus: "",
+                    Award: "",
+                    Other_Inc: "",
+                    Tot_Inc: "",
+                    Tot_Amount: "",
+                    TDS_Per: "",
+                    TDS: "",
+                    Advance: "",
+                    Other_Ded: "",
+                    Total_Ded: "",
+                    Net_Payment: "",
+                    Payment_Type: "",
+                    Cheque_No: "",
+                    Payment_Dt: "",
+                    Date_Added: "",
+                    Remark: "",
+                    IsActive: 1,
+                    IsDelete: 0,
+                    NEFT_No: "",
+                });
+
+                // if (addfacultysalaryid) {
+                //     setHide(true);
+                //     navigate(`/addfacultysalry/${addfacultysalaryid}`);
+                //     getfacultysalarypopulate(addfacultysalaryid);
+                // }
+            } catch (err) {
+                console.log("AXIOS ERROR:", err);
             }
-        } catch (err) {
-            console.log("error", err);
-            alert("Error");
         }
     };
+
 
     const numInputs = [
         "Total_Hours",

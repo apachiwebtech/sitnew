@@ -972,7 +972,7 @@ const Router = createBrowserRouter([
                 element: <AddFacultySalaryListing />,
             },
             {
-                path: "/addfacultysalary/:addfacultysalaryid",
+                path: "/addfacultysalry/:addfacultysalaryid",
                 element: <AddFacultySalary />,
             },
 

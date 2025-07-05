@@ -20,24 +20,30 @@ const AddFacultySalaryListing = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
     const label = { inputProps: { "aria-label": "Color switch demo" } };
-    const [inquiryData, setInquiryData] = useState([]);
     const [facultySalaryData, setFacultySalaryData] = useState([]);
     const [paginationModel, setPaginationModel] = useState({
-            pageSize: 50,
-            page: 0,
-          });
+        pageSize: 50,
+        page: 0,
+    });
 
-    const getInquiryData = async () => {
-        const response = await fetch(`${BASE_URL}/getaddfacultysalarydata`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
-        const data = await response.json();
-
-        setInquiryData(data);
+    const getFacultySalary = async () => {
+        try {
+            const response = await axios.get(`${BASE_URL}/getFacultySalary`);
+            setFacultySalaryData(response.data);
+        } catch (err) {
+            console.log("getFacultySalary error", err);
+        }
     };
+
+    // async function getFacultySalary() {
+    //     axios.post(`${BASE_URL}/getFacultySalary`)
+    //         .then((res) => {
+    //             setFacultySalaryData(res.data)
+    //             setLoading(false)
+    //         })
+    // }
+
+
 
     const handleClick = (id) => {
         setCid(id);
@@ -75,13 +81,13 @@ const AddFacultySalaryListing = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename: "awt_addfeesdetails",
+            tablename: "Faculty_Salary",
         };
 
         axios
-            .post(`${BASE_URL}/delete_inquiry_data`, data)
+            .post(`${BASE_URL}/delete_salary_data`, data)
             .then((res) => {
-                getInquiryData();
+                getFacultySalary();
             })
             .catch((err) => {
                 console.log(err);
@@ -95,29 +101,23 @@ const AddFacultySalaryListing = () => {
 
     useEffect(() => {
         getFacultySalary();
+        setUid([])
     }, []);
 
-    const getFacultySalary = async () => {
-        try {
-            const response = await axios.get(`${BASE_URL}/getFacultySalary`);
-            setFacultySalaryData(response.data);
-        } catch (err) {
-            console.log("getFacultySalary error", err);
-        }
-    };
+
 
 
     const roledata = {
-            role: Cookies.get(`role`),
-            pageid: 78,
-        };
-    
-        const dispatch = useDispatch();
-        const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
-    
-        useEffect(() => {
-            dispatch(getRoleData(roledata));
-        }, []);
+        role: Cookies.get(`role`),
+        pageid: 78,
+    };
+
+    const dispatch = useDispatch();
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata));
+    }, []);
 
     const columns = [
         { field: "Faculty_Name", headerName: "Faculty Name", flex: 1 },
@@ -127,27 +127,27 @@ const AddFacultySalaryListing = () => {
             headerName: "Date",
             flex: 1,
             renderCell: (params) => {
-              if (!params.value) return ""; // Handle empty values
-          
-              // Check if already in DD-MM-YYYY format
-              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
-              if (ddmmyyyyRegex.test(params.value)) {
-                return params.value; // Return as-is if already formatted
-              }
-          
-              const date = new Date(params.value);
-              if (isNaN(date.getTime())) return ""; // Handle invalid dates
-          
-              // Convert to DD-MM-YYYY format
-              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+                if (!params.value) return ""; // Handle empty values
+
+                // Check if already in DD-MM-YYYY format
+                const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+                if (ddmmyyyyRegex.test(params.value)) {
+                    return params.value; // Return as-is if already formatted
+                }
+
+                const date = new Date(params.value);
+                if (isNaN(date.getTime())) return ""; // Handle invalid dates
+
+                // Convert to DD-MM-YYYY format
+                return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
             },
-          },
-          
+        },
+
         { field: "Sal_Month", headerName: "Month", flex: 1 },
         { field: "Sal_Year", headerName: "Year", flex: 1 },
         { field: "Total_Hours", headerName: "Total Hours", flex: 1 },
         { field: "Tot_Inc", headerName: "Total Inc.", flex: 1 },
-        { field: "Total_Ded", headerName: "Total Ded.", flex: 1},
+        { field: "Total_Ded", headerName: "Total Ded.", flex: 1 },
         { field: "Net_Payment", headerName: "Net Payment", flex: 1 },
         { field: "Payment_Type", headerName: "Payment Type", flex: 1 },
         { field: "Cheque_No", headerName: "Cheque No", flex: 1 },
@@ -163,7 +163,7 @@ const AddFacultySalaryListing = () => {
                         </Link>}
                         {roleaccess > 3 && <DeleteIcon
                             style={{ color: "red", cursor: "pointer" }}
-                            onClick={() => handleClick(params.row.id)}
+                            onClick={() => handleClick(params.row.Salary_Id)}
                         />}
                         {roleaccess > 2 && <Switch
                             {...label}
@@ -177,7 +177,7 @@ const AddFacultySalaryListing = () => {
         },] : [])
     ];
 
-    const rowsWithIds = inquiryData.map((row, index) => ({
+    const rowsWithIds = facultySalaryData.map((row, index) => ({
         index: index + 1,
         ...row,
     }));
@@ -202,13 +202,13 @@ const AddFacultySalaryListing = () => {
                                         <div>
                                             <h4 class="card-title">View Faculty Salary</h4>
                                         </div>
-                                        <Link to="/addfacultysalary/:addfacultysalaryid">
+                                        <Link to="/addfacultysalry/:addfacultysalaryid">
                                             {" "}
                                             <button className="btn btn-success">Add +</button>
                                         </Link>
                                     </div>
 
-                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "hidden"}}>
+                                    <div style={{ borderLeft: "1px solid #dce4ec", height: "510px", overflow: "hidden" }}>
                                         <StyledDataGrid
                                             rows={facultySalaryData}
                                             columns={columns}
@@ -220,20 +220,20 @@ const AddFacultySalaryListing = () => {
                                             pagination
                                             paginationModel={paginationModel}
                                             onPaginationModelChange={setPaginationModel}
-                                            pageSizeOptions= {[50]}
+                                            pageSizeOptions={[50]}
                                             autoHeight={false}
                                             sx={{
-                                              height: 500, // Ensure enough height for pagination controls
-                                              '& .MuiDataGrid-footerContainer': {
-                                                justifyContent: 'flex-end',
-                                              },
-                                            }}slots={{
+                                                height: 500, // Ensure enough height for pagination controls
+                                                '& .MuiDataGrid-footerContainer': {
+                                                    justifyContent: 'flex-end',
+                                                },
+                                            }} slots={{
                                                 toolbar: GridToolbar
                                             }}
                                             slotProps={{
-                                              toolbar: {
-                                                showQuickFilter: true,
-                                              },
+                                                toolbar: {
+                                                    showQuickFilter: true,
+                                                },
                                             }}
                                         />
 
