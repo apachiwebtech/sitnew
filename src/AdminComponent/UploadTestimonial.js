@@ -9,6 +9,7 @@ import { StyledDataGrid } from "./StyledDataGrid";
 import { useDispatch, useSelector } from "react-redux";
 import { getRoleData } from "../Store/Role/role-action";
 import Cookies from "js-cookie";
+import { Link, useNavigate } from "react-router-dom";
 
 const UploadTestimonial = () => {
 
@@ -23,15 +24,16 @@ const UploadTestimonial = () => {
     const [hide, setHide] = useState([])
     const [vindordata, setStudent] = useState([])
     const [courseid, setCourseid] = useState([])
+    const navigate = useNavigate();
     const [batchid, setBatch] = useState('')
     const [paginationModel, setPaginationModel] = useState({
-            pageSize: 50,
-            page: 0,
-          });
+        pageSize: 50,
+        page: 0,
+    });
 
     const [value, setValue] = useState({
-        course: "" ,
-        batch: "" ,
+        course: "",
+        batch: "",
 
 
 
@@ -55,25 +57,25 @@ const UploadTestimonial = () => {
         const data = {
             courseid: id
         }
-       
-        if(id) {
+
+        if (id) {
             try {
-                const res = await 
-                axios.post(`${BASE_URL}/getcoursewisebatch`, data);
+                const res = await
+                    axios.post(`${BASE_URL}/getcoursewisebatch`, data);
                 setAnnulBatch(res.data);
             } catch (err) {
                 console.error("Error fetching data:", err);
             }
-        }else{
+        } else {
             try {
-                const res = await 
-                axios.get(`${BASE_URL}/getbatch`);
+                const res = await
+                    axios.get(`${BASE_URL}/getbatch`);
                 setAnnulBatch(res.data);
             } catch (err) {
                 console.error("Error fetching data:", err);
             }
         }
-      
+
     };
 
     useEffect(() => {
@@ -86,24 +88,10 @@ const UploadTestimonial = () => {
     }, [uid])
 
 
-    async function getData() {
-        const data = {
-            tablename: "awt_uploadtestimonial"
-        }
-        axios.post(`${BASE_URL}/get_data`, data)
-            .then((res) => {
-                console.log(res.data)
-                setVendorData(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
+
     async function getDatas() {
-        const data = {
-            tablename: "awt_uploadtestimonial"
-        }
-        axios.post(`${BASE_URL}/gettestimonial`, data)
+
+        axios.post(`${BASE_URL}/gettestimonial`)
             .then((res) => {
                 console.log(res.data)
                 setVendorData(res.data)
@@ -114,7 +102,6 @@ const UploadTestimonial = () => {
     }
 
     useEffect(() => {
-        getData()
         getDatas()
         getCourseData()
         getBatch()
@@ -161,7 +148,7 @@ const UploadTestimonial = () => {
 
         axios.post(`${BASE_URL}/delete_data`, data)
             .then((res) => {
-                getData()
+
                 setValue({
                     course: "",
                     batch: "",
@@ -182,23 +169,22 @@ const UploadTestimonial = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
         console.log("Submitting data:", value);
-            const data = {
+        const data = {
 
-                course: value.course,
-                batch: value.batch,
-                uid: uid.length > 0 ? uid.id : undefined 
-            }
-            console.log("Data being sent to the server:", data);
+            course: value.course,
+            batch: value.batch,
+            uid: uid.length > 0 ? uid.id : undefined
+        }
+        console.log("Data being sent to the server:", data);
 
-            axios.post(`${BASE_URL}/add_uploadtestimonial`, data)
-                .then((res) => {
-                    console.log(res)
-                    getData()
+        axios.post(`${BASE_URL}/add_uploadtestimonial`, data)
+            .then((res) => {
+                console.log(res)
 
-                })
-                .catch((err) => {
-                    console.log(err)
-                })
+            })
+            .catch((err) => {
+                console.log(err)
+            })
 
     }
 
@@ -208,7 +194,7 @@ const UploadTestimonial = () => {
     }
 
 
-const roledata = {
+    const roledata = {
         role: Cookies.get(`role`),
         pageid: 96,
     };
@@ -223,18 +209,10 @@ const roledata = {
 
 
     const columns = [
-        {
-            field: 'index',
-            headerName: 'Id',
-            type: 'number',
-            align: 'center',
-            headerAlign: 'center',
-            flex: 1,
-            filterable: false,
 
-        },
+        { field: 'Batch_code', headerName: 'Batch Name', flex: 1 },
         { field: 'Course_Name', headerName: 'Course Name', flex: 2 },
-        { field: 'batch', headerName: 'Batch Name', flex: 2 },
+        { field: 'Student_Name', headerName: 'Student Name', flex: 2 },
 
         {
             field: 'actions',
@@ -244,8 +222,8 @@ const roledata = {
             renderCell: (params) => {
                 return (
                     <>
-                        {roleaccess > 2 &&<EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />}
-                         {roleaccess > 3 &&<DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />}
+                        {roleaccess > 2 && <EditIcon style={{ cursor: "pointer" }} onClick={() => navigate(`/uploadtestimonial/${params.row.Id}`)} />}
+                        {roleaccess > 3 && <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.Id)} />}
                     </>
                 )
             }
@@ -262,7 +240,7 @@ const roledata = {
             <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="row">
-                        <div class="col-lg-12 grid-margin stretch-card">
+                        {/* <div class="col-lg-12 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
                                     <h4 class="card-title">Add Testimonial Details</h4>
@@ -275,9 +253,9 @@ const roledata = {
                                                 <select class="form-control" id="exampleFormControlSelect1"
                                                     value={value.course} name='course' onChange={(e) => {
                                                         getBatch(e.target.value);
-                                                        onhandleChange(e); 
+                                                        onhandleChange(e);
                                                     }}>
-                                                    <option value="">Select Course</option> 
+                                                    <option value="">Select Course</option>
                                                     {course.map((item) => (
                                                         <option key={item.Course_Id} value={item.Course_Id}>{item.Course_Name}</option>
                                                     ))}
@@ -289,7 +267,7 @@ const roledata = {
                                                 <label for="exampleFormControlSelect1">Batch</label>
                                                 <select class="form-control" id="exampleFormControlSelect1"
                                                     value={value.batch} name='batch' onChange={onhandleChange}>
-                                                    <option value="">Select Batch</option> 
+                                                    <option value="">Select Batch</option>
                                                     {batch.map((item) => (
                                                         <option key={item.Batch_code} value={item.Batch_code}>{item.Batch_code}</option>
                                                     ))}
@@ -308,18 +286,22 @@ const roledata = {
 
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <div className='d-flex justify-content-between'>
+                                    <div className='d-flex justify-content-between '>
                                         <div>
                                             <h4 class="card-title">View Testimonial Details</h4>
                                         </div>
+                                        <Link to="/uploadtestimonial/:testimonialid">
+                                            {" "}
+                                            <button className="btn btn-success my-2">Add +</button>
+                                        </Link>
 
                                     </div>
 
-                                    <div style={ { border: "1px solid #dce4ec", height: "510px", overflow: "hidden"}}>
+                                    <div style={{ border: "1px solid #dce4ec", height: "510px", overflow: "hidden" }}>
                                         <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
@@ -327,25 +309,25 @@ const roledata = {
                                             disableColumnSelector
                                             disableDensitySelector
                                             rowHeight={35}
-                                            getRowId={(row) => row.id}
+                                            getRowId={(row) => row.Id}
                                             pagination
                                             paginationModel={paginationModel}
                                             onPaginationModelChange={setPaginationModel}
-                                            pageSizeOptions= {[50]}
+                                            pageSizeOptions={[50]}
                                             autoHeight={false}
                                             sx={{
-                                              height: 500, // Ensure enough height for pagination controls
-                                              '& .MuiDataGrid-footerContainer': {
-                                                justifyContent: 'flex-end',
-                                              },
+                                                height: 500, // Ensure enough height for pagination controls
+                                                '& .MuiDataGrid-footerContainer': {
+                                                    justifyContent: 'flex-end',
+                                                },
                                             }}
                                             slots={{
                                                 toolbar: GridToolbar
                                             }}
                                             slotProps={{
-                                              toolbar: {
-                                                showQuickFilter: true,
-                                              },
+                                                toolbar: {
+                                                    showQuickFilter: true,
+                                                },
                                             }}
                                         />
 

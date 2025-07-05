@@ -236,6 +236,7 @@ import InquiryCorporateAdd from "./AdminComponent/InquiryCorporateAdd.js";
 import Documents from "./AdminComponent/Document/Documents.js";
 import PlacedStudents from "./AdminComponent/Document/PlacedStudents.js";
 import StudentPlacement from "./AdminComponent/StudentPlacement.js";
+import TestimonialChild from "./AdminComponent/TestimonialChild.js";
 
 
 
@@ -789,6 +790,10 @@ const Router = createBrowserRouter([
             {
                 path: "/uploadtestimonial",
                 element: <UploadTestimonial />,
+            },
+            {
+                path: "/uploadtestimonial/:testimonialid",
+                element: <TestimonialChild />,
             },
 
             {
