@@ -32,17 +32,17 @@ const LibraryBook = () => {
 
 
     const [value, setValue] = useState({
-        bookname: "" || uid.bookname,
-        booknumber: "" || uid.booknumber,
-        publication: "" || uid.publication,
-        page: "" || uid.page,
-        status: "" || uid.status,
-        comment: "" || uid.comment,
-        coursename: "" || uid.coursename,
-        author: "" || uid.author,
-        purchasedate: "" || uid.purchasedate,
-        price: "" || uid.price,
-        rackno: "" || uid.rackno
+        Book_Name: "" || uid.Book_Name,
+        Book_No: "" || uid.Book_No,
+        Publisher: "" || uid.Publisher,
+        Total_Pages: "" || uid.Total_Pages,
+        Status: "" || uid.Status,
+        Remark: "" || uid.Remark,
+        Book_Course: "" || uid.Book_Course,
+        Author: "" || uid.Author,
+        Purchase_Dt: "" || uid.Purchase_Dt,
+        Amount: "" || uid.Amount,
+        RackNo: "" || uid.RackNo
 
 
     })
@@ -50,17 +50,17 @@ const LibraryBook = () => {
     useEffect(() => {
         setValue({
 
-            bookname: uid.bookname,
-            booknumber: uid.booknumber,
-            publication: uid.publication,
-            page: uid.page,
-            status: uid.status,
-            comment: uid.comment,
-            coursename: uid.coursename,
-            author: uid.author,
-            purchasedate: uid.purchasedate,
-            price: uid.price,
-            rackno: uid.rackno
+            Book_Name: uid.Book_Name,
+            Book_No: uid.Book_No,
+            Publisher: uid.Publisher,
+            Total_Pages: uid.Total_Pages,
+            Status: uid.Status,
+            Remark: uid.Remark,
+            Book_Course: uid.Book_Course,
+            Author: uid.Author,
+            Purchase_Dt: uid.Purchase_Dt,
+            Amount: uid.Amount,
+            RackNo: uid.RackNo
 
 
         })
@@ -72,18 +72,18 @@ const LibraryBook = () => {
         const newErrors = {}
 
 
-        if (!value.bookname) {
+        if (!value.Book_Name) {
             isValid = false;
-            newErrors.bookname = "Book Name is Required"
+            newErrors.Book_Name = "Book Name is Required"
         }
-        if (!value.booknumber) {
+        if (!value.Book_No) {
             isValid = false;
-            newErrors.booknumber = "Book Number is Required"
+            newErrors.Book_No = "Book Number is Required"
         }
 
-        if (!value.coursename || value.coursename === "") {
+        if (!value.Book_Course || value.Book_Course === "") {
             isValid = false;
-            newErrors.coursename = "Course Name is Required";
+            newErrors.Book_Course = "Course Name is Required";
         }
 
         setError(newErrors)
@@ -119,9 +119,9 @@ const LibraryBook = () => {
 
     async function getLibraryData() {
         const data = {
-            tablename: "awt_librarybook"
+            tablename: "Library_Book_Mst"
         }
-        axios.post(`${BASE_URL}/get_data`, data)
+        axios.post(`${BASE_URL}/get_librarydata`, data)
             .then((res) => {
                 console.log(res.data)
                 setVendorData(res.data)
@@ -160,7 +160,7 @@ const LibraryBook = () => {
     const handleUpdate = (id) => {
         const data = {
             u_id: id,
-            tablename: "awt_librarybook"
+            tablename: "Library_Book_Mst"
         }
         axios.post(`${BASE_URL}/update_data`, data)
             .then((res) => {
@@ -168,17 +168,17 @@ const LibraryBook = () => {
 
                 console.log(res.data, "update")
                 setValue({
-                    bookname: '',
-                    booknumber: '',
-                    publication: '',
-                    page: '',
-                    status: '',
-                    comment: '',
-                    coursename: '',
-                    author: '',
-                    purchasedate: '',
-                    price: '',
-                    rackno: '',
+                    Book_Name: '',
+                    Book_No: '',
+                    Publisher: '',
+                    Total_Pages: '',
+                    Status: '',
+                    Remark: '',
+                    Book_Course: '',
+                    Author: '',
+                    Purchase_Dt: '',
+                    Amount: '',
+                    RackNo: '',
                 });
 
             })
@@ -190,10 +190,10 @@ const LibraryBook = () => {
     const handleDelete = (id) => {
         const data = {
             cat_id: id,
-            tablename: "awt_librarybook"
+            tablename: "Library_Book_Mst"
         }
 
-        axios.post(`${BASE_URL}/delete_data`, data)
+        axios.post(`${BASE_URL}/delete_librarydata`, data)
             .then((res) => {
                 getLibraryData()
 
@@ -214,17 +214,17 @@ const LibraryBook = () => {
         if (validateForm()) {
             const data = {
 
-                bookname: value.bookname,
-                booknumber: value.booknumber,
-                publication: value.publication,
-                page: value.page,
-                status: value.status,
-                comment: value.comment,
-                coursename: value.coursename,
-                author: value.author,
-                purchasedate: value.purchasedate,
-                price: value.price,
-                rackno: value.rackno,
+                Book_Name: value.Book_Name,
+                Book_No: value.Book_No,
+                Publisher: value.Publisher,
+                Total_Pages: value.Total_Pages,
+                Status: value.Status,
+                Remark: value.Remark,
+                Book_Course: value.Book_Course,
+                Author: value.Author,
+                Purchase_Dt: value.Purchase_Dt,
+                Amount: value.Amount,
+                RackNo: value.RackNo,
                 uid: uid.id
             }
 
@@ -240,17 +240,17 @@ const LibraryBook = () => {
                     }
 
                     setValue({
-                        bookname: '',
-                        booknumber: '',
-                        publication: '',
-                        page: '',
-                        status: '',
-                        comment: '',
-                        coursename: '',
-                        author: '',
-                        purchasedate: '',
-                        price: '',
-                        rackno: '',
+                        Book_Name: '',
+                        Book_No: '',
+                        Publisher: '',
+                        Total_Pages: '',
+                        Status: '',
+                        Remark: '',
+                        Book_Course: '',
+                        Author: '',
+                        Purchase_Dt: '',
+                        Amount: '',
+                        RackNo: '',
                     });
 
 
@@ -295,7 +295,7 @@ const LibraryBook = () => {
 
     const columns = [
         {
-            field: 'index',
+            field: 'Book_Id',
             headerName: 'Id',
             type: 'number',
             align: 'center',
@@ -303,11 +303,11 @@ const LibraryBook = () => {
             flex: 0.5,
             filterable: false,
         },
-        { field: 'bookname', headerName: 'Book Name', flex: 1 },
-        { field: 'booknumber', headerName: 'Book Number', flex: 1 },
-        { field: 'coursename', headerName: 'Course Name', flex: 1 },
+        { field: 'Book_Name', headerName: 'Book Name', flex: 1 },
+        { field: 'Book_No', headerName: 'Book Number', flex: 1 },
+        { field: 'Book_Course', headerName: 'Course Name', flex: 1 },
         {
-            field: 'purchasedate',
+            field: 'Purchase_Dt',
             headerName: 'Purchase Date',
             flex: 1,
             valueGetter: (params) => {
@@ -319,7 +319,7 @@ const LibraryBook = () => {
                 return `${day}-${month}-${year}`;
             }
         },
-        { field: 'rackno', headerName: 'Rach No.', flex: 1 },
+        { field: 'RackNo', headerName: 'Rack No.', flex: 1 },
 
         ...(roleaccess > 2 ? [{
             field: 'actions',
@@ -338,7 +338,10 @@ const LibraryBook = () => {
     ];
 
 
-    const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
+    const rowsWithIds = vendordata.map((row, index) => ({
+        id: row.Book_Id ?? index + 1,  // Prefer Book_Id, fallback to index
+        ...row,
+    }));
 
     return (
 
@@ -359,31 +362,42 @@ const LibraryBook = () => {
                                         <div class='row'>
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleInputUsername1">Book Name<span className='text-danger'>*</span></label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.bookname}
-                                                    placeholder="Book Name*" name='bookname' onChange={onhandleChange} />
-                                                {<span className='text-danger'>{error.bookname}</span>}
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.Book_Name}
+                                                    placeholder="Book Name*" name='Book_Name' onChange={onhandleChange} />
+                                                {<span className='text-danger'>{error.Book_Name}</span>}
                                             </div>
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleInputUsername1">Book Number<span className='text-danger'>*</span></label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.booknumber}
-                                                    placeholder="Book Number*" name='booknumber' onChange={onhandleChange} />
-                                                {<span className='text-danger'>{error.booknumber}</span>}
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.Book_No}
+                                                    placeholder="Book Number*" name='Book_No' onChange={onhandleChange} />
+                                                {<span className='text-danger'>{error.Book_No}</span>}
                                             </div>
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleInputUsername1">Publication</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.publication}
-                                                    placeholder="Publication" name='publication' onChange={onhandleChange} />
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.Publisher}
+                                                    placeholder="Publisher" name='Publisher' onChange={onhandleChange} />
 
                                             </div>
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleInputUsername1">Page</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.page} placeholder="Page" name='page' onChange={onhandleChange} />
+                                                <input
+                                                    type="text"
+                                                    className="form-control"
+                                                    id="exampleInputUsername1"
+                                                    value={value.Total_Pages}
+                                                    placeholder="Total_Pages"
+                                                    name="Total_Pages"
+                                                    onChange={(e) => {
+                                                        const onlyNums = e.target.value.replace(/\D/g, ''); // Remove non-digits
+                                                        onhandleChange({ target: { name: 'Total_Pages', value: onlyNums } });
+                                                    }}
+                                                />
 
                                             </div>
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleFormControlSelect1">Status </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.status} onChange={onhandleChange} name='status'>
-                                                    <option></option>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.Status} onChange={onhandleChange} name='Status'>
+                                                    <option>Select Status</option>
                                                     <option value="1">Current</option>
                                                     <option value="2">Non-Current</option>
 
@@ -398,32 +412,32 @@ const LibraryBook = () => {
                                                 <select
                                                     className="form-control form-control-lg"
                                                     id="exampleFormControlSelect1"
-                                                    name="coursename"
-                                                    value={value.coursename}
+                                                    name="Book_Course"
+                                                    value={value.Book_Course}
                                                     onChange={onhandleChange}
                                                 >
                                                     <option value="">--Select Course--</option>
                                                     {courses.map((course) => (
                                                         <option key={course.id} value={course.id}>
-                                                            {course.Course_Name} {/* change to course.title or course.coursename if needed */}
+                                                            {course.Course_Name} {/* change to course.title or course.Book_Course if needed */}
                                                         </option>
                                                     ))}
                                                 </select>
 
-                                                {error.coursename && (
-                                                    <span className="text-danger">{error.coursename}</span>
+                                                {error.Book_Course && (
+                                                    <span className="text-danger">{error.Book_Course}</span>
                                                 )}
                                             </div>
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleInputUsername1">Author</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.author} placeholder="Author" name='author' onChange={onhandleChange} />
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.Author} placeholder="Author" name='Author' onChange={onhandleChange} />
 
                                             </div>
                                             <div class="form-group col-lg-2" style={{ display: "flex", flexDirection: "column" }}>
                                                 <label for="exampleInputUsername1">Purchase Date</label>
                                                 <DatePicker
-                                                    selected={value.purchasedate ? new Date(value.purchasedate) : null}
-                                                    onChange={(date) => onhandleChange({ target: { name: "purchasedate", value: date } })}
+                                                    selected={value.Purchase_Dt ? new Date(value.Purchase_Dt) : null}
+                                                    onChange={(date) => onhandleChange({ target: { name: "Purchase_Dt", value: date } })}
                                                     className="form-control"
                                                     id="exampleInputUsername1"
                                                     dateFormat="dd-MM-yyyy"
@@ -432,22 +446,38 @@ const LibraryBook = () => {
 
                                             </div>
 
-                                            <div class="form-group col-lg-2">
-                                                <label for="exampleInputUsername1">Price</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.price} placeholder="Price" name='price' onChange={onhandleChange} />
+                                            <div className="form-group col-lg-2">
+                                                <label htmlFor="exampleInputUsername1">Price</label>
+                                                <input
+                                                    type="text"
+                                                    className="form-control"
+                                                    id="exampleInputUsername1"
+                                                    value={value.Amount}
+                                                    placeholder="Price"
+                                                    name="Amount"
+                                                    onChange={(e) => {
+                                                        let input = e.target.value;
+
+                                                        // Allow only digits and a single decimal point
+                                                        input = input.replace(/[^0-9.]/g, ''); // Remove all except digits and .
+                                                        input = input.replace(/(\..*)\./g, '$1'); // Allow only one dot
+
+                                                        onhandleChange({ target: { name: 'Amount', value: input } });
+                                                    }}
+                                                />
 
                                             </div>
 
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleInputUsername1">Rack No.</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.rackno} placeholder="Rack No." name='rackno' onChange={onhandleChange} />
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.RackNo} placeholder="Rack No." name='RackNo' onChange={onhandleChange} />
                                                 <option value=""></option>
                                             </div>
 
 
                                             <div class="form-group col-lg-4">
                                                 <label for="exampleTextarea1">Comment </label>
-                                                <textarea class="form-control" id="exampleTextarea1" value={value.comment} placeholder="Comment*" name='comment' onChange={onhandleChange}></textarea>
+                                                <textarea class="form-control" id="exampleTextarea1" value={value.Remark} placeholder="Comment*" name='Remark' onChange={onhandleChange}></textarea>
 
                                             </div>
 

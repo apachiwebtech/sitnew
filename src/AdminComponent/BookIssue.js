@@ -16,15 +16,23 @@ const BookIssue = () => {
 
     const [brand, setBrand] = useState([])
     const [vendordata, setVendorData] = useState([])
+    const [batch, setBatch] = useState([])
+    const [course, setCourse] = useState([])
+    const [book, setBook] = useState([])
     const [uid, setUid] = useState([])
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
+    const [batchid, setBatchid] = useState('')
+    const [courseid, setCourseid] = useState('')
+    const [bookid, setBookid] = useState('')
+    const [student, setStudent] = useState([])
+
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [checked, setChecked] = React.useState([true, false]);
     const [paginationModel, setPaginationModel] = useState({
-            pageSize: 50,
-            page: 0,
-          });
+        pageSize: 50,
+        page: 0,
+    });
 
 
 
@@ -32,8 +40,8 @@ const BookIssue = () => {
         student: "" || uid.student,
         book: "" || uid.book,
         bookcode: "" || uid.bookcode,
-        issuedate: "" || uid.issuedate,
-        returndate: "" || uid.status,
+        issuedate: new Date() || uid.issuedate,
+        returndate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) || uid.status,
 
 
 
@@ -44,8 +52,8 @@ const BookIssue = () => {
             student: uid.student,
             book: uid.book,
             bookcode: uid.bookcode,
-            issuedate: uid.issuedate,
-            returndate: uid.returndate,
+            issuedate: new Date() || uid.issuedate,
+            returndate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) || uid.returndate,
 
 
         })
@@ -57,10 +65,10 @@ const BookIssue = () => {
         const newErrors = {}
 
 
-       if (!value.student) {
-        isValid = false;
-        newErrors.student = "Student is Required"
-       }
+        if (!value.student) {
+            isValid = false;
+            newErrors.student = "Student is Required"
+        }
         if (!value.book) {
             isValid = false;
             newErrors.book = "Book is Required"
@@ -70,39 +78,19 @@ const BookIssue = () => {
     }
 
 
-    async function getBookData() {
-
-        axios.post(`${BASE_URL}/vendor_details`)
-            .then((res) => {
-                console.log(res.data)
-                setBrand(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
 
 
 
-    async function getBookData() {
-        const data = {
-            tablename: "awt_bookissue"
-        }
-        axios.post(`${BASE_URL}/get_data`, data)
-            .then((res) => {
-                console.log(res.data)
-                setVendorData(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
+
+
 
     useEffect(() => {
-        getBookData()
         value.title = ""
         setError({})
         setUid([])
+        getCourseData()
+        getBatchData()
+        getBook()
     }, [])
 
     const handleClick = (id) => {
@@ -145,7 +133,7 @@ const BookIssue = () => {
 
         axios.post(`${BASE_URL}/delete_data`, data)
             .then((res) => {
-                getBookData()
+                // getBookData()
 
             })
             .catch((err) => {
@@ -161,27 +149,27 @@ const BookIssue = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        if(validateForm()){
-        const data = {
+        if (validateForm()) {
+            const data = {
 
-            student: value.student,
-            book: value.book,
-            bookcode: value.bookcode,
-            issuedate: value.issuedate,
-            returndate: value.returndate,
-            uid: uid.id
-        }
+                student: value.student,
+                book: value.book,
+                bookcode: value.bookcode,
+                issuedate: value.issuedate,
+                returndate: value.returndate,
+                uid: uid.id
+            }
 
 
-        axios.post(`${BASE_URL}/add_bookissue`, data)
-            .then((res) => {
-                console.log(res)
-                getBookData()
+            axios.post(`${BASE_URL}/add_bookissue`, data)
+                .then((res) => {
+                    console.log(res)
+                    // getBookData()
 
-            })
-            .catch((err) => {
-                console.log(err)
-            })
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
         }
 
 
@@ -195,9 +183,108 @@ const BookIssue = () => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
 
+    const getCourseData = () => {
+
+        const data = {
+            tablename: "Course_Mst",
+            columnname: "Course_Id,Course_Name"
+        }
+
+        axios.post(`${BASE_URL}/get_new_data`, data)
+            .then((res) => {
+                console.log(res.data)
+                setCourse(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+
+    }
+
+    const getBook = () => {
+
+        const data = {
+            tablename: "awt_librarybook",
+            columnname: "id,bookname"
+        }
+
+        axios.post(`${BASE_URL}/get_book`, data)
+            .then((res) => {
+                console.log(res.data)
+                setBook(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+
+    }
+
+    const getBatchData = async (id) => {
+        setCourseid(id)
+        const data = {
+            courseid: id
+        }
 
 
-const roledata = {
+        if (id) {
+            axios.post(`${BASE_URL}/getcoursewisebatch`, data)
+                .then((res) => {
+                    console.log(res.data)
+                    setBatch(res.data)
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        } else {
+            try {
+                const res = await axios.get(`${BASE_URL}/getbatch`, data);
+
+                setBatch(res.data);
+
+            } catch (err) {
+                console.error("Error fetching data:", err);
+            }
+        }
+
+
+    }
+
+
+
+    const getStudent = async (code) => {
+        setBatchid(code)
+        const data = {
+            batch_code: code
+        }
+        if (code) {
+            axios.post(`${BASE_URL}/getbatchwisestudent`, data)
+                .then((res) => {
+
+                    setStudent(res.data)
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        } else {
+            try {
+                const res = await axios.post(`${BASE_URL}/get_new_data`,
+                    {
+                        tablename: "Student_Master",
+                        columnname: "Student_Id,Student_Name"
+                    });
+
+                setStudent(res.data);
+
+            } catch (err) {
+                console.error("Error fetching data:", err);
+            }
+        }
+
+
+    }
+
+
+    const roledata = {
         role: Cookies.get(`role`),
         pageid: 37,
     };
@@ -228,43 +315,43 @@ const roledata = {
             headerName: "Issue Date",
             flex: 1.5,
             renderCell: (params) => {
-              if (!params.value) return ""; // Handle empty values
-          
-              // Check if already in DD-MM-YYYY format
-              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
-              if (ddmmyyyyRegex.test(params.value)) {
-                return params.value; // Return as-is if already formatted
-              }
-          
-              const date = new Date(params.value);
-              if (isNaN(date.getTime())) return ""; // Handle invalid dates
-          
-              // Convert to DD-MM-YYYY format
-              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+                if (!params.value) return ""; // Handle empty values
+
+                // Check if already in DD-MM-YYYY format
+                const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+                if (ddmmyyyyRegex.test(params.value)) {
+                    return params.value; // Return as-is if already formatted
+                }
+
+                const date = new Date(params.value);
+                if (isNaN(date.getTime())) return ""; // Handle invalid dates
+
+                // Convert to DD-MM-YYYY format
+                return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
             },
-          },
-          
+        },
+
         {
             field: "returndate",
             headerName: "Return Date",
             flex: 1.5,
             renderCell: (params) => {
-              if (!params.value) return ""; // Handle empty values
-          
-              // Check if already in DD-MM-YYYY format
-              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
-              if (ddmmyyyyRegex.test(params.value)) {
-                return params.value; // Return as-is if already formatted
-              }
-          
-              const date = new Date(params.value);
-              if (isNaN(date.getTime())) return ""; // Handle invalid dates
-          
-              // Convert to DD-MM-YYYY format
-              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+                if (!params.value) return ""; // Handle empty values
+
+                // Check if already in DD-MM-YYYY format
+                const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+                if (ddmmyyyyRegex.test(params.value)) {
+                    return params.value; // Return as-is if already formatted
+                }
+
+                const date = new Date(params.value);
+                if (isNaN(date.getTime())) return ""; // Handle invalid dates
+
+                // Convert to DD-MM-YYYY format
+                return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
             },
-          },
-          
+        },
+
 
         {
             field: 'actions',
@@ -274,8 +361,8 @@ const roledata = {
             renderCell: (params) => {
                 return (
                     <>
-                         {roleaccess > 2 &&<EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />}
-                         {roleaccess > 3 && <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />}
+                        {roleaccess > 2 && <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />}
+                        {roleaccess > 3 && <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />}
                     </>
                 )
             }
@@ -300,44 +387,91 @@ const roledata = {
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">Students Name<span className='text-danger'>*</span></label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.student} 
-                                                placeholder="Student Name*" name='student' onChange={onhandleChange} />
-                                                {<span className='text-danger'>{error.student}</span>}
-                                            </div>
-                                            <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">Book<span className='text-danger'>*</span></label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.book} 
-                                                placeholder="Book *" name='book' onChange={onhandleChange} />
-                                                {<span className='text-danger'>{error.book}</span>}
-                                            </div>
-                                            <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">Book Code</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.bookcode} 
-                                                placeholder="Book Code*" name='bookcode' onChange={onhandleChange} />
-                                            </div>
-                                            <div class="form-group col-lg-3" style={{display:"flex", flexDirection:"column"}}>
-                                                <label for="exampleInputUsername1">Issue Date</label>
-                                                <DatePicker
-        selected={value.issuedate ? new Date(value.issuedate) : null}
-        onChange={(date) => onhandleChange({ target: { name: "issuedate", value: date } })}
-        className="form-control"
-        id="exampleInputUsername1"
-        dateFormat="dd-MM-yyyy"
-        placeholderText="Select Issue Date"
-      />
+                                                <lable for="exampleFormControlSelect1">Course<span className="text-danger">*</span></lable>
+                                                <select class="form-control" id="exampleFormControlSelect1"
+                                                    value={courseid} name='coursename' onChange={(e) => getBatchData(e.target.value)}>
+                                                    <option>Select Course</option>
+                                                    {course.map((item) => {
+                                                        return (
+                                                            <option value={item.Course_Id}>{item.Course_Name}</option>
 
+                                                        )
+                                                    })}
+                                                </select>
+                                                {<span className='text-danger'> {error.coursename} </span>}
                                             </div>
-                                            <div class="form-group col-lg-3" style={{display:"flex", flexDirection:"column"}}>
+                                            <div class="form-group col-lg-3">
+                                                <label for="exampleFormControlSelect1">Batch No.</label>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1"
+                                                    value={batchid} name='oldbatchno' onChange={(e) => getStudent(e.target.value)}>
+                                                    <option>Select Batch</option>
+                                                    {batch.map((item) => {
+                                                        return (
+                                                            <option value={item.Batch_code}>{item.Batch_code}</option>
+
+                                                        )
+                                                    })}
+                                                </select>
+                                                {<span className="text-danger">{error.oldbatchno} </span>}
+                                            </div>
+                                            <div class="form-group col-lg-3">
+                                                <label for="exampleFomrControlSelect1">Student</label>
+                                                <select className='form-control form-control-lg' id="exampleFormControlSelect1"
+                                                    value={value.student} name='student' onChange={onhandleChange}>
+
+                                                    <option>Select Student</option>
+                                                    {student.map((item) => {
+                                                        return (
+                                                            <option value={item.Student_Id}>{item.Student_Name}</option>
+                                                        )
+                                                    })}
+                                                </select>
+                                                {<span className="text-danger"> {error.student} </span>}
+                                            </div>
+                                            <div class="form-group col-lg-3">
+                                                <lable for="exampleFormControlSelect1">Book<span className="text-danger">*</span></lable>
+                                                <select class="form-control" id="exampleFormControlSelect1"
+                                                    value={bookid} name='coursename' onChange={onhandleChange}>
+                                                    <option>Select Book</option>
+                                                    {book.map((item) => {
+                                                        return (
+                                                            <option value={item.id}>{item.bookname}</option>
+
+                                                        )
+                                                    })}
+                                                </select>
+                                                {<span className='text-danger'> {error.coursename} </span>}
+                                            </div>
+                                            {/* <div class="form-group col-lg-3">
+                                                <label for="exampleInputUsername1">Book Code</label>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.bookcode}
+                                                    placeholder="Book Code*" name='bookcode' onChange={onhandleChange} />
+                                            </div> */}
+                                            <div className="form-group col-lg-3" style={{ display: "flex", flexDirection: "column" }}>
+                                                <label htmlFor="exampleInputUsername1">Issue Date</label>
+                                                <DatePicker
+                                                    selected={value.issuedate}
+                                                    onChange={(date) =>
+                                                        onhandleChange({ target: { name: "issuedate", value: date } })
+                                                    }
+                                                    className="form-control"
+                                                    id="exampleInputUsername1"
+                                                    dateFormat="dd-MM-yyyy"
+                                                    placeholderText="Select Issue Date"
+                                                    disabled
+                                                />
+                                            </div>
+                                            <div class="form-group col-lg-3" style={{ display: "flex", flexDirection: "column" }}>
                                                 <label for="exampleInputUsername1">Return Date</label>
                                                 <DatePicker
-        selected={value.returndate ? new Date(value.returndate) : null}
-        onChange={(date) => onhandleChange({ target: { name: "returndate", value: date } })}
-        className="form-control"
-        id="exampleInputUsername1"
-        dateFormat="dd-MM-yyyy"
-        placeholderText="Select Return Date"
-      />
+                                                    selected={value.returndate ? new Date(value.returndate) : null}
+                                                    onChange={(date) => onhandleChange({ target: { name: "returndate", value: date } })}
+                                                    className="form-control"
+                                                    id="exampleInputUsername1"
+                                                    dateFormat="dd-MM-yyyy"
+                                                    placeholderText="Select Return Date"
+                                                    disabled 
+                                                />
 
                                             </div>
 
@@ -361,14 +495,14 @@ const roledata = {
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <div className='d-flex justify-content-between'style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
+                                    <div className='d-flex justify-content-between' style={{ borderBottom: "2px solid #dce4ec", width: "100%" }}>
                                         <div>
                                             <h4 class="card-title">Book Issue</h4>
                                         </div>
 
                                     </div>
 
-                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "hidden"}}>
+                                    <div style={{ borderLeft: "1px solid #dce4ec", height: "510px", overflow: "hidden" }}>
                                         <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
@@ -378,21 +512,21 @@ const roledata = {
                                             pagination
                                             paginationModel={paginationModel}
                                             onPaginationModelChange={setPaginationModel}
-                                            pageSizeOptions= {[50]}
+                                            pageSizeOptions={[50]}
                                             autoHeight={false}
                                             sx={{
-                                              height: 500, // Ensure enough height for pagination controls
-                                              '& .MuiDataGrid-footerContainer': {
-                                                justifyContent: 'flex-end',
-                                              },
+                                                height: 500, // Ensure enough height for pagination controls
+                                                '& .MuiDataGrid-footerContainer': {
+                                                    justifyContent: 'flex-end',
+                                                },
                                             }}
                                             slots={{
                                                 toolbar: GridToolbar
                                             }}
                                             slotProps={{
-                                              toolbar: {
-                                                showQuickFilter: true,
-                                              },
+                                                toolbar: {
+                                                    showQuickFilter: true,
+                                                },
                                             }}
                                         />
 
