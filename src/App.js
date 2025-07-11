@@ -232,11 +232,19 @@ import Forcardlist from "./AdminComponent/Document/Forcardlist.js";
 import { BatchWiseFeesDetailsNewpdf } from "./AdminComponent/Document/BatchWiseFeesDetailsNewpdf.js";
 import StudentListR from "./AdminComponent/Document/StudentListR.js";
 import InquiryCorporateAdd from "./AdminComponent/InquiryCorporateAdd.js";
-
+import EmployeeUser from "./AdminComponent/EmployeeUser";
 import Documents from "./AdminComponent/Document/Documents.js";
 import PlacedStudents from "./AdminComponent/Document/PlacedStudents.js";
 import StudentPlacement from "./AdminComponent/StudentPlacement.js";
 import TestimonialChild from "./AdminComponent/TestimonialChild.js";
+import EmployeePersonalDetails from "./AdminComponent/EmployeePersonalDetails.js";
+import EmailCredential from "./AdminComponent/EmailCredential.js";
+import Academicqualificationsemp from "./AdminComponent/Academicqualificationsemp.js";
+import WorkExperience from "./AdminComponent/WorkExperience.js";
+import LeaveStructure from "./AdminComponent/LeaveStructure.js";
+import WeeklyOff from "./AdminComponent/WeeklyOff.js";
+import IntimeSetting from "./AdminComponent/IntimeSetting.js";
+import SalaryStructure from "./AdminComponent/SalaryStructure.js";
 
 
 
@@ -364,6 +372,45 @@ const Router = createBrowserRouter([
                 path: "/courselisting",
                 element: <CourseListing />,
             },
+             
+            {
+                path: "/employeeUser",
+                element: <EmployeeUser/>
+            },
+             // employee personal details
+            {
+                path: "/employeepersonaldetails/:empolyeeid",
+                element: <EmployeePersonalDetails/>
+            },
+            {
+                path: "/emailcredential/:empolyeeid",
+                element:<EmailCredential/>
+            },
+            {
+                path: "/academicqualificationsemp/:employeeid",
+                element:<Academicqualificationsemp/>
+            },
+            {
+                path: "/workexperience/:empolyeeid",
+                element:<WorkExperience/>
+            },
+            {
+                path:"/leavestructure/:empolyeeid",
+                element:<LeaveStructure/>
+            },
+            {
+                path: "/salarystructure/:employeeid",
+                element: <SalaryStructure/>
+            },
+                
+            {
+                path:"/weeklyoff/:empolyeeid",
+                element:<WeeklyOff/>
+            },
+            {
+                path:"/intimesetting/:empolyeeid",
+                element:<IntimeSetting/>
+            },
             {
                 path: "/course/:courseid",
                 element: <Course />,
@@ -376,6 +423,8 @@ const Router = createBrowserRouter([
                 path: "/college/:collegeid",
                 element: <College />,
             },
+
+
             {
                 path: "/addcollegemaster/:collegeid",
                 element: <AddCollegeMaster />,
@@ -406,6 +455,8 @@ const Router = createBrowserRouter([
                 element: <Batch />,
             },
 
+
+           
             // batch details
             {
                 path: "/batchedit",

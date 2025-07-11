@@ -216,7 +216,7 @@ const Header = () => {
                 <Icon path={mdiCircleMedium} size={1} className='mx-3' />
                 <span className={`menu-title ${isSidebarOpen ? 'd-none' : ''}`}>Batch</span>
               </Link>
-            </li>
+            /collegelisting</li>
             <li className="nav-item">
               <Link className="nav-link" to='/status'>
                 {/* <Icon path={mdiCircleMedium } size={1} className='mx-3' /> */}
@@ -239,6 +239,16 @@ const Header = () => {
                 <span className={`menu-title ${isSidebarOpen ? 'd-none' : ''}`}>College</span>
               </Link>
             </li>
+{/*  */}
+            <li className="nav-item">
+  <Link className="nav-link" to="/EmployeeUser">
+    <Icon path={mdiCircleMedium} size={1} className='mx-3' />
+    <span className={`menu-title ${isSidebarOpen ? 'd-none' : ''}`}>Employee</span>
+  </Link>
+</li>
+
+
+            
 
             <li className="nav-item">
               <Link className="nav-link" to="/librarybook">

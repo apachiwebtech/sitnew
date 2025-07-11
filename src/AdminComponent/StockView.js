@@ -46,7 +46,7 @@ const StockView = () => {
     e.preventDefault();
 
     try {
-      const res = await axios.post(`${BASE_URL}/materials_summary`);
+      const res = await axios.get(`${BASE_URL}/materials_summary`);
       let data = res.data;
 
       if (value.selectcourse !== "All") {

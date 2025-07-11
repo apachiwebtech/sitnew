@@ -39,16 +39,30 @@ const EmployeeTrainingPlanListing = () => {
 
 
     const getInquiryData = async () => {
-        const response = await fetch(`${BASE_URL}/getemployeetrainingplandata`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
+  try {
+    const response = await fetch(`${BASE_URL}/employee_training_plan`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    const data = await response.json();
 
-        setemployeetrainingplandata(data);
-    }
+    // Map to match DataGrid expectations
+    setemployeerecorddata(
+      data.map((item, index) => ({
+        id: index + 1,
+        subject: item.Subject,
+        internal: item.Inernal_By,
+        identified: item.Identified_By,
+        date: item.Date_Added
+      }))
+    );
+  } catch (error) {
+    console.error("Failed to fetch employee training plan:", error);
+  }
+};
+
 
 
     useEffect(() => {

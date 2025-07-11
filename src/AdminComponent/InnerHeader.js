@@ -88,8 +88,10 @@ const InnerHeader = () => {
                 return 'College';
             case '/librarybook':
                 return 'Library Book';
+                 
             case '/faculty':
                 return 'Faculty';
+
             case '/rollnumberallot':
                 return 'Allot Roll Number';
             case '/lecturetaken':
@@ -264,6 +266,9 @@ const InnerHeader = () => {
 
             case '/collegelisting':
                 return 'College Information';
+// 
+
+            
             case '/college/:collegeid':
                 return 'College Information';
             case location.pathname.match(/^\/addcorporateinquiry\/\d+$/) ? location.pathname : '':

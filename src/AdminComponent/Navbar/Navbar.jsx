@@ -72,6 +72,7 @@ const NavbarWithDropdowns = () => {
                                 <li><Link className="dropdown-item" to="/status">Status</Link></li>
                                 <li><Link className="dropdown-item" to={`/onefieldform/${"awt_bookcode"}/${"Book Code"}`}>Book Code</Link></li>
                                 <li><Link className="dropdown-item" to="/collegelisting">College</Link></li>
+                                <li><Link className="dropdown-item" to="/employeeUser">Employee</Link></li>
                                 <li><Link className="dropdown-item" to="/librarybook">Library Book</Link></li>
                                 <li><Link className="dropdown-item" to="/faculty">Faculty</Link></li>
                             </ul>

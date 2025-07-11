@@ -31,15 +31,12 @@ const EmployeeTrainingPlan = () => {
     const [checked, setChecked] = React.useState([true, false]);
 
  
-
-
-    const [value, setValue] = useState({
-        subject: '',
-        internal: '',
-        identified: '',
-        date: '',
-
-    })
+   const [value, setValue] = useState({
+//   Employee: '',
+  subject: '',
+  internal: '',
+  identified: ''
+});
 
 
 
@@ -67,48 +64,6 @@ const EmployeeTrainingPlan = () => {
         return isValid
     }
 
-
-    async function getStudentDetail() {
-
-        const response = await fetch(`${BASE_URL}/update_data`, {
-            method: 'POST',
-            body: JSON.stringify({
-                u_id: employeetrainingplanid,
-                tablename :"awt_employeeplan"
-            }),
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
-
-        const data = await response.json();
-         
-        setUid(data[0])
-
-        setValue(prevState => ({
-            ...prevState,
-            subject: data[0].subject,
-            internal: data[0].internal,
-            identified: data[0].identified,
-            date: data[0].date,
-        }))
-    }
-    useEffect(() => {
-        if (employeetrainingplanid !== ":employeetrainingplanid") {
-            getStudentDetail()
-        }
-
-        value.title = ""
-        setError({})
-        setUid([])
-    }, [])
-
-
-
-
-
-
-
     const handleSubmit = async (e) => {
         e.preventDefault()
         let response
@@ -121,7 +76,8 @@ const EmployeeTrainingPlan = () => {
                         subject: value.subject,
                         internal: value.internal,
                         identified: value.identified,
-                        date: value.date,
+                        date: date,
+                        // Employee: value.Employee
                     }),
                     headers: {
                         'Content-Type': 'application/json'
@@ -156,12 +112,21 @@ const EmployeeTrainingPlan = () => {
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class='row'>
 
+                                            <div class="form-group col-lg-4">
+                                                <label for="exampleFormControlSelect1">Employee<span className='text-danger'>*</span> </label>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.employee} onChange={onhandleChange} name='Employee'>
+                                                    <option>Select</option>
+                                                   
+                                                </select>
+                                                {<span className='text-danger'> {error.employee} </span>}
+                                            </div>
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">Subject<span className="text-danger">*</span></label>
                                                 <input type="text" class="form-control" id="exampleInputUsername1" value={value.subject} placeholder="Subject" name='subject' onChange={onhandleChange} />
                                                 {<span className="text-danger"> {error.subject} </span>}
                                             </div>
+
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">Internal/External By<span className="text-danger">*</span></label>
                                                 <input type="text" class="form-control" id="exampleInputUsername1" value={value.internal} placeholder="Internal" name='internal' onChange={onhandleChange} />
@@ -185,10 +150,9 @@ const EmployeeTrainingPlan = () => {
                                                 />
                                                 
                                             </div>
-
-
+                                            
                                         </div>
-
+                                    
                                         <button type="submit" class="btn btn-primary mr-2">Submit</button>
 
                                         <button type='button' onClick={() => {
@@ -213,3 +177,45 @@ const EmployeeTrainingPlan = () => {
 }
 
 export default EmployeeTrainingPlan
+
+
+
+
+
+
+
+    // async function getStudentDetail() {
+
+    //     const response = await fetch(`${BASE_URL}/update_data`, {
+    //         method: 'POST',
+    //         body: JSON.stringify({
+    //             u_id: employeetrainingplanid,
+    //             tablename :"awt_employeeplan"
+    //         }),
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //         }
+    //     });
+
+    //     const data = await response.json();
+         
+    //     setUid(data[0])
+
+    //     setValue(prevState => ({
+    //         ...prevState,
+    //         subject: data[0].subject,
+    //         internal: data[0].internal,
+    //         identified: data[0].identified,
+    //         date: data[0].date,
+    //     }))
+    // }
+    // useEffect(() => {
+    //     if (employeetrainingplanid !== ":employeetrainingplanid") {
+    //         getStudentDetail()
+    //     }
+
+    //     value.title = ""
+    //     setError({})
+    //     setUid([])
+    // }, [])
+
