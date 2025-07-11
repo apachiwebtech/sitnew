@@ -108,8 +108,9 @@ const BlankAttendance = (props) => {
                         style={{
                             backgroundColor: "yellow",
                             textAlign: "center",
-                            padding: "5px",
+                            padding: "8px",
                             border: "1px solid black",
+                            marginTop :"6px"
                         }}
                     >
                         <Text style={{ fontSize: "8px", fontWeight: "600", color: "#000" }}>
@@ -322,6 +323,7 @@ const BlankAttendance = (props) => {
                             return rows;
                         }, [])
                         .map((row, rowIndex) => (
+                            
                             <View
                                 key={rowIndex}
                                 style={{
@@ -329,6 +331,7 @@ const BlankAttendance = (props) => {
                                     flexDirection: "row",
                                     justifyContent: "space-between",
                                 }}
+                                   break={rowIndex > 0 && rowIndex % 16 === 0}
                             >
                                 {row.map((item, itemIndex) => (
                                     <View

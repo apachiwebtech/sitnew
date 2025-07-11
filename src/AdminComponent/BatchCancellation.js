@@ -114,35 +114,7 @@ const BatchCancellation = () => {
 
     }
 
-    // const getBatch = async (id) => {
-    //     setCourseid(id)
-    //     const data = {
-    //         courseid: id
-    //     }
 
-
-    //     if (id) {
-    //         axios.post(`${BASE_URL}/getcoursewisebatch`, data)
-    //             .then((res) => {
-
-    //                 setBatch(res.data)
-    //             })
-    //             .catch((err) => {
-    //                 console.log(err)
-    //             })
-    //     } else {
-    //         try {
-    //             const res = await axios.get(`${BASE_URL}/getbatch`, data);
-
-    //             setBatch(res.data);
-
-    //         } catch (err) {
-    //             console.error("Error fetching data:", err);
-    //         }
-    //     }
-
-
-    // }
 
     const getBatch = async (id) => {
         setCourseid(id);
@@ -197,7 +169,7 @@ const BatchCancellation = () => {
 
         if (code) {
             try {
-                const res = await axios.post(`${BASE_URL}/getbatchwisestudent`, data);
+                const res = await axios.post(`${BASE_URL}/getbatchidwisestudent`, data);
                 setStudent(res.data);
             } catch (err) {
                 console.error("Error fetching students:", err);
@@ -454,8 +426,7 @@ const roledata = {
 
                                                 {batch.map((item) => {
                                                     return (
-                                                        <option value={item.Batch_code}>{item.Batch_code}</option>
-
+                                                        <option value={item.Batch_Id}>{item.Batch_code}</option>
                                                     )
                                                 })}
                                             </select>
@@ -477,7 +448,7 @@ const roledata = {
 
 
                                         <div class="form-group col-lg-3">
-                                            <lable for="exampleInputUsername1">Cancellation Ammount<span className="text-danger">*</span></lable>
+                                            <lable for="exampleInputUsername1">Cancellation Amount<span className="text-danger">*</span></lable>
                                             <input text="text" class="form-control" id="exampleInputUsername1"
                                                 value={value.cancellationammount} placeholder='0' name='cancellationammount'
                                                 onChange={onhandleChange} />

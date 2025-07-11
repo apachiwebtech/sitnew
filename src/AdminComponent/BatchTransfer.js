@@ -26,11 +26,11 @@ const BatchTransfer = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [batchid, setBatchid] = useState('')
     const [courseid, setCourseid] = useState('')
-     const [paginationModel, setPaginationModel] = useState({
-            pageSize: 50,
-            page: 0,
-          });
-
+    const [batchCode, setBatchCode] = useState("");
+    const [paginationModel, setPaginationModel] = useState({
+        pageSize: 50,
+        page: 0,
+    });
     const [value, setValue] = useState({
 
         coursename: "" || uid.coursename,
@@ -120,13 +120,13 @@ const BatchTransfer = () => {
 
     }
 
-    const gettransferbatch = () =>{
+    const gettransferbatch = () => {
 
         axios.get(`${BASE_URL}/gettranferbatch`)
-        .then((res) =>{
-            console.log(res)
-            setTransBatch(res.data)
-        })
+            .then((res) => {
+                console.log(res)
+                setTransBatch(res.data)
+            })
     }
 
     const getBatch = async (id) => {
@@ -160,7 +160,7 @@ const BatchTransfer = () => {
     }
 
     const getStudent = async (code) => {
-        setBatchid(code)
+
         const data = {
             batch_code: code
         }
@@ -192,7 +192,15 @@ const BatchTransfer = () => {
     }
 
 
-
+    const handleBatchChange = (batchId) => {
+        setBatchid(batchId);
+        const selected = batch.find((b) => String(b.Batch_Id) === String(batchId));
+        console.log("Selected Batch:", selected);
+        if (selected) {
+            setBatchCode(selected.Batch_code);
+            getStudent(selected.Batch_code);  // Fetch student using Batch_code
+        }
+    };
 
 
     useEffect(() => {
@@ -221,21 +229,29 @@ const BatchTransfer = () => {
         }));
     };
 
-    const handleUpdate = (id) => {
+    const handleUpdate = async (id) => {
         const data = {
             u_id: id,
             tablename: "awt_batchtransfer"
         }
-        axios.post(`${BASE_URL}/update_data`, data)
-            .then((res) => {
-                setUid(res.data[0])
-                setBatchid(res.data[0].oldbatch_code)
-                setCourseid(res.data[0].coursename)
-         
-            })
-            .catch((err) => {
-                console.log(err)
-            })
+        try {
+            const res = await axios.post(`${BASE_URL}/update_data`, data);
+            const response = res.data[0];
+            setUid(response);
+            setBatchid(response.oldbatch_code);
+            setCourseid(response.coursename);
+            // Wait for getBatch to finish and update the batch list
+            await getBatch(response.coursename);
+            // Find the batch after the batch list is updated
+            const selectedBatch = batch.find((b) => String(b.Batch_Id) === String(response.oldbatch_code));
+            if (selectedBatch) {
+                getStudent(selectedBatch.Batch_code);
+            } else {
+                console.warn("Batch code not found for ID:", response.oldbatch_code);
+            }
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     const handleDelete = (id) => {
@@ -259,8 +275,50 @@ const BatchTransfer = () => {
         }));
     }
 
+
+    const validateForm = () => {
+        let isValid = true
+        const newErrors = {}
+
+
+        if (!courseid) {
+            isValid = false;
+            newErrors.coursename = "This feild is Required"
+        }
+        if (!batchid) {
+            isValid = false;
+            newErrors.oldbatchno = "This feild is Required"
+        }
+        if (!value.student) {
+            isValid = false;
+            newErrors.student = "This feild is Required"
+        }
+        if (!value.newbatch) {
+            isValid = false;
+            newErrors.newbatch = "This feild is Required"
+        }
+        if (!value.transferammount) {
+            isValid = false;
+            newErrors.transferammount = "This feild is Required"
+        }
+        if (!value.paymenttype) {
+            isValid = false;
+            newErrors.paymenttype = "This feild is Required"
+        }
+
+
+
+
+        setError(newErrors)
+        return isValid
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault()
+
+        if (!validateForm()) {
+            return; // Stop submission if validation fails 
+        }
 
         const data = {
             coursename: courseid,
@@ -277,17 +335,17 @@ const BatchTransfer = () => {
             .then((res) => {
                 console.log(res)
                 setValue({
-                    newbatch:"",
-                    student:"",
-                    transferammount:"",
-                    paymenttype:"",
+                    newbatch: "",
+                    student: "",
+                    transferammount: "",
+                    paymenttype: "",
 
-                    
+
                 })
                 setBatchid('')
                 setCourseid('')
                 setUid([])
-                alert("Data added successfully")
+                alert(res.data.message)
                 BatchTransfer()
             })
             .catch((err) => {
@@ -300,7 +358,7 @@ const BatchTransfer = () => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
 
-const roledata = {
+    const roledata = {
         role: Cookies.get(`role`),
         pageid: 74,
     };
@@ -331,22 +389,22 @@ const roledata = {
             headerName: "Date",
             flex: 1.5,
             renderCell: (params) => {
-              if (!params.value) return ""; // Handle empty values
-          
-              // Check if already in DD-MM-YYYY format
-              const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
-              if (ddmmyyyyRegex.test(params.value)) {
-                return params.value; // Return as-is if already formatted
-              }
-          
-              const date = new Date(params.value);
-              if (isNaN(date.getTime())) return ""; // Handle invalid dates
-          
-              // Convert to DD-MM-YYYY format
-              return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+                if (!params.value) return ""; // Handle empty values
+
+                // Check if already in DD-MM-YYYY format
+                const ddmmyyyyRegex = /^\d{2}-\d{2}-\d{4}$/;
+                if (ddmmyyyyRegex.test(params.value)) {
+                    return params.value; // Return as-is if already formatted
+                }
+
+                const date = new Date(params.value);
+                if (isNaN(date.getTime())) return ""; // Handle invalid dates
+
+                // Convert to DD-MM-YYYY format
+                return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
             },
-          },
-          
+        },
+
         { field: 'transferammount', headerName: 'Transfer Amount', flex: 1.5 },
 
         {
@@ -357,7 +415,7 @@ const roledata = {
             renderCell: (params) => {
                 return (
                     <>
-                         {roleaccess > 2 && <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />}
+                        {roleaccess > 2 && <EditIcon style={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />}
                         {roleaccess > 3 && <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick={() => handleClick(params.row.id)} />}
                     </>
                 )
@@ -399,13 +457,13 @@ const roledata = {
                                             </div>
 
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">Batch No.</label>
+                                                <label for="exampleFormControlSelect1">Batch No. <span className='text-danger'>*</span></label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1"
-                                                    value={batchid} name='oldbatchno' onChange={(e) => getStudent(e.target.value)}>
+                                                    value={batchid} name='oldbatchno' onChange={(e) => handleBatchChange(e.target.value)}>
                                                     <option>Select Batch</option>
                                                     {batch.map((item) => {
                                                         return (
-                                                            <option value={item.Batch_code}>{item.Batch_code}</option>
+                                                            <option value={item.Batch_Id}>{item.Batch_code}</option>
 
                                                         )
                                                     })}
@@ -414,7 +472,7 @@ const roledata = {
                                             </div>
 
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleFomrControlSelect1">Student</label>
+                                                <label for="exampleFomrControlSelect1">Student <span className='text-danger'>*</span></label>
                                                 <select className='form-control form-control-lg' id="exampleFormControlSelect1"
                                                     value={value.student} name='student' onChange={onhandleChange}>
 
@@ -433,9 +491,9 @@ const roledata = {
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1" name='newbatch'
                                                     value={value.newbatch} onChange={onhandleChange}>
                                                     <option>Select Batch</option>
-                                                    {transfer.map((item) => {
+                                                    {batch.map((item) => {
                                                         return (
-                                                            <option value={item.Batch_code}>{item.Batch_code}</option>
+                                                            <option value={item.Batch_Id}>{item.Batch_code}</option>
                                                         )
                                                     })}
 
@@ -482,14 +540,14 @@ const roledata = {
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <div className='d-flex justify-content-between'style={{borderBottom: "2px solid #dce4ec", width: "100%"}}>
+                                    <div className='d-flex justify-content-between' style={{ borderBottom: "2px solid #dce4ec", width: "100%" }}>
                                         <div>
                                             <h4 class="card-title">View Batch Transfer</h4>
                                         </div>
 
                                     </div>
 
-                                    <div style={ { borderLeft: "1px solid #dce4ec", height: "510px", overflow: "hidden"}}>
+                                    <div style={{ borderLeft: "1px solid #dce4ec", height: "510px", overflow: "hidden" }}>
                                         <StyledDataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
@@ -501,18 +559,18 @@ const roledata = {
                                             pagination
                                             paginationModel={paginationModel}
                                             onPaginationModelChange={setPaginationModel}
-                                            pageSizeOptions= {[50]}
+                                            pageSizeOptions={[50]}
                                             autoHeight={false}
                                             sx={{
-                                              height: 500, // Ensure enough height for pagination controls
-                                              '& .MuiDataGrid-footerContainer': {
-                                                justifyContent: 'flex-end',
-                                              },
+                                                height: 500, // Ensure enough height for pagination controls
+                                                '& .MuiDataGrid-footerContainer': {
+                                                    justifyContent: 'flex-end',
+                                                },
                                             }}
                                             slotProps={{
-                                              toolbar: {
-                                                showQuickFilter: true,
-                                              },
+                                                toolbar: {
+                                                    showQuickFilter: true,
+                                                },
                                             }}
                                         />
 

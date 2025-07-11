@@ -270,7 +270,7 @@ const Router = createBrowserRouter([
     },
     {
         path: "/onlineadmissionform/documents/:admissionid",
-        element: <Documents />,
+        element: <StudentDocument  />,
     },
     // {
     //     path: "/onlineadmissionform/placement/:admissionid",

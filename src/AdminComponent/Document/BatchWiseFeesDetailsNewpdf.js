@@ -272,7 +272,7 @@ export const BatchWiseFeesDetailsNewpdf = ({ batchwisefee }) => {
                                             fontSize: 8,
                                             fontFamily: 'Poppins',
                                             fontWeight: 600
-                                        }}>{index + 1}</Text>
+                                        }}>{pageIndex * 32 + index + 1}</Text>
                                     </View>
                                     <View style={{
                                         width: "49%",
