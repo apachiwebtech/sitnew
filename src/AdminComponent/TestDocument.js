@@ -261,9 +261,9 @@ const TestDocument = ({ data }) => {
                             </View>
                         </View>
                         <View style={{ padding: 5, borderRight: "1px solid black", width: "2.5%" }}>
-                            <View style={{ flexDirection: "column", alignItems: "center" }}>
+                            <View style={{ flexDirection: "column", alignItems: "center",justifyContent:"center" }}>
                                 {"Average".split("").map((letter, index) => (
-                                    <Text key={index} style={{ fontSize: 9 }}>
+                                    <Text key={index} style={{ fontSize: 9, }}>
                                         {letter}
                                     </Text>
                                 ))}
@@ -327,10 +327,10 @@ const TestDocument = ({ data }) => {
                                 ))}
                             </View>
                         </View>
-                        <View style={{ padding: 5, borderRight: "1px solid black", width: "2.5%" }}>
-                            <View style={{ flexDirection: "column", alignItems: "center" }}>
+                        <View style={{ justifyContent:"center", alignItems:"center", borderRight: "1px solid black", width: "2.5%" }}>
+                            <View style={{ flexDirection: "column", justifyContent:'center' }}>
                                 {"Average".split("").map((letter, index) => (
-                                    <Text key={index} style={{ fontSize: 9 }}>
+                                    <Text key={index} style={{ fontSize: 9, }}>
                                         {letter}
                                     </Text>
                                 ))}
@@ -392,7 +392,7 @@ const TestDocument = ({ data }) => {
                                 ))}
                             </View>
                         </View>
-                        <View style={{ padding: 5, borderRight: "1px solid black", width: "2.5%" }}>
+                        <View style={{ alignItems:"center",justifyContent:"center", borderRight: "1px solid black", width: "2.5%" }}>
                             <View style={{ flexDirection: "row", gap: "5px" }}>
                                 <View style={{ flexDirection: "column", alignItems: "center" }}>
                                     {"Final".split("").map((letter, index) => (
@@ -401,9 +401,9 @@ const TestDocument = ({ data }) => {
                                         </Text>
                                     ))}
                                 </View>
-                                <View style={{ flexDirection: "column", alignItems: "center" }}>
+                                <View style={{ alignItems:"center",justifyContent:"center", flexDirection: "column", width: "2.5%" }}>
                                     {"Average".split("").map((letter, index) => (
-                                        <Text key={index} style={{ fontSize: 9 }}>
+                                        <Text key={index} style={{ fontSize: 9,alignSelf:"center", }}>
                                             {letter}
                                         </Text>
                                     ))}
@@ -512,13 +512,13 @@ const TestDocument = ({ data }) => {
                                 }}
                                 key={index}
                             >
-                                <View style={{ padding: 5, borderRight: "1px solid black", width: "1.95%" }}>
-                                    <Text style={{ fontSize: 10, margin: "auto" }}>{index + 1}</Text>
+                                <View style={{ alignItems:"center",justifyContent:"center", borderRight: "1px solid black", width: "1.95%" }}>
+                                    <Text style={{ fontSize: 9, margin: "auto" }}>{index + 1}</Text>
                                 </View>
-                                <View style={{ padding: 5, borderRight: "1px solid black", width: "5.85%" }}>
-                                    <Text style={{ fontSize: 8, marginVertical: "auto" }}>{item.Student_Code}</Text>
+                                <View style={{ alignItems:"center",justifyContent:"center", borderRight: "1px solid black", width: "5.85%" }}>
+                                    <Text style={{ fontSize: 9, marginVertical: "auto" }}>{item.Student_Code}</Text>
                                 </View>
-                                <View style={{ padding: 5, borderRight: "1px solid black", width: "11.7%" }}>
+                                <View style={{ padding:5, borderRight: "1px solid black", width: "11.7%" }}>
                                     <Text style={{ fontSize: 10, marginVertical: "auto", textAlign: "left" }}>
                                         {item.Student_Name}
                                     </Text>
@@ -544,14 +544,14 @@ const TestDocument = ({ data }) => {
                                                 height: "100%",
                                             }}
                                         >
-                                            <Text style={{ fontSize: 10, textAlign: "right" }}>
+                                            <Text style={{ fontSize: 9, textAlign: "right" }}>
                                                 {item[`Test${index}_Given`] || ""}
                                             </Text>
                                         </View>
                                     ))}
                                 </View>
-                                <View style={{ padding: 5, borderRight: "1px solid black", width: "2.45%" }}>
-                                    <Text style={{ fontSize: 9 }}>{item.Test_Percent}</Text>
+                                <View style={{ alignItems:"center",justifyContent:"center", borderRight: "1px solid black", width: "2.45%" }}>
+                                    <Text style={{ fontSize: 9, textAlign:"center" }}>{item.Test_Percent}</Text>
                                 </View>
                                 <View
                                     style={{
@@ -573,14 +573,14 @@ const TestDocument = ({ data }) => {
                                                 height: "100%",
                                             }}
                                         >
-                                            <Text style={{ fontSize: 10, textAlign: "right" }}>
+                                            <Text style={{ fontSize: 9, textAlign: "right" }}>
                                                 {item[`Ass${index}_Given`] || ""}
                                             </Text>
                                         </View>
                                     ))}
                                 </View>
-                                <View style={{ padding: 5, borderRight: "1px solid black", width: "2.45%" }}>
-                                    <Text style={{ fontSize: 9 }}>{item.Ass_Percent}</Text>
+                                <View style={{ alignItems:"center",justifyContent:"center", borderRight: "1px solid black", width: "2.45%" }}>
+                                    <Text style={{ fontSize: 9,textAlign:'center' }}>{item.Ass_Percent}</Text>
                                 </View>
                                 <View
                                     style={{
@@ -603,68 +603,69 @@ const TestDocument = ({ data }) => {
                                                 minHeight: 13,
                                             }}
                                         >
-                                            <Text style={{ fontSize: 10, textAlign: "right" }}>
+                                            <Text style={{ fontSize: 9, textAlign: "right" }}>
                                                 {item[`Final${index}_Given`] || ""}
                                             </Text>
                                         </View>
                                     ))}
                                 </View>
-                                <View style={{ padding: 5, borderRight: "1px solid black", width: "2.42%" }}>
-                                    <Text style={{ fontSize: 10 }}>{item.Final_Percent}</Text>
+                                <View style={{alignItems:"center",justifyContent:"center", borderRight: "1px solid black", width: "2.42%" }}>
+                                    <Text style={{ fontSize: 9,textAlign:"center" }}>{item.Final_Percent}</Text>
                                 </View>
                                 <View
                                     style={{
-                                        padding: 5,
+                                        
                                         borderRight: "1px solid black",
                                         width: "3.1%",
+                                        alignItems:"center",justifyContent:"center",
                                     }}
                                 >
-                                    <Text style={{ fontSize: 10, textAlign: "center" }}>{item.Discipline}</Text>
+                                    <Text style={{ fontSize: 9, textAlign: "center" }}>{item.Discipline}</Text>
                                 </View>
                                 <View
                                     style={{
-                                        padding: 5,
+                                        
                                         borderRight: "1px solid black",
-                                        width: "3.75%",
+                                        width: "3.75%",alignItems:"center",justifyContent:"center",
                                     }}
                                 >
-                                    <Text style={{ fontSize: 10 }}>{item.Full_Attend}</Text>
+                                    <Text style={{ fontSize: 9 }}>{item.Full_Attend}</Text>
                                 </View>
                                 <View
                                     style={{
-                                        padding: 5,
-                                        borderRight: "1px solid black",
-                                        width: "3.3%",
-                                    }}
-                                >
-                                    <Text style={{ fontSize: 10, textAlign: "center" }}>0</Text>
-                                </View>
-                                <View
-                                    style={{
-                                        padding: 5,
+                                        alignItems:"center",justifyContent:"center",
                                         borderRight: "1px solid black",
                                         width: "3.3%",
                                     }}
                                 >
-                                    <Text style={{ fontSize: 10, textAlign: "center" }}>{item.Absents}</Text>
+                                    <Text style={{ fontSize: 9, textAlign: "center" }}>0</Text>
                                 </View>
                                 <View
                                     style={{
-                                        padding: 5,
+                                        alignItems:"center",justifyContent:"center",
+                                        borderRight: "1px solid black",
+                                        width: "3.3%",
+                                    }}
+                                >
+                                    <Text style={{ fontSize: 9, textAlign: "center" }}>{item.Absents}</Text>
+                                </View>
+                                <View
+                                    style={{
+                                        alignItems:"center",justifyContent:"center",
                                         borderRight: "1px solid black",
                                         width: "3.32%",
                                     }}
                                 >
-                                    <Text style={{ fontSize: 10, textAlign: "center" }}>{item.Full_Attendance}</Text>
+                                    <Text style={{ fontSize: 9, textAlign: "center" }}>{item.Full_Attendance}</Text>
                                 </View>
                                 <View
                                     style={{
-                                        padding: 5,
+                                        alignItems:"center",justifyContent:"center",
                                         borderRight: "1px solid black",
                                         width: "3.92%",
                                     }}
                                 >
-                                    <Text style={{ fontSize: 10, textAlign: "center" }}>
+                                    <Text style={{ fontSize: 9, textAlign: "center" }}>
                                         {item.Final_Result_Percent}
                                     </Text>
                                 </View>
