@@ -42,7 +42,7 @@ const LibraryBook = () => {
         Author: "" || uid.Author,
         Purchase_Dt: "" || uid.Purchase_Dt,
         Amount: "" || uid.Amount,
-        RackNo: "" || uid.RackNo
+        RackNo: "" || uid.RackNo,
 
 
     })
@@ -157,35 +157,52 @@ const LibraryBook = () => {
         }));
     };
 
-    const handleUpdate = (id) => {
+    const handleUpdate = (Book_Id) => {
         const data = {
-            u_id: id,
+            u_id: Book_Id,
             tablename: "Library_Book_Mst"
-        }
-        axios.post(`${BASE_URL}/update_data`, data)
+        };
+
+        axios.post(`${BASE_URL}/update_library_data`, data)
             .then((res) => {
-                setUid(res.data[0])
+                if (res.data && res.data.length > 0) {
+                    const bookData = res.data[0];
 
-                console.log(res.data, "update")
-                setValue({
-                    Book_Name: '',
-                    Book_No: '',
-                    Publisher: '',
-                    Total_Pages: '',
-                    Status: '',
-                    Remark: '',
-                    Book_Course: '',
-                    Author: '',
-                    Purchase_Dt: '',
-                    Amount: '',
-                    RackNo: '',
-                });
+                    // Handle date cleanup
+                    const rawDate = bookData.Purchase_Dt;
+                    let parsedDate = null;
 
+                    if (rawDate && rawDate !== "00:00.0" && rawDate !== "Invalid Date") {
+                        const tryDate = new Date(rawDate);
+                        if (!isNaN(tryDate.getTime())) {
+                            parsedDate = tryDate;
+                        }
+                    }
+
+                    setUid(bookData);
+
+                    setValue({
+                        Book_Name: bookData.Book_Name || '',
+                        Book_No: bookData.Book_No || '',
+                        Publisher: bookData.Publisher || '',
+                        Total_Pages: bookData.Total_Pages || '',
+                        Status: bookData.Status || '',
+                        Remark: bookData.Remark || '',
+                        Book_Course: bookData.Book_Course || '',
+                        Author: bookData.Author || '',
+                        Purchase_Dt: parsedDate, // Null if invalid
+                        Amount: bookData.Amount || '',
+                        RackNo: bookData.RackNo || '',
+                    });
+
+                    console.log(res.data, "update");
+                }
             })
             .catch((err) => {
-                console.log(err)
-            })
-    }
+                console.log(err);
+            });
+    };
+
 
     const handleDelete = (id) => {
         const data = {
@@ -225,7 +242,7 @@ const LibraryBook = () => {
                 Purchase_Dt: value.Purchase_Dt,
                 Amount: value.Amount,
                 RackNo: value.RackNo,
-                uid: uid.id
+                uid: uid.Book_Id
             }
 
 
@@ -240,6 +257,7 @@ const LibraryBook = () => {
                     }
 
                     setValue({
+                        Book_Id: '',
                         Book_Name: '',
                         Book_No: '',
                         Publisher: '',
@@ -313,6 +331,10 @@ const LibraryBook = () => {
             valueGetter: (params) => {
                 if (!params.value) return '';
                 const date = new Date(params.value);
+
+                // Check for invalid date
+                if (isNaN(date.getTime())) return '';
+
                 const day = String(date.getDate()).padStart(2, '0');
                 const month = String(date.getMonth() + 1).padStart(2, '0');
                 const year = date.getFullYear();
@@ -436,13 +458,18 @@ const LibraryBook = () => {
                                             <div class="form-group col-lg-2" style={{ display: "flex", flexDirection: "column" }}>
                                                 <label for="exampleInputUsername1">Purchase Date</label>
                                                 <DatePicker
-                                                    selected={value.Purchase_Dt ? new Date(value.Purchase_Dt) : null}
+                                                    selected={
+                                                        value.Purchase_Dt && !isNaN(new Date(value.Purchase_Dt)) && value.Purchase_Dt !== "00:00.0"
+                                                            ? new Date(value.Purchase_Dt)
+                                                            : null
+                                                    }
                                                     onChange={(date) => onhandleChange({ target: { name: "Purchase_Dt", value: date } })}
                                                     className="form-control"
                                                     id="exampleInputUsername1"
                                                     dateFormat="dd-MM-yyyy"
                                                     placeholderText="Purchase Date"
                                                 />
+
 
                                             </div>
 
