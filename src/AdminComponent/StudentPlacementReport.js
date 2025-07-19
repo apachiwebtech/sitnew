@@ -2,17 +2,27 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
+import { StyledDataGrid } from './StyledDataGrid';
+import { DataGrid, GridToolbar, GridToolbarContainer, GridToolbarFilterButton, GridToolbarQuickFilter } from '@mui/x-data-grid';
+import { saveAs } from "file-saver";
+import ExcelJS from "exceljs";
+import Discipline from './Discipline';
 //import FormControlLabel from '@mui/material/FormControlLabel';
 
 const StudentPlacementReport = () => {
 
     const [coursedata, setCourseData] = useState([])
+    const [vendordata, setVendorData] = useState([])
     const [courseid, setCourseId] = useState([])
     const [batchid, setbatchId] = useState([])
     const [batch, setBatch] = useState([])
     const [student, setStudent] = useState([])
     const [uid, setUid] = useState([])
     const [error, setError] = useState({})
+    const [paginationModel, setPaginationModel] = useState({
+        pageSize: 50,
+        page: 0,
+    });
 
 
 
@@ -26,6 +36,20 @@ const StudentPlacementReport = () => {
 
 
     })
+
+    const getStudentDetails = async () => {
+        const data = {
+            batchId: batchid, // send selected batchId
+        };
+
+        try {
+            const res = await axios.post(`${BASE_URL}/getStudentplacementreport`, data);
+            setVendorData(res.data); // assuming response contains student list
+            console.log(res.data, 'test');
+        } catch (err) {
+            console.error("Error fetching student details:", err);
+        }
+    };
 
 
 
@@ -97,6 +121,170 @@ const StudentPlacementReport = () => {
         getCourseData()
     }, [])
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        if (!batchid) {
+            alert("Please select a batch");
+            return;
+        }
+
+        // Simply call getStudentDetails which already uses value.rollnumberallot
+        getStudentDetails();
+    };
+
+
+    const columns = [
+        {
+            field: 'id',
+            headerName: 'Sr No.',
+            type: 'number',
+            align: 'center',
+            headerAlign: 'center',
+            width: 100,
+            filterable: false,
+        },
+        {
+            field: 'Student_Name',
+            headerName: 'Name',
+            flex: 1,
+            align: 'left',
+            headerAlign: 'left',
+        },
+        {
+            field: 'Present_Mobile',
+            headerName: 'Mobile Number',
+            flex: 1,
+            align: 'left',
+            headerAlign: 'left',
+        },
+        {
+            field: 'Email',
+            headerName: 'Email',
+            flex: 1,
+            align: 'left',
+            headerAlign: 'left',
+        },
+        {
+            field: 'Qualification',
+            headerName: 'Qualification',
+            flex: 1,
+            align: 'left',
+            headerAlign: 'left',
+        },
+        {
+            field: 'Years',
+            headerName: 'Year',
+            flex: 1,
+            align: 'left',
+            headerAlign: 'left',
+        },
+        {
+            field: 'Discipline',
+            headerName: 'Discipline',
+            flex: 1,
+            align: 'left',
+            headerAlign: 'left',
+        },
+        {
+            field: 'Marks',
+            headerName: 'Marks',
+            flex: 1,
+            align: 'left',
+            headerAlign: 'left',
+        },
+        {
+            field: 'Design_Exp',
+            headerName: 'Design_Exp',
+            flex: 1,
+            align: 'left',
+            headerAlign: 'left',
+        },
+        {
+            field: 'Total_Exp',
+            headerName: 'Total_Exp',
+            flex: 1,
+            align: 'left',
+            headerAlign: 'left',
+        }
+
+
+    ];
+
+    function CustomToolbar() {
+        return (
+            <GridToolbarContainer
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    padding: '8px',
+                }}
+            >
+                <GridToolbarFilterButton />
+                <GridToolbarQuickFilter />
+            </GridToolbarContainer>
+        );
+    }
+
+    const exportToExcel = async () => {
+        if (!vendordata || vendordata.length === 0) {
+            alert("No data available to export.");
+            return;
+        }
+
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet("Export Contacts");
+
+        // Define columns
+        worksheet.columns = [
+            { header: "Student Name", key: "Student_Name", width: 30 },
+            { header: "Email", key: "Email", width: 30 },
+            { header: "Present Mobile", key: "Present_Mobile", width: 20 },
+            { header: "Qualification", key: "Qualification", width: 30 },
+            { header: "Year", key: "Years", width: 30 },
+            { header: "Discipline", key: "Discipline", width: 20 },
+            { header: "Marks", key: "Marks", width: 30 },
+            { header: "Design_Exp", key: "Design_Exp", width: 30 },
+            { header: "Total_Exp", key: "Total_Exp", width: 20 },
+        ];
+
+        // Add rows
+        vendordata.forEach(row => {
+            worksheet.addRow({
+                Student_Name: row.Student_Name || '',
+                Email: row.Email || '',
+                Present_Mobile: row.Present_Mobile || '',
+                Qualification: row.Qualification || '',
+                Year: row.Years || '',
+                Discipline: row.Discipline || '',
+                Marks: row.Marks || '',
+                Design_Exp: row.Design_Exp || '',
+                Total_Exp: row.Total_Exp || '',
+            });
+        });
+
+        // Export
+        try {
+            const buffer = await workbook.xlsx.writeBuffer();
+            const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+            saveAs(blob, "StudentPlacementReport.xlsx");
+        } catch (error) {
+            console.error("Excel export failed:", error);
+        }
+    };
+
+
+
+
+
+
+
+
+    const rowsWithIds = vendordata.map((row, index) => ({
+        ...row,
+        id: index + 1 // this will be used as the unique ID
+    }));
 
 
 
@@ -127,7 +315,7 @@ const StudentPlacementReport = () => {
 
                                             <div class="form-group col-lg-4">
                                                 <label for="exampleFormControlSelect1">Course<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={courseid} onChange={(e) => getbatch(e.target.value)}name='course'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={courseid} onChange={(e) => getbatch(e.target.value)} name='course'>
                                                     <option>Select Course</option>
                                                     {coursedata.map((item) => {
                                                         return (
@@ -150,7 +338,9 @@ const StudentPlacementReport = () => {
                                             </div>
                                         </div>
 
-                                        <button type="submit" class="btn btn-primary mr-2">Go</button>
+                                        <button type="button" class="btn btn-primary mr-2" onClick={getStudentDetails}>
+                                            Go
+                                        </button>
 
                                     </form>
 
@@ -166,42 +356,58 @@ const StudentPlacementReport = () => {
                                         </div>
 
                                     </div>
+                                    <form className="forms-sample py-3" onSubmit={handleSubmit}>
+                                        <div className="d-flex justify-content-between align-items-center mb-3">
+                                            <h5></h5>
+                                            <button
+                                                type="button"
+                                                className="btn btn-primary"
+                                                onClick={exportToExcel}
+                                                disabled={vendordata.length === 0}
+                                            >
+                                                Excel
+                                            </button>
+                                        </div>
+                                        {vendordata.length > 0 && (
+                                            <div>
+                                                {/* Top bar with Excel button aligned right */}
 
-                                    {/* <div>
-                                        <DataGrid
-                                            rows={rowsWithIds}
-                                            columns={columns}
-                                            disableColumnFilter
-                                            disableColumnSelector
-                                            disableDensitySelector
-                                            rowHeight={35}
-                                            getRowId={(row) => row.id}
-                                            initialState={{
-                                                pagination: {
-                                                    paginationModel: { pageSize: 10, page: 0 },
-                                                },
-                                            }}
-                                            slots={{ toolbar: GridToolbar }}
-                                            slotProps={{
-                                                toolbar: {
-                                                    showQuickFilter: true,
-                                                },
-                                            }}
-                                        />
 
-                                        {confirmationVisibleMap[cid] && (
-                                            <div className='confirm-delete'>
-                                                <p>Are you sure you want to delete?</p>
-                                                <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
-                                                <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
+                                                {/* DataGrid below with top margin */}
+                                                <div
+                                                    style={{
+                                                        borderLeft: "1px solid #dce4ec",
+                                                        height: "510px",
+                                                        overflow: "hidden",
+                                                    }}
+                                                >
+                                                    <StyledDataGrid
+                                                        rows={rowsWithIds}
+                                                        columns={columns}
+                                                        disableColumnSelector
+                                                        disableDensitySelector
+                                                        rowHeight={37}
+                                                        pagination
+                                                        paginationModel={paginationModel}
+                                                        onPaginationModelChange={setPaginationModel}
+                                                        pageSizeOptions={[50]}
+                                                        autoHeight={false}
+                                                        sx={{
+                                                            height: 500,
+                                                            '& .MuiDataGrid-footerContainer': {
+                                                                justifyContent: 'flex-end',
+                                                            },
+                                                        }}
+                                                        slots={{
+                                                            toolbar: CustomToolbar,
+                                                        }}
+                                                    />
+                                                </div>
                                             </div>
                                         )}
-                                    </div> */}
+                                    </form>
 
-                                    <button type="submit" class="btn btn-primary mr-2">Excel</button>
-                                    <button type='button' onClick={() => {
-                                        window.location.reload()
-                                    }} class="btn btn-primary mr-2">Close</button>
+                                    
 
 
                                 </div>
