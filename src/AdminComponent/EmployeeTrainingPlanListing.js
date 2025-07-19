@@ -52,6 +52,7 @@ const EmployeeTrainingPlanListing = () => {
     setemployeerecorddata(
       data.map((item, index) => ({
         id: index + 1,
+        Training_Id : item.Training_Id,
         subject: item.Subject,
         internal: item.Inernal_By,
         identified: item.Identified_By,
@@ -73,19 +74,19 @@ const EmployeeTrainingPlanListing = () => {
         setUid([])
     }, [])
 
-    const handleClick = (id) => {
-        setCid(id)
+    const handleClick = (Training_Id) => {
+        setCid(Training_Id)
         setConfirmationVisibleMap((prevMap) => ({
             ...prevMap,
-            [id]: true,
+            [Training_Id]: true,
         }));
     };
 
-    const handleCancel = (id) => {
+    const handleCancel = (Training_Id) => {
         // Hide the confirmation dialog without performing the delete action
         setConfirmationVisibleMap((prevMap) => ({
             ...prevMap,
-            [id]: false,
+            [Training_Id]: false,
         }));
     };
 
@@ -106,14 +107,15 @@ const EmployeeTrainingPlanListing = () => {
             })
     }
 
-    const handleDelete = (id) => {
+    const handleDelete = (Training_Id) => {
         const data = {
-            cat_id: id,
-            tablename: "awt_employeeplan",
-            colom_name: 'id'
+            cat_id: Training_Id,
+            tablename: "Office_Employee_Annual_Training",
+            // column_name:"Training_Id"
+            
         }
 
-        axios.post(`${BASE_URL}/delete_employeeplan_data`, data)
+        axios.post(`${BASE_URL}/delete_employeedata`, data)
             .then((res) => {
                 getInquiryData()
             })
@@ -123,7 +125,7 @@ const EmployeeTrainingPlanListing = () => {
 
         setConfirmationVisibleMap((prevMap) => ({
             ...prevMap,
-            [id]: false,
+            [Training_Id]: false,
         }));
     }
 
@@ -197,9 +199,9 @@ const roledata = {
             renderCell: (params) => {
                 return (
                     <>
-                        {roleaccess > 2 && <Link to={`/employeerecord/${params.row.id}`}><EditIcon style={{cursor: "pointer"}} /></Link>}
+                        {roleaccess > 2 && <Link to={`/employeetrainingplan/${params.row.Training_Id}`}><EditIcon style={{cursor: "pointer"}} /></Link>}
                         {/* <EditIcon style={{ cursor: "pointer" }} Link={() => handleUpdate(params.row.id)} /> */}
-                        {roleaccess > 3 && <DeleteIcon style={{ color: "red", cursor: "pointer" }} Link={() => handleClick(params.row.id)} />}
+                        {roleaccess > 3 && <DeleteIcon style={{ color: "red", cursor: "pointer" }} onClick  ={() => handleClick(params.row.Training_Id)} />}
                     </>
                 )
             }

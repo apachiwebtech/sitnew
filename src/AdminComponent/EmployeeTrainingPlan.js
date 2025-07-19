@@ -5,13 +5,14 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
-import { useParams } from "react-router-dom";
+import { useNavigate ,useParams } from "react-router-dom";
+import { MultiSelect } from "react-multi-select-component";
 //import FormControlLabel from '@mui/material/FormControlLabel';
 
 const EmployeeTrainingPlan = () => {
 
 
-    const [date, setDate] = useState('');
+    const [Training_Dt, setDate] = useState('');
 
     useEffect(() => {
         const currentDate = new Date();
@@ -29,14 +30,32 @@ const EmployeeTrainingPlan = () => {
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [checked, setChecked] = React.useState([true, false]);
+    const [selected, setSelected] = useState([]);
+    const [employeevalue, setEmployeevalue] = useState()
+    const [Emp_Id, setEmployee] = useState([])
+    const navigate = useNavigate();
+
 
  
    const [value, setValue] = useState({
-//   Employee: '',
-  subject: '',
-  internal: '',
-  identified: ''
+  Emp_Id: '' || uid.Emp_Id,
+  Subject: ''|| uid.Subject,
+  Inernal_By: '' || uid.Inernal_By,
+  Identified_By: '' || uid.Identified_By,
 });
+
+    useEffect(() => {
+        setValue({
+
+            Subject: uid.Subject,
+            Inernal_By: uid.Inernal_By,
+            Identified_By: uid.Identified_By,
+            Emp_Id: uid.Emp_Id,
+      
+
+
+        })
+    }, [uid])
 
 
 
@@ -45,49 +64,177 @@ const EmployeeTrainingPlan = () => {
         const newErrors = {}
 
 
-        if (!value.subject) {
+        if (!value.Subject) {
             isValid = false;
-            newErrors.subject = "Subject is Required"
+            newErrors.Subject = "Subject is Required"
         }
 
-        if(!value.internal) {
+        if(!value.Inernal_By) {
             isValid = false;
-            newErrors.internal = "Internal/External is Required"
+            newErrors.Inernal_By = "Internal/External is Required"
         }
 
-        if(!value.identified){
+        if(!value.Identified_By){
             isValid = false;
-            newErrors.identified = "Identified is Required"
+            newErrors.Identified_By = "Identified is Required"
         }
 
         setError(newErrors)
         return isValid
     }
 
-    const handleSubmit = async (e) => {
-        e.preventDefault()
-        let response
+const fetchEmployee = async () => {
+  try {
+    const res = await axios.get(`${BASE_URL}/getEmployee`);
+    const formatted = res.data.map(item => ({
+      label: item.Employee_Name,
+      value: item.Emp_Id,
+    }));
+    setEmployee(formatted);
+    return formatted; // return list
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
+};
 
 
-        if (validateForm()) {
-            response = await fetch(`${BASE_URL}/add_employeetrainingplan`, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        subject: value.subject,
-                        internal: value.internal,
-                        identified: value.identified,
-                        date: date,
-                        // Employee: value.Employee
-                    }),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-      
+        const handleselect = (value) => {
 
+        setSelected(value)
 
-        }
+        setEmployeevalue(value.map((item) => item.value).join(','))
+
+        console.log(value.map((item) => item.value))
+
     }
+
+        useEffect(() => {
+    
+            fetchEmployee()
+            value.title = ""
+            setError({})
+            setUid([])
+    
+        }, [])
+
+
+const getEmployeeDetails = () => {
+    const data = {
+        u_id:  employeetrainingplanid,
+        uidname: "Training_Id",
+        tablename: "Office_Employee_Annual_Training"
+    }
+    axios.post(`${BASE_URL}/new_update_data`,data)
+    .then((res) => {
+        setUid(res.data[0])
+
+        const ids = res.data[0].Emp_Id
+        const idArray = ids.split(',').map(Number)
+        
+        const formattedArray = idArray.map((id, index) => ({ label: 'select' + (index + 1), value: id }));
+        setSelected(formattedArray)
+
+        // setValue(prevState => ({
+        //     ...prevState,
+        //     Subject: data[0].Subject || '',
+        //     Inernal_By: data[0].Inernal_By || '',
+        //     Identified_By: data[0].Identified_By || '',
+        // }));
+        
+    })
+    .catch((err) => {
+        console.log(err)
+    })
+}
+
+    useEffect(() => {
+        if (employeetrainingplanid !== ":employeetrainingplanid") {
+            getEmployeeDetails()
+            // setHide(true)
+        }
+    }, [employeetrainingplanid])
+
+    
+
+
+
+
+        
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  const selectedEmpIds = selected.map(item => item.value);
+
+  if (selectedEmpIds.length === 0) {
+    setError({ Emp_Id: "Please select at least one employee" });
+    return;
+  }
+
+  setError({});
+
+  const isEdit =
+    employeetrainingplanid &&
+    employeetrainingplanid !== "" &&
+    employeetrainingplanid !== "0" &&
+    employeetrainingplanid !== ":employeetrainingplanid";
+
+  const payload = {
+    Emp_Id: selectedEmpIds.join(","), // ✅ Always send comma-separated employee IDs
+    Subject: value.Subject,
+    Inernal_By: value.Inernal_By,
+    Identified_By: value.Identified_By,
+    Training_Dt: Training_Dt,
+    Date_Added: new Date().toISOString().split("T")[0],
+    ...(isEdit && { u_id: employeetrainingplanid }), // ✅ If updating, include the ID
+  };
+
+  console.log("Submitting payload:", payload); // Optional: debug log
+
+  try {
+    const response = await fetch(`${BASE_URL}/add_employeetrainingplan`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await response.json();
+    console.log("Server response:", data);
+
+    if (data && data.success) {
+      alert(isEdit ? "Training Plan Updated Successfully!" : "Employee Training Plan Inserted Successfully!");
+
+      setSelected([]);
+      setValue({
+        Subject: "",
+        Inernal_By: "",
+        Identified_By: "",
+        u_id: "",
+      });
+      // Optional: reset Training_Dt
+      // setTraining_Dt("");
+
+      setError({});
+         if (isEdit) {
+    navigate("/employeetrainingplan");
+  }
+    } else {
+      alert("Something went wrong. Please try again.");
+    }
+  } catch (err) {
+    console.error("Error submitting form:", err);
+    alert("Error occurred while submitting. Please try again.");
+  }
+};
+
+
+
+
+
+
+
+
+
 
 
     const onhandleChange = (e) => {
@@ -114,28 +261,28 @@ const EmployeeTrainingPlan = () => {
 
                                             <div class="form-group col-lg-4">
                                                 <label for="exampleFormControlSelect1">Employee<span className='text-danger'>*</span> </label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.employee} onChange={onhandleChange} name='Employee'>
-                                                    <option>Select</option>
-                                                   
-                                                </select>
-                                                {<span className='text-danger'> {error.employee} </span>}
+                                               <MultiSelect options={Emp_Id} value={selected}
+                                                                        onChange={(value) => handleselect(value)}
+                                                                        labelledBy='Select All' name="selected">
+                                                                    </MultiSelect>
+                                                {<span className='text-danger'> {error.Emp_Id} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">Subject<span className="text-danger">*</span></label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.subject} placeholder="Subject" name='subject' onChange={onhandleChange} />
-                                                {<span className="text-danger"> {error.subject} </span>}
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.Subject} placeholder="Subject" name='Subject' onChange={onhandleChange} />
+                                                {<span className="text-danger"> {error.Subject} </span>}
                                             </div>
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">Internal/External By<span className="text-danger">*</span></label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.internal} placeholder="Internal" name='internal' onChange={onhandleChange} />
-                                                {<span className="text-danger"> {error.internal} </span>}
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.Inernal_By} placeholder="Inernal_By" name='Inernal_By' onChange={onhandleChange} />
+                                                {<span className="text-danger"> {error.Inernal_By} </span>}
                                             </div>
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">Identified By<span className="text-danger">*</span></label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.identified} placeholder="Identified" name='identified' onChange={onhandleChange} />
-                                                {<span className="text-danger"> {error.identified} </span>}
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.Identified_By} placeholder="Identified_By" name='Identified_By' onChange={onhandleChange} />
+                                                {<span className="text-danger"> {error.Identified_By} </span>}
                                             </div>
                                             <div className="form-group col-lg-3">
                                                 <label htmlFor="exampleInputUsername1">Date<span className="text-danger">*</span></label>
@@ -143,8 +290,8 @@ const EmployeeTrainingPlan = () => {
                                                     type="date"
                                                     className="form-control"
                                                     id="exampleInputUsername1"
-                                                    value={date}
-                                                    name="date"
+                                                    value={Training_Dt}
+                                                    name="Training_Dt"
                                                     onChange={(e) => { }}
                                                     disabled
                                                 />
@@ -153,7 +300,13 @@ const EmployeeTrainingPlan = () => {
                                             
                                         </div>
                                     
-                                        <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                <button type="submit" className="btn btn-primary mr-2">
+  {employeetrainingplanid && employeetrainingplanid !== '' && employeetrainingplanid !== '0' && employeetrainingplanid !== ':employeetrainingplanid'
+    ? 'Update'
+    : 'Submit'}
+</button>
+
+
 
                                         <button type='button' onClick={() => {
                                             window.location.reload()
@@ -184,7 +337,7 @@ export default EmployeeTrainingPlan
 
 
 
-    // async function getStudentDetail() {
+    // async function getEmployeeDetails() {
 
     //     const response = await fetch(`${BASE_URL}/update_data`, {
     //         method: 'POST',
@@ -211,7 +364,7 @@ export default EmployeeTrainingPlan
     // }
     // useEffect(() => {
     //     if (employeetrainingplanid !== ":employeetrainingplanid") {
-    //         getStudentDetail()
+    //         getEmployeeDetails()
     //     }
 
     //     value.title = ""

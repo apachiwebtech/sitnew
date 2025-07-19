@@ -118,7 +118,7 @@ const College = () => {
             .catch((err) => {
                 console.log(err)
             })
-            
+
     }
 
 
@@ -412,7 +412,8 @@ const College = () => {
                                                                     <lable for="exampleFormControlSelect1"></lable>
                                                                     <MultiSelect options={descipline} value={selected}
                                                                         onChange={(value) => handleselect(value)}
-                                                                        labelledBy='Select All' name="selected"></MultiSelect>
+                                                                        labelledBy='Select All' name="selected">
+                                                                    </MultiSelect>
 
                                                                 </div>
 

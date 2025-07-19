@@ -88,6 +88,7 @@ const LibraryBook = () => {
 
         setError(newErrors)
         return isValid
+        
     }
 
     async function fetchCourses() {
